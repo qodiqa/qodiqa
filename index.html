@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="index, follow"/>
+<meta name="author" content="Bogdan Dutescu"/>
+<meta name="theme-color" content="#09090b"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'none'"/>
+<title>QODIQA — Deterministic Runtime Consent Enforcement</title>
+<meta name="description" content="QODIQA is the open standard for deterministic runtime consent enforcement in AI systems. Author: Bogdan Dutescu."/>
+<meta property="og:title" content="QODIQA — Deterministic Runtime Consent Enforcement"/>
+<meta property="og:description" content="The open standard that makes AI consent enforcement verifiable, auditable, and enforceable at runtime."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://qodiqa.github.io/"/>
+<meta property="og:image" content="https://qodiqa.github.io/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="QODIQA — Deterministic Runtime Consent Enforcement"/>
+<meta name="twitter:description" content="The open standard that makes AI consent enforcement verifiable, auditable, and enforceable at runtime."/>
+<meta name="twitter:image" content="https://qodiqa.github.io/og-image.png"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2309090b'/><text x='6' y='24' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23ffffff' letter-spacing='1'>Q</text></svg>"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* RESET & ROOT */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#ffffff;
+  --bg-2:#f8f8f8;
+  --bg-raised:#f2f2f2;
+  --ink:#09090b;
+  --ink-2:#141418;
+  --ink-3:#444750;
+  --ink-4:#7a8090;
+  --border:#d4d7de;
+  --border-strong:#a0a6b4;
+  --red:#ff3b30;
+  --green:#22c55e;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+  --max:1000px;
+  --pad:48px;
+  --section-v:64px;
+}
+
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.55;
+}
+p{text-align:left;hyphens:none;overflow-wrap:break-word;word-break:break-word}
+img,table,video,iframe{max-width:100%}
+
+/* NAVIGATION */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  height:48px;
+  padding:0 var(--pad);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.nav-brand{
+  font-family:var(--mono);
+  font-size:0.74rem;
+  font-weight:500;
+  letter-spacing:0.18em;
+  color:var(--ink);
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.nav-link{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+  color:var(--ink-4);
+  text-decoration:none;
+  transition:color 0.15s ease;
+}
+.nav-link:hover{color:var(--ink)}
+
+/* LAYOUT PRIMITIVES */
+section{
+  padding:var(--section-v) var(--pad);
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+section.alt{background:var(--bg-2);padding-top:48px;padding-bottom:48px}
+.container{max-width:var(--max);margin:0 auto;width:100%}
+.section-label{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  font-weight:500;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+  margin-bottom:8px;
+  display:block;
+}
+.section-title{
+  font-family:var(--serif);
+  font-size:clamp(1.06rem,2.1vw,1.48rem);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.18;
+  margin-bottom:12px;
+}
+.section-body-wide{
+  font-size:0.89rem;
+  line-height:1.58;
+  color:var(--ink-3);
+  max-width:100%;
+}
+.section-body-wide strong{font-weight:600;color:var(--ink)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding-top:120px;
+  padding-bottom:60px;
+  padding-left:var(--pad);
+  padding-right:var(--pad);
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  opacity:0;
+  animation:appear 0.4s ease 0.05s forwards;
+}
+.hero-inner{max-width:var(--max);width:100%;margin:0 auto;margin-top:-40px}
+.hero-label{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  letter-spacing:0.15em;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  margin-bottom:28px;
+  display:block;
+}
+.hero-wordmark{
+  font-family:var(--serif);
+  font-size:clamp(4.2rem,11vw,8.4rem);
+  font-weight:700;
+  letter-spacing:0.04em;
+  color:var(--ink);
+  line-height:0.88;
+  margin-bottom:24px;
+}
+.hero-title-l1{
+  font-family:var(--serif);
+  font-size:clamp(1.10rem,2.2vw,1.55rem);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.18;
+  letter-spacing:-0.02em;
+  display:block;
+  margin-bottom:6px;
+}
+.hero-title-l2{
+  font-family:var(--serif);
+  font-size:clamp(0.92rem,1.9vw,1.22rem);
+  font-weight:400;
+  font-style:italic;
+  color:var(--ink-3);
+  line-height:1.35;
+  display:block;
+  margin-bottom:22px;
+}
+.hero-sub{
+  font-size:0.98rem;
+  color:var(--ink-3);
+  line-height:1.72;
+  max-width:var(--max);
+  margin:0 auto 36px;
+  text-align:center;
+  letter-spacing:0.002em;
+  hyphens:none;
+}
+.hero-cta-group{margin-bottom:64px;margin-top:150px}
+.hero-micro-cta{
+  margin-top:14px;
+  font-family:var(--mono);
+  font-size:0.64rem;
+  color:var(--ink-4);
+  letter-spacing:0.15em;
+  text-align:center;
+  text-transform:uppercase;
+}
+
+/* SYSTEM STATUS */
+.system-status{
+  margin-bottom:20px;
+  font-family:var(--mono);
+  font-size:0.60rem;
+  color:var(--ink-4);
+  line-height:1.9;
+  text-align:center;
+  letter-spacing:0.04em;
+  opacity:0.75;
+}
+.system-status strong{color:var(--ink-4);font-weight:500}
+.system-status .status-live{color:var(--green);font-weight:500;opacity:1}
+.status-control{color:var(--ink-3);font-weight:500}
+
+/* BUTTONS */
+.hero-actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 18px;
+  font-size:0.74rem;
+  font-weight:500;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  font-family:var(--mono);
+  letter-spacing:0.05em;
+  min-height:40px;
+  border-radius:4px;
+  transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.btn-primary{background:var(--ink);color:#ffffff}
+.btn-primary:hover{background:#2a2c34}
+.btn-primary-dominant{padding:11px 26px;font-size:0.78rem}
+.btn-outline{background:transparent;color:var(--ink-2);border:1px solid var(--border);border-radius:4px}
+.btn-outline:hover{border-color:var(--border-strong);color:var(--ink)}
+.btn svg{width:11px;height:11px;flex-shrink:0}
+
+/* LOG PANELS */
+.log-section{width:100%;margin-bottom:26px}
+.log-grid-row{display:grid;gap:8px;align-items:stretch}
+.log-grid-row1{grid-template-columns:repeat(4,1fr)}
+.log-grid-row2{grid-template-columns:repeat(3,1fr);max-width:75%;margin:8px auto 0}
+.log-panel{
+  background:var(--bg);
+  border:1px solid var(--border);
+  overflow:hidden;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.log-header{
+  padding:6px 12px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--bg);
+  flex-shrink:0;
+}
+.log-title{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  letter-spacing:0.18em;
+  color:var(--ink-3);
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.log-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  flex-shrink:0;
+  animation:blink 3.2s ease-in-out infinite;
+}
+.log-dot.d2{animation-delay:0.42s}
+.log-dot.d3{animation-delay:0.84s}
+.log-dot.d4{animation-delay:1.26s}
+.log-dot.d5{animation-delay:1.68s}
+.log-dot.d6{animation-delay:2.10s}
+.log-dot.d7{animation-delay:0.21s}
+@keyframes blink{0%,100%{opacity:0.2}50%{opacity:0.9}}
+.log-body{
+  padding:10px 12px;
+  font-family:var(--mono);
+  font-size:0.64rem;
+  line-height:1.25;
+  height:auto;
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.log-fields{display:block;overflow:hidden;flex:1}
+.log-field{
+  display:grid;
+  grid-template-columns:68px 1fr;
+  column-gap:6px;
+  margin-bottom:5px;
+  overflow:hidden;
+}
+.log-key{color:var(--ink-4);font-size:0.64rem;padding-top:1px;flex-shrink:0}
+.log-val{
+  color:var(--ink-2);
+  font-size:0.64rem;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+  max-width:100%;
+}
+.log-divider{border:none;border-top:1px solid var(--border);margin:8px 0 7px}
+.log-verdict-row{display:flex;align-items:center;gap:5px}
+.log-body>div:last-child{flex-shrink:0;margin-top:auto}
+.log-arrow{color:var(--ink-4);font-size:0.64rem}
+.log-verdict-label{font-family:var(--mono);font-size:0.64rem;color:var(--ink-3)}
+.log-verdict-val{font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.10em}
+.verdict-blocked{color:var(--red)}
+.verdict-allowed{color:var(--green)}
+
+/* REFERENCE IMPLEMENTATION SIGNAL */
+.ref-impl-signal{
+  margin:16px 0 0;
+  width:100%;
+  border:1px solid var(--border);
+  background:#fbfbfb;
+  text-align:left;
+}
+.ref-impl-inner{padding:12px 18px;display:flex;flex-direction:column;gap:6px}
+.ref-impl-header{display:flex;align-items:center;gap:8px}
+.ref-impl-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.ref-impl-label{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  letter-spacing:0.14em;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  display:block;
+}
+.ref-impl-text{
+  font-size:0.82rem;
+  color:var(--ink-2);
+  line-height:1.72;
+  text-align:center;
+  hyphens:none;
+  max-width:920px;
+  margin:0 auto;
+  letter-spacing:-0.005em;
+  white-space:normal;
+}
+.ref-impl-text-sub{font-size:0.72rem;color:var(--ink-4);margin-top:4px;text-align:center;letter-spacing:0.04em}
+
+/* ENFORCEMENT DEMO TABLE */
+.enforcement-demo{
+  margin:24px 0 0;
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--bg);
+}
+.enforcement-demo-header{
+  padding:6px 14px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.enforcement-demo-title{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  letter-spacing:0.22em;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  font-weight:500;
+}
+.enforcement-demo-status{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  color:var(--green);
+  white-space:nowrap;
+}
+@keyframes statusPulse{
+  0%,100%{opacity:0.5;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.4)}
+}
+.enforcement-demo-status-dot{
+  display:inline-block;
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  margin-right:5px;
+  vertical-align:middle;
+  animation:statusPulse 2.4s ease-in-out infinite;
+}
+.enforcement-demo-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+.enforcement-demo-table th{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  padding:7px 8px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  font-weight:500;
+  text-align:center;
+  vertical-align:middle;
+  white-space:nowrap;
+  opacity:0.82;
+  position:relative;
+}
+.enforcement-demo-table th:first-child{text-align:left;padding-left:10px}
+.enforcement-demo-table th:not(:last-child)::after{
+  content:'';position:absolute;right:0;top:18%;height:64%;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--border-strong) 30%,var(--border-strong) 70%,transparent);
+  opacity:0.5;
+}
+.enforcement-demo-table td{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  padding:6px 8px;
+  border-bottom:1px solid var(--border);
+  color:var(--ink-2);
+  vertical-align:middle;
+  line-height:1.4;
+  background:var(--bg);
+  overflow:hidden;
+  text-overflow:clip;
+  white-space:nowrap;
+  text-align:center;
+  letter-spacing:0.02em;
+}
+.enforcement-demo-table td:first-child{text-align:left}
+.enforcement-demo-table tr:last-child td{border-bottom:none}
+.enforcement-demo-table tbody tr{transition:background 0.18s ease}
+.edt-action{color:var(--ink-2);text-align:left;white-space:normal;word-break:break-word;padding-left:10px}
+.edt-consent-found{color:var(--green);text-align:center}
+.edt-consent-missing,.edt-consent-expired,.edt-consent-mismatch{color:var(--red);text-align:center}
+.edt-scope-ok{color:var(--ink-3);text-align:center}
+.edt-scope-na{color:var(--ink-4);text-align:center}
+.edt-decision-blocked{color:var(--red);font-weight:500;letter-spacing:0.10em;text-align:center}
+.edt-decision-allowed{color:var(--green);font-weight:500;letter-spacing:0.10em;text-align:center}
+.edt-arrow{color:var(--ink-4);font-size:0.62rem;text-align:center}
+.edt-reason{font-family:var(--mono);font-size:0.62rem;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:clip}
+.edt-reason-blocked{color:#c0392b}
+.edt-reason-allowed{color:#16a34a}
+.edt-mono-sm{font-family:var(--mono);font-size:0.62rem;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:clip}
+.row-blocked:hover{background:rgba(255,59,48,0.06)}
+.row-blocked:hover .edt-action,.row-blocked:hover .edt-decision-blocked{color:var(--red)}
+.row-allowed:hover{background:rgba(34,197,94,0.06)}
+.row-allowed:hover .edt-action,.row-allowed:hover .edt-decision-allowed{color:var(--green)}
+
+/* STATS BAR */
+.edt-stats-bar{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  width:100%;
+  background:#f9f9f9;
+  border-bottom:1px solid var(--border);
+  font-family:var(--mono);
+  letter-spacing:0.10em;
+  overflow:hidden;
+}
+.edt-stat{
+  padding:11px 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+}
+.edt-stat:not(:last-child)::after{
+  content:'';position:absolute;right:0;top:22%;height:56%;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--border-strong) 30%,var(--border-strong) 70%,transparent);
+  opacity:0.6;
+}
+.edt-stat-label{color:var(--ink-4);text-transform:uppercase;font-size:0.59rem;letter-spacing:0.14em;margin-bottom:4px;line-height:1}
+.edt-stat-value{color:var(--ink-2);font-size:0.72rem;font-weight:500;letter-spacing:0.02em;line-height:1.2}
+.edt-stat-value.clr-allow{color:var(--green)}
+.edt-stat-value.clr-block{color:var(--red)}
+
+/* BADGES */
+.edt-badge{
+  display:inline-block;
+  padding:1px 5px;
+  font-family:var(--mono);
+  font-size:0.62rem;
+  letter-spacing:0.10em;
+  font-weight:500;
+  text-transform:uppercase;
+  border:1px solid currentColor;
+  white-space:nowrap;
+  opacity:0.85;
+}
+.badge-low{color:#22c55e}
+.badge-medium{color:#f59e0b}
+.badge-high{color:#f97316}
+.badge-critical{color:#ff3b30}
+
+/* ROW FLASH */
+@keyframes rowFlashBlock{0%{background:rgba(255,59,48,0.08)}100%{background:transparent}}
+@keyframes rowFlashAllow{0%{background:rgba(34,197,94,0.08)}100%{background:transparent}}
+.row-blocked.edt-row-updating{animation:rowFlashBlock 0.6s ease-out forwards}
+.row-allowed.edt-row-updating{animation:rowFlashAllow 0.6s ease-out forwards}
+
+/* TOOLTIP */
+.edt-tooltip-wrap{position:relative;display:inline-block;width:100%}
+.edt-tooltip{
+  display:none;
+  position:absolute;
+  z-index:200;
+  bottom:calc(100% + 4px);
+  left:0;
+  min-width:200px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  padding:10px 12px;
+  font-family:var(--mono);
+  font-size:0.62rem;
+  line-height:1.7;
+  color:var(--ink-3);
+  pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  white-space:nowrap;
+}
+.edt-tooltip strong{color:var(--ink-2);font-weight:500;display:block;margin-bottom:4px;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase}
+.edt-tooltip-row{display:flex;gap:8px;justify-content:space-between}
+.edt-tooltip-key{color:var(--ink-4)}
+.edt-tooltip-val-block{color:var(--red)}
+.edt-tooltip-val-ok{color:var(--green)}
+tr:hover .edt-tooltip{display:block}
+
+/* INEVITABILITY */
+.inevitability{
+  padding:26px var(--pad);
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  text-align:center;
+}
+.inevitability-inner{max-width:var(--max);margin:0 auto}
+.inevitability-rule,.inevitability-rule-bottom{width:40px;height:1px;background:var(--ink);margin:0 auto}
+.inevitability-rule{margin-bottom:26px}
+.inevitability-rule-bottom{margin-top:26px}
+.inevitability-statement{
+  font-family:var(--serif);
+  font-size:clamp(1.06rem,2.1vw,1.48rem);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.38;
+  letter-spacing:-0.015em;
+  margin-bottom:16px;
+  text-align:center;
+}
+.inevitability-sub{
+  font-size:0.89rem;
+  color:var(--ink-3);
+  line-height:1.70;
+  max-width:700px;
+  margin:0 auto;
+  text-align:center;
+}
+
+/* ENFORCEMENT CASES GRID */
+.enforcement-cases-grid{
+  margin-top:16px;
+  border:1px solid var(--border);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.enforcement-case{
+  padding:20px 24px;
+  display:flex;
+  flex-direction:column;
+}
+.enforcement-case:nth-child(1),.enforcement-case:nth-child(3){background:var(--bg-2);border-right:1px solid var(--border)}
+.enforcement-case:nth-child(2){background:var(--bg)}
+.enforcement-case:nth-child(4){background:var(--bg)}
+.enforcement-case:nth-child(1),.enforcement-case:nth-child(2){border-bottom:1px solid var(--border)}
+.col-marker{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  font-weight:500;
+  color:var(--ink-4);
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  margin-bottom:5px;
+  display:block;
+}
+.enforcement-case h3{
+  font-family:var(--serif);
+  font-size:1.00rem;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:6px;
+  line-height:1.20;
+}
+.enforcement-case p{
+  font-size:0.81rem;
+  color:var(--ink-3);
+  line-height:1.52;
+  text-align:justify;
+  hyphens:auto;
+  flex:1;
+}
+
+/* EXECUTION FAILURE */
+.execution-failure{
+  padding:40px var(--pad);
+  background:#09090b;
+  border-top:1px solid #1a1c22;
+  border-bottom:1px solid #1a1c22;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.execution-failure::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:60px;background:linear-gradient(to bottom,transparent,#333540);
+}
+.execution-failure::after{
+  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:1px;height:60px;background:linear-gradient(to top,transparent,#333540);
+}
+.execution-failure-inner{
+  max-width:var(--max);margin:0 auto;position:relative;
+  display:flex;flex-direction:column;align-items:center;
+}
+.execution-failure-rule,.execution-failure-rule-bottom{width:56px;height:1px;background:#333540}
+.execution-failure-rule{margin:0 auto 44px}
+.execution-failure-rule-bottom{margin:38px auto 0}
+.execution-failure-statement{
+  font-family:var(--serif);
+  font-size:clamp(1.10rem,2.2vw,1.55rem);
+  font-weight:700;
+  color:#ffffff;
+  line-height:1.36;
+  letter-spacing:-0.015em;
+  margin:0 auto;
+  max-width:var(--max);
+  text-align:center;
+}
+
+/* WHY NOW */
+.why-now{
+  padding:44px var(--pad);
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.framework-list{
+  margin-top:16px;
+  border:1px solid var(--border);
+  display:grid;
+  grid-template-columns:200px 1fr;
+}
+.framework-item{display:contents}
+.framework-name{
+  padding:8px 14px;
+  background:var(--bg-2);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:0.63rem;
+  font-weight:500;
+  color:var(--ink-3);
+  letter-spacing:0.14em;
+  display:flex;
+  align-items:center;
+}
+.framework-gap{
+  padding:8px 16px;
+  font-size:0.81rem;
+  color:var(--ink-3);
+  line-height:1.44;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+  text-align:justify;
+  hyphens:auto;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.framework-item:last-child .framework-name,
+.framework-item:last-child .framework-gap{border-bottom:none}
+.framework-gap strong{color:var(--ink);font-weight:600}
+.why-now-final{
+  margin-top:12px;
+  padding:14px 20px;
+  background:var(--ink);
+  color:#ffffff;
+}
+.why-now-final p{
+  font-family:var(--serif);
+  font-size:clamp(0.91rem,1.65vw,1.08rem);
+  font-weight:600;
+  line-height:1.35;
+  color:#ffffff;
+  hyphens:none;
+}
+.why-now-final p.sub{
+  font-size:0.80rem;
+  font-weight:400;
+  color:#8899aa;
+  line-height:1.45;
+  margin-top:6px;
+  font-family:var(--mono);
+  letter-spacing:0.04em;
+}
+.why-now-final span{font-family:var(--serif);font-weight:700;color:#ffffff;letter-spacing:-0.01em}
+
+/* WHO THIS IS FOR */
+.who-for{
+  padding:44px var(--pad);
+  border-bottom:1px solid var(--border);
+  background:var(--bg-2);
+}
+.buyer-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-top:14px;
+}
+.buyer-item{
+  background:var(--bg-2);
+  padding:11px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  transition:background 0.15s ease;
+}
+.buyer-item:hover{background:#f0f0f0}
+.buyer-category{font-family:var(--serif);font-size:0.89rem;font-weight:700;color:var(--ink);line-height:1.18}
+.buyer-risk{font-size:0.77rem;color:var(--ink-3);line-height:1.42;text-align:justify;hyphens:auto}
+.buyer-tag{font-family:var(--mono);font-size:0.64rem;letter-spacing:0.15em;color:var(--ink-4);text-transform:uppercase}
+
+/* PRINCIPLES */
+.principles-header{text-align:left;margin-bottom:16px}
+.principles-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+.principle{background:var(--bg-2);padding:12px 14px;transition:background 0.15s ease}
+.principle:hover{background:#f0f0f0}
+.principle-num{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  font-weight:500;
+  color:var(--ink-4);
+  margin-bottom:4px;
+  display:block;
+  letter-spacing:0.14em;
+}
+.principle h3{font-family:var(--serif);font-size:0.89rem;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.20}
+.principle p{font-size:0.79rem;color:var(--ink-3);line-height:1.42;text-align:justify;hyphens:auto}
+
+/* WHAT BREAKS */
+.what-breaks{
+  padding:44px var(--pad);
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.breaks-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-top:16px;
+}
+.breaks-item{background:var(--bg);padding:12px 16px;transition:background 0.15s ease}
+.breaks-item:hover{background:#fafafa}
+.breaks-status{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  letter-spacing:0.16em;
+  color:var(--red);
+  text-transform:uppercase;
+  margin-bottom:4px;
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.breaks-title{font-family:var(--serif);font-size:0.92rem;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.breaks-body{font-size:0.80rem;color:var(--ink-3);line-height:1.42;text-align:justify;hyphens:auto}
+
+/* CORPUS */
+.corpus-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:26px;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.corpus-count{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:700;color:var(--ink);line-height:1}
+.corpus-count span{display:block;font-size:0.62rem;font-weight:400;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.10em;margin-top:6px;font-family:var(--mono)}
+.corpus-trust{font-family:var(--mono);font-size:0.64rem;color:var(--ink-4);letter-spacing:0.15em;margin-bottom:20px;text-transform:uppercase;display:block}
+.corpus-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+.corpus-item{
+  background:var(--bg);
+  padding:10px 14px 10px 11px;
+  text-decoration:none;
+  display:block;
+  border-left:2px solid transparent;
+  transition:background 0.12s ease, border-left-color 0.12s ease;
+}
+.corpus-item:hover{background:var(--bg-2);border-left-color:var(--ink)}
+.corpus-item-num{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--ink-4);margin-bottom:3px;display:block}
+.corpus-item-title{font-size:0.82rem;color:var(--ink-2);line-height:1.42}
+.corpus-item:hover .corpus-item-title{color:var(--ink)}
+
+/* AUTHORITY STRIP */
+.authority-strip{
+  padding:28px var(--pad);
+  background:#09090b;
+  border-top:1px solid #1a1c22;
+  text-align:center;
+}
+.authority-strip-text{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  letter-spacing:0.18em;
+  color:#525763;
+  text-transform:uppercase;
+}
+
+/* COLOPHON / FOOTER */
+.doc-colophon{background:var(--bg);border-top:1px solid var(--border)}
+.colophon-inner{max-width:var(--max);margin:0 auto;padding:56px var(--pad) 48px;width:100%}
+.colophon-brand{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  font-weight:500;
+  letter-spacing:0.20em;
+  color:var(--ink);
+  display:block;
+  margin-bottom:14px;
+  text-transform:uppercase;
+}
+.colophon-name{font-family:var(--serif);font-size:1.14rem;font-weight:700;color:var(--ink);margin-bottom:5px}
+.colophon-role{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  color:var(--ink-4);
+  margin-bottom:20px;
+  display:block;
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+}
+.colophon-statement{
+  font-size:0.86rem;
+  color:var(--ink-3);
+  line-height:1.68;
+  text-align:justify;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+  margin-bottom:18px;
+}
+.colophon-ver{
+  font-family:var(--mono);
+  font-size:0.66rem;
+  color:var(--ink-4);
+  margin-bottom:3px;
+  letter-spacing:0.06em;
+}
+.colophon-ver a{color:var(--ink-4);text-decoration:none}
+.colophon-ver a:hover{color:var(--ink)}
+.colophon-rule{width:100%;height:1px;background:var(--border);margin:18px 0}
+.colophon-final{
+  font-family:var(--mono);
+  font-size:0.60rem;
+  color:var(--ink-4);
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+.colophon-closing-rule{width:100%;height:1px;background:var(--border);margin:28px 0 20px}
+.colophon-closing-statement{
+  font-family:var(--serif);
+  font-size:clamp(1.05rem,2vw,1.3rem);
+  font-weight:400;
+  font-style:italic;
+  color:var(--ink);
+  line-height:1.52;
+  text-align:center;
+  letter-spacing:0.01em;
+  opacity:0.88;
+}
+.footer-sub{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  color:var(--ink-4);
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  text-align:center;
+  margin-top:12px;
+}
+
+/* BACK TO TOP */
+#back-to-top{
+  position:fixed;
+  bottom:24px;right:24px;
+  z-index:200;
+  width:32px;height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg);
+  border:1px solid var(--border-strong);
+  color:var(--ink-3);
+  cursor:pointer;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.2s ease, border-color 0.15s ease, color 0.15s ease;
+}
+#back-to-top.visible{opacity:1;pointer-events:auto}
+#back-to-top:hover{border-color:var(--ink);color:var(--ink)}
+#back-to-top svg{width:11px;height:11px;flex-shrink:0}
+
+@keyframes appear{from{opacity:0}to{opacity:1}}
+
+/* ENFORCEMENT TABLE COLUMN WIDTHS */
+.enforcement-demo-table colgroup col:nth-child(1){width:16%}
+.enforcement-demo-table colgroup col:nth-child(2){width:11%}
+.enforcement-demo-table colgroup col:nth-child(3){width:10%}
+.enforcement-demo-table colgroup col:nth-child(4){width:4%}
+.enforcement-demo-table colgroup col:nth-child(5){width:14%}
+.enforcement-demo-table colgroup col:nth-child(6){width:0;display:none}
+.enforcement-demo-table colgroup col:nth-child(7){width:10%}
+.enforcement-demo-table colgroup col:nth-child(8){width:10%}
+.enforcement-demo-table colgroup col:nth-child(9){width:8%}
+.enforcement-demo-table colgroup col:nth-child(10){width:9%}
+.enforcement-demo-table colgroup col:nth-child(11){width:8%}
+.enforcement-demo-table th:nth-child(6),
+.enforcement-demo-table td:nth-child(6){display:none}
+
+/* RANGE SCROLL — mobile only */
+.edt-range-scroll{display:none}
+@media(max-width:760px){
+  .edt-range-scroll{display:block}
+}
+
+/* FORCE TABLE OVERFLOW ON MOBILE */
+@media(max-width:760px){
+  #edt-table{
+    min-width:1100px; /* force horizontal overflow */
+    width:1100px;     /* override width:100% which collapses table */
+  }
+}
+
+/* CUSTOM SCROLLBAR FOR ENFORCEMENT TABLE */
+.edt-custom-scrollbar{
+  width:100%;
+  height:10px;
+  background:#ebebeb;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  position:relative;
+  cursor:pointer;
+  display:none;
+}
+.edt-custom-scrollbar-thumb{
+  position:absolute;
+  top:1px;
+  left:0;
+  height:8px;
+  background:#a0a6b4;
+  border-radius:4px;
+  cursor:grab;
+  transition:background 0.15s;
+  min-width:40px;
+}
+.edt-custom-scrollbar-thumb:active{
+  cursor:grabbing;
+  background:#6b7280;
+}
+@media(max-width:760px){
+  .edt-custom-scrollbar{display:block}
+}
+
+/* TABLE SCROLL HINT BAR (mobile) */
+.table-scroll-hint{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  background:#f5f5f5;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.table-scroll-hint-arrow{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  color:var(--ink-4);
+  flex-shrink:0;
+  user-select:none;
+}
+.table-scroll-hint-track{
+  flex:1;
+  height:4px;
+  background:var(--border);
+  border-radius:4px;
+  position:relative;
+  overflow:hidden;
+}
+.table-scroll-hint-thumb{
+  position:absolute;
+  top:0;left:0;
+  height:100%;
+  width:40%;
+  background:var(--border-strong);
+  border-radius:4px;
+  transition:left 0.1s linear;
+}
+@media(max-width:760px){
+  .table-scroll-hint{display:flex}
+}
+
+/* TABLE SCROLL WRAPPER */
+.table-scroll-wrapper{
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.table-scroll-wrapper::-webkit-scrollbar{height:6px}
+.table-scroll-wrapper::-webkit-scrollbar-track{background:transparent}
+.table-scroll-wrapper::-webkit-scrollbar-thumb{background:#d4d7de;border-radius:4px}
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover{background:#a0a6b4}
+
+/* RESPONSIVE — TABLET (≤1020px) */
+@media(max-width:1020px){
+  .log-grid-row1{grid-template-columns:repeat(2,1fr)}
+  .log-grid-row2{grid-template-columns:repeat(2,1fr);max-width:50%}
+  .buyer-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* RESPONSIVE — MOBILE (≤760px) */
+@media(max-width:760px){
+  :root{--pad:20px;--section-v:56px}
+  .nav-link:not(:last-child){display:none}
+  .hero{padding-top:80px;padding-bottom:48px;justify-content:center}
+  .hero-inner{margin-top:0}
+  .hero-sub{text-align:center}
+  .hero-cta-group{margin-bottom:48px}
+  .log-grid-row1,.log-grid-row2{grid-template-columns:1fr 1fr;max-width:100%;margin-left:0;margin-right:0}
+  .log-body{height:auto;min-height:150px}
+  .enforcement-cases-grid{grid-template-columns:1fr}
+  .enforcement-case:nth-child(1),.enforcement-case:nth-child(3){border-right:none}
+  .enforcement-case:nth-child(1),.enforcement-case:nth-child(2),.enforcement-case:nth-child(3){border-bottom:1px solid var(--border)}
+  .enforcement-case:nth-child(4){border-bottom:none}
+  .principles-grid{grid-template-columns:1fr 1fr}
+  .framework-list{grid-template-columns:1fr}
+  .framework-name{border-right:none;border-bottom:1px solid var(--border);border-top:1px solid var(--border);padding:16px 20px}
+  .framework-gap{border-bottom:1px solid var(--border);padding:16px 20px}
+  .breaks-grid{grid-template-columns:1fr}
+  .buyer-grid{grid-template-columns:1fr}
+  .enforcement-demo-table colgroup col:nth-child(4){width:0}
+  .enforcement-demo-table th:nth-child(4),
+  .enforcement-demo-table td:nth-child(4){display:none}
+  .why-now-final{padding:20px 24px}
+}
+
+/* RESPONSIVE — SMALL MOBILE (≤500px) */
+@media(max-width:500px){
+  :root{--pad:16px;--section-v:48px}
+  .hero{padding-top:72px;padding-bottom:40px;justify-content:center}
+  .hero-cta-group{margin-bottom:36px}
+  .log-grid-row1,.log-grid-row2{grid-template-columns:1fr;max-width:100%}
+  .log-body{height:auto;min-height:140px}
+  .log-val{white-space:normal;overflow:visible;text-overflow:clip}
+  .principles-grid{grid-template-columns:1fr}
+  .corpus-header{flex-direction:column;align-items:flex-start}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-actions .btn{justify-content:center}
+  .colophon-inner{padding:52px var(--pad) 40px}
+  .enforcement-demo-table th,
+  .enforcement-demo-table td{font-size:0.64rem;padding:7px 8px}
+  .edt-stats-bar{grid-template-columns:repeat(3,1fr)}
+}
+
+/* RESPONSIVE — MOBILE LANDSCAPE (short viewport, wide screen) */
+@media(max-height:500px) and (orientation:landscape){
+
+  /* Root spacing: tighter vertical rhythm throughout */
+  :root{--pad:20px;--section-v:32px}
+
+  /* Nav: keep fixed but reduce height cost */
+  nav{height:40px}
+
+  /* Hero: strip the 100vh lock and excessive spacing so it scrolls naturally */
+  .hero{
+    min-height:0;
+    padding-top:56px;
+    padding-bottom:28px;
+    justify-content:flex-start;
+  }
+  .hero-inner{margin-top:0}
+
+  /* Hero wordmark: smaller — it's massive at 11vw when vw is landscape-wide */
+  .hero-wordmark{
+    font-size:clamp(2.4rem,6vw,3.8rem);
+    margin-bottom:10px;
+  }
+
+  /* Hero titles: trim vertical margin */
+  .hero-title-l1{margin-bottom:4px}
+  .hero-title-l2{margin-bottom:12px}
+
+  /* Hero label: smaller top gap */
+  .hero-label{margin-bottom:14px}
+
+  /* Hero sub text: reduce size slightly for vertical economy */
+  .hero-sub{font-size:0.88rem;line-height:1.52;margin-bottom:0}
+
+  /* CTA group: the 150px inline margin-top is the biggest offender —
+     override it via the class; inline style takes precedence so we
+     target the element via its known class context */
+  .hero-cta-group{margin-top:20px;margin-bottom:20px}
+
+  .hero-micro-cta{margin-top:10px}
+
+  /* CTA buttons: inline row, no column stacking */
+  .hero-actions{flex-direction:row;flex-wrap:wrap}
+  .hero-actions .btn{justify-content:center}
+
+  /* Sections: compress vertical padding */
+  section.alt{padding-top:28px;padding-bottom:28px}
+  .why-now,.who-for,.what-breaks{padding-top:28px;padding-bottom:28px}
+  .inevitability{padding-top:20px;padding-bottom:20px}
+  .execution-failure{padding-top:24px;padding-bottom:24px}
+
+  /* Execution failure: reduce decorative rule height */
+  .execution-failure-rule{margin-bottom:20px}
+  .execution-failure-rule-bottom{margin-top:18px}
+
+  /* Log grids: max 2 columns in landscape (never 4) */
+  .log-grid-row1{grid-template-columns:repeat(2,1fr)}
+  .log-grid-row2{grid-template-columns:repeat(2,1fr);max-width:100%;margin-left:0;margin-right:0}
+  .log-section{margin-bottom:14px}
+
+  /* Log panels: reduce fixed height so they don't stack off-screen */
+  .log-body{height:auto;min-height:110px;padding:8px 10px}
+  .log-field{margin-bottom:3px}
+  .log-divider{margin:5px 0 4px}
+
+  /* Grids that collapse to 1-col on portrait: use 2-col in landscape
+     (viewport is wider, so 2 columns fit comfortably) */
+  .enforcement-cases-grid{grid-template-columns:1fr 1fr}
+  .enforcement-case:nth-child(1),.enforcement-case:nth-child(3){
+    border-right:1px solid var(--border)
+  }
+  .enforcement-case:nth-child(1),.enforcement-case:nth-child(2){
+    border-bottom:1px solid var(--border)
+  }
+  .enforcement-case{padding:14px 16px}
+
+  /* Buyer grid: 2-col in landscape */
+  .buyer-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Principles: 2-col (already 2 on portrait; keep consistent) */
+  .principles-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* Breaks grid: already 2-col on desktop, keep 2-col in landscape */
+  .breaks-grid{grid-template-columns:repeat(2,1fr)}
+  .breaks-item{padding:10px 14px}
+
+  /* Framework list: restore 2-col where portrait collapsed it to 1 */
+  .framework-list{grid-template-columns:160px 1fr}
+  .framework-name{border-right:1px solid var(--border);border-top:none;padding:8px 14px}
+  .framework-gap{padding:8px 16px}
+
+  /* Section headings: slightly smaller to reclaim vertical space */
+  .section-title{margin-bottom:8px}
+  .section-body-wide{font-size:0.84rem}
+
+  /* Inevitability statement: compress margins */
+  .inevitability-rule{margin-bottom:14px}
+  .inevitability-rule-bottom{margin-top:14px}
+  .inevitability-statement{margin-bottom:10px}
+
+  /* Ref-impl signal: tighten padding */
+  .ref-impl-signal{margin-top:10px}
+  .ref-impl-inner{padding:8px 14px;gap:4px}
+  .ref-impl-text{font-size:0.78rem;line-height:1.5}
+
+  /* System status: reduce bottom margin */
+  .system-status{margin-bottom:10px;line-height:1.7}
+
+  /* Enforcement demo table: table already has horizontal scroll;
+     reduce font size slightly for better row density */
+  .enforcement-demo-header{padding:5px 14px}
+  .enforcement-demo-table th,
+  .enforcement-demo-table td{font-size:0.60rem;padding:5px 7px}
+  .edt-stats-bar{grid-template-columns:repeat(3,1fr)}
+  .edt-stat{padding:7px 8px}
+  .edt-stat-label{font-size:0.54rem}
+  .edt-stat-value{font-size:0.64rem}
+
+  /* Table: ensure overflow/scroll still active in landscape */
+  #edt-table{min-width:900px;width:900px}
+
+  /* Range slider: keep visible */
+  .edt-range-scroll{display:block}
+
+  /* Corpus grid: let it breathe with auto-fill (already responsive) */
+  .corpus-header{flex-direction:row;align-items:flex-end}
+
+  /* Colophon: tighten padding */
+  .colophon-inner{padding:36px var(--pad) 32px}
+
+  /* why-now-final: tighter */
+  .why-now-final{padding:12px 16px}
+
+  /* Back to top: smaller offset */
+  #back-to-top{bottom:14px;right:14px}
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "QODIQA — Deterministic Runtime Consent Enforcement",
+  "description": "Open technical standard for deterministic runtime consent enforcement in AI systems.",
+  "author": {
+    "@type": "Person",
+    "name": "Bogdan Dutescu",
+    "url": "https://www.linkedin.com/in/bogdandutescu/"
+  },
+  "datePublished": "2026-04",
+  "version": "1.0",
+  "url": "https://qodiqa.github.io/"
+}
+</script>
+</head>
+<body>
+
+<nav aria-label="Primary navigation">
+  <a href="index.html" class="nav-brand" aria-label="QODIQA home">QODIQA</a>
+  <div class="nav-links">
+    <a href="corpus/index.html" class="nav-link">Standard</a>
+    <a href="#principles" class="nav-link">Principles</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-inner">
+    <span class="hero-label">Open Technical Standard — <a href="corpus/corpus_change_log.html" style="color:inherit;text-decoration:none">Version 1.0</a> — April 2026 — Public Specification</span>
+    <h1 class="hero-wordmark">QODIQA</h1>
+    <span class="hero-title-l1">Deterministic Runtime Consent Enforcement</span>
+    <span class="hero-title-l2">for Artificial Intelligence Systems</span>
+    <div class="hero-cta-group">
+      <div class="hero-actions">
+        <a href="corpus/whitepaper.html" class="btn btn-primary btn-primary-dominant">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="1" width="9" height="12" rx="1"/><path d="M5 4h5M5 7h5M5 10h3"/></svg>
+          Read Whitepaper
+        </a>
+        <a href="corpus/core_standard.html" class="btn btn-outline">View Specification</a>
+      </div>
+      <p class="hero-sub" style="font-size:1.02rem;color:var(--ink-2);font-style:normal;font-weight:400;max-width:720px;margin:18px auto 0;line-height:1.52">Other frameworks define what must hold. QODIQA holds it.</p>
+      <p class="hero-micro-cta" style="margin-top:48px">System architects · Regulators · Infrastructure providers</p>
+      <p style="font-family:var(--mono);font-size:0.62rem;color:var(--ink-4);letter-spacing:0.06em;margin-top:14px;line-height:1.7;opacity:0.80;text-align:center">QODIQA is an open technical standard, independently developed and publicly available.<br>No centralized governance body currently exists. The specification is publicly available and independently developed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INEVITABILITY -->
+<div class="inevitability">
+  <div class="inevitability-inner">
+    <div class="inevitability-rule" aria-hidden="true"></div>
+    <p class="inevitability-statement">
+      <span style="display:block">Consent enforcement is not a feature of compliant AI systems.</span>
+      <span style="display:block">It is a required architectural condition for any system operating on human data.</span>
+    </p>
+    <p class="inevitability-sub">The gap is not regulatory. It is architectural. No existing framework operates at the point of execution. QODIQA defines and occupies that boundary.</p>
+    <div class="inevitability-rule-bottom" aria-hidden="true"></div>
+  </div>
+</div>
+
+<!-- ENFORCEMENT DEMO -->
+<section id="enforcement-demo" style="padding:var(--section-v) var(--pad)" aria-label="Enforcement demonstration">
+  <div class="container">
+    <span class="section-label">Illustrative Enforcement Trace</span>
+    <h2 class="section-title">Enforcement at the Execution Boundary</h2>
+    <p class="section-body-wide">Every action is intercepted at the execution boundary. Consent state is verified deterministically before any operation proceeds. The log panels below reflect the enforcement decision cycle across concurrent nodes.</p>
+  </div>
+  <div class="container" style="margin-top:16px">
+    <div class="log-section" aria-label="Live enforcement logs">
+      <div class="log-grid-row log-grid-row1">
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 01</span><span class="log-dot" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l0-req">req_8f21a9c</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l0-ts">14:32:08 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l0-act">Generate Voice, Public Figure</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l0-id">User_4821</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l0-cs" style="color:#ff3b30">NOT FOUND</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l0-sc" style="color:#8d94a3">n/a</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-blocked" id="l0-vrd">BLOCKED</span></div></div>
+          </div>
+        </div>
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 02</span><span class="log-dot d2" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l1-req">req_3c90f12</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l1-ts">14:32:11 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l1-act">Access Patient Medical Records</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l1-id">User_0093</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l1-cs" style="color:#22c55e">VERIFIED</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l1-sc" style="color:#525763">scope:read</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-allowed" id="l1-vrd">ALLOWED</span></div></div>
+          </div>
+        </div>
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 03</span><span class="log-dot d3" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l2-req">req_a74d3e1</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l2-ts">14:32:14 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l2-act">Track Real-Time Location</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l2-id">User_7714</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l2-cs" style="color:#ff3b30">EXPIRED</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l2-sc" style="color:#8d94a3">n/a</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-blocked" id="l2-vrd">BLOCKED</span></div></div>
+          </div>
+        </div>
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 04</span><span class="log-dot d4" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l3-req">req_5b22f90</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l3-ts">14:32:17 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l3-act">Export Contact Graph</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l3-id">User_0561</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l3-cs" style="color:#ff3b30">SCOPE MISMATCH</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l3-sc" style="color:#ff3b30">scope:analytics</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-blocked" id="l3-vrd">BLOCKED</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="log-grid-row log-grid-row2">
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 05</span><span class="log-dot d5" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l4-req">req_c19e4a3</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l4-ts">14:32:20 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l4-act">Clone Voice from Audio</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l4-id">User_2250</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l4-cs" style="color:#ff3b30">NOT FOUND</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l4-sc" style="color:#8d94a3">n/a</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-blocked" id="l4-vrd">BLOCKED</span></div></div>
+          </div>
+        </div>
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 06</span><span class="log-dot d6" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l5-req">req_7d83b12</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l5-ts">14:32:23 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l5-act">Identify Person from Image</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l5-id">User_9340</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l5-cs" style="color:#ff3b30">WITHDRAWN</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l5-sc" style="color:#8d94a3">n/a</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-blocked" id="l5-vrd">BLOCKED</span></div></div>
+          </div>
+        </div>
+        <div class="log-panel">
+          <div class="log-header"><span class="log-title">Enforcement Log · Node 07</span><span class="log-dot d7" aria-hidden="true"></span></div>
+          <div class="log-body">
+            <div class="log-fields">
+              <div class="log-field"><span class="log-key">Request</span><span class="log-val" id="l6-req">req_2f44c80</span></div>
+              <div class="log-field"><span class="log-key">Timestamp</span><span class="log-val" id="l6-ts">14:32:26 UTC</span></div>
+              <div class="log-field"><span class="log-key">Action</span><span class="log-val" id="l6-act">Read Preference Profile</span></div>
+              <div class="log-field"><span class="log-key">Identity</span><span class="log-val" id="l6-id">User_1103</span></div>
+              <div class="log-field"><span class="log-key">Consent</span><span class="log-val" id="l6-cs" style="color:#22c55e">VERIFIED</span></div>
+              <div class="log-field"><span class="log-key">Scope</span><span class="log-val" id="l6-sc" style="color:#525763">scope:analytics</span></div>
+            </div>
+            <div><hr class="log-divider"/><div class="log-verdict-row"><span class="log-arrow" aria-hidden="true">-&gt;</span><span class="log-verdict-label">Execution</span><span class="log-verdict-val verdict-allowed" id="l6-vrd">ALLOWED</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="system-status">
+      <strong>Enforcement Gateway:</strong> <span class="status-live">Active</span> · Fail-Closed (Deterministic) &nbsp;&nbsp;
+      <strong>Audit System:</strong> Append-only · Cryptographic Verification &nbsp;&nbsp;
+      <strong>Standard:</strong> Version 1.0 · Public License &nbsp;&nbsp;
+      <span class="status-control">Fail-closed enforcement at runtime. No execution without valid consent.</span>
+    </p>
+
+    <div class="ref-impl-signal">
+      <div class="ref-impl-inner">
+        <div class="ref-impl-header">
+          <span class="ref-impl-dot" aria-hidden="true"></span>
+          <span class="ref-impl-label">Implementation Reference — Verifiable Components</span>
+        </div>
+        <p class="ref-impl-text">Runtime enforcement executes through four specified components: gateway, consent registry, policy engine, and append-only audit log.<br>Unauthorized inference is blocked at the execution boundary under fail-closed conditions.</p>
+        <p class="ref-impl-text-sub">Open specification · Inspectable · Reproducible at inference boundary</p>
+      </div>
+    </div>
+
+    <div class="enforcement-demo" role="region" aria-label="Enforcement simulation">
+      <div class="enforcement-demo-header">
+        <span class="enforcement-demo-title">Deterministic Enforcement: Execution Boundary — Runtime Log</span>
+        <span class="enforcement-demo-status"><span class="enforcement-demo-status-dot" aria-hidden="true"></span>Illustrative Enforcement Cycle</span>
+      </div>
+      <div class="edt-stats-bar" aria-label="Enforcement statistics">
+        <div class="edt-stat">
+          <span class="edt-stat-label">Total Requests</span>
+          <span class="edt-stat-value" id="edt-stat-total">0</span>
+        </div>
+        <div class="edt-stat">
+          <span class="edt-stat-label">Allowed</span>
+          <span class="edt-stat-value clr-allow" id="edt-stat-allowed-pct">—</span>
+        </div>
+        <div class="edt-stat">
+          <span class="edt-stat-label">Blocked</span>
+          <span class="edt-stat-value clr-block" id="edt-stat-blocked-pct">—</span>
+        </div>
+        <div class="edt-stat">
+          <span class="edt-stat-label">Avg Latency</span>
+          <span class="edt-stat-value" id="edt-stat-latency">—</span>
+        </div>
+        <div class="edt-stat">
+          <span class="edt-stat-label">Enforcement Mode</span>
+          <span class="edt-stat-value" style="color:var(--green)">FAIL-CLOSED</span>
+        </div>
+        <div class="edt-stat">
+          <span class="edt-stat-label">Audit</span>
+          <span class="edt-stat-value" style="color:var(--ink-3)">APPEND-ONLY</span>
+        </div>
+      </div>
+      <div class="table-scroll-wrapper" id="edt-scroll-wrapper">
+      <table class="enforcement-demo-table" id="edt-table">
+        <colgroup><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup>
+        <thead>
+          <tr>
+            <th scope="col">Input Action</th>
+            <th scope="col">Consent State</th>
+            <th scope="col">Scope</th>
+            <th scope="col"></th>
+            <th scope="col">Reason</th>
+            <th scope="col" style="display:none">Latency</th>
+            <th scope="col">Req ID</th>
+            <th scope="col">Trace ID</th>
+            <th scope="col">Risk</th>
+            <th scope="col">Consent Age</th>
+            <th scope="col">Decision</th>
+          </tr>
+        </thead>
+        <tbody id="edt-tbody"></tbody>
+      </table>
+      </div>
+      <input type="range" id="edt-range-scroll" class="edt-range-scroll" min="0" max="1000" value="0" step="1"
+        style="width:100%;margin:0;padding:4px 0;accent-color:#6b7280;cursor:pointer;height:28px;box-sizing:border-box;border-top:1px solid var(--border);"
+        aria-label="Scroll tabel stânga-dreapta">
+    </div>
+  </div>
+</section>
+
+<!-- EXECUTION FAILURE -->
+<div class="execution-failure">
+  <div class="execution-failure-inner">
+    <div class="execution-failure-rule" aria-hidden="true"></div>
+    <p class="execution-failure-statement">
+      <span style="display:block">Execution without enforced consent is system failure.</span>
+      <span style="display:block">Every inference without enforcement is an active violation.</span>
+    </p>
+    <div class="execution-failure-rule-bottom" aria-hidden="true"></div>
+  </div>
+</div>
+
+<!-- ENFORCEMENT CASES -->
+<section style="padding-top:48px;padding-bottom:48px">
+  <div class="container">
+    <span class="section-label">Structural Condition</span>
+    <h2 class="section-title">Consent is assumed, not enforced.</h2>
+    <p class="section-body-wide">GDPR, EU AI Act, NIST AI RMF, and ISO/IEC 42001 define consent obligations. None mandate technical enforcement at runtime. Consent remains declarative. The gap is <strong>architectural</strong>, embedded in how AI systems are built. Four concrete enforcement boundaries illustrate what runtime interception resolves.</p>
+    <div class="enforcement-cases-grid">
+      <div class="enforcement-case">
+        <span class="col-marker">Biometric Processing</span>
+        <h3>Facial and Voice Biometrics</h3>
+        <p>Without enforcement, a biometric inference pipeline executes whenever called, regardless of consent state. Scope mismatches and withdrawn consent are invisible at the execution boundary. With QODIQA, every biometric inference maps to a declared scope — <strong>verified cryptographically before execution proceeds</strong>. Unscoped requests are blocked at the action boundary, not discovered in audit.</p>
+      </div>
+      <div class="enforcement-case">
+        <span class="col-marker">Health and Clinical Data</span>
+        <h3>Medical Record Access</h3>
+        <p>Without enforcement, a consent record in a CRM or policy document does not propagate to the inference boundary. An analytics consent token cannot be distinguished from a clinical data scope at runtime. With QODIQA, consent artifacts are <strong>cryptographically scoped and verified at the action boundary</strong>. A wellness-scope token cannot authorize clinical record extraction — mismatch is a technical impossibility, not a policy risk.</p>
+      </div>
+      <div class="enforcement-case">
+        <span class="col-marker">Voice Cloning</span>
+        <h3>Synthetic Identity Generation</h3>
+        <p>Without enforcement, a voice synthesis model executes on any audio sample. No consent artifact is checked at the inference call. Identity is reconstructed without the subject's knowledge. With QODIQA, the enforcement gateway intercepts every synthesis request. Absent a valid, non-expired, explicitly scoped voice consent artifact, <strong>synthesis does not proceed</strong>. The block occurs before model execution, not after it.</p>
+      </div>
+      <div class="enforcement-case">
+        <span class="col-marker">Location and Movement</span>
+        <h3>Real-Time Location Tracking</h3>
+        <p>Without enforcement, withdrawal of location consent updates a database record. The withdrawal signal is not bound to the inference layer. Tracking continues until a manual process propagates the change. With QODIQA, consent withdrawal is immediately effective at the execution boundary. <strong>Withdrawn consent renders execution technically impossible</strong> — no propagation delay, no race condition, no exposure window between withdrawal and enforcement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY NOW -->
+<div class="why-now">
+  <div class="container">
+    <span class="section-label">Structural Gap Analysis</span>
+    <h2 class="section-title">Existing Frameworks Do Not Operate at the Execution Boundary</h2>
+    <p class="section-body-wide">No existing framework operates at the execution boundary. The gap is not resolved by stricter policy. It requires an enforcement layer at the point of execution. The technical absence is not a gap in regulation. It is a gap in architecture. At scale, uncontrolled inference becomes systemic legal exposure.</p>
+    <div class="framework-list">
+      <div class="framework-item">
+        <span class="framework-name">GDPR</span>
+        <span class="framework-gap">Consent obligations defined. <strong>No runtime enforcement mechanism required.</strong> Compliance is verified by audit, not by execution control.</span>
+      </div>
+      <div class="framework-item">
+        <span class="framework-name">EU AI Act</span>
+        <span class="framework-gap">Risk classification and documentation mandated. <strong>No enforcement at the inference boundary.</strong> Operates at organisational accountability level, not execution control.</span>
+      </div>
+      <div class="framework-item">
+        <span class="framework-name">NIST AI RMF</span>
+        <span class="framework-gap">Risk categories and governance functions defined. <strong>No runtime enforcement specified.</strong> Voluntary risk vocabulary, not an execution control model.</span>
+      </div>
+      <div class="framework-item">
+        <span class="framework-name">ISO/IEC 42001</span>
+        <span class="framework-gap">Management system requirements for AI governance. <strong>No execution-layer controls specified.</strong> Process maturity and documentation, not action-level enforcement.</span>
+      </div>
+    </div>
+    <div class="why-now-final">
+      <p>The enforcement boundary is absent from every existing framework. <span>QODIQA defines and occupies it.</span></p>
+      <p class="sub">The structural gap cannot be closed by stricter policy or tighter documentation. It requires a deterministic enforcement layer at the point of execution — one that makes consent verifiable before inference proceeds.</p>
+    </div>
+  </div>
+</div>
+
+<!-- WHO THIS IS FOR -->
+<div class="who-for">
+  <div class="container">
+    <span class="section-label">Deployment Scope</span>
+    <h2 class="section-title">Systems That Require Runtime Consent Enforcement</h2>
+    <p class="section-body-wide">Any system that generates, infers, or routes outputs derived from human data, at any scale, in any domain, requires deterministic consent enforcement at the execution boundary. This is not a capability upgrade. It is a structural prerequisite for verifiable compliance.</p>
+    <div class="buyer-grid">
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 01</span>
+        <span class="buyer-category">Large-Scale Inference Platforms</span>
+        <span class="buyer-risk">Every inference event on multi-tenant infrastructure constitutes a discrete consent boundary. Enforcement liability cannot be delegated to the application layer or post-hoc audit.</span>
+      </div>
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 02</span>
+        <span class="buyer-category">Foundation Model Operators</span>
+        <span class="buyer-risk">Models trained on human data and deployed at scale carry consent obligations from training through every downstream inference event. Without runtime enforcement, consent integrity cannot be demonstrated at any stage.</span>
+      </div>
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 03</span>
+        <span class="buyer-category">AI Assistant Systems</span>
+        <span class="buyer-risk">Conversational and agentic systems that access, retrieve, or derive personal data on behalf of users require verifiable consent enforcement at every action boundary, not at session initiation alone.</span>
+      </div>
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 04</span>
+        <span class="buyer-category">Healthcare and Clinical AI</span>
+        <span class="buyer-risk">Special category health data access is scope-bound under GDPR Art. 9 and HIPAA. Runtime scope mismatch constitutes a violation regardless of prior documentation or organisational policy.</span>
+      </div>
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 05</span>
+        <span class="buyer-category">Financial and Risk Systems</span>
+        <span class="buyer-risk">Credit, underwriting, and algorithmic scoring decisions require auditable consent chains. Post-hoc reconstruction of consent state does not satisfy the technical burden of proof in regulatory proceedings.</span>
+      </div>
+      <div class="buyer-item">
+        <span class="buyer-tag">Category 06</span>
+        <span class="buyer-category">Identity and Biometric Infrastructure</span>
+        <span class="buyer-risk">Biometric inference carries maximum regulatory exposure across all jurisdictions. Unverified, unscoped, or expired consent at execution constitutes an enforcement failure, not a process deviation.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPLES -->
+<section class="alt" id="principles">
+  <div class="container">
+    <div class="principles-header">
+      <span class="section-label">Principles</span>
+      <h2 class="section-title">Core Principles</h2>
+      <p class="section-body-wide">Six invariants govern deterministic consent enforcement across every action type, consent state, and operational boundary — without exception or ambiguity. No execution proceeds outside verified, scoped consent; no deviation is architecturally possible.</p>
+    </div>
+    <div class="principles-grid">
+      <div class="principle">
+        <span class="principle-num">01</span>
+        <h3>Deterministic Enforcement</h3>
+        <p>Given identical consent state and action request, the enforcer produces identical output. No probabilistic paths. No ambiguity.</p>
+      </div>
+      <div class="principle">
+        <span class="principle-num">02</span>
+        <h3>Runtime Interception</h3>
+        <p>Consent is verified at the moment of execution, not at ingestion or configuration time. The enforcement point is the action boundary.</p>
+      </div>
+      <div class="principle">
+        <span class="principle-num">03</span>
+        <h3>Auditable by Construction</h3>
+        <p>Every enforcement decision produces a cryptographically anchored audit record. Evidence is generated, not reconstructed.</p>
+      </div>
+      <div class="principle">
+        <span class="principle-num">04</span>
+        <h3>Fail-Closed Default</h3>
+        <p>In the absence of verified consent, execution is denied. The safe state is inaction. Uncertainty does not default to permission.</p>
+      </div>
+      <div class="principle">
+        <span class="principle-num">05</span>
+        <h3>Consent Immutability</h3>
+        <p>A recorded consent state cannot be retroactively altered. Withdrawal is prospective. History is append-only.</p>
+      </div>
+      <div class="principle">
+        <span class="principle-num">06</span>
+        <h3>Scope Boundedness</h3>
+        <p>Consent granted for one purpose does not extend to another. Every action maps to a declared scope, verified at runtime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT BREAKS -->
+<div class="what-breaks">
+  <div class="container">
+    <span class="section-label">Enforcement Gap Analysis</span>
+    <h2 class="section-title">Without Runtime Enforcement: Four Certainties</h2>
+    <p class="section-body-wide">Without runtime enforcement, audit, compliance, governance, and accountability operate on unverified assumptions. These are not risks. They are certainties. The system does not fail occasionally. It fails continuously. Every execution without enforcement compounds the exposure.</p>
+    <div class="breaks-grid">
+      <div class="breaks-item">
+        <span class="breaks-status">Condition: Unenforceable</span>
+        <div class="breaks-title">Audit: Reconstructive Only</div>
+        <p class="breaks-body">Compliance investigations reconstruct consent state from records not designed as evidence. Reconstructive audit cannot establish execution-boundary facts, only approximations.</p>
+      </div>
+      <div class="breaks-item">
+        <span class="breaks-status">Condition: Unverifiable</span>
+        <div class="breaks-title">Consent: Unverifiable</div>
+        <p class="breaks-body">Consent in a CRM or policy document is a record of intent, not execution. Without cryptographic enforcement binding at runtime, no verification mechanism exists. The gap between declaration and execution is unresolvable.</p>
+      </div>
+      <div class="breaks-item">
+        <span class="breaks-status">Condition: Declarative Only</span>
+        <div class="breaks-title">Compliance: Declarative Only</div>
+        <p class="breaks-body">Systems without runtime enforcement can assert compliance, not demonstrate it. Regulatory proceedings require technical evidence of enforcement. Documentation of intent does not satisfy that burden.</p>
+      </div>
+      <div class="breaks-item">
+        <span class="breaks-status">Condition: Undetectable</span>
+        <div class="breaks-title">Violations: Undetectable at Runtime</div>
+        <p class="breaks-body">Scope mismatches, expired consent, and withdrawn permissions violate at the moment of inference. Without boundary enforcement, violations are invisible until post-hoc review. Damage precedes detection.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CORPUS -->
+<section id="corpus">
+  <div class="container">
+    <div class="corpus-header">
+      <div>
+        <span class="section-label">The Standard Corpus</span>
+        <h2 class="section-title">Complete. Normative. Open.</h2>
+      </div>
+      <div class="corpus-count">32<span>Specification Documents</span></div>
+    </div>
+    <span class="corpus-trust">Structured for verifiability · Designed for auditability · Enforceable at runtime</span>
+    <div class="corpus-grid">
+      <a class="corpus-item" href="corpus/whitepaper.html"><span class="corpus-item-num">QODIQA-WP-2026-001</span><div class="corpus-item-title">Consent as Infrastructure for Artificial Intelligence. Technical Whitepaper</div></a>
+      <a class="corpus-item" href="corpus/executive_brief.html"><span class="corpus-item-num">QODIQA-EB-2026-001</span><div class="corpus-item-title">Executive Brief</div></a>
+      <a class="corpus-item" href="corpus/core_standard.html"><span class="corpus-item-num">QODIQA-CORE-2026-001</span><div class="corpus-item-title">Core Standard for Deterministic Runtime Consent Enforcement</div></a>
+      <a class="corpus-item" href="corpus/terminology.html"><span class="corpus-item-num">QODIQA-TND-2026-001</span><div class="corpus-item-title">Terminology and Normative Definitions</div></a>
+      <a class="corpus-item" href="corpus/global_invariants.html"><span class="corpus-item-num">QODIQA-GEI-2026-001</span><div class="corpus-item-title">Global Enforcement Invariants</div></a>
+      <a class="corpus-item" href="corpus/reference_architecture.html"><span class="corpus-item-num">QODIQA-ARCH-2026-001</span><div class="corpus-item-title">Reference Architecture for Deterministic Runtime Consent Enforcement</div></a>
+      <a class="corpus-item" href="corpus/system_boundary.html"><span class="corpus-item-num">QODIQA-SBTM-2026-001</span><div class="corpus-item-title">System Boundary and Trust Model Specification</div></a>
+      <a class="corpus-item" href="corpus/enforcement_framework.html"><span class="corpus-item-num">QODIQA-FRAMEWORK-2026-003</span><div class="corpus-item-title">68-Point Enforcement Framework</div></a>
+      <a class="corpus-item" href="corpus/implementation_playbook.html"><span class="corpus-item-num">QODIQA-IMPL-2026-001</span><div class="corpus-item-title">Implementation Playbook</div></a>
+      <a class="corpus-item" href="corpus/reference_implementation.html"><span class="corpus-item-num">QODIQA-RIS-2026-001</span><div class="corpus-item-title">Reference Implementation Specification. Minimal Deterministic Enforcement Stack</div></a>
+      <a class="corpus-item" href="corpus/conformance_test_suite.html"><span class="corpus-item-num">QODIQA-CTSS-2026-001</span><div class="corpus-item-title">Conformance Test Suite Specification</div></a>
+      <a class="corpus-item" href="corpus/conformance_verification.html"><span class="corpus-item-num">QODIQA-CVS-2026-001</span><div class="corpus-item-title">Conformance Verification Specification</div></a>
+      <a class="corpus-item" href="corpus/certification_framework.html"><span class="corpus-item-num">QODIQA-CERT-2026-001</span><div class="corpus-item-title">Certification Framework</div></a>
+      <a class="corpus-item" href="corpus/audit_evidence.html"><span class="corpus-item-num">QODIQA-AUDIT-2026-001</span><div class="corpus-item-title">Audit and Evidence Generation Model</div></a>
+      <a class="corpus-item" href="corpus/audit_readiness.html"><span class="corpus-item-num">QODIQA-ARP-2026-001</span><div class="corpus-item-title">Audit Readiness and Evidence Pack</div></a>
+      <a class="corpus-item" href="corpus/security_cryptographic_profile.html"><span class="corpus-item-num">QODIQA-SEC-2026-001</span><div class="corpus-item-title">Security and Cryptographic Profile</div></a>
+      <a class="corpus-item" href="corpus/failure_handling.html"><span class="corpus-item-num">QODIQA-FEM-2026-001</span><div class="corpus-item-title">Failure Handling and Recovery Specification</div></a>
+      <a class="corpus-item" href="corpus/non_compliance.html"><span class="corpus-item-num">QODIQA-FCM-2026-001</span><div class="corpus-item-title">Non-Compliance Conditions and Failure Modes</div></a>
+      <a class="corpus-item" href="corpus/threat_model.html"><span class="corpus-item-num">QODIQA-SEC-TM-2026-001</span><div class="corpus-item-title">Threat Model and Abuse Case Specification</div></a>
+      <a class="corpus-item" href="corpus/adversarial_threat_model.html"><span class="corpus-item-num">QODIQA-TM-2026-001</span><div class="corpus-item-title">Extended Adversarial Threat Model</div></a>
+      <a class="corpus-item" href="corpus/interoperability.html"><span class="corpus-item-num">QODIQA-INTEROP-CONS-2026-001</span><div class="corpus-item-title">Interoperability and Deployment Constraints</div></a>
+      <a class="corpus-item" href="corpus/regulatory_alignment.html"><span class="corpus-item-num">QODIQA-RAM-2026-001</span><div class="corpus-item-title">Regulatory Alignment Matrix</div></a>
+      <a class="corpus-item" href="corpus/economic_impact.html"><span class="corpus-item-num">QODIQA-EIP-2026-001</span><div class="corpus-item-title">Economic Impact Analysis</div></a>
+      <a class="corpus-item" href="corpus/use_case_dossiers.html"><span class="corpus-item-num">QODIQA-UCD-2026-001</span><div class="corpus-item-title">Use Case Dossiers for Runtime Consent Enforcement Deployments</div></a>
+      <a class="corpus-item" href="corpus/worked_example.html"><span class="corpus-item-num">QODIQA-WE-2026-001</span><div class="corpus-item-title">Worked Example. End-to-End Scenario</div></a>
+      <a class="corpus-item" href="corpus/positioning.html"><span class="corpus-item-num">QODIQA-PSL-2026-001</span><div class="corpus-item-title">Positioning and Scope Limitation Statement</div></a>
+      <a class="corpus-item" href="corpus/residual_risk.html"><span class="corpus-item-num">QODIQA-RISK-2026-001</span><div class="corpus-item-title">Residual Risk and Assumption Disclosure Annex</div></a>
+      <a class="corpus-item" href="corpus/governance_charter.html"><span class="corpus-item-num">QODIQA-GOV-CH-2026-001</span><div class="corpus-item-title">Governance Charter for the QODIQA Standard Corpus</div></a>
+      <a class="corpus-item" href="corpus/implementation_checklist.html"><span class="corpus-item-num">QODIQA-CL-2026-001</span><div class="corpus-item-title">Implementation Conformance Checklist</div></a>
+      <a class="corpus-item" href="corpus/corpus_change_log.html"><span class="corpus-item-num">QODIQA-CCL-2026-001</span><div class="corpus-item-title">Corpus Change Log and Version History</div></a>
+      <a class="corpus-item" href="corpus/master_index.html"><span class="corpus-item-num">QODIQA-IDX-2026-001</span><div class="corpus-item-title">Master Index and Readers Guide</div></a>
+      <a class="corpus-item" href="corpus/public_license.html"><span class="corpus-item-num">QODIQA-PSLI-2026-001</span><div class="corpus-item-title">Public Specification License</div></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRE-FOOTER STRIP -->
+<div class="authority-strip">
+  <span class="authority-strip-text">Consent violations at runtime are not contained at runtime. Neither is the liability.</span>
+</div>
+
+<!-- FOOTER -->
+<footer class="doc-colophon">
+  <div class="colophon-inner">
+    <span class="colophon-brand">QODIQA</span>
+    <div class="colophon-name"><a href="https://www.linkedin.com/in/bogdandutescu/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">Bogdan Duțescu</a></div>
+    <span class="colophon-role">Author &amp; Architect · QODIQA Standard</span>
+    <p class="colophon-statement">The QODIQA Standard Corpus, comprising normative enforcement specifications, formal invariant definitions, reference architecture, a conformance test suite, and implementation artifacts, is authored, maintained, and governed by Bogdan Duțescu. Released under the QODIQA Public License as an open, vendor-neutral, jurisdiction-agnostic specification for deterministic runtime consent enforcement in artificial intelligence systems, the standard constitutes a sole governance authority over normative content, versioning, and corpus integrity. All derivative implementations must reference the canonical corpus.</p>
+    <div class="colophon-ver">Specification Identifier: QODIQA-STD-1.0</div>
+    <div class="colophon-ver">License: QODIQA Public License · Open · Vendor-Neutral</div>
+    <div class="colophon-ver">Repository: <a href="https://github.com/qodiqa/qodiqa.github.io" target="_blank" rel="noopener">github.com/qodiqa</a></div>
+    <div class="colophon-ver">Corpus Documents: 32 · Normative · Versioned · Append-Only</div>
+    <div class="colophon-rule" aria-hidden="true"></div>
+    <div class="colophon-final">Deterministic Runtime Consent Enforcement Standard · QODIQA 2026 · All rights reserved by the specification author</div>
+    <div class="colophon-closing-rule" aria-hidden="true"></div>
+    <p class="colophon-closing-statement">Consent without enforcement is indistinguishable from no consent.</p>
+    <p class="footer-sub">QODIQA Standard Corpus, Foundational Principle</p>
+  </div>
+</footer>
+
+</main>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 12V4M4 7l4-4 4 4"/></svg>
+</button>
+
+<script>
+(function(){
+  function ready(fn){if(document.readyState!=='loading'){fn();}else{document.addEventListener('DOMContentLoaded',fn);}}
+
+  ready(function(){
+
+    /* ── Back to top ── */
+    var btt=document.getElementById('back-to-top');
+    if(btt){
+      window.addEventListener('scroll',function(){
+        if(window.scrollY>300){btt.classList.add('visible');}else{btt.classList.remove('visible');}
+      },{passive:true});
+      btt.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+    }
+
+    /* helpers */
+    function randHex(n){var s='',c='0123456789abcdef';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*16)];return s;}
+    function nowUTC(){
+      var d=new Date();
+      var off=Math.floor(Math.random()*58);
+      var sec=(d.getUTCSeconds()+off)%60;
+      return d.getUTCHours().toString().padStart(2,'0')+':'+
+             d.getUTCMinutes().toString().padStart(2,'0')+':'+
+             sec.toString().padStart(2,'0')+' UTC';
+    }
+    var ID_POOL=['User_4821','User_0093','User_7714','User_0561','User_2250','User_9340','User_1103',
+                 'User_3317','User_8802','User_5501','User_6629','User_1147','User_4433','User_7780',
+                 'User_0012','User_2291','User_8844','User_3390','User_6615','User_5572'];
+    function randId(){
+      if(Math.random()<0.15)return ID_POOL[Math.floor(Math.random()*4)];
+      return ID_POOL[Math.floor(Math.random()*ID_POOL.length)];
+    }
+
+    var CLR_BLOCK='#ff3b30';
+    var CLR_ALLOW='#22c55e';
+    var CLR_NEUT='#8d94a3';
+    var CLR_SCOPE='#6b7280';
+    var CLR_MISMATCH='#ff3b30';
+
+    var MASTER=[
+      {act:'Generate Voice, Public Figure',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Clone Voice from Audio Sample',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthesize Personalized TTS',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:voice-out',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Voice Impersonation, Executive',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Age from Voice Sample',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Extract Emotion from Speech',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:transcription',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Access Patient Medical Records',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Access Private Health Data',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:diagnostics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Query Mental Health History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Retrieve Prescription History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:pharmacy',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Mental Health State',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Access Therapy Session Notes',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:wellness',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Access Insurance Claim Data',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:claims',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Substance Use History',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:wellness',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Derive Chronic Illness Risk',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Read Post-Op Surgical Notes',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Process Biometric Signature',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Transmit Retinal Scan Data',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Extract Biometric from Video',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Broadcast Biometric Data',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:internal',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Access Biometric DB Export',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Facial Composite',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:identity',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Submit Fingerprint for Auth',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:auth',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Enroll Palm Vein Pattern',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Financial Risk Score',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Read Credit Scoring Model',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Aggregate Purchase History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Compute Creditworthiness Score',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Access Payroll Records',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:hr-read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Derive Loan Default Probability',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Income from Spend Pattern',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:marketing',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Identify Person from Image',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Celebrity Image Synthesis',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cross-Platform Identity Link',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Match Face to Criminal DB',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:hr',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Derive Ethnicity from Image',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Verify Document Identity',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:kyc',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Correlate Device Fingerprints',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Link Pseudonymous Profiles',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Behavioral Pattern Extraction',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Read Preference Profile',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:profile',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Emotional State from Text',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Profile Child Behavior',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Map Attention Pattern, Screen',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Reconstruct Keystroke Pattern',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Relationship Status',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Score Personality from Typing',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Track Real-Time Location',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Share Location, Third Party',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Reconstruct Location History',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Map Physical Proximity Data',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Correlate Home and Work Sites',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Disclose Location to Advertiser',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:navigation',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Surveil Physical Movement',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Profile Gait from CCTV',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Stream Webcam Without Consent',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Aggregate Sensor Telemetry',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:iot',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Log Ambient Audio, Office',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Correlate Sleep and Work Data',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Deepfake Video Generation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthesize Personal Narrative',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Authored Style Clone',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Produce Synthetic Likeness',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:promo',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate AI Training Dataset',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Export Employee Comm Logs',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Retrieve Genomic Record',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:genomics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Expose Raw Audit Log',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Retrieve Consent Audit Trail',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Reconstruct Deleted Messages',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Read HR Disciplinary File',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:hr-read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Access Internal Strategy Docs',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:exec-read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Cross-Context Profile Merge',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:search',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Export Contact Graph',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Merge Health and Finance Data',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:reporting',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cross-Refer Arrest Records',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:compliance',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Map Social Network Edges',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Analyze Private Messages',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Derive Immigration Status',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Retrieve Genomic Ancestry',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:genomics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Pregnancy Likelihood',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Political Affiliation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Religious Beliefs',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Sexual Orientation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Disability Status',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Score Social Compliance Index',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:hr',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── VOICE / AUDIO / IDENTITY ── */
+      {act:'Generate Voice of Public Figure',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Clone Voice from Audio Sample',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthesize Personalized TTS',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:voice',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Voice Impersonation, Executive',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Infer Age from Voice Sample',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Extract Emotion from Speech',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Reconstruct Speech from Noise',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:voice',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Generate Political Speech Voice',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Clone Celebrity Voice for Ad',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthesize Child Voice',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Fake Emergency Call Voice',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Recreate Deceased Person Voice',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Deepfake for Scam',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Identity Matching',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Biometric Extraction',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Continuous Audio Surveillance',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Stress Detection',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Voice Gender Classification',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Accent Profiling',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice-based Lie Detection',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthetic Podcast Generation (Impersonation)',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Audio Style Transfer (Artist)',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Signature Extraction',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice-based User Tracking',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Dataset Generation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:voice',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Multi-speaker Identity Merge',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Emotion Manipulation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Real-time Voice Conversion',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:voice',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Speech Reconstruction from Embeddings',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Voice Cloning from 3-sec Sample',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── FACE / IMAGE / BIOMETRICS ── */
+      {act:'Identify Person from Image',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Facial Recognition on Crowd',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Embedding Extraction',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Deepfake Face',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Swap Face in Video',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Synthetic Likeness',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Age Progression Simulation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Emotion Detection from Face',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Tracking Across Cameras',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cross-dataset Face Matching',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Nude Deepfake',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Biometric Signature Extraction',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Iris Scan Processing',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Fingerprint Matching',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Reconstruct Face from Latent',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Image-based Identity Linking',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Mask Detection',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Gait Recognition from Video',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Re-identify Person Across Frames',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Clustering in Dataset',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'CCTV Identity Tracking',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Photo Enhancement of Identity',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Facial Attribute Inference',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Skin Tone Classification',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Health Inference from Face',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Passport-style Photo',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Clone Influencer Appearance',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Dataset Aggregation',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face De-anonymization',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Reverse Image Identity Lookup',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Detect Person in Crowd',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Track Individual Movement',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Predict Age from Image',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Predict Ethnicity from Image',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Reconstruct Missing Face Regions',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Generate AI Portrait of Real Person',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Identity Matching Across Platforms',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Face Recognition in Live Feed',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthetic Identity Photo Creation',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Deepfake Video Face Swap',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── LOCATION / TRACKING / SURVEILLANCE ── */
+      {act:'Track Real-Time Location',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Reconstruct Location History',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Map Physical Proximity Data',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Correlate Home and Work Sites',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Disclose Location to Advertiser',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:navigation',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Surveil Physical Movement',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Profile Movement Patterns',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'GPS Data Aggregation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Location Prediction Modeling',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Identify Frequent Locations',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:navigation',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Detect Routine Behavior',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Geo-fencing Enforcement',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Cross-device Location Linking',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'WiFi-based Location Tracking',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Bluetooth Proximity Mapping',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Location Heatmap Generation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Workplace Presence Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'School Attendance Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Predict Next Location',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Identify Travel Patterns',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:navigation',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Border Crossing Analysis',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Location Sharing to Third Party',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Location-based Ad Targeting',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:navigation',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Device Movement Correlation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Track Ride History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infer Social Graph from Location',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Location-based Risk Scoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Surveillance via IoT Devices',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Track Vehicle Movement',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Drone-based Tracking',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── HEALTH / MEDICAL ── */
+      {act:'Access Patient Medical Records',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Retrieve Genomic Data',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:genomics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Analyze Health History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Predict Disease Risk',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Process Biometric Signals',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Heart Rate Monitoring Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Sleep Pattern Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Mental Health Inference',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Medication Adherence Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Genetic Trait Prediction',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Health Data Export',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Cross-hospital Record Merge',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Clinical Decision Support',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Medical Imaging Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'DNA Matching',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Insurance Risk Profiling',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Patient Identity Matching',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Biometric Authentication',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Health Data Sharing',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Fitness Tracker Aggregation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Wearable Device Monitoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Health Alert Generation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Disease Spread Modeling',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Psychological Profiling',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Neurological Signal Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Voice-based Health Detection',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Eye Movement Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Stress Level Detection',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cognitive State Inference',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Brainwave Analysis',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── FINANCIAL / PROFILING ── */
+      {act:'Infer Financial Risk Score',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Credit Scoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Spending Pattern Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Fraud Detection Profiling',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Behavioral Segmentation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Income Prediction',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Purchase Intent Prediction',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Ad Targeting Optimization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Insurance Risk Modeling',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:scoring',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Loan Approval Decision',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Financial History Aggregation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Transaction Pattern Mining',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Wealth Estimation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Behavioral Credit Profiling',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:scoring',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Predict Default Risk',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'User Value Scoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Dynamic Pricing Adjustment',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Financial Identity Linking',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Bank Data Aggregation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Expense Categorization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Subscription Behavior Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Financial Forecasting',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Investment Risk Profiling',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Portfolio Optimization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Payment Behavior Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Billing Pattern Detection',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Cross-account Correlation',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Credit Card Usage Profiling',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Financial Fraud Simulation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Economic Status Inference',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── DATA / PRIVACY ── */
+      {act:'Cross-context Profile Merge',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:search',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Re-identification',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Dataset Correlation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Identity Graph Construction',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cross-platform Tracking',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Enrichment from External Sources',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Merge Anonymous Datasets',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Reverse Anonymization',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'User Profiling from Logs',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Behavioral Tracking Across Apps',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Warehouse Aggregation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Log Analysis for Identity',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'User Journey Reconstruction',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Email Metadata Analysis',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Communication Graph Extraction',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Social Network Mapping',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Contact Graph Export',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:analytics',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Brokerage Export',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Third-party Data Sharing',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Cross-device Fingerprinting',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Browser Fingerprinting',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Session Tracking',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Persistent Identifier Linking',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'API Data Harvesting',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Leakage Detection',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Data Exfiltration Simulation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Scraping Automation',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Metadata Correlation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Identity Stitching',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Multi-source Data Fusion',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      /* ── CONTENT / GENERATION ── */
+      {act:'Generate Authored Style Clone',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Produce Synthetic Likeness',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:promo',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Deepfake Video Generation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Fake News Article',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Mimic Writing Style',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Copyrighted Text',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Create AI Training Dataset',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Synthetic Image Generation (Real Person)',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Political Propaganda',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Create Fake Interview',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Scam Email',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Automated Phishing Content',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Fake Legal Document Generation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Contract Auto-generation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Resume Fabrication',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Fake Identity Profile Creation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Social Media Persona',cs:'EXPIRED',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Content Moderation Bypass',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Generate Harmful Instructions',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Deepfake Evidence Fabrication',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Video Manipulation for Narrative',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Audio Editing for Deception',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Image Editing for Misinformation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Synthetic Review Generation',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Bot-generated Comments',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Spam Content Generation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Fake Testimonial Creation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'AI-generated News Anchors',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Virtual Influencer Creation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Content Personalization Engine',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── SYSTEM / SECURITY ── */
+      {act:'API Data Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Unauthorized Model Invocation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Shadow Model Execution',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Pipeline Data Injection',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Prompt Injection Attack',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Model Inversion Attempt',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Membership Inference Attempt',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Data Poisoning Simulation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Unauthorized Fine-tuning',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Model Extraction Attempt',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'API Key Abuse',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Rate Limit Bypass',cs:'WITHDRAWN',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Privilege Escalation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Insider Data Access',cs:'SCOPE MISMATCH',csColor:CLR_MISMATCH,sc:'scope:read',scColor:CLR_MISMATCH,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Unauthorized Query Execution',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'System Log Extraction',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Audit Trail Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Encryption Key Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Secure Storage Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Cloud Data Retrieval',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Edge Device Data Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'IoT Device Control',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Remote Command Execution',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Automated Attack Orchestration',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Vulnerability Scanning via AI',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Exploit Generation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Credential Harvesting',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Session Hijacking Simulation',cs:'NOT FOUND',csColor:CLR_BLOCK,sc:'n/a',scColor:CLR_NEUT,vrd:'BLOCKED',vClass:'verdict-blocked'},
+      {act:'Secure Endpoint Access',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Infrastructure Monitoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── HEALTH / MEDICAL (CONSENTED) ── */
+      {act:'Authorized Clinical Data Review',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:clinical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Doctor Access to Patient History',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Medical Imaging Analysis (Consented)',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:diagnostics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Prescription Validation System',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:medical',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── FINANCIAL / BANKING (CONSENTED) ── */
+      {act:'Bank Account Aggregation (User Approved)',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Transaction Fraud Monitoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:fraud',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Loan Eligibility Assessment (Consented)',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:scoring',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Financial Portfolio Optimization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── PERSONALIZATION / UX ── */
+      {act:'Personalized Content Recommendation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:personalization',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'User Preference Learning',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Search Result Personalization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:search',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── ENTERPRISE / INTERNAL SYSTEMS ── */
+      {act:'Internal Audit Log Analysis',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Employee Access Control Validation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:access',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Enterprise Data Warehouse Query',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:read',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── BIOMETRIC / SECURITY (CONSENTED) ── */
+      {act:'Secure Biometric Authentication',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Face Unlock (Device Owner)',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:biometric',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── LOCATION / NAVIGATION ── */
+      {act:'Navigation Route Optimization',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:navigation',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Location-based Service Recommendation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:navigation',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      /* ── AI / MODEL OPERATIONS ── */
+      {act:'Model Performance Monitoring',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:analytics',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Dataset Quality Validation',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:audit',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+      {act:'Inference Logging (Consented)',cs:'VERIFIED',csColor:CLR_ALLOW,sc:'scope:logging',scColor:CLR_SCOPE,vrd:'ALLOWED',vClass:'verdict-allowed'},
+    ];
+
+    var POOL_LEN=MASTER.length;
+
+    function shuffle(arr){
+      var a=arr.slice(),i,j,t;
+      for(i=a.length-1;i>0;i--){
+        j=Math.floor(Math.random()*(i+1));
+        t=a[i];a[i]=a[j];a[j]=t;
+      }
+      return a;
+    }
+
+    var LOG_PANELS=[
+      {req:'l0-req',ts:'l0-ts',act:'l0-act',id:'l0-id',cs:'l0-cs',sc:'l0-sc',vrd:'l0-vrd'},
+      {req:'l1-req',ts:'l1-ts',act:'l1-act',id:'l1-id',cs:'l1-cs',sc:'l1-sc',vrd:'l1-vrd'},
+      {req:'l2-req',ts:'l2-ts',act:'l2-act',id:'l2-id',cs:'l2-cs',sc:'l2-sc',vrd:'l2-vrd'},
+      {req:'l3-req',ts:'l3-ts',act:'l3-act',id:'l3-id',cs:'l3-cs',sc:'l3-sc',vrd:'l3-vrd'},
+      {req:'l4-req',ts:'l4-ts',act:'l4-act',id:'l4-id',cs:'l4-cs',sc:'l4-sc',vrd:'l4-vrd'},
+      {req:'l5-req',ts:'l5-ts',act:'l5-act',id:'l5-id',cs:'l5-cs',sc:'l5-sc',vrd:'l5-vrd'},
+      {req:'l6-req',ts:'l6-ts',act:'l6-act',id:'l6-id',cs:'l6-cs',sc:'l6-sc',vrd:'l6-vrd'},
+    ];
+
+    for(var pi=0;pi<LOG_PANELS.length;pi++){
+      LOG_PANELS[pi].pool=shuffle(MASTER);
+      LOG_PANELS[pi].pos=Math.floor(Math.random()*POOL_LEN);
+    }
+
+    function updatePanel(panel){
+      if(panel.pos>=panel.pool.length){panel.pool=shuffle(MASTER);panel.pos=0;}
+      var sc=panel.pool[panel.pos];
+      panel.pos++;
+      var eReq=document.getElementById(panel.req);
+      var eTs=document.getElementById(panel.ts);
+      var eAct=document.getElementById(panel.act);
+      var eId=document.getElementById(panel.id);
+      var eCs=document.getElementById(panel.cs);
+      var eSc=document.getElementById(panel.sc);
+      var eVrd=document.getElementById(panel.vrd);
+      if(!eReq||!eTs||!eAct||!eId||!eCs||!eSc||!eVrd)return;
+      eReq.textContent='req_'+randHex(7);
+      eTs.textContent=nowUTC();
+      eAct.textContent=sc.act;
+      eId.textContent=randId();
+      eCs.textContent=sc.cs;
+      eCs.style.color=sc.csColor;
+      eSc.textContent=sc.sc;
+      eSc.style.color=sc.scColor;
+      eVrd.textContent=sc.vrd;
+      eVrd.className='log-verdict-val '+sc.vClass;
+      /* ── PIPELINE: propagate this scenario downstream to execution table ── */
+      pushToExecutionTable(sc);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       EXECUTION TABLE PIPELINE
+       Architecture: MASTER → updatePanel() → pushToExecutionTable() → table
+       The table is PASSIVE. It only receives events from log panels.
+       No independent data source. No direct MASTER access.
+    ═══════════════════════════════════════════════════════════════════ */
+
+    /* ── Enrichment helpers (table-only, do not affect scenario verdict) ── */
+    function edtRandHex(n){var s='';for(var i=0;i<n;i++)s+='0123456789abcdef'[Math.floor(Math.random()*16)];return s;}
+    function edtRandInt(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+
+    var EDT_CAT_MAP=[
+      [/voice|speech|audio|podcast|tts/i,'VOICE'],
+      [/face|facial|biometric|iris|fingerprint|retinal|palm|deepfake|likeness|gait|cctv/i,'BIOMETRIC'],
+      [/health|medical|clinical|genomic|dna|patient|drug|therapy|disease|diagnostic|biometric signal|brainwave|neurolog/i,'HEALTH'],
+      [/financ|credit|loan|payment|bank|spend|transaction|wealth|insurance|income|purchase|billing|portfolio/i,'FINANCE'],
+      [/location|gps|proximity|geo|tracking|movement|route|travel|navigation|border/i,'LOCATION'],
+      [/security|audit|log|encrypt|access|api|model|pipeline|injection|privilege|credential|endpoint|infrastructure/i,'SECURITY'],
+      [/content|generat|synth|narrative|article|fake|phish|scam|persona|review|propaganda|copyright|training dataset/i,'CONTENT'],
+    ];
+    function edtCategory(act){
+      for(var i=0;i<EDT_CAT_MAP.length;i++){if(EDT_CAT_MAP[i][0].test(act))return EDT_CAT_MAP[i][1];}
+      return 'DATA';
+    }
+
+    var EDT_RISK_MAP=[
+      [/deepfake|clone|impersonat|cctv|recreate.*deceased|nude|criminal|identity.*match|face.*crowd/i,'CRITICAL'],
+      [/biometric|iris|fingerprint|retinal|palm|genomic|dna|health|medical|clinical|patient|therapy|disease|brainwave|neurolog/i,'HIGH'],
+      [/financ|credit|loan|payment|bank|spend|transaction|wealth|insurance|income|profil|scoring/i,'MEDIUM'],
+      [/analytics|log|audit|recommendation|personali|search|preference|journey|metadata|heatmap/i,'LOW'],
+    ];
+    function edtRisk(act){
+      for(var i=0;i<EDT_RISK_MAP.length;i++){if(EDT_RISK_MAP[i][0].test(act))return EDT_RISK_MAP[i][1];}
+      return 'MEDIUM';
+    }
+
+    function edtReason(cs,sc,act){
+      if(cs==='VERIFIED')return 'VALID_CONSENT';
+      if(cs==='NOT FOUND')return 'CONSENT_NOT_FOUND';
+      if(cs==='EXPIRED')return 'CONSENT_EXPIRED';
+      if(cs==='WITHDRAWN')return 'CONSENT_WITHDRAWN';
+      if(cs==='SCOPE MISMATCH'){
+        var prov=sc&&sc!=='n/a'?sc.replace('scope:',''):'none';
+        return 'SCOPE_MISMATCH:'+edtCategory(act).toLowerCase()+'/'+prov;
+      }
+      return 'POLICY_BLOCK';
+    }
+
+    var EDT_CAGE_VALID=['2m ago','4m ago','8m ago','12m ago','15m ago','22m ago','31m ago','45m ago','1h ago','2h ago','3h ago'];
+    function edtConsentAge(cs){
+      if(cs==='VERIFIED')return EDT_CAGE_VALID[edtRandInt(0,EDT_CAGE_VALID.length-1)];
+      if(cs==='EXPIRED')return 'expired ('+edtRandInt(24,72)+'h)';
+      return 'n/a';
+    }
+
+    /* ── Stats (only updated when table receives a row) ── */
+    var edtStats={total:0,allowed:0,blocked:0,latencies:[]};
+    function edtUpdateStats(isAllowed,lat){
+      edtStats.total++;
+      if(isAllowed)edtStats.allowed++;else edtStats.blocked++;
+      edtStats.latencies.push(lat);
+      if(edtStats.latencies.length>60)edtStats.latencies.shift();
+      var avg=Math.round(edtStats.latencies.reduce(function(a,b){return a+b;},0)/edtStats.latencies.length);
+      var ap=Math.round(edtStats.allowed/edtStats.total*100);
+      var elT=document.getElementById('edt-stat-total');
+      var elA=document.getElementById('edt-stat-allowed-pct');
+      var elB=document.getElementById('edt-stat-blocked-pct');
+      var elL=document.getElementById('edt-stat-latency');
+      if(elT)elT.textContent=edtStats.total.toLocaleString();
+      if(elA)elA.textContent=ap+'%';
+      if(elB)elB.textContent=(100-ap)+'%';
+      if(elL)elL.textContent=avg+'ms';
+    }
+
+    /* ── Build row from the EXACT scenario passed by log panel ── */
+    /* verdict, act, cs, sc are taken verbatim — only enrichment fields are generated ── */
+    function edtBuildRow(sc){
+      var isAllowed=sc.vrd==='ALLOWED';
+      var lat=edtRandInt(8,120);
+      var reqId='req_'+edtRandHex(6);
+      var traceId='trace_'+edtRandHex(12);
+      var cat=edtCategory(sc.act);
+      var risk=edtRisk(sc.act);
+      var reason=edtReason(sc.cs,sc.sc,sc.act);
+      var cage=edtConsentAge(sc.cs);
+      var riskCls={'LOW':'badge-low','MEDIUM':'badge-medium','HIGH':'badge-high','CRITICAL':'badge-critical'}[risk]||'badge-medium';
+      var csCls=isAllowed?'edt-consent-found':(sc.cs==='EXPIRED'?'edt-consent-expired':sc.cs==='SCOPE MISMATCH'?'edt-consent-mismatch':'edt-consent-missing');
+
+      /* tooltip — strictly mirrors the same scenario data */
+      var tip;
+      if(!isAllowed){
+        tip='<strong>Violation Detail</strong>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Consent:</span><span class="edt-tooltip-val-block">'+sc.cs+'</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Required scope:</span><span class="edt-tooltip-val-block">'+cat.toLowerCase()+'</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Provided:</span><span class="edt-tooltip-val-block">'+(sc.sc!=='n/a'?sc.sc:'none')+'</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Reason:</span><span class="edt-tooltip-val-block">'+reason+'</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Decision:</span><span class="edt-tooltip-val-block">BLOCKED</span></div>';
+      } else {
+        tip='<strong>Execution Permitted</strong>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Consent:</span><span class="edt-tooltip-val-ok">VERIFIED</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Scope:</span><span class="edt-tooltip-val-ok">'+sc.sc+'</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Reason:</span><span class="edt-tooltip-val-ok">VALID_CONSENT</span></div>'+
+          '<div class="edt-tooltip-row"><span class="edt-tooltip-key">Decision:</span><span class="edt-tooltip-val-ok">ALLOWED</span></div>';
+      }
+
+      var tr=document.createElement('tr');
+      tr.className=(isAllowed?'row-allowed':'row-blocked')+' edt-row-updating';
+      tr.innerHTML=
+        '<td class="edt-action"><div class="edt-tooltip-wrap">'+sc.act+'<div class="edt-tooltip">'+tip+'</div></div></td>'+
+        '<td class="'+csCls+'">'+sc.cs+'</td>'+
+        '<td class="'+(isAllowed?'edt-scope-ok':'edt-scope-na')+'">'+sc.sc+'</td>'+
+        '<td class="edt-arrow" aria-hidden="true">→</td>'+
+        '<td class="edt-reason '+(isAllowed?'edt-reason-allowed':'edt-reason-blocked')+'">'+reason+'</td>'+
+        '<td class="edt-mono-sm edt-latency">'+lat+'ms</td>'+
+        '<td class="edt-mono-sm">'+reqId+'</td>'+
+        '<td class="edt-mono-sm" style="font-size:0.62rem">'+traceId+'</td>'+
+        '<td><span class="edt-badge '+riskCls+'">'+risk+'</span></td>'+
+        '<td class="edt-mono-sm">'+cage+'</td>'+
+        '<td class="'+(isAllowed?'edt-decision-allowed':'edt-decision-blocked')+'">'+sc.vrd+'</td>';
+
+      setTimeout(function(){tr.className=isAllowed?'row-allowed':'row-blocked';},600);
+      edtUpdateStats(isAllowed,lat);
+      return tr;
+    }
+
+    /* ── Insert at top of table, cap at 8 rows ── */
+    function edtInsertRow(sc){
+      var tbody=document.getElementById('edt-tbody');
+      if(!tbody)return;
+      var row=edtBuildRow(sc);
+      tbody.insertBefore(row,tbody.firstChild);
+      while(tbody.children.length>8)tbody.removeChild(tbody.lastChild);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       EXECUTION QUEUE — global FIFO
+       Source: ONLY log panel events via enqueueExecutionEvent().
+       Consumer: processExecutionQueue() — ticks every 1.2–2.0s,
+                 processes an event only if it has aged ≥1500ms.
+       The table NEVER reads MASTER. It is purely event-driven.
+    ═══════════════════════════════════════════════════════════════════ */
+    var EXECUTION_QUEUE=[];
+
+    /* Called by updatePanel() after every log panel DOM update.
+       Stores a shallow copy of the scenario with a queued-at timestamp.
+       Original fields (act, cs, sc, vrd) are preserved verbatim. */
+    function enqueueExecutionEvent(sc){
+      EXECUTION_QUEUE.push({
+        act:sc.act,
+        cs:sc.cs,
+        csColor:sc.csColor,
+        sc:sc.sc,
+        scColor:sc.scColor,
+        vrd:sc.vrd,
+        vClass:sc.vClass,
+        _queuedAt:Date.now()
+      });
+    }
+
+    /* Single pipeline entry point — called ONLY from updatePanel() */
+    function pushToExecutionTable(sc){
+      enqueueExecutionEvent(sc);
+    }
+
+    /* processExecutionQueue is now managed by startEnforcementDemo() via IntersectionObserver */
+    /* The queue processor runs only when the enforcement demo section is visible */
+
+    /* ── IntersectionObserver: start animations only when demo enters viewport ── */
+    var _demoStarted=false;
+    var _demoQueueTimer=null;
+    var _demoPanelTimers=[];
+
+    function startEnforcementDemo(){
+      if(_demoStarted)return;
+      _demoStarted=true;
+
+      /* Start the execution queue processor */
+      (function tickQueue(){
+        if(EXECUTION_QUEUE.length>0){
+          var batchSize=EXECUTION_QUEUE.length>5?3:Math.random()<0.6?2:1;
+          for(var i=0;i<batchSize;i++){
+            if(EXECUTION_QUEUE.length===0)break;
+            edtInsertRow(EXECUTION_QUEUE.shift());
+          }
+        }
+        _demoQueueTimer=setTimeout(tickQueue,200+Math.random()*200);
+      })();
+
+      /* Start log panel rotation */
+      var INIT_DELAYS=[0,680,1420,2190,910,1650,2870];
+      for(var li=0;li<LOG_PANELS.length;li++){
+        (function(panel,delay){
+          _demoPanelTimers.push(setTimeout(function(){
+            updatePanel(panel);
+            (function loop(){
+              var next=2500+Math.floor(Math.random()*1500);
+              _demoPanelTimers.push(setTimeout(function(){updatePanel(panel);loop();},next));
+            })();
+          },delay));
+        })(LOG_PANELS[li],INIT_DELAYS[li]);
+      }
+    }
+
+    /* Observe the enforcement demo section */
+    var _demoTarget=document.getElementById('enforcement-demo');
+    if(_demoTarget&&'IntersectionObserver' in window){
+      var _obs=new IntersectionObserver(function(entries){
+        if(entries[0].isIntersecting){
+          startEnforcementDemo();
+          _obs.disconnect();
+        }
+      },{threshold:0.1});
+      _obs.observe(_demoTarget);
+    } else {
+      /* Fallback for browsers without IntersectionObserver */
+      startEnforcementDemo();
+    }
+
+    /* ── Range slider scrolls the enforcement table ── */
+    (function(){
+      var wrapper = document.getElementById('edt-scroll-wrapper');
+      var range   = document.getElementById('edt-range-scroll');
+      if(!wrapper || !range) return;
+
+      function updateRange(){
+        var maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+        range.max   = maxScroll > 0 ? maxScroll : 0;
+        range.value = wrapper.scrollLeft;
+      }
+
+      wrapper.addEventListener('scroll', function(){
+        range.value = wrapper.scrollLeft;
+      }, {passive:true});
+
+      range.addEventListener('input', function(){
+        wrapper.scrollLeft = range.value;
+      });
+
+      window.addEventListener('load', updateRange);
+      window.addEventListener('resize', updateRange);
+      /* Also update after demo rows are inserted (table grows) */
+      updateRange();
+    })();
+
+  });
+})();
+</script>
+</body>
+</html>
