@@ -27,9 +27,9 @@ It is an execution constraint.
 
 ## Start Here
 
-- [Read Whitepaper](./docs/whitepaper.html)
-- [Explore Core Standard](./docs/core-standard.html)
-- [Browse Full Corpus](./docs/index.html)
+- [Read Whitepaper](https://qodiqa.github.io/qodiqa/index.html)
+- [Explore Core Standard](https://qodiqa.github.io/qodiqa/index.html)
+- [Browse Full Corpus](https://qodiqa.github.io/qodiqa/index.html)
 
 ---
 
