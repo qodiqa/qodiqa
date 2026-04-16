@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Non-Compliance Conditions and Failure Modes · v1.0</title>
+<meta name="description" content="QODIQA Non-Compliance Conditions and Failure Modes - Deterministic Runtime Consent Enforcement. April 2026. Formal classification of invalid system states, enforcement failures, and certification invalidation conditions.">
+<meta property="og:title" content="QODIQA — Non-Compliance Conditions and Failure Modes">
+<meta property="og:description" content="Deterministic classification of non-compliance conditions, failure modes, and certification invalidation triggers for QODIQA-conformant systems.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+.doc-section .doc-section:first-of-type { margin-top: 24px; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.68;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.62; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+
+/* ============================================================
+   FAILURE CONDITION BLOCKS
+   ============================================================ */
+.failure-block {
+  background: #F0EDEA;
+  border: 1px solid #C8C4BE;
+  border-left: 3px solid #8C3A2A;
+  padding: 18px 24px;
+  margin: 12px 0 20px;
+  overflow: hidden;
+}
+
+.failure-block-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8C3A2A;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.90;
+}
+
+.failure-block p {
+  font-size: 0.905rem;
+  margin: 0 0 6px;
+  line-height: 1.62;
+  text-align: left;
+  hyphens: none;
+}
+
+.failure-block p:last-child { margin-bottom: 0; }
+
+.failure-block .fc-row {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  column-gap: 16px;
+  align-items: start;
+  padding-bottom: 6px;
+}
+
+.failure-block .fc-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  margin-bottom: 6px;
+}
+
+.failure-block .fc-key {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding-top: 2px;
+}
+
+.failure-block .fc-val {
+  color: var(--text);
+  font-size: 0.89rem;
+  line-height: 1.6;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+/* Severity level badges */
+.severity-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.sev-critical {
+  background: #3B0F0A;
+  color: #F0A090;
+  border: 1px solid rgba(240,160,144,0.20);
+}
+
+.sev-major {
+  background: #2A1E06;
+  color: #D4A84B;
+  border: 1px solid rgba(212,168,75,0.20);
+}
+
+.sev-minor {
+  background: #111820;
+  color: #7A9AB8;
+  border: 1px solid rgba(122,154,184,0.20);
+}
+
+/* Mobile: failure block stacking */
+@media (max-width: 768px) {
+  .failure-block .fc-row { grid-template-columns: 1fr; gap: 2px; }
+  .failure-block .fc-key { text-align: left; }
+  .failure-block { padding: 16px 18px; margin: 12px 0 16px; }
+  .failure-block .fc-row:not(:last-child) { padding-bottom: 8px; margin-bottom: 8px; }
+  p, li { text-align: left; hyphens: none; }
+  .doc-section { margin-top: 28px; }
+  .doc-section:has(.section-divider) { margin-top: 40px; }
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Non-Compliance Conditions<br>and <span class="italic-part">Failure Modes</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Failure Classification Specification &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Formal classification of invalid system states, enforcement failure modes, and certification invalidation conditions within the runtime consent enforcement model.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Scope</a>
+      <a class="nav-item" href="#s2">2. Normative Foundations</a>
+      <a class="nav-item" href="#s3">3. Definition of Non-Compliance</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Hard Non-Compliance</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Soft Non-Compliance</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Conditional Non-Compliance</a>
+      <a class="nav-item" href="#s3a">3A. Failure State Transition Model</a>
+      <a class="nav-item" href="#s4">4. Failure Mode Taxonomy</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Enforcement Failure</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Decision Integrity Failure</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Data Integrity Failure</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Control Plane Failure</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Audit Failure</a>
+      <a class="nav-item sub" href="#s4-6">4.6 Cryptographic Failure</a>
+      <a class="nav-item sub" href="#s4-7">4.7 Boundary Failure</a>
+      <a class="nav-item" href="#s5">5. Deterministic Failure Conditions</a>
+      <a class="nav-item" href="#s6">6. Fail-Closed Requirements</a>
+      <a class="nav-item" href="#s7">7. Non-Compliance Severity Levels</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Level 1 - Critical</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Level 2 - Major</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Level 3 - Minor</a>
+      <a class="nav-item" href="#s8">8. Certification Impact</a>
+      <a class="nav-item" href="#s9">9. Detection and Verifiability</a>
+      <a class="nav-item" href="#s10">10. Prohibited System Behaviors</a>
+      <a class="nav-item" href="#s11">11. Recovery Constraints</a>
+      <a class="nav-item" href="#s12">12. Residual Failure Surfaces</a>
+      <a class="nav-item" href="#s13">13. Conformance Requirements</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document defines the invalid states, failure modes, and non-compliance conditions of systems implementing the QODIQA deterministic runtime consent enforcement model. It classifies all conditions under which a system fails to enforce consent correctly, fails to produce verifiable enforcement decisions, or otherwise violates the invariants established by the QODIQA normative corpus. This document operates exclusively as a fail-closed enforcement model: any condition not positively confirmed as compliant is treated as non-compliant. It does not provide guidance, recommendations, or implementation advice. It defines states that are impermissible, conditions that invalidate conformance, and triggers that require certification revocation.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1: SCOPE -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Scope</h2>
+
+        <p>This document applies to all systems claiming conformance with the QODIQA standard, including systems under evaluation, systems holding active certification, and systems in production deployment. The scope encompasses the following enforcement surfaces:</p>
+
+        <ul>
+          <li>The runtime enforcement layer and all enforcement decision pathways</li>
+          <li>The policy evaluation engine and all policy resolution mechanisms</li>
+          <li>All interactions with the consent registry, including read, write, and validation operations</li>
+          <li>The enforcement gateway and all request interception and disposition mechanisms</li>
+          <li>The audit and logging subsystem and all record production pathways</li>
+          <li>The cryptographic subsystem and all signing, verification, and key management operations</li>
+        </ul>
+
+        <p>This document governs failure and non-compliance states only. It does not define conformant behavior. Conformant behavior is defined in the QODIQA Core Standard and the 68-Point Enforcement Framework. This document defines the conditions under which conformance is absent, invalidated, or suspended.</p>
+
+        <p>This document is normative. All conditions defined herein SHALL be treated as binding constraints on systems claiming QODIQA conformance.</p>
+      </div>
+
+      <!-- SECTION 2: NORMATIVE FOUNDATIONS -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Normative Foundations</h2>
+
+        <p>All failure conditions defined in this document derive from violations of the invariants established by the following QODIQA corpus documents. These documents are incorporated by reference and are not redefined herein:</p>
+
+        <ul>
+          <li><strong>QODIQA Core Standard for Deterministic Runtime Consent Enforcement</strong> - establishes the mandatory behavioral invariants of a conformant enforcement system.</li>
+          <li><strong>QODIQA 68-Point Enforcement Framework</strong> - enumerates the specific enforcement obligations against which non-compliance is measured.</li>
+          <li><strong>QODIQA Certification Framework for Deterministic Runtime Consent Enforcement</strong> - defines certification levels, assessment criteria, and revocation procedures.</li>
+          <li><strong>QODIQA Conformance Test Suite</strong> - specifies the observable test conditions that verify or refute conformance claims.</li>
+          <li><strong>QODIQA Threat Model and Abuse Case Analysis</strong> - defines the adversarial conditions and attack surfaces against which enforcement invariants must hold.</li>
+          <li><strong>QODIQA Security and Cryptographic Profile</strong> - establishes the cryptographic requirements whose violation constitutes a failure condition.</li>
+          <li><strong>QODIQA Risk and Assumption Disclosure Annex</strong> - identifies residual risk surfaces referenced in Section 12 of this document.</li>
+        </ul>
+
+        <p>A failure condition is present whenever a system state, transition, or output violates an invariant established by any of the above documents. This document classifies such violations. It does not establish new invariants.</p>
+      </div>
+
+      <!-- SECTION 3: DEFINITION OF NON-COMPLIANCE -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Definition of Non-Compliance</h2>
+
+        <p>Non-compliance is the state of a system in which one or more required invariants are not satisfied. Non-compliance is not a gradient. A system is either compliant or non-compliant with respect to each invariant individually. Partial compliance with respect to an invariant is classified as non-compliance.</p>
+
+        <p>Non-compliance occurs in the following conditions:</p>
+
+        <ul>
+          <li>A required invariant is not enforced by the system.</li>
+          <li>Enforcement occurs but is subsequently bypassed, overridden, or rendered ineffective.</li>
+          <li>The outcome of enforcement is indeterminate - the system cannot produce a definitive allow or deny decision.</li>
+          <li>The enforcement decision is not externally verifiable - no auditable record is produced, or existing records are insufficient for verification.</li>
+        </ul>
+
+        <p>Non-compliance is categorized as follows.</p>
+
+        <div id="s3-1" class="doc-section">
+          <h3>3.1 Hard Non-Compliance</h3>
+          <p>Hard non-compliance is a deterministic violation of a required invariant. The violation is observable, reproducible, and verifiable without inference. Hard non-compliance includes: execution proceeding without a completed consent check; a consent check returning a deny decision that is not enforced; enforcement being bypassed by an alternate execution path; and logs that are absent, truncated, or non-append-only.</p>
+          <p>Hard non-compliance results in immediate loss of conformance status. No cure period applies.</p>
+        </div>
+
+        <div id="s3-2" class="doc-section">
+          <h3>3.2 Soft Non-Compliance</h3>
+          <p>Soft non-compliance is a condition in which the system cannot demonstrate that a required invariant is satisfied. The violation may not be directly observable, but the absence of verifiable proof of compliance constitutes non-compliance. Soft non-compliance includes: enforcement decisions that are not signed or cryptographically attributable; audit logs that exist but cannot be verified for integrity; and consent states that are asserted but not backed by registry-confirmed records.</p>
+          <p>Soft non-compliance results in loss of conformance status. A system cannot claim conformance on the basis of undemonstratable compliance.</p>
+        </div>
+
+        <div id="s3-3" class="doc-section">
+          <h3>3.3 Conditional Non-Compliance</h3>
+          <p>Conditional non-compliance is a violation that is contingent on system state, operational context, or input conditions. The system may satisfy an invariant under nominal conditions but fail under specific states. Conditional non-compliance includes: enforcement decisions that diverge when the consent registry is unavailable; policy evaluation that produces different results for structurally identical inputs across execution instances; and audit logging that fails under high throughput or degraded infrastructure conditions.</p>
+          <p>Conditional non-compliance results in loss of conformance status for all states in which the invariant is violated. A conformant system MUST satisfy all required invariants under all defined operating conditions, including degraded conditions.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 3A: FAILURE STATE TRANSITION MODEL -->
+      <div id="s3a" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3A</span>
+        <h2><a class="anchor-link" href="#s3a">#</a>Failure State Transition Model</h2>
+
+        <p>This section defines the four discrete states in which a QODIQA-conformant system may exist with respect to compliance status, and the deterministic conditions that govern transitions between those states. State transitions are not discretionary. Each transition is triggered by a defined condition and results in a required system response.</p>
+
+        <h3>Compliant State</h3>
+        <p>A system is in the Compliant State when all of the following conditions are simultaneously satisfied: all required invariants are enforced; all enforcement decisions are deterministic, signed, and auditable; the consent registry is reachable and synchronized within the permitted staleness threshold; the audit log is append-only, integrity-protected, and externally verifiable; and no failure mode defined in Section 4 is active. Certification is valid and operative in this state.</p>
+
+        <h3>Degraded State</h3>
+        <p>A system enters the Degraded State when one or more operational conditions are impaired but no enforcement invariant has yet been violated. Conditions that may produce a Degraded State include: elevated registry synchronization latency approaching the staleness threshold; key management system response times approaching the defined timeout; or audit log write latency approaching the maximum permitted delay. A system in the Degraded State MUST alert governance and MUST apply heightened monitoring. If any impaired condition crosses its defined threshold, the system MUST immediately transition to the Non-Compliant State. The system MUST NOT remain in the Degraded State indefinitely. The Degraded State does not permit execution on a permissive basis; fail-closed requirements remain fully operative.</p>
+
+        <h3>Non-Compliant State</h3>
+        <p>A system enters the Non-Compliant State when one or more invariants are violated, as defined in Section 3 and Section 4. The Non-Compliant State is triggered by any active failure condition classified under the taxonomy in Section 4, or by any deterministic trigger condition defined in Section 5. Upon entering the Non-Compliant State, the system MUST deny all execution requests, MUST produce an observable signal identifying the failure condition, and MUST NOT resume enforcement without completing the re-validation process defined in Section 11. Certification is suspended upon entry to the Non-Compliant State. The severity of the non-compliance condition, as classified in Section 7, determines whether the transition is from suspension to revocation.</p>
+
+        <h3>Certification Revoked State</h3>
+        <p>A system enters the Certification Revoked State when a Level 1 non-compliance condition is confirmed, or when a Level 2 condition is not remediated within the period specified by the Certification Framework, resulting in escalation. In this state, the system has no valid certification. The system MUST NOT represent itself as QODIQA-conformant or reference its prior certification. No auto-recovery, operator action, or remediation restores certification status in this state. A new certification process, initiated under the QODIQA Certification Framework, is the sole path to re-entering the Compliant State from the Certification Revoked State.</p>
+
+        <h3>Deterministic Transition Rules</h3>
+        <p>The following transitions are defined and are non-discretionary:</p>
+        <ul>
+          <li><strong>Compliant to Degraded:</strong> One or more operational conditions approach but have not crossed a defined invariant threshold. Triggered by monitoring signals. Does not require external notification.</li>
+          <li><strong>Compliant or Degraded to Non-Compliant:</strong> An invariant threshold is crossed or a failure condition defined in Section 4 becomes active. Triggered deterministically by the conditions in Table 5-A. Requires immediate fail-closed enforcement and certification suspension notification.</li>
+          <li><strong>Non-Compliant to Compliant:</strong> All failure conditions are resolved and the system has completed the re-validation process under Section 11. Requires positive confirmation by the certification body. Not achievable through self-attestation.</li>
+          <li><strong>Non-Compliant to Certification Revoked:</strong> A Level 1 condition is confirmed, or a Level 2 condition is not remediated within the required period. Triggered by the certification body under the Certification Framework. Requires initiation of a new certification process to exit.</li>
+          <li><strong>Certification Revoked to Compliant:</strong> Only achievable through successful completion of a full re-certification process under the QODIQA Certification Framework. All prior enforcement records from the revocation period are considered invalid.</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 4: FAILURE MODE TAXONOMY -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Failure Mode Taxonomy</h2>
+
+        <p>The following taxonomy classifies all failure modes recognized within the QODIQA enforcement model. Each failure mode class identifies distinct categories of invariant violation. A system may simultaneously exhibit failures across multiple classes.</p>
+
+        <!-- 4.1 -->
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Enforcement Failure</h3>
+          <p>Enforcement failure occurs when the enforcement layer does not produce or apply a correct enforcement decision for an incoming execution request.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">EF-1 - Consent Check Absent</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An execution request proceeds to the target system without a consent check having been completed by the enforcement gateway.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Audit log contains an execution record with no corresponding consent evaluation record. Enforcement gateway emits no decision artifact for the request.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Unauthorized execution. Hard non-compliance. Immediate loss of conformance status.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-ENF-01 (Core Standard Section 4.1 - Mandatory Consent Evaluation)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-EF-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">EF-2 - Consent Checked but Not Enforced</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">A consent check is completed and produces a deny decision, but the request is permitted to proceed.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Audit log contains a deny decision record followed by an execution record for the same request identifier within the same session context.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement decision ignored. Hard non-compliance. Immediate loss of conformance status.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-ENF-02 (Core Standard Section 4.2 - Enforcement Decision Binding)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-EF-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">EF-3 - Enforcement Decision Ignored</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The enforcement gateway produces a decision artifact, but downstream components do not act on that decision.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Enforcement gateway log shows decision issued; execution log shows request completed without reference to enforcement decision artifact.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement bypassed at downstream boundary. Hard non-compliance.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-ENF-03 (68-Point Framework Section 1.3 - Downstream Enforcement Obligation)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-EF-03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.2 -->
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Decision Integrity Failure</h3>
+          <p>Decision integrity failure occurs when the policy evaluation engine produces incorrect, inconsistent, or non-deterministic outputs for a given input set.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DI-1 - Policy Evaluation Inconsistency</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">Structurally identical inputs to the policy engine produce different decisions across two or more evaluation instances under identical policy state.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Replay of a recorded request against the same policy version yields a different decision than the original evaluation log records.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Non-deterministic enforcement. Hard non-compliance.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DEC-01 (Core Standard Section 5.1 - Deterministic Policy Evaluation)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DI-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DI-2 - Non-Deterministic Output</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The policy engine returns an output that is neither a definitive allow nor a definitive deny for a valid, well-formed input.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Decision artifact is absent, malformed, null, or contains an unrecognized decision value. Conformance test suite DI-series tests fail.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Indeterminate enforcement state. System MUST apply deny. Soft non-compliance if deny is applied; hard non-compliance if execution proceeds.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DEC-02 (Core Standard Section 5.2 - Binary Decision Requirement)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DI-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DI-3 - State Desynchronization</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The policy engine evaluates against a consent state that does not match the current consent registry state due to cache staleness, replication lag, or partial update failure.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Consent record timestamp in enforcement decision artifact predates the most recent registry update for the subject consent identifier.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement based on stale state. Conditional non-compliance. Decisions issued against desynchronized state are invalid.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DEC-03 (Core Standard Section 5.3 - Registry State Currency)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DI-03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.3 -->
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Data Integrity Failure</h3>
+          <p>Data integrity failure occurs when the consent state, registry data, or enforcement inputs have been corrupted, altered, or cannot be verified as authentic.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DAI-1 - Corrupted Consent State</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The consent record for a subject cannot be read, is structurally invalid, or fails integrity verification at the time of policy evaluation.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Consent record fails schema validation or cryptographic integrity check. Policy engine cannot complete evaluation.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Consent resolution failure. System MUST apply deny. Hard non-compliance if execution proceeds.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DAT-01 (Core Standard Section 6.1 - Consent Record Integrity)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DAI-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DAI-2 - Stale Registry Data</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The enforcement layer operates against registry data that has exceeded the maximum permitted staleness threshold defined in the QODIQA Core Standard.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Registry synchronization timestamp in enforcement context exceeds permitted staleness window. Registry replication health check fails.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Conditional non-compliance. All decisions issued during the staleness window are invalid and must be treated as unenforced.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DAT-02 (Core Standard Section 6.2 - Maximum Staleness Threshold)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DAI-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">DAI-3 - Tampered Inputs</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">Enforcement inputs - including request context, subject identity claims, or consent token - have been modified after initial capture and before policy evaluation.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Input bundle signature verification fails. Hash of enforcement input context does not match the hash recorded at capture time.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement decision issued on invalid inputs. Hard non-compliance. Decision artifact is void.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-DAT-03 (68-Point Framework Section 2.4 - Input Bundle Integrity)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-DAI-03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.4 -->
+        <div id="s4-4" class="doc-section">
+          <h3>4.4 Control Plane Failure</h3>
+          <p>Control plane failure occurs when a critical system component required for enforcement is unavailable, degraded, or not responding within the permitted time constraints.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CP-1 - Registry Unavailable</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The consent registry is unreachable or returns no valid response within the maximum resolution timeout defined in the Core Standard.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Registry health check returns failure. Enforcement gateway cannot complete consent resolution. Execution queued or attempted without resolved consent state.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Consent unresolvable. System MUST apply deny to all requests during the unavailability window. Any execution permitted during this window constitutes hard non-compliance.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CTL-01 (Core Standard Section 7.1 - Registry Availability Requirement)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CP-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CP-2 - Policy Engine Unavailable</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The policy evaluation engine is unreachable, non-responsive, or produces no output for submitted evaluation requests.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Policy engine health endpoint returns failure or timeout. No decision artifact is produced for incoming enforcement requests.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement decision impossible. System MUST apply deny. Any execution permitted constitutes hard non-compliance.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CTL-02 (Core Standard Section 7.2 - Policy Engine Availability Requirement)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CP-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CP-3 - Key Management Failure</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The key management system is unavailable, returns invalid material, or cannot issue keys required for signing or verification of enforcement artifacts.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Signing operations fail. Verification operations return invalid results. Key material retrieval timeout or error.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement artifacts cannot be cryptographically attributed. All decisions issued without valid signatures are void. Soft non-compliance transitions to hard non-compliance if execution proceeds.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CTL-03 (Security and Cryptographic Profile Section 3.1 - Key Material Availability)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CP-03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.5 -->
+        <div id="s4-5" class="doc-section">
+          <h3>4.5 Audit Failure</h3>
+          <p>Audit failure occurs when the audit and logging subsystem fails to produce complete, verifiable, and tamper-evident records of all enforcement operations.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">AF-1 - Missing Logs</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An enforcement operation completes but no corresponding audit record is produced, or the produced record is absent from the audit store.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Reconciliation of enforcement gateway event count against audit store record count reveals a deficit. Request identifiers present in execution logs are absent from audit logs.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Unverifiable enforcement. Soft non-compliance for each unlogged operation. Operations without audit records cannot be treated as conformant.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-AUD-01 (Core Standard Section 8.1 - Complete Audit Coverage)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-AF-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">AF-2 - Non-Append-Only Logs</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The audit store permits modification, deletion, or overwrite of existing records.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Audit store configuration audit reveals write permissions other than append. Hash-chain verification of log sequence fails at one or more positions.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Audit integrity structurally compromised. Hard non-compliance. The entire audit record for the affected period is considered invalid.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-AUD-02 (Core Standard Section 8.2 - Append-Only Log Requirement)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-AF-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">AF-3 - Tampered Logs</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">One or more audit records have been modified after initial write.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Hash-chain verification failure. Record signature verification failure. Audit record timestamp inconsistency.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Audit integrity breach. Hard non-compliance. All records in the affected sequence are invalid.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-AUD-03 (Core Standard Section 8.3 - Audit Record Immutability)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-AF-03</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">AF-4 - Non-Verifiable Logs</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">Audit records exist but cannot be externally verified due to absent or invalid signatures, unavailable verification keys, or missing hash-chain anchors.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">External audit verification process returns failure or cannot complete. Verification keys are not available to the verifying party.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Soft non-compliance. Records that cannot be externally verified do not satisfy the auditability invariant.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-AUD-04 (68-Point Framework Section 3.4 - External Verifiability)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-AF-04</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.6 -->
+        <div id="s4-6" class="doc-section">
+          <h3>4.6 Cryptographic Failure</h3>
+          <p>Cryptographic failure occurs when the cryptographic mechanisms required for enforcement artifact integrity, audit log integrity, or consent state authentication do not operate correctly.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CF-1 - Invalid Signatures</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An enforcement decision artifact, consent token, or audit record carries a digital signature that fails verification.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Signature verification returns invalid. Verification key does not correspond to the signing key referenced in the artifact header.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Artifact authenticity cannot be established. The artifact is void. If the artifact is a decision, that decision is invalid. Hard non-compliance if voided decision was acted upon.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CRY-01 (Security and Cryptographic Profile Section 4.1 - Artifact Signature Validity)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CF-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CF-2 - Broken Trust Chain</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">The chain of cryptographic trust from the enforcement artifact to the trust anchor defined in the Security and Cryptographic Profile is broken at one or more links.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Trust chain traversal fails. An intermediate certificate or key attestation in the chain is absent, expired, or revoked.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Unattributable enforcement. Hard non-compliance. All artifacts dependent on the broken chain are void.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CRY-02 (Security and Cryptographic Profile Section 4.2 - Trust Chain Continuity)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CF-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">CF-3 - Key Misuse</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">A cryptographic key is used outside its defined purpose, scope, or validity period as specified in the Security and Cryptographic Profile.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Key usage field in certificate or key attestation does not permit the operation performed. Key is expired or its defined scope does not include the signing context.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Cryptographic invariant violated. All artifacts produced using the misused key are void. Hard non-compliance.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-CRY-03 (Security and Cryptographic Profile Section 4.3 - Key Usage Constraints)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-CF-03</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.7 -->
+        <div id="s4-7" class="doc-section">
+          <h3>4.7 Boundary Failure</h3>
+          <p>Boundary failure occurs when enforcement is bypassed by an execution path that does not pass through the enforcement gateway, or when execution occurs in a context that is not subject to enforcement evaluation.</p>
+
+          <div class="failure-block">
+            <span class="failure-block-label">BF-1 - Enforcement Bypass via Alternate Path</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An execution request reaches the target system via a path that does not include the enforcement gateway.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Execution records exist for requests with no corresponding enforcement gateway entry. Network topology analysis reveals direct access routes to protected systems that bypass the enforcement plane.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Complete enforcement bypass. Hard non-compliance. All executions occurring via the bypassed path are unauthorized.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-BND-01 (Core Standard Section 9.1 - Enforcement Boundary Completeness)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-BF-01</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">BF-2 - Shadow Execution Path</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An execution context exists within the system boundary that does not emit observable signals to the enforcement or audit subsystem and is not subject to consent evaluation.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">System boundary analysis identifies execution contexts without enforcement plane registration. Audit log coverage analysis reveals gaps corresponding to specific execution contexts.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Unmonitored execution surface. Hard non-compliance. The existence of a shadow path constitutes a violation independent of whether unauthorized execution has occurred.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-BND-02 (68-Point Framework Section 4.2 - Execution Context Registration)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-BF-02</span>
+            </div>
+          </div>
+
+          <div class="failure-block">
+            <span class="failure-block-label">BF-3 - Side-Channel Execution</span>
+            <div class="fc-row">
+              <span class="fc-key">Condition</span>
+              <span class="fc-val">An action with material effect on the consent-protected resource is achieved through a mechanism other than the protected execution interface, and that mechanism is not subject to enforcement evaluation.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Detection</span>
+              <span class="fc-val">Threat model coverage analysis identifies effect-equivalent access paths not covered by enforcement evaluation. Conformance test suite BF-series tests fail.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Resulting State</span>
+              <span class="fc-val">Enforcement model incomplete. Hard non-compliance. The protected resource is not fully under enforcement control.</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Referenced Invariant</span>
+              <span class="fc-val">INV-BND-03 (Threat Model Section 5.3 - Side-Channel Attack Surface)</span>
+            </div>
+            <div class="fc-row">
+              <span class="fc-key">Conformance Test</span>
+              <span class="fc-val">CTS-BF-03</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: DETERMINISTIC FAILURE CONDITIONS -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Deterministic Failure Conditions</h2>
+
+        <p>The following conditions are defined as deterministic triggers for fail-closed behavior. Each condition is expressed as a verifiable system state. Upon detection of any of these conditions, the system MUST apply the specified resulting state immediately and without exception.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 5-A - Deterministic Failure Trigger Conditions</span>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Trigger Condition</th>
+                <th>Detection Mechanism</th>
+                <th>Required System Response</th>
+                <th>Referenced Invariant</th>
+                <th>Test Mapping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FC-01</td>
+                <td>Consent record for subject cannot be resolved within maximum timeout</td>
+                <td>Registry resolution timeout event</td>
+                <td>MUST deny execution. MUST log unresolvable consent condition.</td>
+                <td>INV-DAT-02, INV-CTL-01</td>
+                <td>CTS-CP-01, CTS-DAI-02</td>
+              </tr>
+              <tr>
+                <td>FC-02</td>
+                <td>Policy evaluation returns indeterminate or null output</td>
+                <td>Decision artifact absent or contains invalid decision value</td>
+                <td>MUST deny execution. MUST NOT treat null as allow.</td>
+                <td>INV-DEC-02</td>
+                <td>CTS-DI-02</td>
+              </tr>
+              <tr>
+                <td>FC-03</td>
+                <td>Enforcement decision artifact signature fails verification</td>
+                <td>Signature verification returns invalid</td>
+                <td>MUST void the artifact. MUST deny execution. MUST log signature failure.</td>
+                <td>INV-CRY-01</td>
+                <td>CTS-CF-01</td>
+              </tr>
+              <tr>
+                <td>FC-04</td>
+                <td>Consent registry is unreachable at time of evaluation</td>
+                <td>Registry health check failure; no response within timeout</td>
+                <td>MUST deny all execution requests until registry is reachable and verified.</td>
+                <td>INV-CTL-01</td>
+                <td>CTS-CP-01</td>
+              </tr>
+              <tr>
+                <td>FC-05</td>
+                <td>Policy engine is unavailable at time of evaluation request</td>
+                <td>Policy engine health failure; no decision artifact produced</td>
+                <td>MUST deny all execution requests until policy engine is available and verified.</td>
+                <td>INV-CTL-02</td>
+                <td>CTS-CP-02</td>
+              </tr>
+              <tr>
+                <td>FC-06</td>
+                <td>Audit log write fails for an enforcement operation</td>
+                <td>Audit subsystem returns write error or no confirmation</td>
+                <td>MUST deny the associated execution. MUST NOT proceed without a confirmed audit record.</td>
+                <td>INV-AUD-01</td>
+                <td>CTS-AF-01</td>
+              </tr>
+              <tr>
+                <td>FC-07</td>
+                <td>Consent record fails integrity check at evaluation time</td>
+                <td>Record hash or signature verification failure</td>
+                <td>MUST deny execution. MUST treat record as invalid. MUST log integrity failure.</td>
+                <td>INV-DAT-01</td>
+                <td>CTS-DAI-01</td>
+              </tr>
+              <tr>
+                <td>FC-08</td>
+                <td>Enforcement input bundle has been modified after capture</td>
+                <td>Input bundle hash mismatch at evaluation time</td>
+                <td>MUST void the evaluation. MUST deny execution. MUST log tampering condition.</td>
+                <td>INV-DAT-03</td>
+                <td>CTS-DAI-03</td>
+              </tr>
+              <tr>
+                <td>FC-09</td>
+                <td>Audit log sequence hash-chain verification fails</td>
+                <td>Hash-chain traversal returns inconsistency at one or more positions</td>
+                <td>MUST flag entire affected sequence as compromised. MUST NOT treat affected records as valid evidence of compliance.</td>
+                <td>INV-AUD-03</td>
+                <td>CTS-AF-03</td>
+              </tr>
+              <tr>
+                <td>FC-10</td>
+                <td>Execution request arrives via path not registered with enforcement gateway</td>
+                <td>Source path not present in enforcement boundary registry</td>
+                <td>MUST deny execution. MUST log boundary violation. MUST alert governance.</td>
+                <td>INV-BND-01</td>
+                <td>CTS-BF-01</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>No failure condition defined in this table permits a fallback to permissive behavior. The absence of a positive, verified enforcement decision is equivalent to a deny decision. Systems MUST be designed such that the default state under uncertainty is execution denial.</p>
+      </div>
+
+      <!-- SECTION 6: FAIL-CLOSED REQUIREMENTS -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Fail-Closed Requirements</h2>
+
+        <p>The QODIQA model is a fail-closed enforcement model. The requirements in this section are absolute. No operational condition, system constraint, availability target, or performance requirement overrides these requirements.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement FC-R1 - No Fallback to Permissive State</div>
+          <p>A system MUST NOT transition from an enforcement state to a permissive state as a result of any failure condition. A system experiencing a failure condition MUST remain in a deny state until the failure condition is resolved and the system has returned to a verified compliant state.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement FC-R2 - No Degraded Permissive Operation</div>
+          <p>A system operating in a degraded mode MUST NOT permit execution of consent-protected requests during that degraded mode. There is no defined degraded operational mode that allows execution. A system that cannot fully enforce consent MUST deny all execution.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement FC-R3 - No Silent Bypass</div>
+          <p>A system MUST NOT permit execution to proceed without a completed enforcement decision, regardless of whether that bypass is caused by a configuration error, infrastructure failure, component unavailability, or operator action. Silent bypass is a hard non-compliance condition independent of its cause.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement FC-R4 - Default Deny Under Uncertainty</div>
+          <p>A system MUST default to denying execution under any condition of uncertainty. Uncertainty includes: inability to resolve consent, inability to evaluate policy, inability to verify enforcement artifact integrity, and inability to write an audit record. No uncertainty condition permits execution.</p>
+        </div>
+
+        <p>These requirements apply without exception to all system states, including startup, shutdown, maintenance, degraded operation, failover, and recovery. A system that satisfies fail-closed requirements under nominal operation but not under exceptional conditions is non-conformant.</p>
+      </div>
+
+      <!-- SECTION 7: NON-COMPLIANCE SEVERITY LEVELS -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Non-Compliance Severity Levels</h2>
+
+        <p>Non-compliance conditions are classified into three severity levels. Severity level determines the immediate required outcome and the certification impact. Severity levels are assigned per the conditions specified below and are not subject to operator interpretation or reclassification.</p>
+
+        <div id="s7-1" class="doc-section">
+          <h3>7.1 Level 1 - Critical Non-Compliance</h3>
+
+          <p><span class="severity-badge sev-critical">Critical</span> A Level 1 condition is a direct violation of a mandatory enforcement invariant that results in unauthorized execution, undetected bypass, or irrecoverable audit failure. Level 1 conditions require no remediation period. They result in immediate loss of conformance status and immediate initiation of certification revocation proceedings.</p>
+
+          <p><strong>Conditions classified as Level 1:</strong></p>
+          <ul>
+            <li>Execution proceeding without a completed consent check (EF-1)</li>
+            <li>A deny decision not enforced and execution permitted (EF-2)</li>
+            <li>Execution bypassing the enforcement gateway via an alternate path (BF-1)</li>
+            <li>Execution via a shadow path not registered with the enforcement plane (BF-2)</li>
+            <li>Audit log records found to be modified after initial write (AF-3)</li>
+            <li>Audit store configuration permitting non-append-only writes (AF-2)</li>
+            <li>Enforcement proceeding on a voided or signature-invalid decision artifact, where execution was permitted (CF-1, CF-2)</li>
+          </ul>
+
+          <p><strong>Required outcome:</strong> Immediate suspension of conformance status. Initiation of certification revocation under the QODIQA Certification Framework. No continued operation as a QODIQA-conformant system. Re-certification required before any compliance claim may be renewed. Each condition listed above SHALL be traceable to its originating invariant and validated through the corresponding Conformance Test Suite mapping.</p>
+        </div>
+
+        <div id="s7-2" class="doc-section">
+          <h3>7.2 Level 2 - Major Non-Compliance</h3>
+
+          <p><span class="severity-badge sev-major">Major</span> A Level 2 condition is a violation of a required invariant that does not result in proven unauthorized execution but renders the system's enforcement decisions unverifiable, unreliable, or structurally unsound. Level 2 conditions result in loss of conformance status and require remediation and re-assessment before conformance status may be restored.</p>
+
+          <p><strong>Conditions classified as Level 2:</strong></p>
+          <ul>
+            <li>Policy evaluation returning inconsistent results for structurally identical inputs (DI-1)</li>
+            <li>State desynchronization between enforcement layer and consent registry (DI-3)</li>
+            <li>Consent registry unavailable, without confirmed fail-closed response (CP-1)</li>
+            <li>Policy engine unavailable, without confirmed fail-closed response (CP-2)</li>
+            <li>Key management failure preventing signing or verification of artifacts (CP-3)</li>
+            <li>Audit records missing for one or more enforcement operations (AF-1)</li>
+            <li>Non-verifiable audit records due to absent or invalid signatures (AF-4)</li>
+            <li>Trust chain broken at one or more links (CF-2)</li>
+            <li>Side-channel execution path identified and not covered by enforcement evaluation (BF-3)</li>
+          </ul>
+
+          <p><strong>Required outcome:</strong> Immediate suspension of conformance status. System is considered non-conformant until the condition is remediated and independently re-assessed. No conformance claim may be maintained while a Level 2 condition is present. Each condition listed above SHALL be traceable to its originating invariant and validated through the corresponding Conformance Test Suite mapping.</p>
+        </div>
+
+        <div id="s7-3" class="doc-section">
+          <h3>7.3 Level 3 - Minor Non-Compliance</h3>
+
+          <p><span class="severity-badge sev-minor">Minor</span> A Level 3 condition is a violation of a structural or procedural requirement that does not directly break enforcement or produce unverifiable decisions, but represents a deviation from normative specification requirements. Level 3 conditions do not by themselves result in loss of conformance status, but MUST be remediated within the timeframe specified in the Certification Framework. A Level 3 condition that is not remediated within the specified period is reclassified as Level 2.</p>
+
+          <p><strong>Conditions classified as Level 3:</strong></p>
+          <ul>
+            <li>Enforcement decision artifacts that satisfy functional requirements but do not conform to the normative artifact schema</li>
+            <li>Audit records that satisfy content requirements but do not conform to the normative record format</li>
+            <li>Registry interaction that satisfies functional requirements but uses a non-normative protocol binding</li>
+            <li>Documentation or configuration artifacts that do not satisfy corpus reference requirements</li>
+          </ul>
+
+          <p><strong>Required outcome:</strong> Documented finding against the conformance record. Remediation plan required within the period specified by the Certification Framework. No immediate suspension of conformance status, subject to escalation conditions above. Each condition listed above SHALL be traceable to its originating invariant and validated through the corresponding Conformance Test Suite mapping.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 8: CERTIFICATION IMPACT -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Certification Impact</h2>
+
+        <p>Failure conditions map to certification outcomes as defined in the QODIQA Certification Framework. The following table specifies the required certification action for each severity level and condition class.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 8-A - Failure Severity to Certification Impact Mapping</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Severity Level</th>
+                <th>Condition Class</th>
+                <th>Certification Action</th>
+                <th>Re-Certification Required</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Level 1 - Critical</td>
+                <td>EF-1, EF-2, BF-1, BF-2, AF-2, AF-3, CF-1 (with execution), CF-2 (with execution)</td>
+                <td>Immediate revocation</td>
+                <td>Yes - full re-certification at applicable level</td>
+              </tr>
+              <tr>
+                <td>Level 2 - Major</td>
+                <td>DI-1, DI-3, CP-1, CP-2, CP-3, AF-1, AF-4, CF-2 (no execution), BF-3</td>
+                <td>Immediate suspension</td>
+                <td>Yes - re-assessment against all affected framework points</td>
+              </tr>
+              <tr>
+                <td>Level 3 - Minor</td>
+                <td>Structural and procedural deviations</td>
+                <td>Documented finding; remediation required within specified period</td>
+                <td>No - unless reclassified to Level 2 due to non-remediation</td>
+              </tr>
+              <tr>
+                <td>Level 2 (escalated from Level 3)</td>
+                <td>Any Level 3 condition not remediated within specified period</td>
+                <td>Immediate suspension</td>
+                <td>Yes - re-assessment against affected framework points</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Certification suspension is distinct from certification revocation. Suspension is a temporary state from which reinstatement is possible upon successful re-assessment. Revocation is a permanent invalidation of the certification record. A revoked certification cannot be reinstated; a new certification process must be initiated.</p>
+
+        <p>The certification body operating under the QODIQA Certification Framework is the sole authority for determining certification status. Operator self-assessment does not constitute certification status restoration. A system remains non-conformant until the certification body issues a positive conformance determination.</p>
+
+        <p>Any misrepresentation of certification status following revocation or suspension, including continued use of conformance claims or QODIQA compliance attestations, constitutes a violation of the Governance Charter and the terms of certification.</p>
+      </div>
+
+      <!-- SECTION 9: DETECTION AND VERIFIABILITY -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Detection and Verifiability Constraints</h2>
+
+        <p>A failure condition that cannot be detected is not exempt from non-compliance classification. The inability to detect a failure condition is itself a non-compliance condition. The following requirements govern detection and verifiability of all failure states.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement DV-R1 - External Testability</div>
+          <p>All failure conditions defined in this document MUST be externally testable. The Conformance Test Suite defines the test procedures for each condition. A system that cannot be subjected to these test procedures is non-conformant with respect to verifiability requirements, independent of whether any failure condition is present.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement DV-R2 - Observable Signals</div>
+          <p>All failure conditions MUST produce observable signals. These signals include: enforcement decision artifacts, audit log records, health status outputs, and error responses. A failure condition that occurs without producing any observable signal constitutes a silent failure and is classified as hard non-compliance (see Section 10).</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement DV-R3 - No Hidden Failure States</div>
+          <p>A system MUST NOT contain operational states in which a failure condition exists but produces no externally observable indication. All system states MUST be enumerable and testable. The existence of internal states not observable through defined interfaces is a boundary failure condition (BF-2).</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement DV-R4 - Failure Signal Integrity</div>
+          <p>Failure signals themselves MUST be integrity-protected. A system that can suppress, forge, or delay failure signals is considered to be in a state of hard non-compliance with respect to the failure condition that the signal would have indicated.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10: PROHIBITED SYSTEM BEHAVIORS -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Prohibited System Behaviors</h2>
+
+        <p>The following behaviors are prohibited in all systems claiming QODIQA conformance. These prohibitions are absolute. No operational justification, performance requirement, or system constraint constitutes a basis for exception.</p>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-1 - Silent Failure</strong>
+          <p>A system MUST NOT fail to enforce consent without producing an observable signal indicating that enforcement did not occur. Silent failure includes: timeout expiry with no recorded outcome; component crash with no logged state transition; and audit write failure with no system-level alarm or fallback.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-2 - Implicit Allow</strong>
+          <p>A system MUST NOT default to allowing execution in the absence of an explicit, verified allow decision. The absence of a deny decision does not constitute an allow decision. An allow decision MUST be explicitly issued, signed, and recorded before execution is permitted.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-3 - Partial Enforcement</strong>
+          <p>A system MUST NOT enforce consent for a subset of requests while permitting uninspected requests to proceed. Partial enforcement is not a degraded mode of operation. It is a non-conformant configuration in which the enforcement boundary is incomplete.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-4 - Logging Without Integrity</strong>
+          <p>A system MUST NOT produce audit log records that are not integrity-protected. Unprotected log records satisfy the volume requirement of logging but not the integrity requirement. Production of unprotected records does not constitute audit compliance.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-5 - Runtime Overrides</strong>
+          <p>A system MUST NOT implement or expose any mechanism by which an enforcement decision can be overridden, bypassed, or suppressed at runtime by an operator, administrator, or automated process. The enforcement decision issued by the policy engine is final for its evaluated context. Runtime override capability constitutes a structural non-compliance condition independent of whether it is exercised.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Prohibited Behavior PB-6 - Compliance Claims Under Suspension or Revocation</strong>
+          <p>A system MUST NOT assert QODIQA conformance, reference QODIQA certification, or represent itself as meeting QODIQA requirements while its certification is suspended or revoked.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 11: RECOVERY CONSTRAINTS -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Recovery Constraints</h2>
+
+        <p>Recovery from a failure condition does not restore conformance status. Recovery and compliance are distinct states. A system that has experienced a failure condition and subsequently returned to operational function has not demonstrated conformance unless it has re-entered a verified compliant state through the processes defined in this section.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RC-R1 - Recovery is Not Compliance</div>
+          <p>A system that resolves a failure condition through automated restart, failover, or operator intervention has not restored conformance. Recovery denotes a return to operational function. Compliance denotes a verified state in which all required invariants are satisfied. These are distinct and recovery does not imply compliance.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RC-R2 - Re-Entry into Verified Compliant State</div>
+          <p>A system MUST re-enter a verified compliant state following any Level 1 or Level 2 failure condition. Re-entry requires: a complete integrity check of all enforcement subsystems; verification that all failure conditions have been resolved; confirmation that no data from the failure period is being treated as valid enforcement evidence; and, for Level 1 conditions, initiation of the re-certification process with the certification body.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RC-R3 - No Auto-Recovery Without Re-Validation</div>
+          <p>A system MUST NOT automatically resume enforcement operations following a Level 1 or Level 2 failure condition without an explicit re-validation step. Auto-recovery mechanisms MUST halt at a deny-all state and require explicit operator confirmation of system integrity before resuming enforcement. An auto-recovery sequence that resumes enforcement without re-validation constitutes an implicit allow condition and is classified as hard non-compliance under PB-2.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RC-R4 - Failure Period Records</div>
+          <p>All enforcement operations attempted during a failure period MUST be treated as unenforced, regardless of whether they completed successfully from an application perspective. Audit records produced during a failure period that cannot be independently verified are not valid evidence of enforcement.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 12: RESIDUAL FAILURE SURFACES -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Residual Failure Surfaces</h2>
+
+        <p>The QODIQA Risk and Assumption Disclosure Annex identifies residual risk surfaces that are acknowledged as present within the QODIQA model and that cannot be fully eliminated through system design. This section defines how such residual surfaces interact with the non-compliance and failure classification framework.</p>
+
+        <p>The existence of a residual failure surface does not constitute permission for that surface to produce non-fail-closed behavior. The following requirements apply to all residual surfaces identified in the Disclosure Annex.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RS-R1 - Fail-Closed Behavior Required Despite Residual Surface</div>
+          <p>A system MUST apply fail-closed behavior on all residual failure surfaces. The acknowledgment of a residual surface in the Disclosure Annex documents its existence; it does not authorize execution in the presence of that surface. If a residual surface manifests as an active failure condition, the system MUST deny execution.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RS-R2 - Residual Surfaces Must Be Observable</div>
+          <p>All residual failure surfaces MUST produce observable signals when active. A residual surface that activates without producing an observable signal constitutes a silent failure under PB-1 and is classified as hard non-compliance.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement RS-R3 - Residual Surface Manifestation Triggers Non-Compliance Classification</div>
+          <p>When a residual failure surface manifests as an active failure condition, the condition is classified under the taxonomy in Section 4 and receives a severity level under Section 7 as if it were any other failure condition. The residual nature of the surface does not modify the severity classification or the required certification impact.</p>
+        </div>
+
+        <p>The distinction between a residual surface and an unmitigated vulnerability is determined by the Disclosure Annex. A failure condition not identified in the Disclosure Annex as a residual surface is classified as an unmitigated vulnerability and is treated as a Level 1 non-compliance condition unless assessment indicates otherwise.</p>
+      </div>
+
+      <!-- SECTION 13: CONFORMANCE REQUIREMENTS -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Conformance Requirements</h2>
+
+        <p>A system is conformant with this document if and only if all of the following conditions are simultaneously satisfied. Partial satisfaction of the conditions below does not constitute conformance.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Condition CC-1 - Absence of Defined Failure Modes</div>
+          <p>None of the failure modes defined in Section 4 are present in the system. A conformant system has no active enforcement failures, no active decision integrity failures, no active data integrity failures, no active control plane failures, no active audit failures, no active cryptographic failures, and no active boundary failures.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Condition CC-2 - Fail-Closed Under All Failure Triggers</div>
+          <p>All deterministic failure conditions listed in Section 5 result in fail-closed behavior. The system MUST deny execution in response to each trigger condition. Verification of this condition is performed through the Conformance Test Suite failure-condition test series.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Condition CC-3 - Observable and Auditable Failures</div>
+          <p>All failure conditions that occur produce externally observable signals and are recorded in the audit log in a manner that satisfies the integrity requirements of Section 4.5. No failure condition occurs silently. No failure produces an audit record that cannot be independently verified.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Condition CC-4 - Absence of Prohibited Behaviors</div>
+          <p>None of the behaviors enumerated in Section 10 are implemented or achievable in the system. The system contains no silent failure paths, no implicit allow mechanisms, no partial enforcement configurations, no logging without integrity, no runtime override mechanisms, and no capability to misrepresent certification status.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Condition CC-5 - Recovery Compliance</div>
+          <p>The system satisfies all recovery constraints in Section 11. No automated recovery mechanism exists that could restore permissive execution without an explicit re-validation step.</p>
+        </div>
+
+        <p>Conformance with this document is a necessary component of QODIQA certification at any level defined in the Certification Framework. Conformance with this document alone does not constitute full corpus conformance. Systems asserting QODIQA certification MUST satisfy this document in conjunction with all other normative corpus documents.</p>
+
+        <div class="decision-block">
+          <strong>Final Conformance Statement</strong>
+          <p>A system is QODIQA-conformant with respect to this document if and only if conditions CC-1 through CC-5 are all satisfied simultaneously, as verified by the QODIQA Conformance Test Suite under the assessment procedures of the QODIQA Certification Framework. The burden of demonstrating conformance rests with the system operator. The absence of demonstrated non-compliance does not constitute demonstrated compliance.</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative component of the QODIQA specification corpus. It defines the invalid states, failure modes, non-compliance conditions, and certification invalidation triggers applicable to all systems implementing the QODIQA deterministic runtime consent enforcement model.</p>
+
+          <p>This document does not define conformant behavior. It defines exclusively the conditions under which conformance is absent, invalidated, or suspended. It must be read in conjunction with the normative corpus documents from which its failure conditions are derived.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-FCM-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Non-Compliance Conditions and Failure Modes - Deterministic Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Formal Classification of Invalid System States, Enforcement Failures, and Certification Invalidation Conditions</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Failure Classification Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Non-Compliance Conditions and Failure Modes</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-FCM-2026-001</p>
+      <p>Failure Classification Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a formal classification of invalid system states within the QODIQA enforcement model and does not constitute legal, regulatory, or operational advice. All conditions described herein are intended for conformance assessment purposes only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-FCM-2026-001 &nbsp;·&nbsp; Version 1.0 - Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- IntersectionObserver ScrollSpy (deterministic, observer-only) ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s2','s3','s3-1','s3-2','s3-3',
+    's3a','s4','s4-1','s4-2','s4-3','s4-4','s4-5','s4-6','s4-7',
+    's5','s6','s7','s7-1','s7-2','s7-3',
+    's8','s9','s10','s11','s12','s13','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    if (visible.size > 0) {
+      let topId = null;
+      let topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-15% 0px -65% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

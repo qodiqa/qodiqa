@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Worked Example: End-to-End Enforcement Scenario</title>
+<meta name="description" content="QODIQA Worked Example v1.0 — A complete end-to-end narrative tracing a single AI request through intent declaration, consent resolution, policy evaluation, decision artifact production, and mid-session revocation in a clinical data platform.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* COVER */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 3.4vw, 2.55rem);
+  font-weight: 700;
+  line-height: 1.22;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 540px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 480px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav { flex: 1; padding: 12px 0 32px; }
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover { color: #C4BEB2; background: rgba(255,255,255,0.04); border-left-color: rgba(122,106,80,0.32); }
+.nav-item.active { color: #E2D8C8; border-left-color: #A8966E; background: rgba(122,106,80,0.14); font-weight: 600; }
+.nav-item.sub { padding-left: 32px; font-size: 0.69rem; color: #6E7880; }
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* MAIN CONTENT */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* SECTION STRUCTURE */
+.doc-section { margin-top: 32px; padding-top: 0; }
+.doc-section:first-child { margin-top: 0; }
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* HEADINGS */
+h1, h2, h3, h4 { font-family: var(--serif); color: var(--ink); font-kerning: normal; }
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* BODY TEXT */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+ul, ol { padding-left: 1.35em; margin-bottom: 0.85em; }
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ABSTRACT BLOCK */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* CODE */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 12px 0 20px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 20px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* TABLES */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 20px 0 28px;
+  border: 1px solid #C4C0BA;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* KEY PROP BLOCKS */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p { margin: 0; font-size: 0.920rem; line-height: 1.65; }
+
+/* DECISION BLOCKS */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+.decision-block ul { list-style: disc; padding-left: 1.3em; margin: 6px 0 0; }
+.decision-block ul li { font-size: 0.905rem; padding: 2px 0; margin-bottom: 3px; line-height: 1.58; }
+
+/* FOOTNOTES */
+.footnotes { margin-top: 28px; padding-top: 14px; border-top: 1px solid #D0CCC6; }
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* SECTION NOTE */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* DOC STATUS / IDENTITY */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block { margin-top: 0; padding-top: 20px; text-align: center; }
+.contact-block p { text-align: center; font-size: 0.875rem; color: var(--text-3); margin-bottom: 10px; hyphens: none; }
+.contact-name { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 4px !important; }
+.contact-detail { font-size: 0.840rem !important; color: var(--muted) !important; margin-bottom: 2px !important; }
+.contact-detail a { color: var(--accent); text-decoration: none; }
+.contact-detail a:hover { text-decoration: underline; }
+
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+.doc-id-key { flex: 0 0 200px; color: var(--muted); font-size: 0.64rem; letter-spacing: 0.09em; text-transform: uppercase; }
+.doc-id-val { color: var(--text); font-size: 0.760rem; line-height: 1.6; }
+
+/* BACK TO TOP */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* FOOTER */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p { font-size: 0.760rem; color: rgba(255,255,255,0.50); line-height: 1.65; margin: 0 0 3px; text-align: left; }
+
+.footer-divider { grid-column: 1 / -1; height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   WORKED EXAMPLE SPECIFIC STYLES
+   ============================================================ */
+
+/* Stage header */
+.stage-header {
+  background: #191C21;
+  border-top: 2px solid var(--accent);
+  padding: 18px 24px;
+  margin: 32px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.stage-number {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  flex-shrink: 0;
+}
+
+.stage-title {
+  font-family: var(--serif);
+  font-size: 1.0rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.22;
+}
+
+.stage-subtitle {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.38);
+  margin-left: auto;
+  flex-shrink: 0;
+  font-style: italic;
+}
+
+/* Stage scope note */
+.stage-scope {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-top: none;
+  border-bottom: 2px solid var(--rule);
+  padding: 11px 24px;
+  margin-bottom: 22px;
+  font-size: 0.840rem;
+  color: var(--text-2);
+  line-height: 1.58;
+  font-style: italic;
+}
+
+/* Field annotation table */
+.annotation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 20px;
+  border: 1px solid #C4C0BA;
+}
+
+.annotation-table th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.55);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 9px 14px;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.annotation-table th:last-child { border-right: none; }
+
+.annotation-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-size: 0.855rem;
+  vertical-align: top;
+  line-height: 1.52;
+}
+
+.annotation-table td:first-child {
+  font-family: var(--mono);
+  font-size: 0.780rem;
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap;
+  width: 200px;
+}
+
+.annotation-table td:last-child { border-right: none; color: var(--text-2); }
+.annotation-table tr:nth-child(even) td { background: #EAE7E2; }
+.annotation-table tr:last-child td { border-bottom: none; }
+
+/* Outcome banner */
+.outcome-allow {
+  background: #EDF2EC;
+  border: 1px solid #C2CFC0;
+  border-left: 3px solid #5A8A5A;
+  padding: 14px 20px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.outcome-deny {
+  background: #F2EDEC;
+  border: 1px solid #CFB8B5;
+  border-left: 3px solid #8A4A4A;
+  padding: 14px 20px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.outcome-restrict {
+  background: #F2F0E8;
+  border: 1px solid #CEC8B0;
+  border-left: 3px solid #8A7A30;
+  padding: 14px 20px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.outcome-badge {
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 12px 3px;
+  flex-shrink: 0;
+}
+
+.outcome-allow  .outcome-badge { background: #5A8A5A; color: #fff; }
+.outcome-deny   .outcome-badge { background: #8A4A4A; color: #fff; }
+.outcome-restrict .outcome-badge { background: #8A7A30; color: #fff; }
+
+.outcome-text { font-size: 0.900rem; color: var(--ink-2); line-height: 1.55; }
+
+/* Timeline strip for revocation scenario */
+.timeline {
+  margin: 20px 0 24px;
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent) 0%, rgba(122,106,80,0.20) 100%);
+}
+
+.timeline-event {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.timeline-event:last-child { margin-bottom: 0; }
+
+.timeline-event::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 1px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.timeline-event.event-revoke::before { background: #8A4A4A; box-shadow: 0 0 0 1px #8A4A4A; }
+.timeline-event.event-deny::before   { background: #8A4A4A; box-shadow: 0 0 0 1px #8A4A4A; }
+
+.timeline-time {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.timeline-event.event-revoke .timeline-time { color: #8A4A4A; }
+.timeline-event.event-deny   .timeline-time { color: #8A4A4A; }
+
+.timeline-desc {
+  font-size: 0.900rem;
+  color: var(--text);
+  line-height: 1.60;
+}
+
+/* Artifact display block */
+.artifact-block {
+  background: #191C21;
+  border: 1px solid rgba(122,106,80,0.22);
+  border-left: 2px solid rgba(122,106,80,0.55);
+  padding: 20px 24px;
+  margin: 16px 0 20px;
+  font-family: var(--mono);
+  font-size: 0.790rem;
+  color: #BEB9B0;
+  line-height: 1.72;
+  overflow-x: auto;
+}
+
+.artifact-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.artifact-key   { color: #8A9AB0; }
+.artifact-val   { color: #BEB9B0; }
+.artifact-str   { color: #A8966E; }
+.artifact-num   { color: #7A9A7A; }
+.artifact-bool-t { color: #7A9A7A; }
+.artifact-bool-f { color: #9A5A5A; }
+.artifact-null  { color: #6A7080; }
+.artifact-comment { color: #4A5060; font-style: italic; }
+
+/* Scenario context box */
+.scenario-context {
+  background: #F0EDE7;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 18px 22px;
+  margin: 0 0 32px;
+}
+
+.scenario-context-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.75;
+}
+
+.scenario-context p { margin-bottom: 0.6em; text-align: left; hyphens: none; }
+.scenario-context p:last-child { margin-bottom: 0; }
+
+.scenario-actors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.actor-card {
+  background: #F6F4F0;
+  border: 1px solid #D2CEC8;
+  padding: 10px 14px;
+}
+
+.actor-role {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.actor-id {
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--ink);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.actor-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  body       { font-size: 11pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) { #content { padding: 64px 56px 96px; } footer { padding: 36px 56px; } }
+@media (max-width: 1024px) { #content { padding: 52px 40px 80px; } footer { padding: 32px 40px; } .footer-inner { gap: 28px; } }
+
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; position: relative; flex-shrink: 0; }
+  .mobile-nav-header {
+    display: flex; align-items: center; gap: 12px;
+    position: fixed; top: 0; left: 0; width: 100%; height: 52px; padding: 0 16px;
+    background: #0A0C0F; border-bottom: 1px solid rgba(122,106,80,0.15); z-index: 210;
+  }
+  .mobile-contents-label { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+  #sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); transition: transform 0.25s ease; z-index: 150; }
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+  #content { padding: 68px 20px 52px; }
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+  .stage-header { flex-direction: column; gap: 4px; }
+  .stage-subtitle { margin-left: 0; }
+  .scenario-actors { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Worked Example<br>
+        <span class="italic-part">End-to-End Enforcement Scenario</span>
+      </span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <span class="cover-info-subtitle">Deterministic Runtime Consent Enforcement</span>
+      <span class="cover-info-date">April 2026</span>
+      <span class="cover-info-badge">QODIQA-WE-2026-001</span>
+      <p class="cover-info-tagline">A complete technical narrative tracing a single AI request through every enforcement stage — from intent declaration to revocation — so that any engineer can see the system running, not just described.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M6 1v10M6 11L1 6M6 11L11 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Scroll to read
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<div class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M2 4h12M2 8h12M2 12h12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">QODIQA — Worked Example</span>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-brand">QODIQA</span>
+      <span class="sidebar-nav-label">Worked Example</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item active" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Purpose &amp; Scope</a>
+      <a class="nav-item" href="#s1">Scenario Setup</a>
+      <a class="nav-item sub" href="#s1-1">Platform &amp; Actors</a>
+      <a class="nav-item sub" href="#s1-2">Consent Registry State</a>
+      <a class="nav-item sub" href="#s1-3">Active Policy Version</a>
+      <a class="nav-item" href="#s2">Stage 1 — Intent Declaration</a>
+      <a class="nav-item" href="#s3">Stage 2 — Consent Resolution</a>
+      <a class="nav-item" href="#s4">Stage 3 — Policy Evaluation</a>
+      <a class="nav-item" href="#s5">Stage 4 — Decision Artifact</a>
+      <a class="nav-item" href="#s6">Stage 5 — Execution Gate</a>
+      <a class="nav-item" href="#s7">Stage 6 — Mid-Session Revocation</a>
+      <a class="nav-item sub" href="#s7-1">Revocation Event</a>
+      <a class="nav-item sub" href="#s7-2">Next Request Behavior</a>
+      <a class="nav-item sub" href="#s7-3">Revocation Artifact</a>
+      <a class="nav-item" href="#s8">Audit Replay</a>
+      <a class="nav-item" href="#s9">What QODIQA Did Not Do</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Purpose &amp; Scope</span>
+          <p>This document traces a single AI action request — an AI diagnostic assistant reading a patient's longitudinal record on a clinical data platform — through every stage of QODIQA enforcement: intent declaration, consent resolution, policy evaluation, decision artifact production, execution gating, and mid-session revocation. All values shown are concrete. The scenario is designed to be complete enough that an engineer who has never read the Core Standard can identify, from this document alone, exactly what must be built and in what sequence. This is a normative illustrative document; it does not introduce requirements beyond those defined in the Core Standard and the 68-Point Enforcement Framework.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1: SCENARIO SETUP -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Scenario Setup</h2>
+
+        <p>Before tracing the enforcement flow, it is necessary to establish the deployment context, the actors involved, the state of the consent registry at the time of the request, and the active policy version. These are not background details; they are the concrete inputs that QODIQA will consume. Every enforcement decision in this scenario is fully determined by this initial state.</p>
+
+        <div id="s1-1">
+          <h3>1.1 Platform and Actors</h3>
+
+          <div class="scenario-context">
+            <span class="scenario-context-label">Deployment Context</span>
+            <p><strong>NeuraPath Health</strong> operates a clinical decision-support platform that uses an AI model (<code>dx-assistant-v3</code>) to analyze longitudinal patient records and surface diagnostic patterns for reviewing clinicians. The platform processes data under GDPR Article 9 (sensitive health data) and is subject to internal NeuraPath data governance policy <code>NPGOV-CLINICAL-2026-003</code>.</p>
+            <p>QODIQA is deployed as an enforcement sidecar between the application tier and the model execution layer. Every request from any AI component must pass through QODIQA before the model receives data. The enforcement layer runs in strict fail-closed mode: any error, timeout, or missing field produces an unconditional DENY.</p>
+            <div class="scenario-actors">
+              <div class="actor-card">
+                <span class="actor-role">Requesting Actor</span>
+                <span class="actor-id">actor:dx-assistant-v3</span>
+                <span class="actor-desc">AI diagnostic assistant. Authorized to read clinical records for purpose <code>dx_analysis</code> only.</span>
+              </div>
+              <div class="actor-card">
+                <span class="actor-role">Data Subject</span>
+                <span class="actor-id">patient:PT-00441</span>
+                <span class="actor-desc">Elena Marin, adult patient. Has an active consent record for AI-assisted diagnostics.</span>
+              </div>
+              <div class="actor-card">
+                <span class="actor-role">Reviewing Clinician</span>
+                <span class="actor-id">user:clinician-DR-IONESCU</span>
+                <span class="actor-desc">Dr. Radu Ionescu. Initiated the diagnostic session at 09:14 UTC. Not a QODIQA actor; operates downstream of enforcement.</span>
+              </div>
+              <div class="actor-card">
+                <span class="actor-role">QODIQA Policy</span>
+                <span class="actor-id">NPGOV-CLINICAL-2026-003 · v7</span>
+                <span class="actor-desc">Immutable published policy version active at the time of this session.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s1-2">
+          <h3>1.2 Consent Registry State at T₀</h3>
+
+          <p>The following consent record for patient PT-00441 exists in the Consent Registry at session start. This record was issued at T₀ − 14 days, when the patient signed the NeuraPath digital consent form for AI-assisted diagnostics. It has not been modified since.</p>
+
+          <span class="code-label">Consent Record — as stored in Consent Registry</span>
+          <div class="artifact-block">
+            <span class="artifact-label">consent_registry · record: CNST-PT00441-DX-2026</span>
+<span class="artifact-key">consent_id</span>:       <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+<span class="artifact-key">subject_id</span>:       <span class="artifact-str">"patient:PT-00441"</span><br>
+<span class="artifact-key">granted_to</span>:       <span class="artifact-str">"actor:dx-assistant-v3"</span><br>
+<span class="artifact-key">purpose</span>:          <span class="artifact-str">"dx_analysis"</span><br>
+<span class="artifact-key">data_categories</span>: [<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.lab_results"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.imaging_metadata"</span><br>
+]<br>
+<span class="artifact-key">jurisdiction</span>:     <span class="artifact-str">"EU-RO"</span><br>
+<span class="artifact-key">valid_from</span>:       <span class="artifact-str">"2026-03-24T00:00:00Z"</span><br>
+<span class="artifact-key">valid_until</span>:      <span class="artifact-str">"2026-09-24T23:59:59Z"</span><br>
+<span class="artifact-key">revoked</span>:          <span class="artifact-bool-t">false</span><br>
+<span class="artifact-key">revocation_ts</span>:    <span class="artifact-null">null</span><br>
+<span class="artifact-key">issuer_sig</span>:       <span class="artifact-str">"sha256:a3f9c...d82e1"</span>  <span class="artifact-comment">// cryptographic binding to NeuraPath CA</span>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Scope Boundary</div>
+            <p>This consent record grants <code>actor:dx-assistant-v3</code> access to three specific data categories for the single purpose <code>dx_analysis</code>. It does not extend to research, billing, training, or any secondary use. QODIQA does not infer scope; any request for a data category or purpose not listed here will be denied at the consent resolution stage regardless of what policies say.</p>
+          </div>
+        </div>
+
+        <div id="s1-3">
+          <h3>1.3 Active Policy Version</h3>
+
+          <p>Policy <code>NPGOV-CLINICAL-2026-003 · v7</code> was published and frozen on 2026-04-01. It cannot be modified. If NeuraPath's governance team needs to change any condition, they must publish v8, which will apply only to requests submitted after v8 becomes active. The version applied to this request will be permanently recorded in the decision artifact.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">Policy NPGOV-CLINICAL-2026-003 · v7 — Key Conditions</span>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:200px;">Condition</th>
+                  <th>Required Value</th>
+                  <th style="width:200px;">Failure Behavior</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Purpose must be</strong></td>
+                  <td><code>dx_analysis</code></td>
+                  <td>DENY — purpose mismatch</td>
+                </tr>
+                <tr>
+                  <td><strong>Actor must be</strong></td>
+                  <td>registered in actor registry, role <code>ai-model.clinical</code></td>
+                  <td>DENY — actor not authorized</td>
+                </tr>
+                <tr>
+                  <td><strong>Jurisdiction must be</strong></td>
+                  <td><code>EU-RO</code> or <code>EU-*</code></td>
+                  <td>DENY — jurisdiction out of scope</td>
+                </tr>
+                <tr>
+                  <td><strong>Data categories</strong></td>
+                  <td>Must be subset of consent-granted categories</td>
+                  <td>DENY — category not consented</td>
+                </tr>
+                <tr>
+                  <td><strong>Consent state</strong></td>
+                  <td>GRANTED · not expired · not revoked</td>
+                  <td>DENY — consent invalid</td>
+                </tr>
+                <tr>
+                  <td><strong>Session window</strong></td>
+                  <td>Request must arrive within active clinical session</td>
+                  <td>ALLOW-WITH-RESTRICTIONS: flag for clinician review</td>
+                </tr>
+                <tr>
+                  <td><strong>Data output restriction</strong></td>
+                  <td>Model output must not include raw identifiers</td>
+                  <td>Restriction propagated to execution layer</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: INTENT DECLARATION -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 1</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Intent Declaration</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 1 of 6</span>
+          <span class="stage-title">DecisionRequest — Closed Contract Submission</span>
+          <span class="stage-subtitle">T = 09:14:32Z</span>
+        </div>
+        <div class="stage-scope">The diagnostic session has opened. Dr. Ionescu's interface requests that the AI assistant analyze PT-00441's longitudinal record for a potential metabolic diagnosis. The application tier constructs and submits a DecisionRequest to QODIQA. This is the first contact with the enforcement layer.</div>
+
+        <p>The DecisionRequest is the only input QODIQA accepts. It is a closed, immutable contract: once submitted, none of its fields can be modified, extended, or supplemented. If the application needs to change any field, it must submit a new request. There is no mechanism to amend a request in flight.</p>
+
+        <span class="code-label">DecisionRequest — submitted at 09:14:32.041Z</span>
+        <div class="artifact-block">
+          <span class="artifact-label">request_id: DRQ-20260407-004411</span>
+<span class="artifact-key">request_id</span>:        <span class="artifact-str">"DRQ-20260407-004411"</span><br>
+<span class="artifact-key">submitted_at</span>:      <span class="artifact-str">"2026-04-07T09:14:32.041Z"</span><br>
+<span class="artifact-key">actor_id</span>:          <span class="artifact-str">"actor:dx-assistant-v3"</span><br>
+<span class="artifact-key">action</span>:            <span class="artifact-str">"read.longitudinal_record"</span><br>
+<span class="artifact-key">purpose</span>:           <span class="artifact-str">"dx_analysis"</span><br>
+<span class="artifact-key">data_subjects</span>:    [<span class="artifact-str">"patient:PT-00441"</span>]<br>
+<span class="artifact-key">data_categories</span>: [<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.lab_results"</span><br>
+]<br>
+<span class="artifact-key">jurisdiction</span>:      <span class="artifact-str">"EU-RO"</span><br>
+<span class="artifact-key">session_id</span>:        <span class="artifact-str">"SES-20260407-DR-IONESCU-0091"</span><br>
+<span class="artifact-key">policy_version</span>:    <span class="artifact-str">"NPGOV-CLINICAL-2026-003:v7"</span><br>
+<span class="artifact-key">request_hash</span>:      <span class="artifact-str">"sha256:b7d2f4...a9c310"</span>  <span class="artifact-comment">// computed over all fields above</span>
+        </div>
+
+        <p>QODIQA immediately validates the structural completeness of the request. It verifies that all required fields are present, that no unknown fields have been injected, that the request hash matches the field content, and that the <code>policy_version</code> field references a known, published, and active policy document. This validation is purely structural: QODIQA does not yet know whether the request will be allowed.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Intent Declaration — Field Annotations</span>
+          <table class="annotation-table">
+            <thead>
+              <tr>
+                <th style="width:220px;">Field</th>
+                <th>Value</th>
+                <th>Enforcement Significance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>request_id</td>
+                <td><code>DRQ-20260407-004411</code></td>
+                <td>Globally unique. Will appear in the decision artifact and all downstream audit records. Enables trace-to-origin without ambiguity.</td>
+              </tr>
+              <tr>
+                <td>actor_id</td>
+                <td><code>actor:dx-assistant-v3</code></td>
+                <td>Identifies the acting AI model. QODIQA will verify this against the actor registry and the consent record's <code>granted_to</code> field.</td>
+              </tr>
+              <tr>
+                <td>action</td>
+                <td><code>read.longitudinal_record</code></td>
+                <td>Specifies the operation type. Policy conditions may restrict which actions are permitted for a given purpose. This is not free-text; it must match an enumerated action type.</td>
+              </tr>
+              <tr>
+                <td>purpose</td>
+                <td><code>dx_analysis</code></td>
+                <td>The declared purpose of the action. Must exactly match the <code>purpose</code> field in the consent record. A different purpose — even a plausible one like <code>quality_review</code> — would cause a DENY.</td>
+              </tr>
+              <tr>
+                <td>data_categories</td>
+                <td><code>clinical.longitudinal_record</code>, <code>clinical.lab_results</code></td>
+                <td>The two categories requested. Note that <code>clinical.imaging_metadata</code> is also in the consent record but is not requested here. The request need not exhaust the consented scope; it must only stay within it.</td>
+              </tr>
+              <tr>
+                <td>jurisdiction</td>
+                <td><code>EU-RO</code></td>
+                <td>Matches the consent record and falls within the policy's accepted jurisdiction set. A mismatch here would be a DENY regardless of consent state.</td>
+              </tr>
+              <tr>
+                <td>policy_version</td>
+                <td><code>NPGOV-CLINICAL-2026-003:v7</code></td>
+                <td>The caller explicitly declares which policy version governs this request. QODIQA will evaluate against exactly this version. If v8 is published tomorrow, past decisions are not retroactively affected.</td>
+              </tr>
+              <tr>
+                <td>request_hash</td>
+                <td><code>sha256:b7d2f4...a9c310</code></td>
+                <td>A SHA-256 digest of all fields. QODIQA recomputes this hash independently; a mismatch indicates tampering or transmission corruption and results in an immediate DENY with error code <code>E-HASH-MISMATCH</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="outcome-allow">
+          <span class="outcome-badge">PASS</span>
+          <span class="outcome-text">Structural validation succeeded at 09:14:32.043Z. Request hash verified. All required fields present. Policy version <code>NPGOV-CLINICAL-2026-003:v7</code> confirmed active. Request contract frozen. Proceeding to consent resolution.</span>
+        </div>
+      </div>
+
+      <!-- SECTION 3: CONSENT RESOLUTION -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 2</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Consent Resolution</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 2 of 6</span>
+          <span class="stage-title">Consent Registry Lookup — Explicit State Resolution</span>
+          <span class="stage-subtitle">T = 09:14:32.043Z</span>
+        </div>
+        <div class="stage-scope">QODIQA queries the Consent Registry to resolve the consent state for the data subject identified in the request. Consent resolution is completely separate from policy evaluation. Policies do not know about consent; they only see the resolved consent state as a frozen input.</div>
+
+        <p>QODIQA performs a deterministic lookup against the Consent Registry using three keys derived from the request: <code>data_subject</code>, <code>actor_id</code>, and <code>purpose</code>. The lookup is exact-match only. There is no fuzzy matching, no inheritance from parent records, and no cross-purpose resolution. Either a record exists for this exact combination, or it does not.</p>
+
+        <p>If the registry is unavailable — network timeout, service error, or degraded response — QODIQA does not wait and does not retry beyond a single bounded timeout. It issues an immediate fail-closed DENY with reason code <code>E-CONSENT-STORE-UNAVAILABLE</code> and records a failure artifact. This is not an error state requiring manual intervention; it is the correct behavior.</p>
+
+        <span class="code-label">Consent Resolution — lookup parameters</span>
+        <div class="artifact-block">
+<span class="artifact-comment">// Parameters derived from the frozen DecisionRequest</span><br>
+<span class="artifact-key">subject_id</span>:   <span class="artifact-str">"patient:PT-00441"</span><br>
+<span class="artifact-key">actor_id</span>:     <span class="artifact-str">"actor:dx-assistant-v3"</span><br>
+<span class="artifact-key">purpose</span>:      <span class="artifact-str">"dx_analysis"</span><br>
+<span class="artifact-key">eval_time</span>:    <span class="artifact-str">"2026-04-07T09:14:32.043Z"</span>  <span class="artifact-comment">// evaluation timestamp, frozen</span>
+        </div>
+
+        <p>The registry returns record <code>CNST-PT00441-DX-2026</code>. QODIQA now performs four sequential checks. All four must pass; failure at any point terminates consent resolution with DENY.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Consent Validation Checks — executed in sequence</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:30px;">#</th>
+                <th style="width:200px;">Check</th>
+                <th>Test</th>
+                <th style="width:100px;">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1</strong></td>
+                <td>Record exists</td>
+                <td>Registry returned a non-null record for the lookup keys.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>2</strong></td>
+                <td>Not revoked</td>
+                <td><code>revoked == false</code> and <code>revocation_ts == null</code>.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>3</strong></td>
+                <td>Within validity window</td>
+                <td><code>valid_from (2026-03-24) ≤ eval_time (2026-04-07) ≤ valid_until (2026-09-24)</code>.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;">PASS</td>
+              </tr>
+              <tr>
+                <td><strong>4</strong></td>
+                <td>Requested categories within consent scope</td>
+                <td>Both <code>clinical.longitudinal_record</code> and <code>clinical.lab_results</code> appear in <code>data_categories</code> of the consent record.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;">PASS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>All four checks pass. QODIQA freezes the consent state as a named reference. This snapshot is immutable: if the patient revokes consent one second later, it will not change the outcome of this evaluation. It will, however, affect the very next request — which is described in Stage 6.</p>
+
+        <span class="code-label">Resolved Consent State — frozen at 09:14:32.051Z</span>
+        <div class="artifact-block">
+<span class="artifact-key">consent_ref</span>:      <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+<span class="artifact-key">state</span>:            <span class="artifact-str">"GRANTED"</span><br>
+<span class="artifact-key">resolved_at</span>:      <span class="artifact-str">"2026-04-07T09:14:32.051Z"</span><br>
+<span class="artifact-key">scope_confirmed</span>: [<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.lab_results"</span><br>
+]<br>
+<span class="artifact-key">issuer_sig_valid</span>: <span class="artifact-bool-t">true</span>  <span class="artifact-comment">// cryptographic binding to NeuraPath CA verified</span>
+        </div>
+
+        <div class="outcome-allow">
+          <span class="outcome-badge">GRANTED</span>
+          <span class="outcome-text">Consent resolved as GRANTED at 09:14:32.051Z. Frozen state reference: <code>CNST-PT00441-DX-2026</code>. Proceeding to policy evaluation. Consent state is now immutable input; it will not be re-queried during this evaluation.</span>
+        </div>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">QODIQA does not verify the legal sufficiency of a consent record; it verifies its structural validity and scope alignment. Legal sufficiency is a governance concern addressed upstream of QODIQA.</div>
+          <div class="footnote" data-num="²">The issuer signature check verifies that the consent record was created by an entity holding the NeuraPath CA private key. It does not verify the content of the patient's informed consent disclosure, which is a human-layer concern.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: POLICY EVALUATION -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 3</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Policy Evaluation</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 3 of 6</span>
+          <span class="stage-title">Policy Engine — Deterministic Evaluation Against Frozen Context</span>
+          <span class="stage-subtitle">T = 09:14:32.051Z</span>
+        </div>
+        <div class="stage-scope">The policy engine receives two immutable inputs: the frozen DecisionRequest and the frozen consent state. It evaluates every condition in policy version NPGOV-CLINICAL-2026-003:v7 against this context. No external state is read during evaluation. The engine is a pure function.</div>
+
+        <p>Policy evaluation in QODIQA is not a reasoning process. The engine does not interpret, infer, or exercise judgment. It evaluates a finite set of declared conditions against a frozen context and produces exactly one outcome. Given the same inputs, it will always produce the same output — this is the determinism guarantee.</p>
+
+        <p>The evaluation context is fully captured at the moment evaluation begins. This means the context is impervious to race conditions, concurrent updates, or the passage of time during evaluation. The world that the policy engine sees is the world as it existed at 09:14:32.051Z.</p>
+
+        <span class="code-label">Evaluation Context — frozen at evaluation entry</span>
+        <div class="artifact-block">
+<span class="artifact-comment">// This is the complete and immutable context for this evaluation.</span><br>
+<span class="artifact-comment">// Nothing outside this structure is read during policy evaluation.</span><br><br>
+<span class="artifact-key">request</span>: {<br>
+&nbsp;&nbsp;<span class="artifact-key">actor_id</span>:         <span class="artifact-str">"actor:dx-assistant-v3"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">action</span>:           <span class="artifact-str">"read.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">purpose</span>:          <span class="artifact-str">"dx_analysis"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">data_categories</span>: [<span class="artifact-str">"clinical.longitudinal_record"</span>, <span class="artifact-str">"clinical.lab_results"</span>],<br>
+&nbsp;&nbsp;<span class="artifact-key">jurisdiction</span>:     <span class="artifact-str">"EU-RO"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">session_id</span>:       <span class="artifact-str">"SES-20260407-DR-IONESCU-0091"</span><br>
+},<br>
+<span class="artifact-key">consent</span>: {<br>
+&nbsp;&nbsp;<span class="artifact-key">state</span>:            <span class="artifact-str">"GRANTED"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">consent_ref</span>:     <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+},<br>
+<span class="artifact-key">policy_version</span>:   <span class="artifact-str">"NPGOV-CLINICAL-2026-003:v7"</span>,<br>
+<span class="artifact-key">eval_timestamp</span>:   <span class="artifact-str">"2026-04-07T09:14:32.051Z"</span>
+        </div>
+
+        <p>The engine evaluates each policy condition in order. Conditions are stateless predicates. The table below shows the evaluation trace — the complete sequence of conditions tested, the test result for each, and the engine's running state.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Policy Evaluation Trace — NPGOV-CLINICAL-2026-003:v7</span>
+          <table>
+            <colgroup>
+              <col style="width:260px;">
+              <col style="width:auto;">
+              <col style="width:88px;">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Test</th>
+                <th style="text-align:center;">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-01</span>&ensp;Purpose matches policy scope</td>
+                <td><code>purpose == "dx_analysis"</code></td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-02</span>&ensp;Actor is authorized for this purpose</td>
+                <td>Actor registry confirms <code>dx-assistant-v3</code> holds role <code>ai-model.clinical</code> with <code>dx_analysis</code> authorization.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-03</span>&ensp;Jurisdiction within accepted range</td>
+                <td><code>jurisdiction "EU-RO"</code> matches policy's <code>EU-*</code> wildcard.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-04</span>&ensp;Consent state is GRANTED</td>
+                <td><code>consent.state == "GRANTED"</code>. Policy does not re-query the registry; it reads the frozen state.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-05</span>&ensp;Requested categories within consented scope</td>
+                <td>Both requested categories were confirmed in the frozen consent scope. Policy validates this was done before it received control.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent);font-size:0.80rem;">C-06</span>&ensp;Request within active clinical session</td>
+                <td>Session <code>SES-20260407-DR-IONESCU-0091</code> is active in session registry at eval time. Request is within session window.</td>
+                <td style="color:#5A8A5A;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">PASS</td>
+              </tr>
+              <tr>
+                <td><span style="font-family:var(--mono);font-weight:700;color:#8A7A30;font-size:0.80rem;">C-07</span>&ensp;Output restriction — no raw identifiers</td>
+                <td>Condition passes but adds a restriction: model output must pass through the de-identification filter before being returned to the application tier. This does not block execution; it constrains it.</td>
+                <td style="color:#8A7A30;font-weight:700;font-family:var(--mono);font-size:0.80rem;text-align:center;">RESTRICT</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Conditions C-01 through C-06 all pass without restriction. Condition C-07 introduces an output restriction. This restriction does not change the top-level outcome from ALLOW; it modifies the terms of the allow. The restriction is encoded into the decision artifact and propagated to the execution layer, which is responsible for enforcing it operationally.</p>
+
+        <div class="outcome-restrict">
+          <span class="outcome-badge">ALLOW-WITH-RESTRICTIONS</span>
+          <span class="outcome-text">Policy evaluation completed at 09:14:32.058Z. All mandatory conditions satisfied. Restriction R-01 applies: model output must pass through de-identification filter <code>deid-filter-v2</code> before surface to application tier.</span>
+        </div>
+      </div>
+
+      <!-- SECTION 5: DECISION ARTIFACT -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 4</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Decision Artifact Production</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 4 of 6</span>
+          <span class="stage-title">Immutable Decision Artifact — Creation and Storage</span>
+          <span class="stage-subtitle">T = 09:14:32.058Z</span>
+        </div>
+        <div class="stage-scope">The enforcement engine produces a Decision Artifact — a permanent, immutable record of the complete enforcement decision. This artifact is created before execution begins. It captures every input, every evaluation result, and the final outcome. Once written, it cannot be modified by any system component.</div>
+
+        <p>The Decision Artifact is the foundational unit of QODIQA's accountability model. It is not a log entry; it is a structured, cryptographically bound record that makes the enforcement decision independently verifiable. Given this artifact and the policy document it references, any auditor can replay the decision and confirm it is correct — without access to the production enforcement system, without access to the Consent Registry, and without any contextual interpretation.</p>
+
+        <span class="code-label">Decision Artifact — DA-20260407-004411 · created at 09:14:32.058Z</span>
+        <div class="artifact-block">
+          <span class="artifact-label">decision_artifact · id: DA-20260407-004411</span>
+<span class="artifact-key">artifact_id</span>:         <span class="artifact-str">"DA-20260407-004411"</span><br>
+<span class="artifact-key">request_id</span>:          <span class="artifact-str">"DRQ-20260407-004411"</span>  <span class="artifact-comment">// trace link to originating request</span><br>
+<span class="artifact-key">created_at</span>:          <span class="artifact-str">"2026-04-07T09:14:32.058Z"</span><br><br>
+<span class="artifact-comment">// ── OUTCOME ──────────────────────────────────────────────────</span><br>
+<span class="artifact-key">outcome</span>:             <span class="artifact-str">"ALLOW-WITH-RESTRICTIONS"</span><br>
+<span class="artifact-key">restrictions</span>: [{<br>
+&nbsp;&nbsp;<span class="artifact-key">id</span>:          <span class="artifact-str">"R-01"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">description</span>: <span class="artifact-str">"Output must pass through deid-filter-v2 before surface"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">enforced_by</span>: <span class="artifact-str">"execution-layer"</span><br>
+}]<br><br>
+<span class="artifact-comment">// ── POLICY ───────────────────────────────────────────────────</span><br>
+<span class="artifact-key">policy_version</span>:      <span class="artifact-str">"NPGOV-CLINICAL-2026-003:v7"</span><br>
+<span class="artifact-key">policy_hash</span>:         <span class="artifact-str">"sha256:f3a1b9...c04d72"</span>  <span class="artifact-comment">// hash of the immutable policy document</span><br><br>
+<span class="artifact-comment">// ── CONSENT ──────────────────────────────────────────────────</span><br>
+<span class="artifact-key">consent_ref</span>:         <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+<span class="artifact-key">consent_state_at_eval</span>: <span class="artifact-str">"GRANTED"</span><br>
+<span class="artifact-key">consent_scope_used</span>: [<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-str">"clinical.lab_results"</span><br>
+]<br><br>
+<span class="artifact-comment">// ── REQUEST SNAPSHOT ─────────────────────────────────────────</span><br>
+<span class="artifact-key">request_snapshot</span>: {<br>
+&nbsp;&nbsp;<span class="artifact-key">actor_id</span>:       <span class="artifact-str">"actor:dx-assistant-v3"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">action</span>:         <span class="artifact-str">"read.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">purpose</span>:        <span class="artifact-str">"dx_analysis"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">data_subjects</span>: [<span class="artifact-str">"patient:PT-00441"</span>],<br>
+&nbsp;&nbsp;<span class="artifact-key">jurisdiction</span>:   <span class="artifact-str">"EU-RO"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">session_id</span>:     <span class="artifact-str">"SES-20260407-DR-IONESCU-0091"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">submitted_at</span>:   <span class="artifact-str">"2026-04-07T09:14:32.041Z"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">request_hash</span>:   <span class="artifact-str">"sha256:b7d2f4...a9c310"</span><br>
+},<br><br>
+<span class="artifact-comment">// ── EVALUATION TRACE ─────────────────────────────────────────</span><br>
+<span class="artifact-key">condition_results</span>: [<br>
+&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-01"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-02"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-03"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },<br>
+&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-04"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-05"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-06"</span>, <span class="artifact-key">result</span>: <span class="artifact-bool-t">"PASS"</span>     },<br>
+&nbsp;&nbsp;{ <span class="artifact-key">condition</span>: <span class="artifact-str">"C-07"</span>, <span class="artifact-key">result</span>: <span class="artifact-str">"RESTRICT"</span>, <span class="artifact-key">restriction_id</span>: <span class="artifact-str">"R-01"</span> }<br>
+],<br><br>
+<span class="artifact-comment">// ── INTEGRITY ────────────────────────────────────────────────</span><br>
+<span class="artifact-key">enforcement_latency_ms</span>: <span class="artifact-num">17</span>,<br>
+<span class="artifact-key">artifact_hash</span>:          <span class="artifact-str">"sha256:e8c3a1...7f2d90"</span>  <span class="artifact-comment">// computed over all fields above; immutable</span>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Why the Artifact Hash Matters</div>
+          <p>The <code>artifact_hash</code> is computed over every field in the artifact, including the evaluation trace and the request snapshot. If any field is altered after creation — even a single character — the hash will not match. An auditor who independently computes the hash and finds a mismatch knows the artifact has been tampered with. This property makes the audit trail tamper-evident without requiring a blockchain or distributed ledger: the hash itself is the proof.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 6: EXECUTION GATE -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 5</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Execution Gate</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 5 of 6</span>
+          <span class="stage-title">Decision Emission and Execution Layer Response</span>
+          <span class="stage-subtitle">T = 09:14:32.062Z</span>
+        </div>
+        <div class="stage-scope">QODIQA emits the enforcement decision to the application tier. The application tier's execution layer reads the outcome and acts accordingly. QODIQA's responsibility ends at emission. The execution layer owns enforcement of the restriction.</div>
+
+        <p>QODIQA emits a structured enforcement response to the application tier. The response is minimal: it contains the outcome, the artifact reference, and the restrictions. It does not contain raw data, model outputs, or any content from the clinical record. QODIQA does not touch data; it governs access to it.</p>
+
+        <span class="code-label">Enforcement Response — emitted to application tier at 09:14:32.062Z</span>
+        <div class="artifact-block">
+<span class="artifact-key">outcome</span>:         <span class="artifact-str">"ALLOW-WITH-RESTRICTIONS"</span><br>
+<span class="artifact-key">artifact_ref</span>:    <span class="artifact-str">"DA-20260407-004411"</span><br>
+<span class="artifact-key">restrictions</span>: [{<br>
+&nbsp;&nbsp;<span class="artifact-key">id</span>:          <span class="artifact-str">"R-01"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">filter</span>:      <span class="artifact-str">"deid-filter-v2"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">apply_to</span>:    <span class="artifact-str">"model.output"</span><br>
+}]<br>
+<span class="artifact-key">emit_timestamp</span>: <span class="artifact-str">"2026-04-07T09:14:32.062Z"</span>
+        </div>
+
+        <p>The execution layer receives this response and proceeds as follows: it loads patient PT-00441's longitudinal record and lab results from the data store, passes them to <code>dx-assistant-v3</code> for analysis, intercepts the model output before returning it to Dr. Ionescu's interface, applies <code>deid-filter-v2</code> to strip any raw patient identifiers from the output, and delivers the filtered result to the clinical interface. The artifact reference <code>DA-20260407-004411</code> is logged by the execution layer alongside the session record, creating a traceable link between the governance decision and the operational action.</p>
+
+        <p>At this point, the happy-path scenario is complete. Total enforcement latency from request submission to decision emission: <strong>21 milliseconds</strong>. The patient has not been inconvenienced. Dr. Ionescu has received a de-identified diagnostic analysis. The enforcement decision is permanently recorded and independently verifiable.</p>
+
+        <div class="decision-block">
+          <strong>What QODIQA did not do</strong>
+          <p>QODIQA did not access the patient record. It did not read the model output. It did not apply the de-identification filter. It did not assess whether the diagnostic analysis was clinically appropriate. These are all outside QODIQA's scope. QODIQA's only concern was whether the request to access the data was authorized. The answer was yes, with a restriction — and that answer is now permanently provable.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7: MID-SESSION REVOCATION -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Stage 6</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Mid-Session Revocation</h2>
+
+        <div class="stage-header">
+          <span class="stage-number">Stage 6 of 6</span>
+          <span class="stage-title">Patient Revocation — Mid-Session Consent Withdrawal</span>
+          <span class="stage-subtitle">T = 09:22:17Z</span>
+        </div>
+        <div class="stage-scope">Eight minutes after the first request was authorized, patient PT-00441 contacts NeuraPath's patient portal and withdraws consent for AI-assisted diagnostics. The revocation is processed immediately. A second AI request arrives seven seconds later, from the same actor, for the same patient, for the same purpose. The outcome is completely different.</div>
+
+        <div id="s7-1">
+          <h3>7.1 The Revocation Event</h3>
+
+          <p>At 09:22:17Z, the NeuraPath patient portal receives a consent withdrawal request from Elena Marin. The portal's consent management service writes a revocation update to the Consent Registry immediately. The update is atomic: the registry transitions from the existing record to a revoked state in a single operation.</p>
+
+          <span class="code-label">Consent Registry — record state after revocation at 09:22:17.339Z</span>
+          <div class="artifact-block">
+<span class="artifact-key">consent_id</span>:       <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+<span class="artifact-key">subject_id</span>:       <span class="artifact-str">"patient:PT-00441"</span><br>
+<span class="artifact-key">granted_to</span>:       <span class="artifact-str">"actor:dx-assistant-v3"</span><br>
+<span class="artifact-key">purpose</span>:          <span class="artifact-str">"dx_analysis"</span><br>
+<span class="artifact-key">revoked</span>:          <span class="artifact-bool-f">true</span><br>
+<span class="artifact-key">revocation_ts</span>:    <span class="artifact-str">"2026-04-07T09:22:17.339Z"</span><br>
+<span class="artifact-key">revocation_reason</span>: <span class="artifact-str">"patient_withdrawal"</span>  <span class="artifact-comment">// written by consent management service</span>
+          </div>
+
+          <p>The revocation does not affect past decisions. Decision Artifact <code>DA-20260407-004411</code>, which authorized the 09:14 request, remains valid and correct. Its consent state was resolved at 09:14:32.051Z, at which point the record was not revoked. The artifact truthfully records what was true at that moment, and that truth does not change retroactively. This is a foundational property of QODIQA's architecture: decisions are facts about a point in time, not claims about the world today.</p>
+        </div>
+
+        <div id="s7-2">
+          <h3>7.2 The Next Request — Instant Denial</h3>
+
+          <p>At 09:22:24Z — seven seconds after revocation — the clinical interface attempts a second AI read request. Dr. Ionescu's session is still active. The application tier constructs a new DecisionRequest, structurally identical to the first except for a new request ID and timestamp. It is submitted to QODIQA.</p>
+
+          <div class="timeline">
+            <div class="timeline-event">
+              <div class="timeline-time">09:14:32Z</div>
+              <div class="timeline-desc">First request authorized. Decision Artifact <code>DA-20260407-004411</code> produced. Execution proceeds with restriction R-01.</div>
+            </div>
+            <div class="timeline-event event-revoke">
+              <div class="timeline-time">09:22:17Z — Revocation</div>
+              <div class="timeline-desc">Patient PT-00441 withdraws consent via patient portal. Consent Registry updated atomically. <code>CNST-PT00441-DX-2026</code> marked revoked.</div>
+            </div>
+            <div class="timeline-event event-deny">
+              <div class="timeline-time">09:22:24Z — DENY</div>
+              <div class="timeline-desc">Second request submitted. Consent resolution fails at check #2: <code>revoked == true</code>. Execution blocked. Decision Artifact <code>DA-20260407-009972</code> produced with outcome DENY.</div>
+            </div>
+          </div>
+
+          <p>Consent resolution for the second request proceeds through the same four-check sequence as before. Check #1 passes: the record still exists in the registry. Check #2 fails: <code>revoked == true</code>. Resolution stops immediately. The engine does not evaluate checks 3 and 4, and does not enter policy evaluation. The outcome is DENY.</p>
+
+          <span class="code-label">Decision Artifact — DA-20260407-009972 · second request, denied</span>
+          <div class="artifact-block">
+            <span class="artifact-label">decision_artifact · id: DA-20260407-009972</span>
+<span class="artifact-key">artifact_id</span>:           <span class="artifact-str">"DA-20260407-009972"</span><br>
+<span class="artifact-key">request_id</span>:            <span class="artifact-str">"DRQ-20260407-009972"</span><br>
+<span class="artifact-key">created_at</span>:            <span class="artifact-str">"2026-04-07T09:22:24.112Z"</span><br><br>
+<span class="artifact-key">outcome</span>:               <span class="artifact-str">"DENY"</span><br>
+<span class="artifact-key">deny_reason</span>:           <span class="artifact-str">"E-CONSENT-REVOKED"</span><br>
+<span class="artifact-key">deny_stage</span>:            <span class="artifact-str">"consent_resolution"</span>  <span class="artifact-comment">// denied before reaching policy evaluation</span><br><br>
+<span class="artifact-key">consent_ref</span>:           <span class="artifact-str">"CNST-PT00441-DX-2026"</span><br>
+<span class="artifact-key">consent_state_at_eval</span>: <span class="artifact-str">"REVOKED"</span><br>
+<span class="artifact-key">consent_revocation_ts</span>: <span class="artifact-str">"2026-04-07T09:22:17.339Z"</span><br><br>
+<span class="artifact-key">request_snapshot</span>: {<br>
+&nbsp;&nbsp;<span class="artifact-key">actor_id</span>:     <span class="artifact-str">"actor:dx-assistant-v3"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">action</span>:       <span class="artifact-str">"read.longitudinal_record"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">purpose</span>:      <span class="artifact-str">"dx_analysis"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">session_id</span>:   <span class="artifact-str">"SES-20260407-DR-IONESCU-0091"</span>,<br>
+&nbsp;&nbsp;<span class="artifact-key">submitted_at</span>: <span class="artifact-str">"2026-04-07T09:22:24.101Z"</span><br>
+},<br><br>
+<span class="artifact-key">enforcement_latency_ms</span>: <span class="artifact-num">11</span>,<br>
+<span class="artifact-key">artifact_hash</span>:          <span class="artifact-str">"sha256:c1f7e2...84a301"</span>
+          </div>
+
+          <div class="outcome-deny">
+            <span class="outcome-badge">DENY</span>
+            <span class="outcome-text">Request <code>DRQ-20260407-009972</code> denied at consent resolution stage. Reason: <code>E-CONSENT-REVOKED</code>. Revocation recorded at 09:22:17.339Z — 6.762 seconds before this request. Execution blocked. No data accessed. Enforcement latency: 11ms.</span>
+          </div>
+
+          <p>The enforcement response returned to the application tier is a DENY with error code <code>E-CONSENT-REVOKED</code>. The application tier is expected to surface an appropriate message to Dr. Ionescu's interface — for example, that the patient's consent is no longer active and the session cannot continue without intervention from the care team. QODIQA does not dictate the user experience; it dictates the enforcement outcome.</p>
+        </div>
+
+        <div id="s7-3">
+          <h3>7.3 What the Revocation Artifact Proves</h3>
+
+          <p>The two decision artifacts now tell a coherent and independently verifiable story. <code>DA-20260407-004411</code> proves that at 09:14:32Z, consent was valid and the request was properly authorized. <code>DA-20260407-009972</code> proves that at 09:22:24Z, consent had been revoked and the request was correctly blocked. The gap between revocation timestamp and the second request's submission — 6.762 seconds — is on record. If NeuraPath's legal team or a data protection authority ever asks whether consent was respected, these two artifacts are the answer. Not a narrative. Not a policy document. Proof.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 8: AUDIT REPLAY -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Audit Replay</h2>
+
+        <p>Three months later, a data protection authority reviewing NeuraPath's AI practices asks: <em>"On April 7th 2026, was patient PT-00441's data accessed by AI systems after she withdrew consent?"</em></p>
+
+        <p>The NeuraPath compliance team runs the following audit query against the decision artifact store:</p>
+
+        <span class="code-label">Audit Query</span>
+        <div class="artifact-block">
+<span class="artifact-key">subject</span>:          <span class="artifact-str">"patient:PT-00441"</span><br>
+<span class="artifact-key">date</span>:             <span class="artifact-str">"2026-04-07"</span><br>
+<span class="artifact-key">after_timestamp</span>:  <span class="artifact-str">"2026-04-07T09:22:17.339Z"</span>  <span class="artifact-comment">// revocation timestamp</span><br>
+<span class="artifact-key">outcome_filter</span>:   <span class="artifact-str">"ALLOW | ALLOW-WITH-RESTRICTIONS"</span>
+        </div>
+
+        <p>The query returns zero results. No ALLOW or ALLOW-WITH-RESTRICTIONS artifact exists for patient PT-00441 after 09:22:17.339Z on April 7th. The only artifact in that window is <code>DA-20260407-009972</code>, which is a DENY. The answer to the authority's question is: <strong>no</strong> — and that answer comes with a cryptographically verifiable artifact, not a human attestation.</p>
+
+        <p>The compliance team can additionally replay Decision Artifact <code>DA-20260407-004411</code> — the authorized request — against the policy document at <code>sha256:f3a1b9...c04d72</code> and the consent record as it existed at 09:14:32.051Z. The replay will produce the same ALLOW-WITH-RESTRICTIONS outcome. This confirms that the earlier access was correctly authorized under the rules that were in effect at the time.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">The Audit Property</div>
+          <p>The replay invariant holds: given the same frozen inputs — request, consent state, policy version, evaluation timestamp — QODIQA's evaluation engine always produces the same decision. This makes the audit outcome reproducible without trust in any single party's assertion. An auditor who independently constructs the replay environment and verifies the artifact hashes reaches the same conclusion as the production system did in real time.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9: WHAT QODIQA DID NOT DO -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>What QODIQA Did Not Do</h2>
+
+        <p>This scenario demonstrates several things QODIQA deliberately chose not to do. Understanding these boundaries is as important as understanding what QODIQA enforces, because the constraints define where implementation responsibility lies in the systems around it.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Scope Boundaries — QODIQA responsibilities vs. surrounding system responsibilities</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:340px;">QODIQA did not do this</th>
+                <th>Who is responsible</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Read or inspect the patient's clinical record or lab results.</td>
+                <td>Data store and execution layer. QODIQA governs access; it does not access data.</td>
+              </tr>
+              <tr>
+                <td>Verify that Dr. Ionescu is clinically qualified to request this analysis.</td>
+                <td>NeuraPath's authentication and role management system. QODIQA receives an authenticated actor ID; it does not perform authentication.</td>
+              </tr>
+              <tr>
+                <td>Apply the de-identification filter to the model's output.</td>
+                <td>The execution layer. QODIQA declared the restriction; the execution layer enforces it operationally.</td>
+              </tr>
+              <tr>
+                <td>Assess whether the AI diagnostic analysis was clinically appropriate or accurate.</td>
+                <td>Clinical governance. Outside QODIQA's scope entirely.</td>
+              </tr>
+              <tr>
+                <td>Notify Dr. Ionescu or the care team of the consent revocation.</td>
+                <td>The application tier. QODIQA emits a DENY; what the interface does with it is the application's responsibility.</td>
+              </tr>
+              <tr>
+                <td>Verify the legal adequacy of NeuraPath's consent disclosure language.</td>
+                <td>Legal and compliance. QODIQA verifies structural validity and scope alignment of a consent record, not the human process that produced it.</td>
+              </tr>
+              <tr>
+                <td>Make a probabilistic or risk-based judgment about whether to allow the request despite revocation.</td>
+                <td>Nobody. This is not a permitted behavior. QODIQA is deterministic: revoked consent produces DENY, always, without exception or override.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">The intentional minimalism of QODIQA's scope is a design property, not a limitation. A system that tries to do everything provides guarantees about nothing. By restricting itself to enforcement — and doing enforcement deterministically and verifiably — QODIQA makes it possible for every surrounding system to rely on exactly one thing: that if QODIQA said ALLOW, the request was authorized, and if it said DENY, execution did not proceed.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative illustrative instrument within the QODIQA specification corpus. It does not introduce requirements; all requirements are defined in the Core Standard and the 68-Point Enforcement Framework. It illustrates how those requirements manifest in a complete, concrete deployment scenario, using real field values, specific timestamps, and actual artifact structures.</p>
+
+          <p>The scenario in this document — NeuraPath Health and patient PT-00441 — is synthetic. All identifiers, timestamps, hash values, and actor names are constructed for illustrative purposes. Any resemblance to real persons, organizations, or systems is coincidental.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Implementation Conformance Checklist</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+          </ul>
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-WE-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Worked Example: End-to-End Enforcement Scenario</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">A Complete Technical Narrative from Intent Declaration to Revocation in a Clinical Data Platform</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Illustrative Document</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Scenario</span>
+            <span class="doc-id-val">Synthetic — NeuraPath Health · patient:PT-00441 · 2026-04-07</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Worked Example: End-to-End Enforcement Scenario</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-WE-2026-001</p>
+      <p>Normative Illustrative Document</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>The scenario, identifiers, timestamps, and values in this document are synthetic and constructed for illustrative purposes only. This document does not constitute legal, regulatory, or operational advice. All architectural principles described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-WE-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s1-1','s1-2','s1-3',
+    's2','s3','s4','s5','s6',
+    's7','s7-1','s7-2','s7-3',
+    's8','s9','s-status'
+  ];
+
+  /* Build ordered list of [id, element] pairs that exist in DOM */
+  const sections = sectionIds
+    .map(id => [id, document.getElementById(id)])
+    .filter(([, el]) => el !== null);
+
+  /* Track the latest "winning" section via document order index */
+  const sectionOrder = new Map(sections.map(([id], i) => [id, i]));
+  let currentActive = sections[0] ? sections[0][0] : null;
+  let pendingRaf = null;
+
+  function setActive(id) {
+    if (id === currentActive) return;
+    currentActive = id;
+    const href = '#' + id;
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === href);
+    });
+  }
+
+  /* Maintain a set of currently intersecting section IDs.
+     On each change, pick the one earliest in document order. */
+  const intersecting = new Set();
+
+  function pickActive() {
+    if (intersecting.size === 0) return;
+    let bestId = null;
+    let bestIdx = Infinity;
+    intersecting.forEach(id => {
+      const idx = sectionOrder.get(id);
+      if (idx < bestIdx) { bestIdx = idx; bestId = id; }
+    });
+    if (bestId) setActive(bestId);
+  }
+
+  /* rootMargin: clip top 30% so a section only "wins" when it's
+     in the upper 70% of the viewport; bottom -5% avoids premature
+     activation of sections just barely entering from below.
+     Mobile header is ~52px — account for it via top margin. */
+  const isMobile = () => window.innerWidth <= 768;
+  function getRootMargin() {
+    const topOffset = isMobile() ? '-52px' : '-30%';
+    return `${topOffset} 0px -5% 0px`;
+  }
+
+  let observer = null;
+
+  function createObserver() {
+    if (observer) observer.disconnect();
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          intersecting.add(entry.target.id);
+        } else {
+          intersecting.delete(entry.target.id);
+        }
+      });
+      /* Debounce via rAF to avoid mid-frame flicker */
+      if (pendingRaf) cancelAnimationFrame(pendingRaf);
+      pendingRaf = requestAnimationFrame(pickActive);
+    }, {
+      root: null,
+      rootMargin: getRootMargin(),
+      threshold: 0
+    });
+    sections.forEach(([, el]) => observer.observe(el));
+  }
+
+  createObserver();
+
+  /* Recreate observer on resize so rootMargin recalculates for
+     mobile/desktop switch */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(createObserver, 150);
+  }, { passive: true });
+
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const mobileOffset = isMobile() ? 60 : 24;
+          const top = target.getBoundingClientRect().top + window.scrollY - mobileOffset;
+          window.scrollTo({ top, behavior: 'smooth' });
+          /* Sync active state immediately on click — don't wait for observer */
+          setActive(targetId);
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Interoperability and Deployment Constraints · Version 1.0</title>
+<meta name="description" content="QODIQA Interoperability and Deployment Constraints Version 1.0 — Deterministic Interoperability Boundaries, Integration Guardrails, and Non-Override Guarantees. April 2026.">
+<meta property="og:title" content="QODIQA — Interoperability and Deployment Constraints">
+<meta property="og:description" content="Formal declaration of the architectural boundaries governing system operation across heterogeneous AI environments, including integration constraints, non-override guarantees, and fail-closed enforcement properties.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:       #1A1C20;
+  --ink-2:     #2C2F36;
+  --ink-3:     #3A3F48;
+  --accent:    #7A6A50;
+  --muted:     #6B7280;
+  --rule:      #D6D2CC;
+  --border:    #D4D0CA;
+  --bg:        #F6F4F0;
+  --text:      #1A1C20;
+  --text-2:    #3A3F48;
+  --text-3:    #5A6070;
+  --sidebar-w: 252px;
+  --col:       800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+  /* Spacing scale */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  24px;
+  --sp-6:  32px;
+  --sp-7:  48px;
+  --sp-8:  64px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: var(--sp-5);
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: var(--sp-8) auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto var(--sp-6);
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: var(--sp-3);
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: var(--sp-5);
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: var(--sp-6);
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; border-radius: 2px; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+  overflow-y: visible;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.10s, background 0.10s, border-color 0.10s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE — normalized vertical rhythm
+   ============================================================ */
+.doc-section {
+  margin-top: var(--sp-6);
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: var(--sp-7); }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: var(--sp-5);
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS — normalized spacing
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--sp-2);
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: var(--sp-4);
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: var(--sp-5);
+  margin-bottom: var(--sp-3);
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+.sh-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 400;
+  margin-right: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   BODY TEXT — normalized
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: left;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+p:last-child { margin-bottom: 0; }
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS — normalized
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: var(--sp-3);
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: var(--sp-1);
+  color: var(--text);
+  text-align: left;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 var(--sp-6);
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--sp-3);
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+.abstract-block p strong { font-style: normal; color: var(--ink); }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--sp-5) 0 var(--sp-6);
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   CALLOUT BLOCKS
+   ============================================================ */
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: var(--sp-4) 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: left;
+  hyphens: none;
+  font-style: normal;
+  color: var(--text);
+}
+
+.callout p + p { margin-top: var(--sp-2); }
+
+/* ============================================================
+   NORMATIVE BLOCK
+   ============================================================ */
+.norm-block {
+  border: 1px solid #C4C0BA;
+  margin: var(--sp-4) 0 var(--sp-5);
+  overflow: hidden;
+}
+
+.norm-block-head {
+  background: #1C1F25;
+  padding: 10px 18px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  border-bottom: 1px solid #2A2D33;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.norm-block-head .nbh-id {
+  color: rgba(255,255,255,0.28);
+  font-size: 0.60rem;
+  letter-spacing: 0.10em;
+}
+
+.norm-block-body {
+  padding: 18px 20px;
+  background: #FAF8F5;
+}
+
+.norm-block-body p {
+  font-size: 0.930rem;
+  line-height: 1.70;
+  color: var(--text-2);
+  margin-bottom: 0.65em;
+  text-align: left;
+  hyphens: none;
+}
+
+.norm-block-body p:last-child { margin-bottom: 0; }
+.norm-block-body p strong { color: var(--ink); font-weight: 600; }
+
+.norm-block-foot {
+  background: #EDEAE5;
+  padding: 8px 18px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+}
+
+/* ============================================================
+   STATE MATRIX
+   ============================================================ */
+.state-matrix {
+  margin: var(--sp-5) 0;
+  border: 1px solid #C4C0BA;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.state-row {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  border-bottom: 1px solid #D4D0CA;
+}
+
+.state-row:last-child { border-bottom: none; }
+.state-row:nth-child(even) { background: #EAE7E2; }
+
+.state-label {
+  padding: 13px 16px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-right: 1px solid #D4D0CA;
+  display: flex;
+  align-items: flex-start;
+}
+
+.state-desc {
+  padding: 13px 16px;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+/* ============================================================
+   INVARIANT LIST
+   ============================================================ */
+.invariant-list {
+  margin: var(--sp-5) 0;
+  border: 1px solid #C4C0BA;
+  overflow: hidden;
+}
+
+.invariant-head {
+  background: #1C1F25;
+  padding: 10px 18px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  border-bottom: 1px solid #2A2D33;
+}
+
+.invariant-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  padding: 11px 18px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+.invariant-item:last-child { border-bottom: none; }
+.invariant-item:nth-child(even) { background: #EAE7E2; }
+
+.inv-tag {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.10em;
+  color: var(--accent);
+  flex-shrink: 0;
+  min-width: 68px;
+  padding-top: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-3) 0 var(--sp-4);
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '•';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: var(--sp-6) 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: left;
+  hyphens: none;
+}
+
+/* ============================================================
+   HIGHLIGHT PARAGRAPH — AUTHORITATIVE RULE
+   ============================================================ */
+.inst-statement-primary {
+  border-top: 2px solid var(--ink-3);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0;
+  margin: var(--sp-6) 0;
+}
+
+.inst-statement-primary p {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: left;
+  hyphens: none;
+}
+
+/* ============================================================
+   STATE MODEL INTRO
+   ============================================================ */
+.state-model-intro {
+  background: #EDEAE5;
+  border-left: 3px solid var(--ink-3);
+  border-top: 1px solid #D0CCC6;
+  border-bottom: 1px solid #D0CCC6;
+  border-right: 1px solid #D0CCC6;
+  padding: 10px 16px;
+  margin: var(--sp-4) 0 var(--sp-3);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+/* ============================================================
+   FIGURE 2.5 — STATE DIAGRAM (POLISHED)
+   ============================================================ */
+.state-diagram-featured {
+  border: 1px solid #B8B4AE;
+  background: #F4F1EC;
+  padding: 28px 32px 20px;
+  margin: var(--sp-4) 0 var(--sp-6);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.state-diagram-featured pre {
+  font-family: var(--mono);
+  font-size: 0.795rem;
+  line-height: 1.90;
+  margin: 0;
+  color: var(--ink);
+  white-space: pre;
+  tab-size: 4;
+  /* center the pre block within its container */
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.state-diagram-caption {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 14px;
+  display: block;
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+/* ============================================================
+   STATE DIAGRAM (generic)
+   ============================================================ */
+.state-diagram {
+  border: 1px solid #C4C0BA;
+  background: #F7F5F2;
+  padding: 16px 20px;
+  margin: var(--sp-4) 0 var(--sp-5);
+  overflow-x: auto;
+}
+
+.state-diagram pre {
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  line-height: 1.65;
+  margin: 0;
+  color: var(--ink);
+  white-space: pre;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: var(--sp-4) 0;
+}
+
+.doc-status-block p { text-align: left; hyphens: none; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-3) 0 var(--sp-4);
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: var(--sp-6);
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-3) 0 var(--sp-4);
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+/* ============================================================
+   CONTACT BLOCK
+   ============================================================ */
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center !important;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: var(--sp-3);
+  hyphens: none;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-1) !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: var(--sp-1) 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer   { margin-left: 0; }
+  #content { padding: 36px 48px; }
+  body     { font-size: 11pt; }
+  h2       { font-size: 16pt; }
+  #cover   { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE — 1200px
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+/* ============================================================
+   RESPONSIVE — 1024px
+   ============================================================ */
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+/* ============================================================
+   RESPONSIVE — 768px (mobile)
+   ============================================================ */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: var(--sp-4) 0; width: 100%; }
+
+  h2 .anchor-link { display: none; }
+
+  .state-row { grid-template-columns: 1fr; }
+  .state-label { border-right: none; border-bottom: 1px solid #D4D0CA; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  .cover-info-block { margin-top: 48px; }
+
+  .state-diagram-featured { padding: 18px 16px 16px; }
+  .state-diagram-featured pre { font-size: 0.68rem; line-height: 1.80; display: block; }
+  .state-model-intro { font-size: 0.65rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Interoperability and<br><span class="italic-part">Deployment Constraints</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-INTEROP-CONSTRAINTS &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Formal declaration of the architectural boundaries governing system operation across heterogeneous AI environments, including integration constraints, non-override guarantees, and fail-closed enforcement properties.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s0">0. Purpose and Scope Boundary</a>
+      <a class="nav-item sub" href="#s0-1">0.1 Scope Declaration</a>
+      <a class="nav-item sub" href="#s0-2">0.2 Foundational Constraint</a>
+      <a class="nav-item" href="#s1">1. Definitions and Vocabulary</a>
+      <a class="nav-item" href="#s2">2. Layered Integration Model</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Pre-Inference Boundary</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Inference Execution Layer</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Post-Inference Processing</a>
+      <a class="nav-item sub" href="#s2-4">2.4 External Orchestration</a>
+      <a class="nav-item sub" href="#s2-5">2.5 Interop State Model</a>
+      <a class="nav-item" href="#s3">3. Authorized Integration Surfaces</a>
+      <a class="nav-item sub" href="#s3-1">3.1 REST and gRPC Enforcement</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Message Queue Enforcement</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Reverse Proxy Enforcement</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Sidecar Enforcement Model</a>
+      <a class="nav-item sub" href="#s3-5">3.5 Network Segmentation</a>
+      <a class="nav-item" href="#s4">4. Non-Override Guarantees</a>
+      <a class="nav-item sub" href="#s4-1">4.1 External System Constraints</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Invariant Declarations</a>
+      <a class="nav-item" href="#s5">5. Multi-Model and Multi-Vendor</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Multi-Provider Routing</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Hybrid On-Premises and Cloud</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Fallback and Load Balancing</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Federated Inference</a>
+      <a class="nav-item" href="#s6">6. Agent Framework Constraints</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Agent Framework Integration</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Tool Invocation Layer</a>
+      <a class="nav-item sub" href="#s6-3">6.3 External Plugin Systems</a>
+      <a class="nav-item" href="#s7">7. Data Flow Constraints</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Input Validation</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Context Window Injection</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Streaming Token Constraints</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Data and Control Plane Separation</a>
+      <a class="nav-item sub" href="#s7-5">7.5 Enforcement Logging Integrity</a>
+      <a class="nav-item" href="#s8">8. Cryptographic and Identity</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Key Exchange and mTLS</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Signature Verification</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Identity Propagation</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Token Integrity Invariants</a>
+      <a class="nav-item" href="#s9">9. Failure Mode Handling</a>
+      <a class="nav-item sub" href="#s9-1">9.1 Failure Mode Specifications</a>
+      <a class="nav-item" href="#s10">10. Anti-Bypass Controls</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Direct Model Access</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Shadow API Routes</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Side-Channel Token Injection</a>
+      <a class="nav-item sub" href="#s10-4">10.4 Prompt Mutation After Approval</a>
+      <a class="nav-item sub" href="#s10-5">10.5 Dynamic Configuration Toggling</a>
+      <a class="nav-item sub" href="#s10-6">10.6 Threat Classification</a>
+      <a class="nav-item" href="#s11">11. Certification Implications</a>
+      <a class="nav-item sub" href="#s11-0">11.0 IAL Framework</a>
+      <a class="nav-item sub" href="#s11-2">11.2 Non-Conformance Findings</a>
+      <a class="nav-item sub" href="#s11-3">11.3 Topology Validation</a>
+      <a class="nav-item" href="#s12">12. Non-Coverage and Limitations</a>
+      <a class="nav-item" href="#closing">Architectural Declaration</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document constitutes the formal interoperability and integration constraints declaration for the QODIQA standard corpus. It defines the structural boundaries within which QODIQA operates across heterogeneous AI system architectures, specifies the integration interfaces that are permitted, and declares the invariants that no external system component is permitted to override.</p>
+          <p>This document does not describe interoperability features, integration tutorials, or vendor-specific implementation guidance. It declares the <strong>hard architectural limits</strong> within which any conformant integration must operate. Interoperability is subordinate to enforcement integrity. Where these objectives conflict, enforcement integrity prevails without exception.</p>
+          <p>The constraints herein are aligned with the QODIQA Core Standard, the 68-Point Enforcement Framework, the Reference Architecture, the Certification Framework, the Conformance Test Suite, and the Security and Cryptographic Profile. No constraint defined in this document weakens, qualifies, or defers any provision established by those normative instruments.</p>
+          <p>All statements using <strong>SHALL</strong> designate mandatory invariants. All statements using <strong>SHALL NOT</strong> designate prohibited behaviors. All statements using <strong>MUST</strong> designate cryptographic or safety-critical requirements. These are not aspirational commitments. They are structural constraints.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 0 -->
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 0</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Purpose and Scope Boundary</h2>
+
+        <p>This document establishes the formal interoperability constraints governing all QODIQA deployments across heterogeneous AI infrastructures and defines the architectural limits within which deterministic runtime consent enforcement operates. Its purpose is to declare, with precision and without qualification, the architectural boundaries within which QODIQA operates when deployed across multi-component, multi-vendor, or multi-layer AI system environments.</p>
+
+        <div class="callout">
+          <p>This document defines interoperability <strong>constraints</strong>, not interoperability features. It does not describe how to integrate QODIQA. It describes what integration architectures are structurally permissible and what cannot, under any circumstance, be introduced through integration.</p>
+        </div>
+
+        <h3 id="s0-1"><span class="sh-num">0.1</span>Scope Declaration</h3>
+
+        <p>The scope of this document encompasses all external system interfaces that interact with, route traffic through, or operate in conjunction with the QODIQA Enforcement Gateway. This includes but is not limited to: AI orchestration frameworks, agent runtimes, multi-model routing systems, API gateways, reverse proxies, message queue systems, sidecar enforcement proxies, and network-layer enforcement components.</p>
+
+        <p>This document explicitly excludes: the internal implementation mechanics of the QODIQA Enforcement Gateway itself, model-internal safety classification mechanisms, training data governance, and organizational or legal compliance processes. Those subjects are addressed by other instruments in the corpus or are outside its scope entirely.</p>
+
+        <h3 id="s0-2"><span class="sh-num">0.2</span>Foundational Constraint Declaration</h3>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Primary Interoperability Invariant</span>
+            <span class="nbh-id">INV-INTEROP-000</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Interoperability SHALL NOT introduce override paths across the deterministic enforcement boundary.</strong></p>
+            <p>No integration architecture, regardless of its topology, vendor composition, or operational justification, is permitted to create conditions under which QODIQA enforcement logic is bypassed, deferred, weakened, or rendered conditional. This invariant is absolute and admits no exception.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-000 · Non-negotiable · Aligned with QODIQA Core Standard and 68-Point Enforcement Framework Domain I</div>
+        </div>
+
+        <p>Deterministic runtime enforcement is structurally prior to any integration concern. Any integration pattern that cannot operate within this constraint is non-conformant and SHALL NOT be deployed in conjunction with QODIQA.</p>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Definitions and System Boundary Vocabulary</h2>
+
+        <p>The following definitions establish the precise vocabulary used throughout this document. All terms are aligned with the QODIQA Reference Architecture. Where a term appears in other corpus documents, the definition provided here is controlling for the purposes of interoperability analysis.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Term</th>
+                <th>Formal Definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Enforcement Gateway</td>
+                <td>The singular, deterministic boundary component through which all inference requests and responses must transit. The Enforcement Gateway is the locus of consent validation, policy evaluation, and enforcement decision execution. It is not a proxy in the conventional sense; it is a structural enforcement point with no bypass provision.</td>
+              </tr>
+              <tr>
+                <td>Consent Registry</td>
+                <td>The authoritative, append-only data store that records consent grants, revocations, scope limitations, and temporal validity windows. The Consent Registry is read at enforcement time. It is not modified by inference operations or orchestration actions.</td>
+              </tr>
+              <tr>
+                <td>Policy Engine</td>
+                <td>The deterministic evaluation component that produces permit or deny decisions by evaluating resolved consent context against applicable policy rules. The Policy Engine produces no probabilistic outputs. Its decision function is a deterministic mapping from consent state and request attributes to a binary enforcement decision.</td>
+              </tr>
+              <tr>
+                <td>Trust Boundary</td>
+                <td>The structural demarcation between components that operate under QODIQA enforcement and components that do not. Components inside the Trust Boundary have received enforcement verdicts for their operations. Components outside the Trust Boundary have not. No component outside the Trust Boundary may present itself as enforcement-cleared without a valid, current enforcement decision.</td>
+              </tr>
+              <tr>
+                <td>Bypass Vector</td>
+                <td>Any architectural pathway, integration pattern, or operational procedure that enables inference operations to proceed without traversing the QODIQA Enforcement Gateway. Bypass Vectors are non-conformant by definition. Their existence in a deployed architecture constitutes a Critical non-conformance finding under the Certification Framework.</td>
+              </tr>
+              <tr>
+                <td>Override Attempt</td>
+                <td>Any action by an external component, system, or actor that attempts to alter, nullify, defer, or circumvent an enforcement decision produced by the Policy Engine. Override Attempts include: configuration changes that disable enforcement logic, injection of pre-authorized tokens by non-authoritative sources, and post-approval mutation of permitted request payloads.</td>
+              </tr>
+              <tr>
+                <td>Integration Surface</td>
+                <td>A defined interface type through which external components interact with the QODIQA Enforcement Gateway. Integration Surfaces are categorized by observability, enforceability, and trust boundary position. Only Integration Surfaces defined in Section 3 of this document are authorized for use in conformant deployments.</td>
+              </tr>
+              <tr>
+                <td>Control Plane</td>
+                <td>The administrative and configuration interface of the QODIQA system, used for policy management, consent registry administration, and enforcement configuration. The Control Plane is strictly separated from the Data Plane. Control Plane access does not grant Data Plane permissions and vice versa.</td>
+              </tr>
+              <tr>
+                <td>Data Plane</td>
+                <td>The operational inference traffic pathway through which requests and responses transit the Enforcement Gateway. Data Plane operations are subject to per-request enforcement decisions. Data Plane components do not have access to Control Plane configuration.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Layered Integration Model</h2>
+
+        <p>QODIQA enforcement is designed to operate within layered AI system architectures. This section defines the integration layers recognized by the QODIQA framework and specifies the enforcement constraints applicable to each layer. The layered model does not imply that all layers must be present in every deployment. It defines the architectural positions at which enforcement can be instantiated and the constraints that apply when enforcement operates at each position.</p>
+
+        <div class="callout">
+          <p>The enforcement constraint applicable to every layer is identical: <strong>no inference operation may proceed without a valid enforcement decision.</strong> The layered model describes where enforcement is instantiated; it does not create layer-specific exceptions to this requirement.</p>
+        </div>
+
+        <h3 id="s2-1"><span class="sh-num">2.1</span>Pre-Inference Boundary Layer</h3>
+
+        <p>The Pre-Inference Boundary Layer encompasses all components that process, route, or transform inference requests prior to their submission to a model provider. This layer includes API gateways, reverse proxies, request routers, and orchestration frameworks that operate upstream of model execution.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Pre-Inference Enforcement Requirement</span>
+            <span class="nbh-id">INV-INTEROP-011</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>All inference requests entering the Pre-Inference Boundary Layer SHALL transit the QODIQA Enforcement Gateway before being forwarded to any model provider endpoint.</strong></p>
+            <p>Components in this layer that forward requests directly to model endpoints without Enforcement Gateway transit are Bypass Vectors and are prohibited in conformant deployments.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-011 · Critical · Verified in Conformance Test Suite Section 3.1</div>
+        </div>
+
+        <h3 id="s2-2"><span class="sh-num">2.2</span>Inference Execution Layer</h3>
+
+        <p>The Inference Execution Layer encompasses model provider endpoints and their immediate operational environment. QODIQA does not operate within the Inference Execution Layer. QODIQA enforcement occurs at the boundary of this layer, not inside it.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Inference Layer Non-Penetration Requirement</span>
+            <span class="nbh-id">INV-INTEROP-012</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>QODIQA enforcement SHALL NOT attempt to operate within the internal computational environment of model providers.</strong></p>
+            <p>Enforcement operates at the boundary of model execution: on requests before they reach model providers and on responses before they reach requesting components. Internal model behavior, intermediate computation states, and provider-side caching are outside the enforcement perimeter and are not subject to QODIQA invariants.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-012 · Scope Boundary · Clarifies enforcement perimeter limits</div>
+        </div>
+
+        <h3 id="s2-3"><span class="sh-num">2.3</span>Post-Inference Processing Layer</h3>
+
+        <p>The Post-Inference Processing Layer encompasses all components that receive, transform, store, or forward model responses after they have exited the Inference Execution Layer. This layer includes response parsers, output formatters, downstream API consumers, storage systems, and notification pipelines.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Post-Inference Response Interception</span>
+            <span class="nbh-id">INV-INTEROP-013</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Model responses SHALL transit the QODIQA Enforcement Gateway before delivery to Post-Inference Processing Layer components.</strong></p>
+            <p>Response-path enforcement is not optional. Enforcement decisions applicable to response content (scope limitations, output filtering requirements, consent-conditioned delivery constraints) are enforced at the response transit point. Responses that bypass the Enforcement Gateway on the return path constitute Bypass Vectors equivalent in severity to request-path bypasses.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-013 · Critical · Response-path enforcement requirement</div>
+        </div>
+
+        <h3 id="s2-4"><span class="sh-num">2.4</span>External Orchestration Layer</h3>
+
+        <p>The External Orchestration Layer encompasses agent frameworks, workflow orchestrators, multi-step inference pipelines, and autonomous systems that coordinate multiple inference operations. This layer presents the most complex interoperability challenges because its components may generate inference requests programmatically, may modify requests in transit, and may operate across trust boundaries that are not fully visible to individual request-level enforcement.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Orchestration Layer Per-Operation Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-014</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Each inference operation initiated by an External Orchestration Layer component SHALL receive an independent enforcement decision.</strong></p>
+            <p>A permit decision for one operation in a multi-step workflow does not constitute authorization for subsequent operations. Orchestration frameworks that cache permit decisions and apply them to subsequent operations without re-evaluation are non-conformant. Per-operation enforcement is the invariant; orchestration convenience does not override it.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-014 · Critical · No permit caching across operations permitted</div>
+        </div>
+
+        <h3 id="s2-5"><span class="sh-num">2.5</span>Interoperability State Model</h3>
+
+        <p>This section defines the formal state machine governing the lifecycle of an inference operation within the QODIQA enforcement architecture. The state model provides the conceptual foundation for understanding which transitions are permitted, which are prohibited, and what conditions produce enforcement failure states.</p>
+
+        <div class="state-model-intro">
+          States: S0 (Request Received) → S1 (Identity Verified) → S2 (Consent Resolved) → S3 (Policy Evaluated) → S4 (Permit Issued) → S5 (Payload Sealed) → S6 (Request Delivered) → S7 (Response Returned) | SD (Deny) | SF (Failure)
+        </div>
+
+        <div class="state-diagram-featured">
+          <pre>S0 ──[Identity Verification]──────────► S1
+S1 ──[Consent Resolution]─────────────► S2    S1 ──[No Identity]──────► SD / SF
+S2 ──[Policy Evaluation]──────────────► S3    S2 ──[No Consent]───────► SD / SF
+S3 ──[Permit Decision]────────────────► S4    S3 ──[Policy Deny]──────► SD
+S3 ──[Error]──────────────────────────► SF    S4 ──[Seal Failure]─────► SF
+S4 ──[Payload Seal]───────────────────► S5    S5 ──[Transit Error]────► SF
+S5 ──[Request Delivery]───────────────► S6
+S6 ──[Response Transit]───────────────► S7
+SD ──[Terminal State]─────────────────► (no further transitions)
+SF ──[Terminal State]─────────────────► (no further transitions)</pre>
+          <span class="state-diagram-caption">Figure 2.5 — QODIQA Enforcement Lifecycle State Machine · All transitions not enumerated are prohibited</span>
+        </div>
+
+        <h3 id="s2-5-2"><span class="sh-num">2.5.2</span>Allowed and Prohibited Transitions</h3>
+
+        <p>The permitted transition set for the nominal path is: S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7. Deny transitions are: S1 → SD, S2 → SD, S3 → SD. Failure transitions are: S1 → SF, S2 → SF, S3 → SF, S4 → SF, S5 → SF.</p>
+
+        <div class="invariant-list">
+          <div class="invariant-head">Transition Constraints</div>
+          <div class="invariant-item">
+            <span class="inv-tag">Prohibited</span>
+            <span><strong>All transitions not enumerated in the permitted transition set are prohibited.</strong> Specifically: any transition that skips one or more intermediate states on the nominal path, any reverse transition from a later state to an earlier state, and any transition from SD or SF to any other state.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Prohibited</span>
+            <span><strong>S4 → S6 (skip S5) is prohibited.</strong> A permit issued in S4 without payload integrity sealing in S5 cannot be delivered. The absence of a sealed payload signature is a transition condition failure that produces SF.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Prohibited</span>
+            <span><strong>S0 → S3 (skip S1, S2) is prohibited.</strong> Policy evaluation cannot proceed without resolved identity and consent context. A Policy Engine invocation without prior identity verification and consent resolution produces SF.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Prohibited</span>
+            <span><strong>S6 → S3 (backtrack) is prohibited.</strong> A delivery event cannot cause re-evaluation. Post-delivery enforcement re-evaluation is a separate operation lifecycle beginning at S0, not a continuation of the current lifecycle.</span>
+          </div>
+        </div>
+
+        <h3 id="s2-5-3"><span class="sh-num">2.5.3</span>Formal Constraints on the State Machine</h3>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>No-Skip Constraint</span>
+            <span class="nbh-id">INV-INTEROP-025A</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>No inference operation may transition directly from S0 to S6 without traversing S1, S2, S3, S4, and S5 in order.</strong></p>
+            <p>This constraint is absolute. Any architectural pattern, optimization, caching mechanism, or pre-authorization scheme that delivers a request to a model provider without the complete ordered traversal of S1 through S5 constitutes a Bypass Vector as defined in Section 1 and is non-conformant.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-025A · Absolute · No exception pathway · Aligned with Conformance Test Suite Section 8.1</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>No-Backtracking Constraint</span>
+            <span class="nbh-id">INV-INTEROP-025B</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>State transitions in the enforcement lifecycle are strictly forward-directed. No operation that has reached state Sn may return to any state S(n-k) for k ≥ 1 within the same operation lifecycle.</strong></p>
+            <p>Conditions that might appear to require backtracking (updated consent arriving after S2 completion, policy changes detected after S3 completion) do not produce backtracking. They produce SF, requiring a new operation lifecycle beginning at S0 with current state.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-025B · Absolute · State machine integrity property</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Atomic Decision Constraint</span>
+            <span class="nbh-id">INV-INTEROP-025C</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>The transition from S3 to S4 (permit issuance) is an atomic operation. It cannot be partially executed, deferred, or split across multiple computational units without cryptographic coordination that preserves atomicity guarantees.</strong></p>
+            <p>Distributed enforcement architectures that evaluate policy rules across multiple nodes MUST produce a single, consolidated, cryptographically bound permit decision before transitioning to S4. No component downstream of S3 receives permit information until S4 is complete as an atomic unit.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-025C · MUST · Cryptographic requirement · Aligned with Security Profile Section 5</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Authorized Integration Surfaces</h2>
+
+        <p>QODIQA enforcement can be deployed across a defined set of integration surface types. Each surface type has specific observability properties, enforcement capabilities, and trust boundary positions. Deploying QODIQA at a surface type not defined herein requires formal evaluation against the Certification Framework prior to production use.</p>
+
+        <h3 id="s3-1"><span class="sh-num">3.1</span>REST and gRPC Boundary Enforcement</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Observable</div>
+            <div class="state-desc">Request headers, request body content, response status, response body content, caller identity claims, and temporal metadata.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Enforceable</div>
+            <div class="state-desc">Permit or deny based on consent context, policy evaluation, and request metadata. Response interception and blocking where output contains enforcement-relevant content.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Non-Observable</div>
+            <div class="state-desc">Model-internal computation state, provider-side caching behavior, and out-of-band provider configuration.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Trust Boundary</div>
+            <div class="state-desc">The Enforcement Gateway resides inline between the caller and the model endpoint. The REST/gRPC interface is the surface through which enforcement decisions are communicated.</div>
+          </div>
+        </div>
+
+        <h3 id="s3-2"><span class="sh-num">3.2</span>Message Queue Enforcement</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Observable</div>
+            <div class="state-desc">Message payload, message metadata, queue identity, producer identity claims, and message timestamp.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Enforceable</div>
+            <div class="state-desc">Message consumption blocking, permit-conditional forwarding to inference endpoints, and dead-letter routing for denied messages.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Non-Observable</div>
+            <div class="state-desc">Messages queued prior to enforcement gateway deployment, out-of-band producer channels, and queue infrastructure internal state.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Trust Boundary</div>
+            <div class="state-desc">Enforcement occurs at message consumption. Messages must not reach inference execution by pathways that bypass enforcement consumption.</div>
+          </div>
+        </div>
+
+        <h3 id="s3-3"><span class="sh-num">3.3</span>Reverse Proxy and API Gateway Enforcement</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Observable</div>
+            <div class="state-desc">Full HTTP/S request and response envelope, TLS termination metadata, upstream routing decisions, and load balancer annotations.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Enforceable</div>
+            <div class="state-desc">Request blocking at proxy layer, response interception, upstream routing modification based on enforcement decision, and connection termination.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Non-Observable</div>
+            <div class="state-desc">Encrypted sideband channels, provider-internal API responses not passing through proxy, and out-of-band WebSocket upgrades unless explicitly intercepted.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Trust Boundary</div>
+            <div class="state-desc">The proxy layer is the Enforcement Boundary. Direct routes to backend model endpoints that bypass the proxy constitute Bypass Vectors and are prohibited.</div>
+          </div>
+        </div>
+
+        <h3 id="s3-4"><span class="sh-num">3.4</span>Sidecar Enforcement Model</h3>
+
+        <p>In containerized deployment environments, QODIQA enforcement may be deployed as a sidecar component co-located with the application container. The sidecar intercepts all outbound inference traffic and inbound model responses. The network topology MUST be configured to prevent the application container from reaching inference endpoints by pathways that bypass the sidecar.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Sidecar Network Isolation Requirement</span>
+            <span class="nbh-id">INV-INTEROP-034</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Network policy configurations in sidecar deployments MUST restrict all outbound traffic from the application container to inference endpoints exclusively through the sidecar enforcement proxy. Direct container-to-provider routes SHALL NOT exist.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-034 · Critical · Verified in Conformance Test Suite Section 8.2</div>
+        </div>
+
+        <h3 id="s3-5"><span class="sh-num">3.5</span>Network Segmentation Enforcement Model</h3>
+
+        <p>In network segmentation deployments, QODIQA enforcement is instantiated as a network segment boundary through which all inference traffic must transit. This model is applicable to on-premises deployments, private cloud environments, and hybrid architectures where physical or virtual network control is available.</p>
+
+        <p>The network segmentation model provides the broadest observability surface and the strongest bypass prevention guarantees. It does not, however, reduce the requirement for application-layer enforcement validation. Network-layer controls are complementary to, not substitutes for, application-layer enforcement.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Non-Override Guarantees</h2>
+
+        <p>This section constitutes the formal declaration of non-override guarantees that apply to all QODIQA conformant deployments. These guarantees are structural. They cannot be disabled by configuration, overridden by operational decisions, or negotiated away through commercial arrangements. Their violation constitutes a non-conformance finding that invalidates certification status.</p>
+
+        <div class="inst-statement-primary">
+          <p>No external system component, regardless of its authority level, operational role, or technical capability, is permitted to disable, defer, weaken, or circumvent the deterministic enforcement decisions of the QODIQA Enforcement Gateway.</p>
+        </div>
+
+        <h3 id="s4-1"><span class="sh-num">4.1</span>External System Constraints</h3>
+
+        <div class="invariant-list">
+          <div class="invariant-head">Non-Override Invariants, External Systems</div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>External systems SHALL NOT disable enforcement logic through configuration flags, environment variables, feature toggles, or administrative API calls. Enforcement logic is not configurable for bypass.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Model providers SHALL NOT modify enforcement decisions. Enforcement decisions are produced by the Policy Engine against Consent Registry state. Model providers receive only request traffic that has been permitted. They do not receive enforcement metadata and cannot alter enforcement outcomes.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Orchestrators SHALL NOT inject post-approval mutations into inference requests. A request approved at the Enforcement Boundary must be delivered to the model provider in the form in which it was approved. Post-approval mutation constitutes an Override Attempt.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Runtime prompts SHALL NOT alter policy state. Prompt content is evaluated against policy; it does not modify policy. No prompt construction pattern, including structured injection formats, system-role manipulation, or meta-instruction sequences, constitutes a valid policy update pathway.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Configuration flags in application code, infrastructure templates, or deployment manifests SHALL NOT provide mechanisms through which deterministic controls can be bypassed. The absence of such flags is a conformance requirement, not a default.</span>
+          </div>
+        </div>
+
+        <h3 id="s4-2"><span class="sh-num">4.2</span>Invariant Declarations</h3>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Enforcement Decision Immutability</span>
+            <span class="nbh-id">INV-INTEROP-041</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>An enforcement decision, once produced by the Policy Engine, is immutable within the scope of the inference operation to which it applies.</strong></p>
+            <p>No downstream component receives authority to reverse a deny decision. No upstream component receives authority to pre-authorize a request in a manner that bypasses Policy Engine evaluation. Enforcement decisions are the exclusive output of the QODIQA Enforcement Gateway operating against current Consent Registry state.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-041 · Absolute · Immutability property of enforcement decisions</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Consent Registry Non-Writeability from Data Plane</span>
+            <span class="nbh-id">INV-INTEROP-042</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>The Consent Registry SHALL NOT accept write operations originating from Data Plane components, inference operations, model provider responses, or orchestration framework actions.</strong></p>
+            <p>Consent state is modified exclusively through the Control Plane by authorized consent management operations. Inference operations read consent state; they do not modify it. Any Data Plane component that issues write operations to the Consent Registry is non-conformant and constitutes an Override Attempt.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-042 · Critical · Control Plane / Data Plane separation enforcement</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Fail-Closed Non-Override</span>
+            <span class="nbh-id">INV-INTEROP-043</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>The fail-closed default of the QODIQA Enforcement Gateway SHALL NOT be overridden by external system configuration, operational policy, or commercial arrangement.</strong></p>
+            <p>Fail-closed means: when the Enforcement Gateway cannot produce a definitive permit decision (due to Consent Registry unavailability, Policy Engine error, identity verification failure, or any other condition that prevents complete enforcement lifecycle execution), the default outcome is deny. This default is not configurable. Deployments that require a fail-open default for operational continuity are non-conformant with QODIQA.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-043 · Non-negotiable · Fail-closed is structural, not configurable</div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Multi-Model and Multi-Vendor Deployment Constraints</h2>
+
+        <p>Multi-model and multi-vendor deployments introduce integration complexity that must be managed without weakening enforcement integrity. This section defines the constraints applicable to deployment architectures that involve multiple model providers, multiple enforcement gateway instances, or hybrid on-premises and cloud configurations.</p>
+
+        <h3 id="s5-1"><span class="sh-num">5.1</span>Multi-Provider Routing Constraints</h3>
+
+        <p>When QODIQA is deployed in an environment that routes inference requests to multiple model providers, each routing path must be covered by enforcement. The existence of multiple providers does not create provider-specific enforcement exemptions.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Multi-Provider Coverage Requirement</span>
+            <span class="nbh-id">INV-INTEROP-051</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Every model provider endpoint accessible within a conformant deployment SHALL be covered by Enforcement Gateway routing. No provider endpoint SHALL be reachable from application components by paths that do not transit enforcement.</strong></p>
+            <p>Routing decisions that select between providers occur after enforcement, not before. The enforcement decision is made on the request as presented; routing to a specific provider is an implementation detail of request delivery that does not alter enforcement requirements.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-051 · Critical · Universal coverage across all provider endpoints</div>
+        </div>
+
+        <h3 id="s5-2"><span class="sh-num">5.2</span>Hybrid On-Premises and Cloud Deployment Constraints</h3>
+
+        <p>Hybrid deployments span on-premises infrastructure and cloud-hosted model providers. The trust boundary in hybrid deployments must be explicitly designed to ensure that the network path between on-premises components and cloud-hosted endpoints transits enforcement controls.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Hybrid Deployment Enforcement Continuity</span>
+            <span class="nbh-id">INV-INTEROP-052</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>In hybrid deployments, enforcement continuity SHALL be maintained across the on-premises/cloud boundary. Network paths from on-premises application components to cloud-hosted model provider endpoints SHALL transit enforcement controls that are subject to the same invariants as fully on-premises or fully cloud-hosted deployments.</strong></p>
+            <p>The physical or logical boundary between on-premises and cloud infrastructure does not constitute a trust boundary exemption. Enforcement applies to the inference operation regardless of where in the network the request originates or terminates.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-052 · Critical · Cross-boundary enforcement continuity</div>
+        </div>
+
+        <h3 id="s5-3"><span class="sh-num">5.3</span>Fallback and Load Balancing Constraints</h3>
+
+        <p>Fallback routing (routing requests to alternative providers when primary providers are unavailable) and load balancing (distributing requests across multiple provider instances) must not create enforcement gaps. Fallback targets and load balancing targets are subject to the same enforcement requirements as primary targets.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Fallback Target Enforcement Requirement</span>
+            <span class="nbh-id">INV-INTEROP-053</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Fallback model provider endpoints SHALL be subject to identical enforcement requirements as primary endpoints. A fallback routing event SHALL NOT bypass enforcement or reduce enforcement scope relative to the original request.</strong></p>
+            <p>Fallback routing that routes to endpoints not covered by enforcement topology is a Bypass Vector. Operational continuity requirements do not justify fallback paths that circumvent enforcement.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-053 · Critical · Fallback paths must maintain enforcement coverage</div>
+        </div>
+
+        <h3 id="s5-4"><span class="sh-num">5.4</span>Federated Inference Deployment Constraints</h3>
+
+        <p>Federated inference deployments distribute inference computation across multiple nodes, potentially across organizational boundaries. These architectures present enforcement challenges because inference operations may be fragmented, results may be aggregated, and the organizational ownership of individual inference nodes may differ.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Federated Inference Enforcement Boundary</span>
+            <span class="nbh-id">INV-INTEROP-054</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>In federated inference deployments, enforcement SHALL be applied to the composite inference operation at the point of request initiation and result delivery. Enforcement of sub-operations within the federation is required where sub-operation results are independently usable by the requesting component.</strong></p>
+            <p>Federated architectures that aggregate results from multiple inference nodes without per-sub-operation enforcement are conformant only where sub-operation results are not delivered to application components independently. Where sub-results are independently delivered, each constitutes an inference operation subject to independent enforcement.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-054 · Complex topology requirement · Requires architectural evaluation during certification</div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Agent Framework Constraints</h2>
+
+        <p>Agent frameworks introduce inference patterns that differ structurally from single-turn request-response interactions. This section defines the enforcement constraints applicable to agent framework integrations, including constraints on tool invocation, memory access, and multi-turn interaction management.</p>
+
+        <h3 id="s6-1"><span class="sh-num">6.1</span>Agent Framework Integration Boundaries</h3>
+
+        <p>Agent frameworks that generate inference requests autonomously or semi-autonomously must route those requests through enforcement with the same rigor applied to application-generated requests. The autonomous or programmatic origin of a request does not reduce the enforcement requirement.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Agent-Generated Request Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-061</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Inference requests generated by agent framework components SHALL transit the QODIQA Enforcement Gateway with complete identity context attributable to both the agent framework instance and the originating principal on whose behalf the agent is operating.</strong></p>
+            <p>Agent frameworks that submit requests under generic or framework-level identities without propagating the originating principal's identity context are non-conformant. Enforcement decisions require identity resolution to the human or organizational principal that authorized the agent's operation.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-061 · Critical · Identity propagation requirement for agent operations</div>
+        </div>
+
+        <h3 id="s6-2"><span class="sh-num">6.2</span>Tool Invocation Layer Constraints</h3>
+
+        <p>Agent frameworks commonly use tool invocation (also referred to as function calling) to interact with external systems. Where tool invocations trigger inference operations (for example, tools that call AI sub-agents or that use AI-powered APIs), those operations are subject to enforcement.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Tool-Initiated Inference Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-062</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Inference operations initiated through tool invocation mechanisms SHALL be subject to enforcement as independent inference operations. Tool invocation does not constitute implicit authorization. The consent and identity context of the parent inference operation does not extend to tool-initiated sub-operations without explicit, independently validated consent.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-062 · Critical · No implicit consent extension through tool invocation</div>
+        </div>
+
+        <h3 id="s6-3"><span class="sh-num">6.3</span>External Plugin Systems</h3>
+
+        <p>Agent frameworks that support external plugin architectures (plugins that extend agent capability through third-party code execution) must ensure that plugin-initiated inference operations transit enforcement. The third-party origin of plugin code does not reduce enforcement requirements; it increases them.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Plugin-Initiated Operation Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-063</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>All inference operations initiated by third-party plugin code executing within an agent framework SHALL transit enforcement with identity context that includes the plugin's identity in addition to the agent framework and originating principal identities.</strong></p>
+            <p>Plugin execution environments that permit inference calls without enforcement gateway routing are Bypass Vectors. Plugin sandboxing that does not include network-level enforcement routing constraints is insufficient for QODIQA conformance.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-063 · Critical · Plugin identity must be included in enforcement context</div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Data Flow Constraints</h2>
+
+        <p>Data flow constraints govern the movement of inference-related data through QODIQA-enforced architectures. These constraints address input validation, context window management, streaming response handling, and the separation of data and control plane traffic.</p>
+
+        <h3 id="s7-1"><span class="sh-num">7.1</span>Input Validation Constraints</h3>
+
+        <p>The Enforcement Gateway validates the structural and semantic properties of inference requests as part of the enforcement lifecycle. Input validation is not a pre-enforcement filter; it is part of enforcement itself. Requests that do not pass validation produce enforcement failure states, not pre-enforcement rejections.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Input Validation as Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-071</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Input validation failures SHALL produce enforcement failure states (SF) with audit log entries equivalent in completeness to permit or deny decisions. Validation failures are enforcement events, not pre-enforcement events.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-071 · Audit requirement · Validation failures are enforcement events</div>
+        </div>
+
+        <h3 id="s7-2"><span class="sh-num">7.2</span>Context Window Injection Constraints</h3>
+
+        <p>Context window injection (the addition of system prompts, retrieved documents, memory contents, or other contextual material to inference requests) must be governed by enforcement. Material injected into the context window is part of the inference request and is subject to the same consent and policy evaluation as user-provided prompt content.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Context Injection Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-072</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Context window content injected by orchestration frameworks, agent runtimes, retrieval systems, or memory components SHALL be subject to enforcement evaluation as part of the complete inference request. Injected content that was not present at consent grant time requires explicit consent scope coverage or triggers a deny decision.</strong></p>
+            <p>System prompt injection that alters the effective scope of the inference operation beyond what consented principals authorized constitutes an Override Attempt. Retrieval-augmented generation systems that inject retrieved content must operate within consent scopes that explicitly authorize the data sources being retrieved.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-072 · Critical · Context injection is part of the enforcement surface</div>
+        </div>
+
+        <h3 id="s7-3"><span class="sh-num">7.3</span>Streaming Token Constraints</h3>
+
+        <p>Streaming inference responses (where model output is delivered as a token stream rather than a complete response) present enforcement challenges because output content is not fully known at response initiation. QODIQA addresses streaming through response-path enforcement that monitors token streams for consent-relevant content.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Streaming Response Enforcement</span>
+            <span class="nbh-id">INV-INTEROP-073</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Streaming response delivery SHALL be interceptable by the Enforcement Gateway at any point in the token stream. Enforcement conditions that arise mid-stream (consent scope violations in response content, prohibited output patterns) SHALL be enforceable through stream termination.</strong></p>
+            <p>Streaming architectures that deliver token streams directly from model providers to application components without Enforcement Gateway interception are Bypass Vectors on the response path. The enforcement requirement applies to streaming responses with equal force to complete responses.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-073 · Critical · Streaming does not exempt from response-path enforcement</div>
+        </div>
+
+        <h3 id="s7-4"><span class="sh-num">7.4</span>Data and Control Plane Separation</h3>
+
+        <p>The separation of Data Plane traffic (inference requests and responses) from Control Plane traffic (policy management, consent administration, enforcement configuration) is a structural requirement of QODIQA architecture. Commingling of Data Plane and Control Plane traffic creates conditions under which Data Plane operations could influence enforcement configuration.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Data/Control Plane Separation</span>
+            <span class="nbh-id">INV-INTEROP-074</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Data Plane and Control Plane traffic SHALL be carried on logically or physically separate channels. Data Plane components SHALL NOT have write access to Control Plane interfaces. Control Plane interfaces SHALL NOT be reachable through pathways that also carry Data Plane traffic without explicit, audited access controls.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-074 · Structural · Plane separation is an architectural requirement</div>
+        </div>
+
+        <h3 id="s7-5"><span class="sh-num">7.5</span>Enforcement Logging Integrity</h3>
+
+        <p>The enforcement audit log is a structural component of the QODIQA architecture. Its integrity must be maintained against both external tampering and internal compromise. Log integrity is not a post-enforcement concern; it is an enforcement property.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Audit Log Integrity Requirement</span>
+            <span class="nbh-id">INV-INTEROP-075</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Enforcement audit log entries SHALL be cryptographically sealed at the time of creation. No component that participates in Data Plane operations SHALL have write access to enforcement audit logs. Audit log access control is a Control Plane function.</strong></p>
+            <p>Enforcement audit logs that are accessible for modification by Data Plane components constitute a structural integrity failure. Deployments in which application components or inference frameworks have write access to audit infrastructure are non-conformant.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-075 · Critical · Log integrity is an enforcement property, not an audit property</div>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Cryptographic and Identity Constraints</h2>
+
+        <p>Cryptographic and identity constraints govern the authentication, authorization, and integrity verification mechanisms required for QODIQA conformant deployments. These constraints are not implementation recommendations; they are structural requirements derived from the deterministic enforcement properties that QODIQA guarantees.</p>
+
+        <h3 id="s8-1"><span class="sh-num">8.1</span>Key Exchange and mTLS Requirements</h3>
+
+        <p>All connections between components within the QODIQA enforcement boundary must use mutual TLS (mTLS) for authentication and channel integrity. mTLS is the minimum transport security requirement; additional cryptographic controls may be required by the Security and Cryptographic Profile for specific deployment contexts.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>mTLS Requirement</span>
+            <span class="nbh-id">INV-INTEROP-081</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>All inter-component connections within the QODIQA enforcement boundary MUST use mTLS with certificates issued by a QODIQA-recognized certificate authority. Unauthenticated or one-way TLS connections between enforcement boundary components are non-conformant.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-081 · MUST · mTLS is mandatory for all enforcement boundary connections</div>
+        </div>
+
+        <h3 id="s8-2"><span class="sh-num">8.2</span>Signature Verification Requirements</h3>
+
+        <p>Enforcement decisions, permit tokens, and audit log entries are cryptographically signed by the Enforcement Gateway. Components that consume these artifacts must verify signatures before acting on them. Signature verification failure is an enforcement failure condition.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Signature Verification Requirement</span>
+            <span class="nbh-id">INV-INTEROP-082</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Components that receive enforcement decisions, permit tokens, or audit log entries MUST verify cryptographic signatures before acting on those artifacts. Acting on an unverified or invalidly signed enforcement artifact is a non-conformance condition equivalent to bypass.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-082 · MUST · Signature verification is mandatory before artifact consumption</div>
+        </div>
+
+        <h3 id="s8-3"><span class="sh-num">8.3</span>Identity Propagation Requirements</h3>
+
+        <p>Identity context must be propagated through all layers of the integration architecture. Components that strip, transform, or substitute identity context without cryptographic authorization are non-conformant.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Identity Context Propagation</span>
+            <span class="nbh-id">INV-INTEROP-083</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Identity context SHALL be propagated without modification through all integration layers. Components that modify identity claims without cryptographic re-issuance from an authorized identity provider are producing non-authoritative identity context that SHALL NOT be accepted by the Enforcement Gateway.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-083 · Critical · Identity context must not be modified in transit</div>
+        </div>
+
+        <h3 id="s8-4"><span class="sh-num">8.4</span>Token Integrity Invariants</h3>
+
+        <div class="invariant-list">
+          <div class="invariant-head">Token Integrity Requirements</div>
+          <div class="invariant-item">
+            <span class="inv-tag">MUST</span>
+            <span>Consent tokens MUST contain cryptographically bound scope, expiry, and principal binding fields. Tokens without these fields SHALL NOT be accepted by the Enforcement Gateway.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">MUST</span>
+            <span>Permit tokens issued by the Enforcement Gateway MUST be bound to the specific request payload they authorize. Permit tokens that are not payload-bound SHALL NOT be accepted as authorization for delivery.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Expired consent tokens SHALL NOT be accepted. Token expiry evaluation MUST use a monotonic clock source that is not configurable by Data Plane components.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">SHALL NOT</span>
+            <span>Consent tokens SHALL NOT be reused across inference operations. Each inference operation requires an independent, current consent evaluation against the Consent Registry.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Failure Mode Handling and Recovery Constraints</h2>
+
+        <p>Failure mode handling in QODIQA conformant deployments is governed by the fail-closed principle: when enforcement cannot be completed, the default outcome is deny. This section specifies the failure categories, their required handling, and the constraints applicable to recovery procedures.</p>
+
+        <h3 id="s9-1"><span class="sh-num">9.1</span>Failure Mode Specifications</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Failure Mode Classification and Required Handling</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Failure Mode</th>
+                <th>Category</th>
+                <th>Required Handling</th>
+                <th>Recovery Constraint</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Consent Registry Unavailable</td>
+                <td>Infrastructure</td>
+                <td>Deny all inference operations. Log unavailability event with timestamp.</td>
+                <td>Recovery requires Registry availability verification before resuming enforcement. No cached consent state may be used.</td>
+              </tr>
+              <tr>
+                <td>Policy Engine Error</td>
+                <td>Computation</td>
+                <td>Deny the affected operation. Log error with full request context (excluding payload content).</td>
+                <td>Policy Engine must complete self-diagnostic evaluation before processing subsequent requests.</td>
+              </tr>
+              <tr>
+                <td>Identity Verification Failure</td>
+                <td>Authentication</td>
+                <td>Deny the operation. Do not expose identity verification failure details to requesting component.</td>
+                <td>No recovery path within the current operation lifecycle. New lifecycle must begin at S0.</td>
+              </tr>
+              <tr>
+                <td>Permit Token Integrity Failure</td>
+                <td>Cryptographic</td>
+                <td>Deny delivery. Log integrity failure as critical security event. Alert enforcement operations.</td>
+                <td>Integrity failures trigger audit review before enforcement resumes for the affected integration pathway.</td>
+              </tr>
+              <tr>
+                <td>Audit Log Write Failure</td>
+                <td>Audit</td>
+                <td>Deny the operation that cannot be logged. Enforcement without auditability is non-conformant.</td>
+                <td>Log storage must be restored and verified before enforcement operations resume.</td>
+              </tr>
+              <tr>
+                <td>Network Path Disruption</td>
+                <td>Infrastructure</td>
+                <td>Deny inference operations on affected paths. Do not route to alternative paths that bypass enforcement.</td>
+                <td>Path restoration must include enforcement topology verification before traffic resumes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Failure Recovery Enforcement Requirement</span>
+            <span class="nbh-id">INV-INTEROP-091</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Recovery from any failure mode SHALL include enforcement topology verification before inference operations resume. Recovery procedures that restore inference capability without verifying enforcement coverage are non-conformant, regardless of operational pressure to restore service.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-091 · Critical · Recovery must include enforcement verification</div>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Anti-Bypass and Adversarial Integration Controls</h2>
+
+        <p>This section enumerates the bypass attempt categories that have been identified in the analysis of adversarial integration patterns and specifies the structural mitigations required to address each. Mitigations are structural. They are architectural properties that make bypass attempts ineffective, not detection mechanisms that respond after bypass has occurred.</p>
+
+        <h3 id="s10-1"><span class="sh-num">10.1</span>Direct Model Access Outside Gateway</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Bypass Vector</div>
+            <div class="state-desc">An application component discovers or is provided with a direct endpoint to a model provider that does not route through the Enforcement Gateway. Inference requests are submitted directly, bypassing enforcement entirely.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Structural Mitigation</div>
+            <div class="state-desc">Model provider endpoints SHALL NOT be accessible from application network segments except through the Enforcement Gateway. Network policy, firewall rules, and service mesh configuration MUST enforce this constraint. Periodic network topology audits are required during certification maintenance.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-2"><span class="sh-num">10.2</span>Shadow API Routes</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Bypass Vector</div>
+            <div class="state-desc">A model provider or orchestration platform exposes undocumented or legacy API endpoints that provide equivalent inference functionality. These endpoints are not covered by enforcement gateway routing rules.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Structural Mitigation</div>
+            <div class="state-desc">Conformant deployments SHALL enumerate all accessible model provider endpoints during certification audits. Unaccounted-for endpoints result in a non-conformance finding. Enforcement topology documentation is a required certification artifact. Any new endpoint exposed by a model provider requires re-certification of the integration topology.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-3"><span class="sh-num">10.3</span>Side-Channel Token Injection</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Bypass Vector</div>
+            <div class="state-desc">An attacker or compromised component injects identity or consent tokens into request headers, message metadata, or context window content in ways that cause the Policy Engine to evaluate the request under an elevated or different permission context.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Structural Mitigation</div>
+            <div class="state-desc">The Enforcement Gateway SHALL derive identity and consent context exclusively from verified, mTLS-authenticated sources. Header or payload content purporting to represent identity or consent grants SHALL be stripped and disregarded unless it is the authoritative token channel. All token validation MUST include issuer verification against a registered, non-malleable authority set.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-4"><span class="sh-num">10.4</span>Prompt Mutation After Approval</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Bypass Vector</div>
+            <div class="state-desc">A component between the Enforcement Gateway and the model provider modifies the prompt content after the enforcement permit decision has been made. The modified prompt may contain instructions or content that would not have received a permit decision in its modified form.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Structural Mitigation</div>
+            <div class="state-desc">The Enforcement Gateway SHALL cryptographically sign the permitted prompt payload at the moment of permit decision. The model provider interface adapter SHALL verify this signature prior to model submission. Any deviation between the signed payload and the submitted payload SHALL cause the request to be rejected and the event logged as a critical integrity violation.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-5"><span class="sh-num">10.5</span>Dynamic Configuration Toggling</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Bypass Vector</div>
+            <div class="state-desc">An attacker or compromised administrative interface modifies enforcement configuration in real time to relax enforcement constraints during a targeted inference operation, then restores the original configuration to evade detection.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Structural Mitigation</div>
+            <div class="state-desc">All enforcement configuration changes are Control Plane events and MUST be logged with cryptographic timestamps and administrator identity. Configuration changes that reduce enforcement strictness require multi-party authorization. The enforcement configuration effective at the time of each enforcement decision is recorded in the audit log. Configuration rollback to evade audit review is detectable through log integrity verification.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-6"><span class="sh-num">10.6</span>Interoperability Threat Classification</h3>
+
+        <p>This subsection defines a formal taxonomy of threat classes applicable to QODIQA interoperability architectures. The taxonomy is structured to support systematic risk identification during integration design, certification evaluation, and post-deployment audit. It does not replace the bypass vector catalog defined in Sections 10.1 through 10.5; it provides the analytical classification layer within which those vectors and others are situated.</p>
+
+        <p>The classification draws on structural threat modeling disciplines consistent with ISO/IEC 27005 and NIST SP 800-30. Each class is defined by its origin characteristics, manifestation pattern, and required architectural mitigation posture. Classification informs the depth of assessment required. It does not alter the enforcement obligation applicable to any class.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Threat Classification Invariant</span>
+            <span class="nbh-id">INV-INTEROP-106</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Threat classification does not reduce enforcement obligation. All threat classes, regardless of their origin, probability, or severity assessment, default to fail-closed behavioral requirements.</strong></p>
+            <p>A threat assessed as low-probability does not receive relaxed mitigation requirements. A threat attributed to accidental misconfiguration does not receive less rigorous architectural response than one attributed to coordinated adversarial action. Classification is an analytical instrument; it is not a risk-acceptance pathway.</p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-106 · Absolute · Governs all Class I through Class V threat responses</div>
+        </div>
+
+        <h3 id="s10-6-1"><span class="sh-num">10.6.1</span>Class I: Accidental Misconfiguration</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Definition</div>
+            <div class="state-desc">Enforcement gaps that arise from unintentional errors in deployment configuration, network topology setup, or integration surface specification. The misconfiguration is not directed; no actor intends to weaken enforcement. The enforcement gap is a consequence of operational error.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Threat Origin</div>
+            <div class="state-desc">Operations teams, platform engineers, or automated deployment tooling executing integration setup without complete awareness of enforcement topology requirements. Commonly associated with initial deployment, migration events, and infrastructure updates.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Typical Manifestation</div>
+            <div class="state-desc">Incomplete routing rules that expose direct model provider endpoints. Sidecar enforcement proxies not applied to newly provisioned application containers. API gateway enforcement plugins not re-enabled after version upgrades. Consent Registry connection strings pointing to non-production instances in production environments.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Mitigation Posture</div>
+            <div class="state-desc">Enforcement topology validation at deployment time and as a scheduled operational control. Integration topology documentation maintained current. Automated conformance checks that detect direct routes to model endpoints. Change management procedures that require enforcement impact assessment for all infrastructure modifications.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Certification Implication</div>
+            <div class="state-desc">Class I occurrences discovered during certification assessment are classified as Major non-conformance findings. They indicate insufficient operational controls and require both remediation and demonstration of preventive control implementation before certification can proceed.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-6-2"><span class="sh-num">10.6.2</span>Class II: Architectural Drift</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Definition</div>
+            <div class="state-desc">Gradual divergence between the certified integration architecture and the deployed integration architecture, occurring through incremental changes that individually appear minor but cumulatively produce material enforcement gaps. Drift is a systemic condition, not a discrete event.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Threat Origin</div>
+            <div class="state-desc">Accumulated effect of undocumented integration changes, provider API version migrations, component upgrades that alter routing behavior, and organic growth of integration surface area without corresponding enforcement coverage review.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Typical Manifestation</div>
+            <div class="state-desc">Integration topology documentation that no longer accurately reflects deployed architecture. Model provider endpoints added during capacity scaling events not covered by enforcement routing rules. Agent framework version upgrades that introduce new tool invocation pathways not assessed against enforcement requirements. Enforcement gateway version mismatches across distributed deployment nodes.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Mitigation Posture</div>
+            <div class="state-desc">Periodic integration topology re-validation against deployed architecture. Mandatory enforcement impact assessment for all integration component upgrades. Continuous monitoring of outbound traffic patterns to detect routes not transiting the Enforcement Gateway. Scheduled re-certification assessments at intervals defined in the Certification Framework.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Certification Implication</div>
+            <div class="state-desc">Class II conditions discovered at re-certification are evaluated for severity based on the magnitude of drift from the last certified baseline. Drift affecting enforcement coverage of active integration surfaces constitutes a Major or Critical finding depending on the enforcement gap created.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-6-3"><span class="sh-num">10.6.3</span>Class III: Privileged Component Abuse</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Definition</div>
+            <div class="state-desc">Exploitation of legitimate, authorized access to system components (orchestrators, agent runtimes, administrative interfaces, or Control Plane endpoints) to produce enforcement outcomes that the authorization framework was not designed to permit. The threat actor possesses real credentials for real components; the abuse is in how those components are operated.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Threat Origin</div>
+            <div class="state-desc">Compromised internal components, malicious insiders with operational access, or legitimate components whose behavior has been modified by supply chain interference. Distinguished from Class IV by the use of genuinely authorized access rather than synthesized or stolen credentials.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Typical Manifestation</div>
+            <div class="state-desc">An authorized orchestrator submitting consent modification requests to the Control Plane outside of legitimate consent management workflows. An authorized administrative account toggling enforcement configuration during a targeted inference window. An agent runtime accumulating permissions across tool invocation chains by presenting prior permit decisions as authorization for subsequent calls.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Mitigation Posture</div>
+            <div class="state-desc">Multi-party authorization for Control Plane modifications. Behavioral anomaly monitoring on privileged component activity. Per-operation permission scoping that prevents permit accumulation. Separation of enforcement administration from inference operations administration. Cryptographic audit trails that attribute each enforcement-relevant action to a specific authorized identity.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Certification Implication</div>
+            <div class="state-desc">Certification assessment evaluates whether authorization structures and operational controls are sufficient to detect and prevent Class III abuse patterns. Insufficient separation of duties in enforcement administration is a Major finding. Evidence of actual Class III exploitation during the certification window is a Critical finding requiring immediate remediation and incident investigation.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-6-4"><span class="sh-num">10.6.4</span>Class IV: Coordinated Bypass Attempt</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Definition</div>
+            <div class="state-desc">A deliberate, multi-vector attempt to circumvent enforcement by simultaneously targeting multiple components or control points in the integration architecture. Coordination implies that individual attack vectors are insufficient in isolation; the bypass requires their simultaneous or sequenced execution.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Threat Origin</div>
+            <div class="state-desc">Sophisticated external adversaries with architectural knowledge of the deployment, coordinated insider threat scenarios, or supply chain compromise affecting multiple components simultaneously.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Typical Manifestation</div>
+            <div class="state-desc">Simultaneous compromise of identity provider and Consent Registry to produce false consent context while suppressing audit log entries. Coordinated configuration modification across multiple enforcement nodes to create a brief enforcement gap. Multi-stage prompt injection designed to accumulate permissions across a sequence of individually permitted operations.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Mitigation Posture</div>
+            <div class="state-desc">Defense-in-depth architectural design that requires simultaneous compromise of cryptographically independent components to produce a bypass. Anomaly detection across enforcement event streams from multiple components. Out-of-band audit log integrity verification that is not subject to the same compromise vectors as the primary enforcement infrastructure.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Certification Implication</div>
+            <div class="state-desc">Certification assessment evaluates whether the deployment architecture requires coordinated compromise of multiple independent components to produce a bypass. Single-point-of-failure bypass paths are Critical findings regardless of their assessed probability.</div>
+          </div>
+        </div>
+
+        <h3 id="s10-6-5"><span class="sh-num">10.6.5</span>Class V: Supply Chain Interference</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Definition</div>
+            <div class="state-desc">Compromise of enforcement properties through modification of components prior to their deployment: tampered enforcement gateway binaries, modified policy evaluation libraries, substituted certificate authority roots, or corrupted model provider interface adapters.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Threat Origin</div>
+            <div class="state-desc">Adversarial modification of software supply chain artifacts, including build pipeline compromise, dependency poisoning, container image tampering, and distribution channel interference.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Typical Manifestation</div>
+            <div class="state-desc">Enforcement gateway binary that behaves correctly under audit conditions but contains conditional bypass logic activated by specific trigger conditions. Policy evaluation library that produces systematically biased results for specific request patterns. Interface adapter that silently strips payload integrity signatures before model submission.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Mitigation Posture</div>
+            <div class="state-desc">Cryptographic verification of all enforcement component integrity at deployment time using checksums registered with the QODIQA specification corpus. Reproducible build verification for enforcement gateway components. Runtime integrity attestation mechanisms that detect binary modification after deployment. Supply chain audit requirements imposed on enforcement component vendors.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Certification Implication</div>
+            <div class="state-desc">Certification requires evidence of supply chain integrity controls for all enforcement boundary components. Absence of deployment-time integrity verification is a Major finding. Absence of supply chain audit requirements for enforcement component vendors is a Minor finding requiring remediation within the certification maintenance period.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Certification Implications</h2>
+
+        <p>This section specifies the certification implications of the interoperability constraints defined in this document. Certification assessment evaluates whether a deployment architecture satisfies all applicable invariants. Findings are classified by severity and drive remediation requirements.</p>
+
+        <h3 id="s11-0"><span class="sh-num">11.0</span>Integration Assurance Level Framework</h3>
+
+        <p>The QODIQA Certification Framework defines Integration Assurance Levels (IAL) that characterize the rigor of enforcement coverage across the integration architecture. IAL classification determines the depth of certification assessment required and the audit frequency applicable to a certified deployment.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Integration Assurance Level Definitions</span>
+          <table>
+            <thead>
+              <tr>
+                <th>IAL</th>
+                <th>Description</th>
+                <th>Assessment Requirements</th>
+                <th>Applicable Deployment Profile</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>IAL-1</td>
+                <td>Basic enforcement coverage across a single-provider, single-layer integration topology with no agent framework involvement.</td>
+                <td>Documentation review, enforcement topology verification, basic bypass vector testing.</td>
+                <td>Simple API integrations with a single model provider and no orchestration complexity.</td>
+              </tr>
+              <tr>
+                <td>IAL-2</td>
+                <td>Extended enforcement coverage across multi-provider or single-layer agent framework integrations.</td>
+                <td>IAL-1 requirements plus multi-provider routing verification, agent identity propagation testing, and tool invocation enforcement testing.</td>
+                <td>Multi-provider routing, basic agent framework integrations, and hybrid deployment topologies.</td>
+              </tr>
+              <tr>
+                <td>IAL-3</td>
+                <td>Comprehensive enforcement coverage across complex multi-layer, multi-provider, multi-agent architectures with federated inference or cross-organizational boundaries.</td>
+                <td>IAL-2 requirements plus federated enforcement verification, cross-organizational trust boundary assessment, supply chain integrity evaluation, and adversarial bypass testing.</td>
+                <td>Enterprise AI platform deployments, federated inference architectures, and cross-organizational AI service integrations.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s11-2"><span class="sh-num">11.2</span>Non-Conformance Finding Classifications</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Non-Conformance Finding Severity Classifications</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Classification</th>
+                <th>Definition</th>
+                <th>Certification Impact</th>
+                <th>Remediation Requirement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Critical</td>
+                <td>A Bypass Vector exists in the deployment architecture. Enforcement can be circumvented without coordinated multi-component compromise.</td>
+                <td>Certification denied or revoked immediately.</td>
+                <td>Architectural remediation required. Full re-assessment before certification can proceed.</td>
+              </tr>
+              <tr>
+                <td>Major</td>
+                <td>An invariant defined in this document or the QODIQA Core Standard is not satisfied. Bypass is not currently possible but enforcement integrity is materially weakened.</td>
+                <td>Certification denied pending remediation.</td>
+                <td>Remediation required within 30 days. Targeted re-assessment of affected areas.</td>
+              </tr>
+              <tr>
+                <td>Minor</td>
+                <td>A conformance requirement is partially satisfied. Enforcement coverage is present but documentation, operational controls, or monitoring are deficient.</td>
+                <td>Certification conditional on remediation plan submission.</td>
+                <td>Remediation plan required within 15 days. Remediation within 90 days.</td>
+              </tr>
+              <tr>
+                <td>Observation</td>
+                <td>A practice or configuration is inconsistent with recommended implementation guidance but does not constitute a violation of a normative requirement.</td>
+                <td>No certification impact.</td>
+                <td>No mandatory remediation. Addressed at deployer's discretion.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s11-3"><span class="sh-num">11.3</span>Enforcement Topology Validation Requirements</h3>
+
+        <p>Certification assessment includes mandatory enforcement topology validation: a systematic verification that the deployed integration architecture matches the documented architecture and that all inference traffic pathways transit the Enforcement Gateway.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">
+            <span>Topology Validation Scope</span>
+            <span class="nbh-id">INV-INTEROP-113</span>
+          </div>
+          <div class="norm-block-body">
+            <p><strong>Enforcement topology validation SHALL include: enumeration of all model provider endpoints accessible from the deployment environment, verification that no application network segment has direct routing to model provider endpoints, verification that all Enforcement Gateway instances are operating with current policy state, and verification that audit log integrity controls are active on all enforcement nodes.</strong></p>
+          </div>
+          <div class="norm-block-foot">INV-INTEROP-113 · Certification requirement · Topology validation scope definition</div>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Non-Coverage and Architectural Limitations</h2>
+
+        <p>This section formally declares what QODIQA does not cover. These declarations are not admissions of weakness; they are precise scope boundaries that enable deployers to correctly identify what additional systems or controls are required in conjunction with QODIQA.</p>
+
+        <div class="invariant-list">
+          <div class="invariant-head">Explicit Non-Coverage Declarations</div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Model correctness.</strong> QODIQA does not guarantee that permitted inference operations produce factually accurate, logically consistent, or task-appropriate outputs. Enforcement of a permit decision is not an endorsement of output quality.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Model ethics evaluation.</strong> QODIQA does not evaluate whether model outputs are ethical, fair, unbiased, or aligned with any particular value framework. Consent enforcement and ethical evaluation are distinct functions. QODIQA performs the former; it is not designed to perform the latter.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Training data integrity.</strong> QODIQA does not enforce or verify any property of the data on which model providers have trained their models. Training data governance is outside the scope of runtime consent enforcement.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Runtime safety classification.</strong> QODIQA does not classify inference outputs as safe or unsafe. It enforces whether an inference operation was consented to. Whether consented operations produce safe outputs is a property of the model, the consent design, and the application, not of the enforcement infrastructure.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Model internal modification.</strong> QODIQA does not modify model weights, modify model inference procedures, inject system prompts into model internals, or alter the computational behavior of model providers. It operates at the boundary of model execution, not within it.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Organizational compliance assurance.</strong> QODIQA provides technical enforcement infrastructure that supports regulatory compliance programs. It does not, by its deployment, guarantee compliance with GDPR, the EU AI Act, NIST AI RMF, or any other regulatory framework. Compliance requires organizational, legal, and governance dimensions that extend beyond technical enforcement.</span>
+          </div>
+          <div class="invariant-item">
+            <span class="inv-tag">Excluded</span>
+            <span><strong>Content moderation.</strong> QODIQA does not perform semantic content moderation on inference outputs. Whether output content is appropriate, harmful, or objectionable is not a question QODIQA's enforcement infrastructure is designed to answer. Content moderation is a separate system function.</span>
+          </div>
+        </div>
+
+        <h3 id="s12-1"><span class="sh-num">12.1</span>Scope Restatement</h3>
+
+        <p>QODIQA strictly enforces <strong>deterministic consent validation at runtime boundaries</strong>. Every guarantee, every invariant, every certification requirement, and every conformance criterion in the QODIQA corpus is directed toward this single, precise function. Systems that require any of the excluded functions must source them from components designed for those purposes and integrate those components separately from QODIQA enforcement infrastructure.</p>
+      </div>
+
+      <!-- CLOSING -->
+      <div id="closing" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Declaration</span>
+        <h2><a class="anchor-link" href="#closing">#</a>Architectural Declaration</h2>
+
+        <p>This document has defined the formal interoperability and integration constraints governing the QODIQA deterministic consent enforcement system. The constraints herein are not aspirational standards or recommended practices. They are structural invariants, architectural properties that must be present for a deployment to be conformant and for certification to remain valid.</p>
+
+        <div class="inst-statement">
+          <p>Interoperability is permitted within the bounds defined by these constraints. Outside those bounds, there is no interoperability. There is only non-conformance.</p>
+        </div>
+
+        <p>The integration complexity of modern AI system architectures (multi-model routing, federated inference, autonomous agent frameworks, hybrid cloud topologies) does not reduce the obligation to maintain deterministic enforcement at every boundary. Complexity is not justification for relaxation. Where complexity makes enforcement harder, the architectural response is to simplify the topology or invest in enforcement infrastructure capable of handling that complexity. The response is never to weaken enforcement.</p>
+
+        <div class="callout">
+          <p><strong>The Trust Boundary is not a parameter to be adjusted per deployment.</strong> It is a structural property of the QODIQA architecture. Every integration decision that treats the Trust Boundary as negotiable is a decision to produce a non-conformant system.</p>
+        </div>
+
+        <p>These constraints are aligned with the totality of the QODIQA standard corpus. They do not introduce new requirements beyond what the corpus already establishes; they specify, in integration-specific terms, what those requirements mean for the full diversity of deployment architectures that QODIQA is designed to support.</p>
+
+        <p>The non-override guarantees declared in Section 4 are the architectural expression of the consent-as-infrastructure principle that motivates the QODIQA standard. Enforcement is not a feature that can be selectively enabled or disabled based on integration convenience. It is the infrastructure on which all compliant use of AI systems within the QODIQA framework depends.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Interoperability and Deployment Constraints specification of the QODIQA standard corpus. It constitutes the formal declaration of architectural boundaries, integration guardrails, non-override guarantees, and fail-closed requirements governing QODIQA deployments across heterogeneous AI system environments. It is issued as a Normative Constraints Note and is binding on all conformant implementations.</p>
+
+          <p>The constraints defined herein are structural invariants. They are not implementation recommendations, configuration guidelines, or vendor integration advisories. Their violation constitutes a non-conformance finding under the Certification Framework. No integration architecture is permitted to weaken, defer, or circumvent any invariant defined in this document.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-INTEROP-CONSTRAINTS</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Interoperability and Deployment Constraints</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Interoperability Boundaries, Integration Guardrails, and Non-Override Guarantees</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Constraints Note</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative: Constraints Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Scope</span>
+            <span class="doc-id-val">Interoperability constraints, integration guardrails, non-override guarantees, anti-bypass controls, failure mode specifications, and certification implications for QODIQA deployments across heterogeneous AI system architectures.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Amendment Process</span>
+            <span class="doc-id-val">Governed by the QODIQA Governance Charter for the QODIQA Standard Corpus. No amendment may relax any non-override guarantee or weaken any fail-closed requirement without Core Invariant Protection Rule evaluation.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA Interoperability and Deployment Constraints</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-INTEROP-CONSTRAINTS</p>
+      <p>Normative Constraints Note</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document declares formal architectural constraints and does not constitute legal advice, regulatory guidance, or implementation instruction. All constraints are structural and binding only within the scope of QODIQA conformance.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-INTEROP-CONSTRAINTS &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================
+     SCROLLSPY — enterprise-grade, IntersectionObserver primary
+     + rAF-throttled scroll fallback for long sections / page bottom
+     ================================================================ */
+
+  var NAV   = document.querySelectorAll('#sidebar .nav-item');
+  var HREF_MAP = {};   /* id → nav element */
+
+  NAV.forEach(function (el) {
+    var h = el.getAttribute('href');
+    if (h && h.charAt(0) === '#') HREF_MAP[h.slice(1)] = el;
+  });
+
+  /* Ordered section IDs — drives tie-breaking */
+  var SECTION_IDS = [
+    'cover','s-abstract',
+    's0','s0-1','s0-2',
+    's1',
+    's2','s2-1','s2-2','s2-3','s2-4','s2-5','s2-5-2','s2-5-3',
+    's3','s3-1','s3-2','s3-3','s3-4','s3-5',
+    's4','s4-1','s4-2',
+    's5','s5-1','s5-2','s5-3','s5-4',
+    's6','s6-1','s6-2','s6-3',
+    's7','s7-1','s7-2','s7-3','s7-4','s7-5',
+    's8','s8-1','s8-2','s8-3','s8-4',
+    's9','s9-1',
+    's10','s10-1','s10-2','s10-3','s10-4','s10-5','s10-6',
+    's11','s11-0','s11-2','s11-3',
+    's12','s12-1',
+    'closing','s-status'
+  ];
+
+  var SECTIONS = SECTION_IDS
+    .map(function (id) { return document.getElementById(id); })
+    .filter(Boolean);
+
+  /* Index for O(1) order lookup */
+  var ORDER = new Map(SECTIONS.map(function (s, i) { return [s.id, i]; }));
+
+  var currentId = null;
+
+  function activate(id) {
+    if (id === currentId) return;
+    currentId = id;
+    NAV.forEach(function (el) { el.classList.remove('active'); });
+    var target = HREF_MAP[id];
+    if (target) {
+      target.classList.add('active');
+      /* Scroll the nav item into view inside the sidebar if needed */
+      var sidebar = document.getElementById('sidebar');
+      if (sidebar) {
+        var elTop    = target.offsetTop;
+        var elBot    = elTop + target.offsetHeight;
+        var sTop     = sidebar.scrollTop;
+        var sBot     = sTop + sidebar.clientHeight;
+        if (elTop < sTop + 40)       sidebar.scrollTop = elTop - 40;
+        else if (elBot > sBot - 40)  sidebar.scrollTop = elBot - sidebar.clientHeight + 40;
+      }
+    }
+  }
+
+  /* --- IntersectionObserver: detects sections entering the "active band" --- */
+  var visible = new Set();
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible.add(e.target.id);
+      else                  visible.delete(e.target.id);
+    });
+
+    if (visible.size === 0) return;
+
+    /* Pick the topmost (lowest order index) visible section */
+    var bestId  = null;
+    var bestIdx = Infinity;
+    visible.forEach(function (id) {
+      var idx = ORDER.get(id);
+      if (idx !== undefined && idx < bestIdx) { bestIdx = idx; bestId = id; }
+    });
+    if (bestId) activate(bestId);
+  }, {
+    root:       null,
+    rootMargin: '-10% 0px -55% 0px',
+    threshold:  0
+  });
+
+  SECTIONS.forEach(function (s) { io.observe(s); });
+
+  /* --- Scroll fallback: handles very long sections & page-bottom edge cases --- */
+  function scrollSpy() {
+    var trigger = window.scrollY + window.innerHeight * 0.25;
+    var bestId  = null;
+    var bestTop = -Infinity;
+
+    SECTIONS.forEach(function (s) {
+      var top = s.getBoundingClientRect().top + window.scrollY;
+      if (top <= trigger && top > bestTop) { bestTop = top; bestId = s.id; }
+    });
+
+    /* At page bottom — always pick the last section */
+    var atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 4;
+    if (atBottom && SECTIONS.length) bestId = SECTIONS[SECTIONS.length - 1].id;
+
+    if (bestId) activate(bestId);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      window.requestAnimationFrame(function () { scrollSpy(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* Activate immediately on load */
+  scrollSpy();
+
+  /* ================================================================
+     SMOOTH NAV CLICKS
+     ================================================================ */
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+
+  NAV.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var href = el.getAttribute('href');
+      if (!href || href.charAt(0) !== '#') return;
+      e.preventDefault();
+      var target = document.getElementById(href.slice(1));
+      if (!target) return;
+      var offset = window.innerWidth <= 768 ? 64 : 24;
+      var top    = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('active');
+    });
+  });
+
+  /* ================================================================
+     BACK TO TOP
+     ================================================================ */
+  var btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', function () {
+      btt.classList.toggle('visible', window.scrollY > 600);
+    }, { passive: true });
+    btt.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ================================================================
+     MOBILE SIDEBAR TOGGLE
+     ================================================================ */
+  var toggle = document.getElementById('navToggle');
+  if (toggle && sidebar && overlay) {
+    toggle.addEventListener('click', function () {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', function () {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+}());
+</script>
+</body>
+</html>

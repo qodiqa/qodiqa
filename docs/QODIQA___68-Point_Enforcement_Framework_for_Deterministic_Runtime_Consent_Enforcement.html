@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — 68-Point Enforcement Framework for Runtime Consent Governance · v1.0</title>
+<meta name="description" content="QODIQA 68-Point Enforcement Framework for Runtime Consent Governance v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — 68-Point Enforcement Framework for Runtime Consent Governance">
+<meta property="og:description" content="Normative governance framework defining 68 control points for deterministic, machine-verifiable consent enforcement across the AI system lifecycle.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.50);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #15171B;
+  border-right: 1px solid #222428;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 22px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(122,106,80,0.25);
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #13151A;
+  color: #FFF;
+  border: 1px solid #282C34;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 40px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 56px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 26px;
+  opacity: 0.40;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 9px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 26px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 26px 0 22px;
+  margin: 0 0 37px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 0.9em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 18px 0 22px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 22px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 22px 0 28px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.48);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 11px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; white-space: nowrap; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 10px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+.key-prop p + p { margin-top: 0.7em; }
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 13px 20px;
+  margin: 13px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 26px 0 22px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FLOW DIAGRAM COMPONENTS
+   ============================================================ */
+.flow-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.flow-node {
+  padding: 14px 16px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  text-align: center;
+  min-width: 130px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.flow-node.gate-node {
+  border-left: 2px solid var(--accent);
+}
+
+.flow-node-id {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.flow-node-title {
+  display: block;
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.flow-node-sub {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.flow-node-fail {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: #8B2020;
+  margin-top: 5px;
+  opacity: 0.75;
+}
+
+.flow-arrow-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   DOMAIN HEADER BLOCKS
+   ============================================================ */
+.domain-block {
+  margin: 22px 0 16px;
+  padding: 16px 20px 12px;
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+}
+
+.domain-id-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.80;
+}
+
+.domain-title-text {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.domain-count-text {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  color: var(--muted);
+  display: block;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   NORMATIVE BADGES
+   ============================================================ */
+.norm-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.norm-must   { background: rgba(180,60,40,0.12);  color: #8B2020; border: 1px solid rgba(180,60,40,0.25); }
+.norm-should { background: rgba(100,90,30,0.10);  color: #6B5A00; border: 1px solid rgba(100,90,30,0.22); }
+.norm-may    { background: rgba(50,90,130,0.10);  color: #1E4A6B; border: 1px solid rgba(50,90,130,0.22); }
+
+/* ============================================================
+   MATURITY GRID
+   ============================================================ */
+.maturity-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 20px 0 28px;
+}
+
+.maturity-card {
+  padding: 14px 12px;
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  text-align: center;
+}
+
+.maturity-card.active {
+  background: #EDEAE5;
+  border-color: var(--accent);
+  border-left-width: 2px;
+}
+
+.maturity-level {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.maturity-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.maturity-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  line-height: 1.45;
+}
+
+/* ============================================================
+   REFERENCE LIST
+   ============================================================ */
+.ref-list { margin: 14px 0; }
+
+.ref-item {
+  display: flex;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid #E0DDD8;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.ref-item:last-child { border-bottom: none; }
+
+.ref-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 90px;
+  padding-top: 1px;
+}
+
+.ref-text { color: var(--text-2); }
+
+.ref-text a {
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.75em;
+  display: block;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 13px;
+  margin-top: 30px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 18px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 18px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+  .maturity-grid { grid-template-columns: repeat(3, 1fr); }
+  .flow-row { flex-direction: column; align-items: center; }
+  .flow-arrow-wrap { transform: rotate(90deg); }
+}
+
+/* ============================================================
+   ABBREVIATION TABLE (2-column pair layout)
+   ============================================================ */
+.tbl-abbr td:nth-child(odd)  { font-family: var(--mono); font-weight: 700; color: var(--accent); text-align: center; white-space: nowrap; width: 90px; }
+.tbl-abbr td:nth-child(even) { font-weight: 700; color: var(--text-2); text-align: left; }
+.tbl-abbr td:empty           { background: transparent; border: none; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">68-Point Enforcement Framework<br><span class="italic-part">for Runtime Consent Governance</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Enforcement Framework &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Normative governance framework defining 68 control points for deterministic, machine-verifiable consent enforcement across the Artificial Intelligence system lifecycle.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Introduction</a>
+      <a class="nav-item" href="#s2">2. Terminology</a>
+      <a class="nav-item sub" href="#s2">2.1 Requirements Language</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Definitions</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Abbreviations</a>
+      <a class="nav-item" href="#s3">3. Architecture Overview</a>
+      <a class="nav-item" href="#s4">4. Governance Domains</a>
+      <a class="nav-item sub" href="#d01">D01 Individual and Creator</a>
+      <a class="nav-item sub" href="#d02">D02 Malicious Use Prevention</a>
+      <a class="nav-item sub" href="#d03">D03 Infrastructure</a>
+      <a class="nav-item sub" href="#d04">D04 Institutional Controls</a>
+      <a class="nav-item sub" href="#d05">D05 Model Lifecycle</a>
+      <a class="nav-item sub" href="#d06">D06 Output Layer</a>
+      <a class="nav-item sub" href="#d07">D07 Temporal Governance</a>
+      <a class="nav-item sub" href="#d08">D08 Economic Rights</a>
+      <a class="nav-item sub" href="#d09">D09 AI-to-AI Control</a>
+      <a class="nav-item sub" href="#d10">D10 Cryptographic Layer</a>
+      <a class="nav-item" href="#s5">5. Lifecycle Model</a>
+      <a class="nav-item" href="#s6">6. Cryptographic Layer</a>
+      <a class="nav-item" href="#s7">7. Protocol Flow</a>
+      <a class="nav-item" href="#s8">8. Threat Model</a>
+      <a class="nav-item sub" href="#s8">8.1 Threat Assumptions</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Severity Classification</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Attack Classes</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Mitigations</a>
+      <a class="nav-item sub" href="#s8-5">8.5 Residual Risks</a>
+      <a class="nav-item" href="#s9">9. Conformance and Profiles</a>
+      <a class="nav-item" href="#s10">10. Maturity Model</a>
+      <a class="nav-item" href="#s11">11–12. Interop and Attestation</a>
+      <a class="nav-item" href="#s13">13. Security Considerations</a>
+      <a class="nav-item" href="#s14">14. Privacy Considerations</a>
+      <a class="nav-item" href="#s15">15. Normative References</a>
+      <a class="nav-item" href="#appendix">Normative Annexes A–E</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>The QODIQA 68-Point Enforcement Framework is a normative governance infrastructure specification designed to provide machine-verifiable consent enforcement across the Artificial Intelligence system lifecycle. This document defines a comprehensive set of 68 control points spanning ten governance domains, establishing a protocol-layer mechanism for asserting, verifying, and enforcing data sovereignty, creator rights, and safety constraints.</p>
+          <p>Unlike voluntary guidelines, this specification provides a rigorous, testable technical standard suitable for implementation in enterprise, research, and open infrastructure environments. It relies on cryptographic tokenization, immutable ledger auditing, and standardized API gateways to ensure that AI systems, from training through runtime inference, operate within explicitly granted consent scopes.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Introduction</h2>
+        <p>As Artificial Intelligence systems scale in complexity and autonomy, the separation between data provenance, model capability, and output generation has created a governance gap. Traditional legal frameworks rely on post-hoc litigation, which is insufficient for real-time, algorithmic decision-making.</p>
+        <p>The QODIQA Framework resolves this by introducing a protocol-layer consent infrastructure. Analogous to how TLS (Transport Layer Security) provides a universal security layer for the web, QODIQA provides a universal consent layer for AI. It operates independently of model architecture (Transformer, SSM, Diffusion) and deployment topology (Cloud, Edge, Federated).</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Core Objective</div>
+          <p>The core objective is to render consent machine-verifiable. A system conformant with this specification does not merely "promise" to respect data rights; it is cryptographically unable to process data or generate inference without a valid, signed consent token that explicitly authorizes the specific operation, scope, and timeframe.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Terminology and Definitions</h2>
+
+        <h3>2.1 Requirements Language</h3>
+        <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Keyword</th><th>Normative Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>MUST / SHALL</code></td><td>Absolute requirement. Failure to satisfy constitutes non-conformance.</td></tr>
+              <tr><td><code>MUST NOT / SHALL NOT</code></td><td>Absolute prohibition.</td></tr>
+              <tr><td><code>SHOULD / SHOULD NOT</code></td><td>Recommended behavior. Deviations MUST be documented with justification.</td></tr>
+              <tr><td><code>MAY / OPTIONAL</code></td><td>Truly optional behavior with no conformance impact.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2-2">2.2 Definitions</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+            <tbody>
+              <tr><td>Consent Enforcement Engine</td><td>The architectural component responsible for validating consent tokens against the request context and policy constraints at every pipeline stage.</td></tr>
+              <tr><td>Consent Token</td><td>A cryptographically signed data structure (JSON-LD format) containing the subject identifier, scope, expiry, commercial flag, and conditions of the consent grant.</td></tr>
+              <tr><td>Control Point</td><td>A discrete, testable enforcement mechanism identified by a unique identifier (CP-01 through CP-68).</td></tr>
+              <tr><td>Governance Domain</td><td>A logical grouping of related control points (D01 through D10).</td></tr>
+              <tr><td>Lifecycle Stage</td><td>One of six temporal phases of AI system operation: Training, Fine-Tuning, Deployment, Runtime, Output, or Retirement.</td></tr>
+              <tr><td>Maturity Level</td><td>A designation (L0 through L4) indicating the depth and rigor of the governance implementation. L4 represents full conformance.</td></tr>
+              <tr><td>Subject ID</td><td>A W3C Decentralized Identifier (DID) representing the entity granting consent.</td></tr>
+              <tr><td>Zero-Knowledge Proof</td><td>A cryptographic mechanism enabling consent verification without revealing the subject's identity.</td></tr>
+              <tr><td>Immutable Ledger</td><td>A tamper-evident distributed ledger recording all token lifecycle events using hash-chained audit entries and Merkle tree verification.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2-3">2.3 Abbreviations</h3>
+        <div class="table-wrapper">
+          <table class="tbl-abbr">
+            <thead>
+              <tr><th>Abbreviation</th><th>Definition</th><th>Abbreviation</th><th>Definition</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DID</td><td>Decentralized Identifier</td>
+                <td>PKI</td><td>Public Key Infrastructure</td>
+              </tr>
+              <tr>
+                <td>DPA</td><td>Data Processing Agreement</td>
+                <td>TLS</td><td>Transport Layer Security</td>
+              </tr>
+              <tr>
+                <td>HSM</td><td>Hardware Security Module</td>
+                <td>TTL</td><td>Time To Live</td>
+              </tr>
+              <tr>
+                <td>JSON-LD</td><td>JSON for Linked Data</td>
+                <td>W3C</td><td>World Wide Web Consortium</td>
+              </tr>
+              <tr>
+                <td>ZK</td><td>Zero-Knowledge</td>
+                <td></td><td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Architectural Overview</h2>
+        <p>The QODIQA architecture is defined as a layered system stack where enforcement occurs at multiple boundaries. The system is designed to intercept control flow at critical junctures, including data ingestion, training initiation, API request, and output generation, to verify consent status at each stage.</p>
+        <p>The architecture consists of three primary layers:</p>
+        <div class="diagram-wrap">
+          <div class="flow-row">
+            <div class="flow-node">
+              <span class="flow-node-id">Layer 1</span>
+              <span class="flow-node-title">Governance Domains</span>
+              <span class="flow-node-sub">D01–D10</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node">
+              <span class="flow-node-id">Layer 2</span>
+              <span class="flow-node-title">Lifecycle Stages</span>
+              <span class="flow-node-sub">Training → Retirement</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Layer 3</span>
+              <span class="flow-node-title">Cryptographic Core</span>
+              <span class="flow-node-sub">PKI · Token · Ledger</span>
+            </div>
+          </div>
+          <p class="diagram-caption">Figure 1 — Layered Architecture Model: Governance Domains drive lifecycle enforcement, backed by a cryptographic core providing PKI, token signing, and immutable ledger functions.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 4: GOVERNANCE DOMAINS -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Governance Domains (D01–D10)</h2>
+        <p>This section defines the 68 normative control points categorized into ten governance domains. Each control point is discrete, testable, and assigned a unique identifier (CP-01 through CP-68).</p>
+
+        <!-- D01 -->
+        <div id="d01">
+          <h3>D01 — Individual and Creator Protection</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 01</span>
+            <span class="domain-title-text">Individual and Creator Protection</span>
+            <span class="domain-count-text">Control Points CP-01 through CP-07 · 7 control points</span>
+          </div>
+          <p>This domain governs the fundamental rights of data subjects and creators, ensuring that no data enters the ecosystem without explicit authorization.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">CP-01 — Explicit Opt-In Gate <span class="norm-badge norm-must">MUST</span></div>
+            <p><strong>Requirement:</strong> Systems MUST require verifiable, explicit opt-in for all data ingestion. Default-on, pre-checked, or passive collection mechanisms are prohibited.</p>
+            <p><strong>Implementation:</strong> The system must record a positive affirmation action (e.g., checkbox selection, API consent grant) with timestamp, IP address if applicable, and user agent. Consent MUST be granular and unbundled.</p>
+            <p><strong>Verification:</strong> Audit logs show a timestamped opt-in event linked to each data object. Automated testing MUST verify that data ingestion fails in the absence of an opt-in record.</p>
+            <p><strong>Failure:</strong> If data is processed without a corresponding opt-in event, the system MUST generate a <strong>critical severity</strong> alert.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">CP-02 — Granular Scope Binding <span class="norm-badge norm-must">MUST</span></div>
+            <p><strong>Requirement:</strong> Consent grants MUST be bound to specific scopes (e.g., "training only", "non-commercial inference", "research purposes"). Blanket or ambiguous consent is prohibited.</p>
+            <p><strong>Implementation:</strong> The consent token MUST include a <code>scope</code> array with explicit use-case identifiers. Systems MUST validate that the requested operation matches at least one scope. Cross-scope operations require separate consent grants.</p>
+            <p><strong>Verification:</strong> Token inspection reveals distinct scope arrays; system blocks operations outside these scopes with HTTP 403 (Scope Violation).</p>
+            <p><strong>Failure:</strong> Processing data for a purpose not listed in the scope array constitutes a <strong>medium-severity</strong> violation.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">CP-03 — Creator Attribution Token <span class="norm-badge norm-must">MUST</span></div>
+            <p><strong>Requirement:</strong> A cryptographic token carrying attribution metadata MUST be associated with every creative work ingested into training pipelines.</p>
+            <p><strong>Implementation:</strong> Attribution tokens MUST include creator identifier (DID recommended), work identifier (e.g., DOI, URI), license terms, and attribution text. Systems MUST preserve attribution chains through derivative works.</p>
+            <p><strong>Verification:</strong> Each training record is linked to a valid, signature-verified attribution token. Audit queries MUST trace any output back to source creators.</p>
+            <p><strong>Failure:</strong> Training on creative works without attribution tokens is a <strong>high-severity</strong> violation and may constitute copyright infringement.</p>
+          </div>
+
+          <div class="table-wrapper">
+            <span class="table-caption">Table — D01 Control Point Summary (CP-04 through CP-07)</span>
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-04</td><td>Revocation Propagation: MUST propagate to all nodes within defined SLA window.</td><td>MUST</td></tr>
+                <tr><td>CP-05</td><td>Derivative Use Boundary: MUST enforce constraints on derivative works as defined in the consent token.</td><td>MUST</td></tr>
+                <tr><td>CP-06</td><td>Minor Data Prohibition: Processing data from subjects under 18 MUST verify guardian consent or be blocked.</td><td>MUST</td></tr>
+                <tr><td>CP-07</td><td>Sensitive Attribute Firewall: Sensitive data categories (biometric, health) MUST require elevated privilege and distinct consent scopes.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D02 -->
+        <div id="d02">
+          <h3>D02 — Malicious Use Prevention</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 02</span>
+            <span class="domain-title-text">Malicious Use Prevention</span>
+            <span class="domain-count-text">Control Points CP-08 through CP-14 · 7 control points</span>
+          </div>
+          <p>Controls designed to mitigate adversarial attacks and prevent the AI system from being used to generate harmful content or deceive users.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-08</td><td>Intent Classification Filter: Incoming prompts MUST be classified for malicious intent before processing.</td><td>MUST</td></tr>
+                <tr><td>CP-09</td><td>Adversarial Prompt Firewall: A firewall MUST intercept known jailbreak or injection patterns.</td><td>MUST</td></tr>
+                <tr><td>CP-10</td><td>Deepfake Output Block: Generation of non-consensual synthetic likenesses MUST be blocked at the output layer.</td><td>MUST</td></tr>
+                <tr><td>CP-11</td><td>Consent Forgery Detection: The system MUST validate cryptographic signatures on all consent tokens to detect forgery.</td><td>MUST</td></tr>
+                <tr><td>CP-12</td><td>Shadow Model Detection: Systems SHOULD detect and block patterns indicative of model distillation or extraction attacks.</td><td>SHOULD</td></tr>
+                <tr><td>CP-13</td><td>Cross-Platform Aggregation Block: Data aggregation across platforms without composite consent MUST be prevented.</td><td>MUST</td></tr>
+                <tr><td>CP-14</td><td>Model Distillation Abuse Control: Rate limits and output noise SHOULD be applied to mitigate unauthorized distillation.</td><td>SHOULD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D03 -->
+        <div id="d03">
+          <h3>D03 — Infrastructure and Model-Level Enforcement</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 03</span>
+            <span class="domain-title-text">Infrastructure and Model-Level Enforcement</span>
+            <span class="domain-count-text">Control Points CP-15 through CP-21 · 7 control points</span>
+          </div>
+          <p>Technical controls embedded within the model serving infrastructure and the API layer.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-15</td><td>API Consent Handshake Protocol: All API sessions MUST initiate with a verified consent handshake.</td><td>MUST</td></tr>
+                <tr><td>CP-16</td><td>Scope Validation Engine: A dedicated engine MUST validate request parameters against the token's allowed scope.</td><td>MUST</td></tr>
+                <tr><td>CP-17</td><td>Runtime Inference Gate: Inference execution MUST be blocked if a valid, active token is not present.</td><td>MUST</td></tr>
+                <tr><td>CP-18</td><td>Dataset Provenance Registry: All training data MUST be logged in an immutable provenance registry.</td><td>MUST</td></tr>
+                <tr><td>CP-19</td><td>Model Fingerprinting: Models MUST embed verifiable fingerprints to trace lineage.</td><td>MUST</td></tr>
+                <tr><td>CP-20</td><td>Pipeline Integrity Check: The CI/CD pipeline MUST verify consent compliance before deployment.</td><td>MUST</td></tr>
+                <tr><td>CP-21</td><td>Compute Isolation Boundary: Tenant data MUST be processed in isolated compute environments.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D04 -->
+        <div id="d04">
+          <h3>D04 — Institutional and Enterprise Controls</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 04</span>
+            <span class="domain-title-text">Institutional and Enterprise Controls</span>
+            <span class="domain-count-text">Control Points CP-22 through CP-28 · 7 control points</span>
+          </div>
+          <p>Organizational policies and mechanisms for compliance, auditing, and third-party management.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-22</td><td>Organisational Consent Policy Engine: Enterprises MUST implement a central policy engine to manage organizational consent settings.</td><td>MUST</td></tr>
+                <tr><td>CP-23</td><td>Role-Based Access Control: Administrative access to consent settings MUST be governed by RBAC.</td><td>MUST</td></tr>
+                <tr><td>CP-24</td><td>Third-Party Vendor Consent Chain: Consent obligations MUST flow down to third-party vendors via technical enforcement.</td><td>MUST</td></tr>
+                <tr><td>CP-25</td><td>Audit Trail Mandate: All consent decisions MUST generate an immutable, hash-chained audit log.</td><td>MUST</td></tr>
+                <tr><td>CP-26</td><td>Data Processing Agreement Linkage: Technical controls MUST be linked to active legal DPAs.</td><td>MUST</td></tr>
+                <tr><td>CP-27</td><td>Breach Notification Trigger: Detected consent breaches MUST automatically trigger notification workflows.</td><td>MUST</td></tr>
+                <tr><td>CP-28</td><td>Enterprise Consent Dashboard: A centralized view of consent posture SHOULD be provided to administrators.</td><td>SHOULD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D05 -->
+        <div id="d05">
+          <h3>D05 — Model Lifecycle Governance</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 05</span>
+            <span class="domain-title-text">Model Lifecycle Governance</span>
+            <span class="domain-count-text">Control Points CP-29 through CP-35 · 7 control points</span>
+          </div>
+          <p>Controls specific to the stages of model development, from pre-training through retirement.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-29</td><td>Pre-Training Consent Audit: A comprehensive audit MUST be passed before training runs initiate.</td><td>MUST</td></tr>
+                <tr><td>CP-30</td><td>Fine-Tuning Consent Rebinding: Fine-tuning on new data MUST trigger a re-verification of consent.</td><td>MUST</td></tr>
+                <tr><td>CP-31</td><td>Deployment Consent Gate: Deployment pipelines MUST fail if consent criteria are not met.</td><td>MUST</td></tr>
+                <tr><td>CP-32</td><td>Runtime Consent Monitoring: Active models MUST be continuously monitored for consent compliance.</td><td>MUST</td></tr>
+                <tr><td>CP-33</td><td>Model Retirement Consent Purge: Decommissioned models MUST undergo a verified data purge.</td><td>MUST</td></tr>
+                <tr><td>CP-34</td><td>Version Control Consent Binding: Model versions MUST be immutably bound to the consent state of their training data.</td><td>MUST</td></tr>
+                <tr><td>CP-35</td><td>Consent Drift Detection: Systems MUST detect and alert on divergence between current consent status and model training basis.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D06 -->
+        <div id="d06">
+          <h3>D06 — Output-Layer Enforcement</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 06</span>
+            <span class="domain-title-text">Output-Layer Enforcement</span>
+            <span class="domain-count-text">Control Points CP-36 through CP-42 · 7 control points</span>
+          </div>
+          <p>Controls applied to the generated artifacts (text, image, audio) produced by the AI system.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-36</td><td>Output Compliance Filter: Outputs MUST be filtered against active consent constraints prior to delivery.</td><td>MUST</td></tr>
+                <tr><td>CP-37</td><td>Attribution Preservation: Attribution metadata MUST be preserved in the output payload.</td><td>MUST</td></tr>
+                <tr><td>CP-38</td><td>Commercial Use Flag: Outputs MUST be tagged with a commercial use flag derived from input consents.</td><td>MUST</td></tr>
+                <tr><td>CP-39</td><td>Watermarking Enforcement: AI-generated content MUST include robust watermarking.</td><td>MUST</td></tr>
+                <tr><td>CP-40</td><td>Synthetic Data Labelling: Synthetic data outputs MUST be explicitly labeled.</td><td>MUST</td></tr>
+                <tr><td>CP-41</td><td>Output Redaction Gate: Content violating consent scopes (e.g., PII) MUST be redacted.</td><td>MUST</td></tr>
+                <tr><td>CP-42</td><td>Downstream Use Restriction: Restrictions on downstream use SHOULD be embedded in output metadata.</td><td>SHOULD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D07 -->
+        <div id="d07">
+          <h3>D07 — Temporal Governance</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 07</span>
+            <span class="domain-title-text">Temporal Governance</span>
+            <span class="domain-count-text">Control Points CP-43 through CP-49 · 7 control points</span>
+          </div>
+          <p>Management of consent over time, including expiry, renewal, and retroactive revocation.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-43</td><td>Consent Expiry Enforcement: Tokens MUST expire automatically upon reaching their <code>expiry_timestamp</code>.</td><td>MUST</td></tr>
+                <tr><td>CP-44</td><td>Right to Erasure Pipeline: Valid erasure requests MUST trigger a verified deletion pipeline.</td><td>MUST</td></tr>
+                <tr><td>CP-45</td><td>Retroactive Revocation Handling: Revocation MUST apply retroactively to active processing sessions.</td><td>MUST</td></tr>
+                <tr><td>CP-46</td><td>Consent Renewal Notification: Systems SHOULD notify subjects prior to consent expiry.</td><td>SHOULD</td></tr>
+                <tr><td>CP-47</td><td>Stale Consent Invalidation: Consent not refreshed within defined periods MUST be invalidated.</td><td>MUST</td></tr>
+                <tr><td>CP-48</td><td>Time-Bound Use Restriction: Usage rights MUST be strictly limited to the time bounds defined in the token.</td><td>MUST</td></tr>
+                <tr><td>CP-49</td><td>Temporal Audit Sequencing: Audit logs MUST maintain strict temporal sequencing via hash chains.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D08 -->
+        <div id="d08">
+          <h3>D08 — Economic Rights Layer</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 08</span>
+            <span class="domain-title-text">Economic Rights Layer</span>
+            <span class="domain-count-text">Control Points CP-50 through CP-56 · 7 control points</span>
+          </div>
+          <p>Mechanisms to track value generation and enforce compensation or royalty distribution.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-50</td><td>Revenue Attribution Tracking: Systems SHOULD track revenue generation events linked to consented data.</td><td>SHOULD</td></tr>
+                <tr><td>CP-51</td><td>Royalty Distribution Engine: Automated distribution mechanisms MAY be integrated for royalty payments.</td><td>MAY</td></tr>
+                <tr><td>CP-52</td><td>Commercial Licence Enforcement: Commercial use requires a distinct license token; otherwise, it MUST be blocked.</td><td>MUST</td></tr>
+                <tr><td>CP-53</td><td>Data Valuation Transparency: Metrics used for data valuation SHOULD be transparent to the data subject.</td><td>SHOULD</td></tr>
+                <tr><td>CP-54</td><td>Creator Compensation Gate: Access to monetization features MUST be gated by valid compensation agreements.</td><td>MUST</td></tr>
+                <tr><td>CP-55</td><td>Economic Right Revocation: Revocation of economic rights MUST cease future revenue generation.</td><td>MUST</td></tr>
+                <tr><td>CP-56</td><td>Compensation Audit Trail: Financial transactions related to data use MUST be audited.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D09 -->
+        <div id="d09">
+          <h3>D09 — AI-to-AI Consent Control</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 09</span>
+            <span class="domain-title-text">AI-to-AI Consent Control</span>
+            <span class="domain-count-text">Control Points CP-57 through CP-62 · 6 control points</span>
+          </div>
+          <p>Governance for autonomous agents and multi-model systems interacting without human intervention.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-57</td><td>Agent Consent Delegation Protocol: Agents MUST use a standardized protocol to delegate consent in chains.</td><td>MUST</td></tr>
+                <tr><td>CP-58</td><td>Inter-Model Data Transfer Gate: Data transfer between models MUST pass a consent gate.</td><td>MUST</td></tr>
+                <tr><td>CP-59</td><td>Autonomous Agent Scope Boundary: Agents MUST NOT exceed the scope of their delegated authority.</td><td>MUST</td></tr>
+                <tr><td>CP-60</td><td>AI Chain Consent Propagation: Consent context MUST propagate through the entire agent chain.</td><td>MUST</td></tr>
+                <tr><td>CP-61</td><td>Model-to-Model Attribution: Source models MUST be attributed in downstream model outputs.</td><td>MUST</td></tr>
+                <tr><td>CP-62</td><td>Orchestration Layer Consent Audit: The orchestration layer MUST log all inter-agent consent transactions.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- D10 -->
+        <div id="d10">
+          <h3>D10 — Cryptographic Consent Layer</h3>
+          <div class="domain-block">
+            <span class="domain-id-label">Domain 10</span>
+            <span class="domain-title-text">Cryptographic Consent Layer</span>
+            <span class="domain-count-text">Control Points CP-63 through CP-68 · 6 control points</span>
+          </div>
+          <p>The foundational cryptographic primitives ensuring the integrity and non-repudiation of the system.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>ID</th><th>Control Point</th><th>Level</th></tr></thead>
+              <tbody>
+                <tr><td>CP-63</td><td>Consent Token Issuance: Tokens MUST be issued by a verified authority using standard schemas.</td><td>MUST</td></tr>
+                <tr><td>CP-64</td><td>Token Signature Verification: Signatures MUST be verified using Ed25519 (or compliant algorithm) keys.</td><td>MUST</td></tr>
+                <tr><td>CP-65</td><td>Revocation Registry Sync: Implementations MUST sync with the revocation registry in real-time or near real-time.</td><td>MUST</td></tr>
+                <tr><td>CP-66</td><td>Zero-Knowledge Consent Proof: Systems SHOULD support ZK-proofs to verify consent without revealing identity.</td><td>SHOULD</td></tr>
+                <tr><td>CP-67</td><td>Immutable Consent Ledger: A tamper-evident ledger MUST record all token lifecycle events.</td><td>MUST</td></tr>
+                <tr><td>CP-68</td><td>Cryptographic Compliance Export: The system MUST be able to export a cryptographically verifiable compliance report.</td><td>MUST</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /s4 -->
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Lifecycle Model</h2>
+        <p>The QODIQA Framework enforces governance across six distinct stages of the AI system lifecycle, from initial training data ingestion through model decommissioning. Each stage is associated with one or more critical control points that MUST be satisfied before the stage may proceed.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Stage</th><th>Description</th><th>Critical Control Point</th></tr></thead>
+            <tbody>
+              <tr><td>Training</td><td>Initial model development.</td><td>CP-29: Pre-Training Consent Audit</td></tr>
+              <tr><td>Fine-Tuning</td><td>Refinement on specific datasets.</td><td>CP-30: Consent Rebinding</td></tr>
+              <tr><td>Deployment</td><td>Integration into production.</td><td>CP-31: Deployment Consent Gate</td></tr>
+              <tr><td>Runtime</td><td>Active inference.</td><td>CP-17 / CP-32: Inference Gate and Monitoring</td></tr>
+              <tr><td>Output</td><td>Generation of results.</td><td>CP-36: Output Compliance Filter</td></tr>
+              <tr><td>Retirement</td><td>Decommissioning.</td><td>CP-33: Model Retirement Consent Purge</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Cryptographic Layer and Protocols</h2>
+        <p>The integrity of the QODIQA Framework relies on robust cryptographic primitives applied consistently across all enforcement boundaries. This section specifies the mandatory token format, approved algorithm suite, and algorithm status classifications.</p>
+
+        <h3>6.1 Token Format</h3>
+        <p>Consent tokens <strong>MUST</strong> use the JSON-LD format. The <code>subject_id</code> <strong>SHOULD</strong> be a W3C Decentralized Identifier (DID).</p>
+        <span class="code-label">Consent Token — JSON-LD Schema</span>
+<pre>{
+  "@context":   "spec/qodiqa/1.0/consent-context.jsonld",
+  "spec":       "QODIQA/1.0",
+  "subject_id": "did:web:subject.example.org",
+  "scope":      ["training", "non-commercial"],
+  "expiry":     "2026-12-31T23:59:59Z",
+  "commercial": false,
+  "signature":  "&lt;Base64url-encoded Ed25519 signature&gt;"
+}</pre>
+
+        <h3>6.2 Algorithms</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Algorithm</th><th>Use Case</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Ed25519</td><td>Token signing (primary)</td><td>RECOMMENDED</td></tr>
+              <tr><td>ECDSA P-256</td><td>Token signing (alternate)</td><td>PERMITTED</td></tr>
+              <tr><td>RSA-PSS</td><td>Token signing (legacy)</td><td>NOT RECOMMENDED</td></tr>
+              <tr><td>SHA-256</td><td>Audit chain hashing</td><td>REQUIRED</td></tr>
+              <tr><td>SHA-512</td><td>Audit chain hashing</td><td>RECOMMENDED</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Protocol Flow (Six-Gate Sequence)</h2>
+        <p>The enforcement logic follows a linear sequence of six gates. Each gate represents a discrete enforcement boundary where consent validation occurs. Failure at any gate MUST produce the defined failure response and MUST prevent progression to subsequent gates.</p>
+
+        <div class="diagram-wrap">
+          <div class="flow-row">
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 01</span>
+              <span class="flow-node-title">User Request</span>
+              <span class="flow-node-fail">↳ 403 Consent Required</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 02</span>
+              <span class="flow-node-title">API Handshake</span>
+              <span class="flow-node-fail">↳ Refresh Flow</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 03</span>
+              <span class="flow-node-title">Scope Validation</span>
+              <span class="flow-node-fail">↳ Violation Logged</span>
+            </div>
+          </div>
+          <div class="flow-row" style="margin-top:2px;">
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 04</span>
+              <span class="flow-node-title">Runtime Inference</span>
+              <span class="flow-node-fail">↳ Inference Blocked</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 05</span>
+              <span class="flow-node-title">Output Compliance</span>
+              <span class="flow-node-fail">↳ Output Redacted</span>
+            </div>
+            <div class="flow-arrow-wrap">→</div>
+            <div class="flow-node gate-node">
+              <span class="flow-node-id">Gate 06</span>
+              <span class="flow-node-title">Audit Log Entry</span>
+              <span class="flow-node-fail">↳ System Alert</span>
+            </div>
+          </div>
+          <p class="diagram-caption">Figure 2 — Six-Gate Enforcement Sequence: Each gate constitutes an independent enforcement boundary. Failure at any gate blocks progression and triggers the defined failure response.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table — Gate Reference</span>
+          <table>
+            <thead><tr><th>Gate</th><th>Name</th><th>Function</th><th>Failure State</th></tr></thead>
+            <tbody>
+              <tr><td>Gate 01</td><td>User Request</td><td>Inbound API call arrival</td><td>403 Consent Required</td></tr>
+              <tr><td>Gate 02</td><td>API Consent Handshake</td><td>Token exchange and signature verification</td><td>Refresh Flow Initiated</td></tr>
+              <tr><td>Gate 03</td><td>Scope Validation</td><td>Check request against token scope</td><td>Violation Logged</td></tr>
+              <tr><td>Gate 04</td><td>Runtime Inference</td><td>Execution of model inference</td><td>Inference Blocked</td></tr>
+              <tr><td>Gate 05</td><td>Output Compliance</td><td>Filter generated content</td><td>Output Redacted</td></tr>
+              <tr><td>Gate 06</td><td>Audit Log Entry</td><td>Write event to ledger</td><td>System Error / Alert</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Threat Model</h2>
+
+        <h3>8.1 Threat Assumptions</h3>
+        <ul>
+          <li>Attackers may have access to API endpoints and attempt to forge consent tokens.</li>
+          <li>Legitimate tokens may be captured and replayed by adversaries.</li>
+          <li>Model operators may intentionally or inadvertently bypass consent controls.</li>
+          <li>Cross-jurisdictional deployments may create enforcement gaps.</li>
+          <li>Cryptographic keys may be compromised through social engineering or technical exploits.</li>
+        </ul>
+
+        <h3 id="s8-2">8.2 Threat Severity Classification</h3>
+        <p><strong>Critical Threats:</strong> Fundamental consent violations requiring immediate enforcement.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Threat</th><th>Description</th><th>Interception</th><th>Control Points</th></tr></thead>
+            <tbody>
+              <tr><td>Consent Forgery</td><td>Fraudulent token generation or signature spoofing</td><td>Gate 02</td><td>CP-11, CP-63, CP-64</td></tr>
+              <tr><td>Biometric Identity Abuse</td><td>Synthetic biometric generation without explicit consent</td><td>Gates 04–05</td><td>CP-10</td></tr>
+              <tr><td>Minor Data Processing</td><td>Processing data from subjects under 18 without verified guardian consent</td><td>Gates 01–03</td><td>CP-06</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>High Severity:</strong> MUST be logged and escalated within 1 hour.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Threat</th><th>Description</th><th>Interception</th><th>Control Points</th></tr></thead>
+            <tbody>
+              <tr><td>Token Replay Attack</td><td>Reuse of captured tokens beyond their validity period</td><td>Gate 02</td><td>CP-63<br>CP-64</td></tr>
+              <tr><td>Shadow Model Replication</td><td>Distillation-based reproduction of model capabilities</td><td>Gate 04</td><td>CP-12<br>CP-19</td></tr>
+              <tr><td>Model Distillation Abuse</td><td>Systematic capability extraction via query harvesting</td><td>Gate 05</td><td>CP-14<br>CP-36</td></tr>
+              <tr><td>Cross-Platform Aggregation</td><td>Combining consented data across platforms without composite consent</td><td>Gates 01–03</td><td>CP-13</td></tr>
+              <tr><td>Revocation Propagation Failure</td><td>Failure to sync revocation events across enforcement nodes</td><td>All Gates</td><td>CP-04<br>CP-65</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Medium Severity:</strong> SHOULD trigger automated remediation within 24 hours.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Threat</th><th>Description</th><th>Control Points</th></tr></thead>
+            <tbody>
+              <tr><td>Stale Consent Usage</td><td>Consent applied beyond defined expiry or inactivity threshold</td><td>CP-43, CP-47</td></tr>
+              <tr><td>Derivative Use Boundary Breach</td><td>Outputs used outside of the consented scope</td><td>CP-05</td></tr>
+              <tr><td>Economic Rights Non-Compliance</td><td>Commercial deployment without creator compensation plan</td><td>CP-54</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s8-3">8.3 Known Attack Classes</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Attack Vector</th><th>Interception Gate</th><th>Primary Control Points</th></tr></thead>
+            <tbody>
+              <tr><td>Prompt Injection</td><td>Gate 03 (Scope Validation)</td><td>CP-09</td></tr>
+              <tr><td>Consent Forgery</td><td>Gate 02 (API Handshake)</td><td>CP-11, CP-63, CP-64</td></tr>
+              <tr><td>Shadow Models</td><td>Gate 04 (Runtime Inference)</td><td>CP-12, CP-19</td></tr>
+              <tr><td>Distillation Abuse</td><td>Gate 05 (Output Compliance)</td><td>CP-14, CP-36</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s8-4">8.4 Mitigations</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Mitigation</th><th>Requirement</th><th>Control Level</th></tr></thead>
+            <tbody>
+              <tr><td>Cryptographic Binding</td><td>All tokens MUST be signed using Ed25519 or equivalent algorithms.</td><td>MUST</td></tr>
+              <tr><td>Nonce / Sequence Enforcement</td><td>Replay protection MUST use monotonic sequence numbers or time-bound nonces.</td><td>MUST</td></tr>
+              <tr><td>Real-Time Registry Sync</td><td>Revocation registries MUST be synchronized across all nodes within defined SLA windows.</td><td>MUST</td></tr>
+              <tr><td>Hardware-Backed Key Storage</td><td>Signing keys SHOULD be protected using Hardware Security Modules (HSMs).</td><td>SHOULD</td></tr>
+              <tr><td>Zero-Knowledge Proofs</td><td>ZK mechanisms SHOULD be deployed to minimize identity exposure (required for L3 and above).</td><td>SHOULD</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s8-5">8.5 Residual Risks</h3>
+        <p>The following risks remain outside the scope of this framework and are acknowledged as conditions that cannot be eliminated by architectural or cryptographic means alone:</p>
+        <ul>
+          <li>Compromise of the root cryptographic authority</li>
+          <li>Nation-state attacks on the underlying cryptographic primitives</li>
+          <li>Legal jurisdiction conflicts that cannot be resolved by technical means</li>
+          <li>Social engineering attacks targeting individual consent capture mechanisms</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Conformance and Profiles</h2>
+
+        <h3>9.1 Conformance Requirements</h3>
+        <p>Implementations claiming conformance to this specification MUST satisfy all MUST-level requirements within their declared conformance profile. Conforming implementations MUST declare: profile adherence, maturity level, supported cryptographic algorithms, and SLA windows for revocation propagation.</p>
+
+        <h3>9.2 Conformance Profiles</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Profile</th><th>Context</th><th>Required Maturity</th><th>MUST Domains</th></tr></thead>
+            <tbody>
+              <tr><td>PRF-ENT</td><td>Commercial, regulated, enterprise</td><td>Level 3–4</td><td>D01–D07</td></tr>
+              <tr><td>PRF-RES</td><td>Academic, research, non-commercial</td><td>Level 2 minimum</td><td>D01–D05 (partial)</td></tr>
+              <tr><td>PRF-OPN</td><td>Open-source, public APIs, federated</td><td>Level 2–3</td><td>D01–D06</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>9.3 Conformance Statement Format</h3>
+        <span class="code-label">Machine-Readable Conformance Statement — JSON-LD</span>
+<pre>{
+  "@context":      "spec/qodiqa/1.0/conformance-context.jsonld",
+  "specification": "QODIQA-FRAMEWORK-2026-003",
+  "profile":       "PRF-ENT",
+  "maturity_level":"L4",
+  "control_points": {
+    "implemented": ["CP-01", "CP-02", ..., "CP-68"],
+    "deviations":  []
+  },
+  "signature_algorithm": "Ed25519",
+  "revocation_sla":    "300s",
+  "attestation": {
+    "authority": "did:web:attestor.example.org",
+    "issued":    "2026-03-01T00:00:00Z",
+    "expires":   "2027-03-01T00:00:00Z"
+  }
+}</pre>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Maturity Model</h2>
+        <p>Governance capability is measured on a five-point scale (L0 through L4). Organizations SHOULD progress through levels sequentially, with each level building on the enforcement controls of the preceding level.</p>
+
+        <div class="maturity-grid">
+          <div class="maturity-card">
+            <span class="maturity-level">L0</span>
+            <span class="maturity-label">No Consent</span>
+            <span class="maturity-desc">Non-conformant. Zero control points implemented.</span>
+          </div>
+          <div class="maturity-card">
+            <span class="maturity-level">L1</span>
+            <span class="maturity-label">Logged</span>
+            <span class="maturity-desc">Informal logging; manual revocation. CP-01, CP-25.</span>
+          </div>
+          <div class="maturity-card">
+            <span class="maturity-level">L2</span>
+            <span class="maturity-label">Enforced</span>
+            <span class="maturity-desc">API-layer enforcement; automated revocation. CP-01 to CP-36.</span>
+          </div>
+          <div class="maturity-card">
+            <span class="maturity-level">L3</span>
+            <span class="maturity-label">Verifiable</span>
+            <span class="maturity-desc">Signed tokens, ZK-proofs, immutable ledger. Minimum for PRF-ENT.</span>
+          </div>
+          <div class="maturity-card active">
+            <span class="maturity-level">L4</span>
+            <span class="maturity-label">Attested</span>
+            <span class="maturity-desc">Full 68-point conformance; independent certification. CP-01 to CP-68.</span>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table — Maturity Level Implementation Timeline</span>
+          <table>
+            <thead><tr><th>Level</th><th>Domains Covered</th><th>Control Points</th><th>Typical Timeline</th></tr></thead>
+            <tbody>
+              <tr><td>L0</td><td>None</td><td>0</td><td>N/A</td></tr>
+              <tr><td>L1</td><td>D01–D04 (partial)</td><td>CP-01, CP-25</td><td>1–3 months</td></tr>
+              <tr><td>L2</td><td>D01–D06</td><td>CP-01 to CP-36</td><td>6–12 months</td></tr>
+              <tr><td>L3</td><td>D01–D09</td><td>CP-01 to CP-62</td><td>12–24 months</td></tr>
+              <tr><td>L4</td><td>D01–D10 (all)</td><td>CP-01 to CP-68</td><td>24–36 months</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 11-12 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Sections 11–12</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Interoperability and Attestation</h2>
+
+        <h3>11. Interoperability Framework</h3>
+        <p>To ensure cross-system compatibility, implementations MUST support the QODIQA Federation API. Trust anchors MUST be published at <code>/.well-known/qodiqa-trust</code>. In conflict scenarios, the Most Restrictive Scope rule applies: the narrowest defined scope governs, and broader scope application requires explicit additional authorization.</p>
+
+        <h3>12. Attestation Model</h3>
+        <p>Independent verification is required for L4 maturity. Attestations MUST be recorded in a public attestation registry. Systems MUST generate machine-readable compliance exports (JSON-LD) to facilitate external audit.</p>
+        <div class="decision-block">
+          <p>Attestation bodies MUST be independent of the implementation vendor, verify all 68 control points for full conformance, conduct verification without accessing personal data, and publish attestation records in the public registry. Re-certification is required annually.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Security Considerations</h2>
+
+        <h3>13.1 Token Security</h3>
+        <p><strong>Critical:</strong> Improper token validation enables consent forgery. Implementations MUST verify Ed25519 (or equivalent) signatures against the issuing authority PKI before every processing decision (CP-11, CP-63, CP-64). Signature verification MUST include cryptographic signature validation, certificate chain verification to trusted root, certificate revocation status check, and timestamp validity window verification.</p>
+        <p><strong>High:</strong> Tokens captured in transit MUST NOT be reusable. Implementations MUST enforce a nonce or monotonic sequence number field and verify freshness within a defined tolerance window (typically 300 seconds).</p>
+        <p><strong>High:</strong> Consent token signing keys SHOULD be protected via Hardware Security Modules. Key rotation MUST be performed on a documented schedule (recommended: quarterly). Compromised keys MUST trigger immediate revocation of all tokens issued under that key within 1 hour from detection.</p>
+
+        <h3>13.2 Revocation and Propagation</h3>
+        <p><strong>Critical:</strong> Failure to propagate revocation events enables continued unauthorized processing. Revocation registries MUST be synchronized across all enforcement nodes within defined SLA windows (CP-65).</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>System Type</th><th>SLA Window</th></tr></thead>
+            <tbody>
+              <tr><td>Critical infrastructure</td><td>30 seconds</td></tr>
+              <tr><td>Enterprise systems</td><td>300 seconds (5 minutes)</td></tr>
+              <tr><td>Research systems</td><td>3600 seconds (1 hour)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>13.3 Audit Integrity</h3>
+        <p>Audit logs MUST be tamper-evident and hash-chained. Each audit entry MUST contain: previous entry hash (forming a chain), timestamp in ISO 8601 format with timezone, event type and associated control point, subject identifier (pseudonymized), and cryptographic signature of the entry.</p>
+
+        <h3>13.4 Federation Security</h3>
+        <p>Federation trust anchors MUST be rotated periodically (recommended: annually). Federated consent tokens MUST carry a cryptographic binding to the originating authority. Systems MUST reject federated tokens that cannot be verified against a published trust anchor at <code>/.well-known/qodiqa-trust</code>.</p>
+
+        <h3>13.5 Lifecycle Security</h3>
+        <p><strong>High:</strong> Partial lifecycle enforcement weakens runtime guarantees. Implementing only deployment and runtime gates without training-stage controls (CP-29) is a non-conformant posture. CP-33 (Model Retirement Consent Purge) MUST be treated as a MUST-level control regardless of profile.</p>
+
+        <h3>13.6 Implementation Security Notes</h3>
+        <ul>
+          <li>TLS 1.3 or higher MUST be used for all API communications</li>
+          <li>Rate limiting SHOULD be implemented to prevent denial-of-service attacks</li>
+          <li>Token storage MUST NOT use plaintext formats; encryption at rest is REQUIRED</li>
+          <li>Logging infrastructure SHOULD be segregated from primary application infrastructure</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 14 -->
+      <div id="s14" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 14</span>
+        <h2><a class="anchor-link" href="#s14">#</a>Privacy Considerations</h2>
+
+        <h3>14.1 Data Minimization</h3>
+        <p>The QODIQA consent token structure is designed to minimize personal data exposure. Tokens MUST NOT contain raw personal data. The <code>subject_id</code> SHOULD reference a pseudonymous or DID-based identifier. Audit log exports MUST exclude raw personal data unless explicitly required by applicable law. The default retention period is 7 years.</p>
+
+        <h3>14.2 Identity and Linkability</h3>
+        <p>Implementations SHOULD support zero-knowledge proof mechanisms (CP-66) to enable consent verification without exposing subject identity. ZK-proof support is REQUIRED for implementations operating at Maturity Level 3 or above. Implementations MUST NOT use consent tokens or audit records to construct cross-system identity profiles of data subjects.</p>
+
+        <h3>14.3 Cross-Border Obligations</h3>
+        <p>Cross-border federation MUST respect subject jurisdiction precedence as defined in Conflict Resolution Rule R-05. Where the subject's jurisdiction imposes stricter data protection requirements than the processing jurisdiction, the subject's jurisdiction requirements SHALL apply in full.</p>
+
+        <h3>14.4 Erasure and Portability</h3>
+        <p>Consent revocation triggers the right-to-erasure pipeline (CP-44). Erasure MUST be completed within the applicable regulatory timeframe (typically 30 days for GDPR-covered entities). Systems MUST provide cryptographic attestation of erasure completion (CP-33). Machine-readable compliance exports (CP-68) MUST support GDPR Article 20 data portability where applicable.</p>
+
+        <h3>14.5 Privacy-by-Design Principles</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Principle</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Proactive not reactive</td><td>Consent enforcement occurs before processing, not after</td></tr>
+              <tr><td>Privacy as default</td><td>No processing without explicit token (CP-01)</td></tr>
+              <tr><td>Embedded into design</td><td>Consent layer integrated at protocol level</td></tr>
+              <tr><td>End-to-end security</td><td>Protection across all lifecycle stages</td></tr>
+              <tr><td>Visibility and transparency</td><td>Audit logs and compliance exports</td></tr>
+              <tr><td>Respect for user privacy</td><td>ZK-proofs and pseudonymization</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 15 -->
+      <div id="s15" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 15</span>
+        <h2><a class="anchor-link" href="#s15">#</a>Normative References</h2>
+        <div class="ref-list">
+          <div class="ref-item">
+            <span class="ref-id">[RFC2119]</span>
+            <span class="ref-text">Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, March 1997.<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a></span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[RFC8174]</span>
+            <span class="ref-text">Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, May 2017.<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a></span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[DID-CORE]</span>
+            <span class="ref-text">Sporny, M., et al., "Decentralized Identifiers (DIDs) v1.0", W3C Recommendation, 19 July 2022.<a href="https://www.w3.org/TR/did-core/">https://www.w3.org/TR/did-core/</a></span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[JSON-LD]</span>
+            <span class="ref-text">Sporny, M., et al., "JSON-LD 1.1", W3C Recommendation, 16 July 2020.<a href="https://www.w3.org/TR/json-ld11/">https://www.w3.org/TR/json-ld11/</a></span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[RFC8032]</span>
+            <span class="ref-text">Josefsson, S., Liusvaara, I., "Edwards-Curve Digital Signature Algorithm (EdDSA)", RFC 8032, January 2017.<a href="https://www.rfc-editor.org/info/rfc8032">https://www.rfc-editor.org/info/rfc8032</a></span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[RFC6979]</span>
+            <span class="ref-text">Pornin, T., "Deterministic Usage of DSA and ECDSA", RFC 6979, August 2013.<a href="https://www.rfc-editor.org/info/rfc6979">https://www.rfc-editor.org/info/rfc6979</a></span>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 32px;">Informative References</h3>
+        <div class="ref-list">
+          <div class="ref-item">
+            <span class="ref-id">[GDPR]</span>
+            <span class="ref-text">European Union, "General Data Protection Regulation (GDPR)", Regulation (EU) 2016/679, 27 April 2016.</span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[ISO-27001]</span>
+            <span class="ref-text">ISO/IEC 27001:2013, "Information technology — Security techniques — Information security management systems — Requirements."</span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[NIST-AI-RMF]</span>
+            <span class="ref-text">NIST, "Artificial Intelligence Risk Management Framework (AI RMF 1.0)", January 2023.</span>
+          </div>
+          <div class="ref-item">
+            <span class="ref-id">[W3C-VC]</span>
+            <span class="ref-text">Sporny, M., et al., "Verifiable Credentials Data Model v1.1", W3C Recommendation, 3 March 2022.<a href="https://www.w3.org/TR/vc-data-model/">https://www.w3.org/TR/vc-data-model/</a></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPENDICES -->
+      <div id="appendix" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Appendices A–E</span>
+        <h2><a class="anchor-link" href="#appendix">#</a>Normative Annexes</h2>
+
+        <h3>Annex A — Consent Lifecycle State Machine</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>State</th><th>Description</th><th>Allowed Transitions</th></tr></thead>
+            <tbody>
+              <tr><td>ISSUED</td><td>Token generated and PKI signed</td><td>→ ACTIVE</td></tr>
+              <tr><td>ACTIVE</td><td>Validated and in effect</td><td>→ RESTRICTED, → REVOKED, → EXPIRED</td></tr>
+              <tr><td>RESTRICTED</td><td>Scope narrowed by override</td><td>→ REVOKED</td></tr>
+              <tr><td>REVOKED</td><td>Explicit withdrawal (terminal)</td><td>→ ARCHIVED</td></tr>
+              <tr><td>EXPIRED</td><td>Expiry timestamp exceeded</td><td>→ ARCHIVED</td></tr>
+              <tr><td>ARCHIVED</td><td>Retained for audit (minimum 7 years)</td><td>(terminal state)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>All state transitions MUST generate immutable, hash-chained audit entries. No transition may be reversed; all revocations are permanent.</p>
+
+        <h3>Annex B — Attack Interception Overlay</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Attack Vector</th><th>Interception Gate</th><th>Primary Control Points</th></tr></thead>
+            <tbody>
+              <tr><td>Prompt Injection</td><td>Gate 03 (Scope Validation)</td><td>CP-09</td></tr>
+              <tr><td>Consent Forgery</td><td>Gate 02 (API Handshake)</td><td>CP-11, CP-63, CP-64</td></tr>
+              <tr><td>Shadow Model Replication</td><td>Gate 04 (Runtime Inference)</td><td>CP-12, CP-19</td></tr>
+              <tr><td>Distillation Abuse</td><td>Gate 05 (Output Compliance)</td><td>CP-14, CP-36</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Annex C — Conflict Resolution Rules</h3>
+        <ul>
+          <li><strong>R-01 (Revocation Supersedes):</strong> Any revocation event cancels all prior grants.</li>
+          <li><strong>R-02 (Most Restrictive Scope):</strong> The narrowest defined scope governs.</li>
+          <li><strong>R-03 (Subject Jurisdiction Precedence):</strong> Subject's local requirements take precedence in cross-border conflicts.</li>
+          <li><strong>R-04 (Explicit Override Required):</strong> Broader scope application requires explicit authorization.</li>
+        </ul>
+
+        <h3>Annex D — Cryptographic Algorithms Reference</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Algorithm</th><th>Use Case</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Ed25519</td><td>Token signing (primary)</td><td>RECOMMENDED</td></tr>
+              <tr><td>ECDSA P-256</td><td>Token signing (alternate)</td><td>PERMITTED</td></tr>
+              <tr><td>RSA-PSS</td><td>Token signing (legacy)</td><td>NOT RECOMMENDED</td></tr>
+              <tr><td>SHA-256</td><td>Audit chain hashing</td><td>REQUIRED</td></tr>
+              <tr><td>SHA-512</td><td>Audit chain hashing</td><td>RECOMMENDED</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Annex E — Scope Boundaries</h3>
+        <p><strong>In Scope:</strong> Machine-verifiable consent enforcement infrastructure, cryptographic guarantees of consent validity, protocol-layer consent mechanisms independent of model architecture, cross-jurisdictional consent management.</p>
+        <div class="table-wrapper">
+          <span class="table-caption">Table — Explicit Exclusions</span>
+          <table>
+            <thead><tr><th>ID</th><th>Exclusion</th></tr></thead>
+            <tbody>
+              <tr><td>OUT-01</td><td>Model Intelligence Regulation: Does not regulate cognitive capabilities, reasoning quality, or emergent intelligence properties.</td></tr>
+              <tr><td>OUT-02</td><td>Ideological Governance: Does not prescribe political, ethical, philosophical, or values-based constraints on AI behavior.</td></tr>
+              <tr><td>OUT-03</td><td>Regulatory Authority Replacement: Does not replace, supersede, or substitute for national or supranational regulatory frameworks.</td></tr>
+              <tr><td>OUT-04</td><td>Output Quality Guarantee: Does not guarantee accuracy, reliability, completeness, or fitness for purpose of AI-generated outputs.</td></tr>
+              <tr><td>OUT-05</td><td>Bias Elimination: Does not claim to detect, mitigate, measure, or eliminate statistical or representational bias in model outputs.</td></tr>
+              <tr><td>OUT-06</td><td>Sovereign Legal Override: Does not override or take precedence over applicable sovereign legal frameworks in any jurisdiction.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">This document presents a normative governance framework and does not constitute legal, regulatory, or operational security advice. Implementations claiming conformance must conduct deployment-specific assessments accounting for their specific topology, operational context, and applicable regulatory obligations.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is part of the QODIQA specification corpus and defines the normative enforcement framework governing deterministic runtime consent enforcement systems. It specifies the complete set of 68 control points, conformance profiles, lifecycle model, cryptographic requirements, and governance obligations required of implementations claiming QODIQA conformance.</p>
+
+          <p>The framework is intended as a machine-implementable technical standard rather than a voluntary guideline. It operates at the protocol layer, independently of model architecture and deployment topology, providing deterministic enforcement mechanisms across all phases of the AI system lifecycle, from training data ingestion through runtime inference and model retirement.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial corpus-normalized release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-FRAMEWORK-2026-003</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">68-Point Enforcement Framework for Runtime Consent Governance</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Governance Framework</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — 68-Point Enforcement Framework for Runtime Consent Governance</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p style="white-space: nowrap;">QODIQA-FRAMEWORK-2026-003</p>
+      <p style="white-space: nowrap;">Normative Governance Framework</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a normative governance framework and does not constitute legal, regulatory, or operational security advice. All control points and architectural principles described herein are intended for conformance evaluation and implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-FRAMEWORK-2026-003 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  'use strict';
+
+  const sections = [...document.querySelectorAll("section[id], main .doc-section[id]")];
+  const navLinks = [...document.querySelectorAll("#sidebar .nav-item")];
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+  const btt      = document.getElementById('back-to-top');
+  const toggle   = document.getElementById('navToggle');
+
+  /* ---- ScrollSpy ---- */
+  function setActive(id) {
+    navLinks.forEach(link => {
+      link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+    });
+  }
+
+  if (sections.length && navLinks.length) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible.length > 0) setActive(visible[0].target.id);
+    }, {
+      rootMargin: "-30% 0px -55% 0px",
+      threshold: [0, 0.1, 0.25, 0.5]
+    });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  /* ---- Smooth nav clicks ---- */
+  navLinks.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  if (btt) {
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  /* ---- Mobile sidebar toggle ---- */
+  if (toggle && sidebar) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      if (overlay) overlay.classList.toggle('active', sidebar.classList.contains('open'));
+    });
+  }
+
+  /* ---- Overlay closes sidebar ---- */
+  if (overlay && sidebar) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+});-e 
+</script>
+
+</body>
+</html>

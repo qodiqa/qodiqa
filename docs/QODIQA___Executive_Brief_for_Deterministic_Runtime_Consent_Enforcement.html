@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA. Executive Brief for Deterministic Runtime Consent Enforcement. v1.0</title>
+<meta name="description" content="QODIQA Executive Brief for Deterministic Runtime Consent Enforcement v1.0. A concise institutional overview of the consent enforcement framework. April 2026.">
+<meta property="og:title" content="QODIQA. Executive Brief for Deterministic Runtime Consent Enforcement">
+<meta property="og:description" content="An institutional executive brief presenting the strategic case for deterministic runtime consent enforcement in artificial intelligence systems.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1C20;--ink-2:#2C2F36;--ink-3:#3A3F48;
+  --accent:#7A6A50;--muted:#6B7280;--rule:#D6D2CC;--border:#D4D0CA;
+  --bg:#F6F4F0;--text:#1A1C20;--text-2:#3A3F48;--text-3:#5A6070;
+  --sidebar-w:252px;--col:800px;
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono','Courier New',monospace;
+  --lh:1.70;--lh-h:1.22;
+}
+html{font-size:16px}
+body{font-family:var(--sans);font-size:1rem;line-height:var(--lh);color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+#cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:#0A0C0F;background-image:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(122,106,80,.09) 0%,transparent 65%),linear-gradient(180deg,#0A0C0F 0%,#0C0F13 50%,#0A0C0F 100%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:100% 100%,100% 100%,52px 52px,52px 52px;position:relative;overflow:hidden;padding:96px 48px;text-align:center}
+#cover::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(10,12,15,.65) 100%);pointer-events:none}
+#cover::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(122,106,80,.45) 50%,transparent 100%)}
+.cover-inner{position:relative;z-index:1;max-width:580px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cover-title{font-family:var(--serif);text-align:center;width:100%}
+.cover-title .qodiqa-brand{display:block;font-family:var(--serif);font-size:clamp(3.4rem,7.8vw,5.8rem);font-weight:700;letter-spacing:.06em;color:#fff;line-height:1;margin-bottom:24px;text-shadow:0 0 20px rgba(122,106,80,.10),0 1px 2px rgba(0,0,0,.55)}
+.cover-title .title-main{display:block;font-family:var(--serif);font-size:clamp(1.70rem,3.7vw,2.8rem);font-weight:700;line-height:1.20;color:rgba(255,255,255,.90);letter-spacing:-.010em}
+.cover-title .title-main .italic-part{font-style:italic;font-weight:400;color:rgba(255,255,255,.58)}
+.cover-info-block{width:100%;max-width:520px;margin:64px auto 0;display:flex;flex-direction:column;align-items:center;text-align:center}
+.cover-info-divider{width:48px;height:1px;background:linear-gradient(90deg,transparent,rgba(122,106,80,.55),transparent);margin:0 auto 32px}
+.cover-info-subtitle{font-family:var(--serif);font-size:.70rem;font-weight:400;letter-spacing:.22em;color:rgba(255,255,255,.50);margin-bottom:12px;text-transform:uppercase}
+.cover-info-date{font-family:var(--serif);font-size:.76rem;font-weight:300;color:rgba(255,255,255,.36);letter-spacing:.14em;margin-bottom:24px}
+.cover-info-badge{display:inline-block;border:1px solid rgba(122,106,80,.38);border-top:1px solid rgba(122,106,80,.55);padding:7px 28px 6px;font-family:var(--mono);font-size:.62rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.50);background:rgba(122,106,80,.06);margin-bottom:32px}
+.cover-info-tagline{font-family:var(--serif);font-size:.85rem;font-weight:400;color:rgba(255,255,255,.50);max-width:440px;line-height:1.82;font-style:italic}
+#cover p,#cover .cover-info-subtitle,#cover .cover-info-date,#cover .cover-info-tagline{text-align:center;hyphens:none;margin-left:auto;margin-right:auto}
+.cover-scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.15);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase}
+.layout{display:flex;min-height:100vh}
+#sidebar{width:var(--sidebar-w);flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;background:#0A0C0F;border-right:1px solid rgba(255,255,255,.055);display:flex;flex-direction:column;z-index:100;scrollbar-width:thin;scrollbar-color:#2A2F38 transparent}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-track{background:transparent}
+#sidebar::-webkit-scrollbar-thumb{background:#2A2F38}
+.sidebar-header{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0}
+.sidebar-nav-label{font-family:var(--sans);font-size:.58rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(122,106,80,.60);display:block}
+.sidebar-nav{flex:1;padding:12px 0 32px}
+.nav-item{display:block;padding:4px 20px 4px 18px;font-family:var(--sans);font-size:.73rem;color:#A0A8B2;text-decoration:none;line-height:1.45;border-left:2px solid transparent;transition:color .12s,background .12s,border-color .12s}
+.nav-item:hover{color:#C4BEB2;background:rgba(255,255,255,.04);border-left-color:rgba(122,106,80,.32)}
+.nav-item.active{color:#E2D8C8;border-left-color:#A8966E;background:rgba(122,106,80,.14);font-weight:600}
+.nav-item.sub{padding-left:32px;font-size:.69rem;color:#6E7880}
+.nav-item.sub:hover{color:#9A9490}
+.nav-item.sub.active{color:#BEB4A8}
+.sidebar-footer{padding:12px 20px;border-top:1px solid rgba(255,255,255,.05);font-size:.62rem;color:#3A4050;line-height:1.5;flex-shrink:0;font-family:var(--mono);letter-spacing:.03em}
+.mobile-nav-header{display:none}
+.nav-toggle{display:none;background:#0A0C0F;color:#fff;border:1px solid rgba(255,255,255,.10);width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:99}
+#content{flex:1;min-width:0;padding:80px 80px 108px}
+.content-inner{max-width:var(--col);margin:0 auto}
+.doc-section{margin-top:32px;padding-top:0}
+.doc-section:first-child{margin-top:0}
+.doc-section:has(.section-divider){margin-top:48px}
+.section-divider{display:block;width:100%;height:1px;background:var(--rule);margin-bottom:24px;opacity:.45}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-kerning:normal}
+.section-label{font-family:var(--mono);font-size:.60rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:8px;opacity:.80}
+h2{font-size:clamp(1.28rem,2.2vw,1.58rem);font-weight:700;line-height:var(--lh-h);letter-spacing:-.018em;color:var(--ink);margin-bottom:16px;position:relative}
+h2 .anchor-link{position:absolute;right:calc(100% + 14px);top:50%;transform:translateY(-50%);opacity:0;color:var(--accent);font-size:.75rem;text-decoration:none;font-family:var(--mono);transition:opacity .12s}
+h2:hover .anchor-link{opacity:.7}
+h3{font-size:1.00rem;font-weight:600;line-height:1.28;letter-spacing:-.005em;color:var(--ink-2);margin-top:24px;margin-bottom:12px}
+.doc-section>h3:first-child{margin-top:0}
+p{font-size:.965rem;line-height:var(--lh);color:var(--text);margin-bottom:1.0em;text-align:justify;hyphens:auto;-webkit-hyphens:auto;-moz-hyphens:auto;overflow-wrap:break-word;orphans:2;widows:2}
+em{font-style:italic}
+strong{font-weight:600;color:var(--ink)}
+ul,ol{padding-left:1.35em;margin-bottom:.85em}
+li{font-size:.965rem;line-height:1.65;margin-bottom:4px;color:var(--text);text-align:justify;hyphens:auto;-webkit-hyphens:auto;-moz-hyphens:auto;overflow-wrap:break-word}
+.abstract-block{background:#F1EFEA;border-top:2px solid var(--accent);border-bottom:1px solid var(--rule);padding:28px 0 24px;margin:0 0 40px}
+.abstract-label{font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:12px;opacity:.80}
+.abstract-block p{font-size:.930rem;line-height:1.78;color:var(--ink-2);font-style:italic;margin:0}
+.key-prop{background:#F2F0EB;border:1px solid #D2CEC8;border-left:3px solid var(--accent);padding:14px 20px;margin:12px 0 16px}
+.key-prop-title{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:7px;opacity:.80}
+.key-prop p{margin:0;font-size:.920rem;line-height:1.65}
+.decision-block{background:#EEEBE6;border:1px solid #D2CEC8;border-left:3px solid var(--ink-3);padding:12px 20px;margin:12px 0}
+.decision-block strong{font-family:var(--mono);font-size:.60rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:7px}
+.decision-block p{font-size:.905rem;margin:0;line-height:1.60}
+.decision-block ul{list-style:disc;padding-left:1.3em;margin:6px 0 0}
+.decision-block ul li{font-size:.905rem;padding:2px 0;margin-bottom:3px;line-height:1.58}
+.section-note{font-size:.770rem;color:var(--muted);font-style:italic;border-top:1px solid #D0CCC6;padding-top:12px;margin-top:32px;line-height:1.62}
+.doc-status-block{background:#EDEAE5;border:1px solid #D2CEC8;border-left:3px solid var(--accent);padding:26px 30px;margin:16px 0}
+.doc-status-block p{text-align:justify;hyphens:auto}
+.corpus-list{list-style:none;padding:0;margin:10px 0 14px;border-top:1px solid #D4D0CC;border-bottom:1px solid #D4D0CC}
+.corpus-list li{font-size:.890rem;color:var(--text-2);line-height:1.55;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);text-align:left;hyphens:none}
+.corpus-list li:last-child{border-bottom:none}
+.contact-block{margin-top:0;padding-top:20px;text-align:center}
+.contact-block p{text-align:center;font-size:.875rem;color:var(--text-3);margin-bottom:10px;hyphens:none}
+.contact-name{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:4px!important}
+.contact-detail{font-size:.840rem!important;color:var(--muted)!important;margin-bottom:2px!important}
+.contact-detail a{color:var(--accent);text-decoration:none}
+.contact-detail a:hover{text-decoration:underline}
+.doc-identity-block{margin-top:32px;padding:20px 24px;background:#EDEAE5;border:1px solid #D2CEC8;border-left:2px solid var(--ink-3);font-family:var(--mono)}
+.doc-identity-row{display:flex;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);line-height:1.5}
+.doc-identity-row:last-child{border-bottom:none}
+.doc-id-key{flex:0 0 200px;color:var(--muted);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase}
+.doc-id-val{color:var(--text);font-size:.760rem;line-height:1.6}
+#back-to-top{position:fixed;bottom:28px;right:28px;width:36px;height:36px;border-radius:50%;background:#0A0C0F;border:1px solid rgba(122,106,80,.30);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .25s,transform .25s,background .12s;z-index:50}
+#back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+#back-to-top:hover{background:#131620;border-color:rgba(122,106,80,.50)}
+footer{background:#0A0C0F;color:rgba(255,255,255,.50);padding:44px 80px;margin-left:var(--sidebar-w);border-top:1px solid rgba(122,106,80,.18)}
+.footer-inner{max-width:calc(var(--col) + 160px);margin:0 auto;display:grid;grid-template-columns:2fr 1fr 2fr;gap:40px;align-items:start}
+.footer-block .f-label{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(122,106,80,.70);font-family:var(--mono);font-weight:600;margin-bottom:10px;display:block}
+.footer-block p{font-size:.760rem;color:rgba(255,255,255,.50);line-height:1.65;margin:0 0 3px;text-align:left}
+.footer-divider{grid-column:1/-1;height:1px;background:rgba(255,255,255,.07);margin:4px 0}
+.footer-bottom{grid-column:1/-1;color:rgba(255,255,255,.28);font-family:var(--mono);font-size:.620rem;display:flex;justify-content:space-between;align-items:center;letter-spacing:.02em}
+@media print{
+  #sidebar,#back-to-top,.nav-toggle,.overlay,.cover-scroll-hint{display:none!important}
+  footer{margin-left:0}
+  #content{padding:36px 48px}
+  pre{white-space:pre-wrap}
+  body{font-size:11pt}
+  h2{font-size:16pt}
+  #cover{min-height:auto;padding:80px 40px;page-break-after:always}
+}
+@media(max-width:1200px){
+  #content{padding:64px 56px 96px}
+  footer{padding:36px 56px}
+}
+@media(max-width:1024px){
+  #content{padding:52px 40px 80px}
+  footer{padding:32px 40px}
+  .footer-inner{gap:28px}
+}
+@media(max-width:768px){
+  .nav-toggle{display:flex;position:relative;flex-shrink:0}
+  .mobile-nav-header{display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;width:100%;height:52px;padding:0 16px;background:#0A0C0F;border-bottom:1px solid rgba(122,106,80,.15);z-index:210}
+  .mobile-contents-label{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+  #sidebar{position:fixed;top:0;left:0;height:100vh;transform:translateX(-100%);transition:transform .25s ease;z-index:150;will-change:transform}
+  #sidebar.open{transform:translateX(0)}
+  .overlay.active{display:block}
+  #content{padding:68px 20px 52px}
+  footer{margin-left:0;padding:28px 20px}
+  .footer-inner{grid-template-columns:1fr;gap:22px}
+  .footer-bottom{flex-direction:column;gap:6px;text-align:center}
+  h2 .anchor-link{display:none}
+  .doc-identity-row{flex-direction:column;gap:2px}
+  .doc-id-key{flex:none}
+  .cover-info-block{margin-top:48px}
+}
+</style>
+</head>
+<body>
+
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Executive Brief for<br><span class="italic-part">Deterministic Runtime Consent Enforcement</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Strategic Overview for Institutional Decision-Makers</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Executive Brief &nbsp;&middot;&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">A concise institutional presentation of a framework for deterministic, machine-enforceable consent in artificial intelligence systems.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white"><rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/></svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s0">0. Executive Overview</a>
+      <a class="nav-item" href="#s1">1. Problem Definition</a>
+      <a class="nav-item" href="#s2">2. Failure of Current Models</a>
+      <a class="nav-item" href="#s3">3. Deterministic Enforcement</a>
+      <a class="nav-item" href="#s4">4. System-Level Implications</a>
+      <a class="nav-item" href="#s5">5. Risk Containment</a>
+      <a class="nav-item" href="#s6">6. Regulatory Alignment</a>
+      <a class="nav-item" href="#s7">7. Deployment Model</a>
+      <a class="nav-item" href="#s8">8. Strategic Impact</a>
+      <a class="nav-item" href="#s9">9. Limitations</a>
+      <a class="nav-item" href="#s10">10. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      QODIQA-EB-2026-001<br>
+      Executive Brief &middot; v1.0<br>
+      April 2026
+    </div>
+  </nav>
+
+  <main id="content">
+    <div class="content-inner">
+
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This executive brief presents the institutional case for deterministic runtime consent enforcement as a necessary architectural property of artificial intelligence systems. Current consent mechanisms, whether contractual, policy-based, or procedural, operate outside the execution layer and cannot provide enforceable guarantees at runtime. QODIQA addresses this gap by positioning consent evaluation as a deterministic, machine-readable gate within the AI inference pipeline. This document characterizes the problem, describes the QODIQA framework at a strategic level, examines system-level implications, and articulates regulatory and operational consequences for deploying organizations.</p>
+        </div>
+      </div>
+
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 0</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Executive Overview</h2>
+        <p>Artificial intelligence systems now operate in consequential domains, including healthcare, financial services, legal analysis, and critical infrastructure, where the boundary between advisory output and operational action is increasingly narrow. In each of these contexts, consent is a foundational requirement: the operating premise that a human principal has authorized a specific class of action, in a specific context, under defined conditions.</p>
+        <p>The problem is structural. Consent, as currently implemented across AI deployments, exists exclusively as a pre-execution agreement: a contract, a terms-of-service clause, a policy document, or a governance control. None of these mechanisms operate within the runtime. Once an AI system begins processing, no technical layer evaluates whether the action being executed falls within the scope of what was consented to. Consent is asserted; it is never verified.</p>
+        <p>QODIQA, the Quantified Operational Declarative Infrastructure for Qualified Assent, is a framework for correcting this structural deficiency. It defines a deterministic consent enforcement layer that operates at the inference boundary, evaluating each AI action against a machine-readable consent record before execution proceeds. The result is a system in which consent is not a policy precondition but an execution property: a runtime invariant that either holds or terminates the operation.</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Central Proposition</div>
+          <p>Consent in AI systems must be enforced at the execution layer, not declared at the agreement layer. QODIQA provides the architectural specification for this enforcement.</p>
+        </div>
+        <p>This brief is addressed to institutional decision-makers evaluating the strategic implications of QODIQA adoption: executive leadership, legal and compliance officers, risk management functions, and technical architects responsible for AI governance. It does not assume prior familiarity with the full QODIQA technical corpus.</p>
+      </div>
+
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Problem Definition</h2>
+        <p>The deployment of AI systems in consequential operational contexts has outpaced the development of consent mechanisms adequate to those contexts. The gap is not primarily one of regulatory coverage or organizational intent. It is an architectural gap: the absence of any mechanism capable of enforcing consent at the moment an AI system acts.</p>
+        <p>Consent failures in AI deployments take several forms. An AI system may perform an action outside the scope of what a user authorized, because no mechanism exists to check scope at runtime. It may act on stale consent, a permission granted under conditions that have since changed, because no mechanism exists to verify temporal validity at execution time. It may aggregate data across multiple consented interactions in ways that exceed the sum of individual authorizations, because consent records are evaluated independently rather than cumulatively. It may proceed in the absence of any consent record, because the default behavior of most AI systems is permissive, not restrictive.</p>
+        <div class="decision-block">
+          <strong>Structural Diagnosis</strong>
+          <p>The fundamental problem is not that consent is absent from AI governance. It is that consent exists only as a pre-execution representation, a legal or policy artifact, rather than a runtime constraint. A representation of consent that cannot be verified at the moment of execution provides no operational guarantee.</p>
+        </div>
+        <p>This structural condition has direct legal, regulatory, and operational consequences. Legally, an organization cannot demonstrate that a specific AI action fell within the scope of a specific consent authorization if no record of runtime evaluation exists. Regulatorily, compliance obligations that require verifiable consent cannot be satisfied by systems that lack the capacity to enforce consent at runtime. Operationally, the inability to constrain AI behavior to consented scope creates exposure to outcomes that were neither authorized nor anticipated.</p>
+        <p>The problem is not addressable by improving existing consent documentation or governance procedures. Those approaches operate at the agreement layer. The deficiency is in the execution layer, and it requires an execution-layer solution.</p>
+      </div>
+
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Failure of Current Consent Models</h2>
+        <p>Three dominant consent models are applied to AI systems: contractual consent, policy-based consent, and procedural consent. Each is structurally limited in its capacity to govern AI behavior at runtime.</p>
+        <h3>Contractual Consent</h3>
+        <p>Contractual consent establishes the legal basis for AI system operation. It specifies permitted use cases, data handling obligations, and authorized scope of action. However, contracts are interpreted and enforced ex post, not at the moment of execution. A contract cannot prevent an out-of-scope action; it can only provide legal recourse after one has occurred. In high-frequency, low-latency AI environments, this distinction is operationally significant: the harm of an out-of-scope action may be irreversible before legal mechanisms engage.</p>
+        <h3>Policy-Based Consent</h3>
+        <p>Policy-based consent translates contractual obligations into operational rules: data classification policies, access controls, usage restrictions. These controls are closer to the execution layer but remain external to it. They govern what data an AI system may access and in what contexts it may be invoked, but they do not evaluate whether a specific inference action falls within the scope of what was authorized. Policy controls operate at system boundaries; they do not operate within the inference pipeline.</p>
+        <h3>Procedural Consent</h3>
+        <p>Procedural consent relies on organizational processes, including training, review workflows, and audit procedures, to ensure AI system behavior remains within authorized scope. These controls are the most remote from execution. They depend on human judgment applied before or after the fact and provide no technical guarantee of runtime compliance. Audit procedures can identify violations after they occur; they cannot prevent them.</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Common Failure Mode</div>
+          <p>All three models share a single structural deficiency: none evaluates consent at the moment of execution. Each operates outside the inference pipeline and therefore cannot provide deterministic enforcement of consent boundaries at runtime.</p>
+        </div>
+        <p>Supplementary technical controls, such as content filters, output classifiers, and model alignment techniques, address behavioral properties of AI systems but do not address the consent enforcement gap directly. A system can produce output that is technically compliant with content policies while acting outside the scope of what any user authorized. These are distinct failure modes, and the former does not mitigate the latter.</p>
+      </div>
+
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Deterministic Runtime Consent Enforcement</h2>
+        <p>Deterministic runtime consent enforcement is the architectural approach in which consent evaluation is performed as a mandatory gate within the AI execution pipeline, producing a binary outcome, permit or deny, before any inference action proceeds. The evaluation is deterministic: given identical inputs, it produces identical outputs. It is runtime: it executes at the moment of action, not before or after. It is consent-based: it evaluates the action against a verified record of what a principal has authorized.</p>
+        <p>QODIQA specifies this enforcement layer as a system component with defined inputs, a defined evaluation procedure, defined outputs, and defined failure behavior. The key architectural properties are as follows.</p>
+        <h3>Machine-Readable Consent Records</h3>
+        <p>Consent is represented as a structured, machine-readable artifact, not a natural-language document subject to interpretation, but a formal record specifying the authorizing principal, the authorized action classes, the context in which authorization applies, and the temporal boundaries of validity. The consent record is the input to the enforcement layer; it is not a reference document consulted by human reviewers.</p>
+        <h3>Deterministic Evaluation</h3>
+        <p>The enforcement layer evaluates each incoming action against the applicable consent record using a defined policy evaluation function. The function is deterministic: it produces the same output for the same input on every invocation. There is no probabilistic component, no discretionary judgment, no fallback to default permissiveness. Ambiguity in the consent record resolves to denial, not approval.</p>
+        <h3>Fail-Closed Semantics</h3>
+        <p>In the absence of a valid, applicable consent record, the enforcement layer denies the action. The system does not proceed under an assumption of implied consent. The default operational posture is restrictive. This is a non-negotiable property of any enforcement layer that provides meaningful guarantees: a system that proceeds without consent records in place does not enforce consent; it merely records its absence.</p>
+        <h3>Cryptographic Auditability</h3>
+        <p>Each enforcement decision, permit or deny, is recorded with a cryptographic integrity guarantee. The audit record cannot be modified without detection. The combination of deterministic evaluation and tamper-evident logging produces a verifiable enforcement history: an institutional record demonstrating that every AI action was evaluated against a consent record and that the evaluation result was preserved.</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Architectural Positioning</div>
+          <p>The QODIQA enforcement layer is positioned between the input processing stage and the inference execution stage of the AI pipeline. It is not a post-processing filter and not a pre-deployment governance control. It is an inline evaluation gate that no action can bypass.</p>
+        </div>
+      </div>
+
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>System-Level Implications</h2>
+        <p>The introduction of a deterministic consent enforcement layer has implications that extend beyond the AI system itself. These implications affect how AI systems integrate with organizational infrastructure, how consent records are managed as a class of operational data, and how accountability is structured across the AI deployment stack.</p>
+        <h3>Consent as Operational Data</h3>
+        <p>In QODIQA-compliant systems, consent records are operational data in the same sense that configuration parameters and access credentials are operational data. They must be created, versioned, validated, stored, and retired as part of the operational lifecycle of the AI system. Organizations deploying QODIQA-compliant systems must treat consent record management as an infrastructure function, not an administrative one.</p>
+        <h3>Separation of the Enforcement Layer</h3>
+        <p>The QODIQA enforcement layer operates independently of the AI model it governs. The enforcement layer does not share code, state, or failure modes with the inference system. A failure in the inference system does not compromise the enforcement layer. A failure in the enforcement layer produces a fail-closed outcome: denial, not uncontrolled execution. This separation provides the organizational assurance that consent enforcement cannot be inadvertently disabled by changes to the AI system itself.</p>
+        <h3>Multi-Principal Environments</h3>
+        <p>In enterprise AI deployments, multiple principals may hold concurrent consent relationships with the same AI system: individual users, organizational units, system administrators, and third-party integrators. QODIQA provides a framework for managing overlapping consent claims and resolving conflicts between them deterministically. The most restrictive applicable consent boundary governs execution; broader permissions held by one principal cannot override more restricted permissions held by another.</p>
+        <h3>Temporal Validity Management</h3>
+        <p>Consent records in the QODIQA framework carry explicit validity windows. An authorization valid at 09:00 may not be valid at 14:00, depending on how the consent record is structured. The enforcement layer evaluates temporal validity as part of every decision. This property requires that organizations actively manage consent record lifecycles, issuing new records when authorizations are renewed and revoking records when authorizations are withdrawn, rather than relying on implicit continuation of prior consent.</p>
+      </div>
+
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Risk Containment Capabilities</h2>
+        <p>From a risk management perspective, QODIQA provides three categories of capability: prevention, containment, and evidence.</p>
+        <h3>Prevention</h3>
+        <p>Deterministic enforcement prevents out-of-scope AI actions at the point of execution. An action that lacks a valid consent authorization does not execute; it is not logged as a violation and flagged for review. For organizations operating in regulated environments or processing sensitive data, this distinction is material. Prevention eliminates the class of harm associated with unauthorized AI action; it does not merely improve the speed with which such harm is detected.</p>
+        <h3>Containment</h3>
+        <p>When consent records are structured with appropriately scoped authorization boundaries, the enforcement layer contains AI system behavior within those boundaries by design. A system authorized to process medical records for diagnostic purposes cannot, in a QODIQA-compliant architecture, use the same consent authorization to perform billing analysis. The scope of each authorization is fixed in the consent record; the enforcement layer holds that scope deterministically. Scope creep, the gradual expansion of AI system behavior beyond its original authorization, becomes a consent record governance problem rather than an ongoing operational monitoring problem.</p>
+        <h3>Evidence</h3>
+        <p>The tamper-evident audit record produced by the enforcement layer constitutes verifiable evidence of consent evaluation for every AI action taken. This evidence supports incident investigation by providing a definitive record of what was authorized at the time of each action; it supports regulatory examination by demonstrating that consent evaluation occurred; and it supports litigation by providing a factual basis for claims about AI system behavior. Organizations cannot generate this category of evidence retroactively; it is produced only by systems that performed runtime enforcement at the time of action.</p>
+        <div class="decision-block">
+          <strong>Risk Classification</strong>
+          <ul>
+            <li><strong>Unauthorized action risk.</strong> Eliminated by prevention at the enforcement layer.</li>
+            <li><strong>Scope creep risk.</strong> Contained by fixed authorization boundaries in consent records.</li>
+            <li><strong>Evidentiary risk.</strong> Mitigated by cryptographically verifiable audit records.</li>
+            <li><strong>Stale consent risk.</strong> Addressed by temporal validity evaluation at runtime.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Regulatory Alignment Positioning</h2>
+        <p>Regulatory frameworks governing AI systems increasingly require demonstrable consent mechanisms, verifiable processing boundaries, and auditable records of AI decision-making. QODIQA is designed to provide the technical foundation for compliance with this class of requirement. It does not constitute legal or regulatory advice, and its applicability to specific regulatory obligations must be assessed in context.</p>
+        <h3>Data Protection Frameworks</h3>
+        <p>Data protection regulations impose requirements for specific, informed, and documented consent as a basis for processing personal data. QODIQA's machine-readable consent records are structurally aligned with these requirements: they specify the processing purpose, the data subject's authorization, and the temporal scope of that authorization in a form evaluable at runtime. The enforcement layer provides the technical mechanism by which processing is constrained to authorized purposes, a capability that policy controls alone cannot provide.</p>
+        <h3>AI Governance Frameworks</h3>
+        <p>Emerging AI governance frameworks impose obligations related to human oversight, risk classification, and technical accountability. QODIQA's deterministic enforcement model supports human oversight by ensuring that AI systems operate within boundaries explicitly defined by human principals. Its audit trail supports technical accountability by providing a verifiable record that those boundaries were evaluated and enforced for every action taken.</p>
+        <h3>Sector-Specific Requirements</h3>
+        <p>Regulated sectors, including healthcare, financial services, and legal services, impose consent obligations specific to their operational contexts. QODIQA's consent record schema is extensible to accommodate sector-specific authorization parameters. The enforcement framework is not domain-specific; the consent records it evaluates can be structured to reflect domain-specific requirements, allowing a single enforcement architecture to address obligations across multiple regulatory contexts.</p>
+        <h3>Institutional Positioning</h3>
+        <p>Organizations that deploy QODIQA-compliant AI systems are positioned to demonstrate, rather than assert, that their AI systems operate within authorized boundaries. The distinction between assertion and demonstration is increasingly significant in regulatory examinations: an organization that can produce a verifiable enforcement record for every AI action taken is in a materially different position from one that can produce only governance documentation describing its intent.</p>
+      </div>
+
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Deployment Model</h2>
+        <p>QODIQA is specified as an enforcement layer that is architecturally distinct from the AI systems it governs. The enforcement layer is not embedded in the AI model; it wraps the inference pipeline as an independent component with defined interfaces.</p>
+        <h3>Integration Points</h3>
+        <p>The QODIQA enforcement layer intercepts each AI action intent, the structured representation of what the AI system proposes to do, before execution. It resolves the applicable consent record, evaluates the proposed action against that record using the QODIQA policy evaluation function, and either permits execution or issues a denial response. The inference pipeline never receives an action intent that the enforcement layer has denied; the denial is final.</p>
+        <h3>Consent Record Management</h3>
+        <p>Consent records are created, stored, and managed outside both the AI system and the enforcement layer. They are provided to the enforcement layer as authoritative inputs at evaluation time. Organizations deploying QODIQA-compliant systems are responsible for the integrity and availability of their consent record stores. The QODIQA framework specifies the required schema and validation rules for consent records; it does not specify the storage infrastructure.</p>
+        <h3>Operational Lifecycle</h3>
+        <p>QODIQA-compliant deployments require operational processes for consent record issuance, renewal, scope modification, and revocation. Where consent is granted dynamically, for example in response to user interaction, the consent record creation process must be capable of generating valid records in real time, prior to the action for which authorization is sought.</p>
+        <h3>Certification and Verification</h3>
+        <p>The QODIQA corpus includes a Certification Framework for Deterministic Runtime Consent Enforcement, which specifies the conformance requirements that enforcement layer implementations must satisfy. Organizations deploying QODIQA-compliant systems should verify that their implementation satisfies the applicable certification requirements before relying on the enforcement layer for compliance purposes.</p>
+      </div>
+
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Strategic Impact</h2>
+        <p>The strategic significance of deterministic runtime consent enforcement extends beyond immediate risk management and regulatory compliance. It represents a foundational property for the class of AI deployments that will define institutional AI capability over the next decade.</p>
+        <p>As AI systems move from decision support toward operational agency, executing transactions, committing resources, and initiating communications on behalf of principals, the question of authorization becomes structurally equivalent to the question of identity in access control systems. An AI system that acts without verifiable authorization is not an authorized agent; it is an autonomous process whose actions cannot be attributed to any principal with legal or institutional confidence. Deterministic runtime consent enforcement is the mechanism by which AI agency is bounded to verified authorization.</p>
+        <p>Organizations that establish consent enforcement infrastructure now acquire a compound advantage. In the near term, they reduce their exposure to the categories of harm, including unauthorized action, scope creep, and evidentiary gaps, that currently characterize AI risk profiles. In the medium term, they establish the organizational capability to manage consent relationships at scale, enabling AI deployments that are both more capable and more controlled. In the long term, they position themselves as institutions for which AI trustworthiness is a demonstrable property of their systems, not a claim about their intentions.</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Strategic Proposition</div>
+          <p>The capacity to deploy AI systems with verifiable consent enforcement will become a differentiating institutional capability as AI governance requirements mature. Organizations that build this capacity early incur lower implementation costs and avoid the operational disruption of retroactive compliance.</p>
+        </div>
+        <p>The inverse is also true. Organizations that continue to rely on pre-execution consent mechanisms will face increasing difficulty demonstrating compliance with governance frameworks that require runtime verifiability. The evidentiary and liability exposure associated with non-enforcement grows as AI systems take more consequential actions in more regulated contexts.</p>
+      </div>
+
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Limitations and Non-Coverage</h2>
+        <p>QODIQA addresses a specific architectural gap: the absence of deterministic consent enforcement at the AI execution layer. It does not address the full scope of AI governance, and its adoption does not substitute for governance controls that operate at other layers of the AI system stack.</p>
+        <p>QODIQA does not govern the substantive content of consent. It enforces the boundaries that consent records define; it does not evaluate whether those boundaries are ethically appropriate, legally sufficient, or strategically advisable. The quality of consent enforcement is bounded by the quality of the consent records provided to the enforcement layer. Organizations that create poorly scoped, overly broad, or inadequately validated consent records will not benefit from enforcement of those records.</p>
+        <p>QODIQA does not address model alignment or output safety. A consent-authorized action may still produce harmful output if the underlying AI model is not appropriately aligned. Consent enforcement and output safety are complementary properties; neither substitutes for the other.</p>
+        <p>QODIQA does not address the validity of consent from a legal or ethical standpoint. A consent record that satisfies QODIQA's technical requirements may not satisfy the requirements of applicable law for valid consent. Organizations must ensure that their consent record governance processes produce authorizations that are legally valid in their operational jurisdictions.</p>
+        <p>QODIQA does not provide guarantees about the behavior of AI systems not integrated with a compliant enforcement layer. Its properties apply only to actions evaluated by the enforcement layer. Portions of an AI system's operational scope not routed through the enforcement layer are not subject to its protections.</p>
+        <div class="decision-block">
+          <strong>Non-Coverage Summary</strong>
+          <ul>
+            <li>Substantive content of consent records</li>
+            <li>Legal validity of consent under applicable law</li>
+            <li>AI model alignment and output safety</li>
+            <li>Governance controls external to the enforcement layer</li>
+            <li>Actions not routed through a QODIQA-compliant enforcement layer</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Conclusion</h2>
+        <p>Consent, as currently implemented in AI deployments, is a representation rather than an enforcement. It exists as a legal artifact, a policy document, or a governance control, each of which operates outside the execution layer and therefore cannot provide deterministic guarantees at the moment an AI system acts. The structural consequence is a systematic gap between what principals authorize and what AI systems do.</p>
+        <p>QODIQA closes this gap by specifying a deterministic consent enforcement layer that operates within the AI execution pipeline. The enforcement layer evaluates every action against a verified consent record, applies fail-closed semantics in the absence of valid authorization, and produces a tamper-evident audit trail of every enforcement decision. The result is a system in which consent is not a pre-execution claim but a runtime invariant.</p>
+        <p>For institutional decision-makers, the implications are direct. Organizations that deploy QODIQA-compliant systems acquire the capacity to prevent unauthorized AI action, contain AI behavior within authorized boundaries, and demonstrate compliance through verifiable enforcement records. Organizations that do not face growing evidentiary and liability exposure as AI systems take increasingly consequential actions in increasingly regulated contexts.</p>
+        <p>Execution-layer consent enforcement is not a regulatory response to current requirements. It is the architectural precondition for AI deployments that are both capable and accountable. QODIQA provides the specification for that architecture.</p>
+        <p class="section-note">This executive brief is a component of the QODIQA standard corpus. Readers seeking technical depth on the enforcement framework, system architecture, security profile, or certification requirements should consult the QODIQA Technical Whitepaper and associated corpus documents.</p>
+      </div>
+
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+        <div class="doc-status-block">
+          <p>This document is an executive brief within the QODIQA specification corpus. It provides a strategic and institutional overview of the QODIQA framework for deterministic runtime consent enforcement in artificial intelligence systems, addressed to organizational decision-makers who require a concise and authoritative characterization of the framework's scope, rationale, and implications.</p>
+          <p>This brief is intended to be read in conjunction with the following corpus documents, which provide technical depth on the subjects introduced herein:</p>
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+          <p>Version 1.0 represents the initial formal release of this executive brief as part of the QODIQA standard corpus.</p>
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+        <div class="doc-identity-block">
+          <div class="doc-identity-row"><span class="doc-id-key">Document Identifier</span><span class="doc-id-val">QODIQA-EB-2026-001</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Title</span><span class="doc-id-val">Executive Brief for Deterministic Runtime Consent Enforcement</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Subtitle</span><span class="doc-id-val">Strategic Overview for Institutional Decision-Makers</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Publication Date</span><span class="doc-id-val">April 2026</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Version</span><span class="doc-id-val">1.0</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Document Type</span><span class="doc-id-val">Executive Brief</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Document Status</span><span class="doc-id-val">Normative</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Corpus Alignment</span><span class="doc-id-val">QODIQA Core v1.0 &middot; 68-Point Framework v3.0 &middot; Whitepaper v1.0</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Governing Authority</span><span class="doc-id-val">QODIQA Governance Charter</span></div>
+          <div class="doc-identity-row"><span class="doc-id-key">Integrity Notice</span><span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA. Executive Brief for Deterministic Runtime Consent Enforcement</p>
+      <p>Version 1.0 &nbsp;&middot;&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-EB-2026-001</p>
+      <p>Executive Brief</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a conceptual and strategic framework and does not constitute legal, regulatory, or operational advice. All architectural principles described herein are intended for institutional guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-EB-2026-001 &nbsp;&middot;&nbsp; Version 1.0. Normative &nbsp;&middot;&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function(){
+  'use strict';
+  const navItems=document.querySelectorAll('.nav-item');
+  const sectionIds=['cover','s-abstract','s0','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s-status'];
+  const sections=sectionIds.map(id=>document.getElementById(id)).filter(Boolean);
+  function setActive(id){navItems.forEach(item=>item.classList.toggle('active',item.getAttribute('href')==='#'+id))}
+  const sectionIndex=new Map(sections.map((s,i)=>[s.id,i]));
+  const visible=new Set();
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{if(entry.isIntersecting)visible.add(entry.target.id);else visible.delete(entry.target.id)});
+    if(visible.size>0){let topId=null,topIdx=Infinity;visible.forEach(id=>{const idx=sectionIndex.get(id);if(idx<topIdx){topIdx=idx;topId=id}});if(topId)setActive(topId)}
+  },{root:null,rootMargin:'-20% 0px -60% 0px',threshold:0});
+  sections.forEach(sec=>observer.observe(sec));
+  const sidebar=document.getElementById('sidebar');
+  const overlay=document.getElementById('overlay');
+  navItems.forEach(item=>{
+    item.addEventListener('click',e=>{
+      const href=item.getAttribute('href');
+      if(href&&href.startsWith('#')){
+        e.preventDefault();
+        const target=document.querySelector(href);
+        if(target){const offset=window.innerWidth<=768?60:20;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});sidebar.classList.remove('open');overlay.classList.remove('active')}
+      }
+    });
+  });
+  const btt=document.getElementById('back-to-top');
+  window.addEventListener('scroll',()=>btt.classList.toggle('visible',window.scrollY>600),{passive:true});
+  btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  const toggle=document.getElementById('navToggle');
+  if(toggle)toggle.addEventListener('click',()=>{sidebar.classList.toggle('open');overlay.classList.toggle('active')});
+  overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('active')});
+  let ticking=false;
+  function positionSpy(){if(!ticking){requestAnimationFrame(()=>{let closest=null,minDist=Infinity;sections.forEach(sec=>{const rect=sec.getBoundingClientRect();const dist=Math.abs(rect.top);if(dist<minDist){minDist=dist;closest=sec}});if(closest)setActive(closest.id);ticking=false});ticking=true}}
+  window.addEventListener('scroll',positionSpy,{passive:true});
+  setActive('cover');
+})();
+</script>
+</body>
+</html>

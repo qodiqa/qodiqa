@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA - Residual Risk and Assumption Disclosure Annex · v1.0</title>
+<meta name="description" content="QODIQA Residual Risk and Assumption Disclosure Annex v1.0 - Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA - Residual Risk and Assumption Disclosure Annex">
+<meta property="og:description" content="The normative risk and assumption disclosure annex for the QODIQA deterministic runtime consent enforcement standard.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 8px 24px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 8px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 16px 4px 16px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 8px 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.doc-section .doc-section { margin-top: 24px; }
+.doc-section .doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+h3.sub-h {
+  font-family: var(--serif);
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+h3.sub-h .sh-num {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  opacity: 0.80;
+}
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 24px 0;
+  margin: 0 0 32px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 16px; }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 8px 16px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 8px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+.table-left-align th,
+.table-left-align td { text-align: left !important; hyphens: none !important; }
+
+.table-first-col-center th:first-child,
+.table-first-col-center td:first-child { text-align: center !important; }
+
+.table-header-center thead th { text-align: center !important; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 8px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  text-align: justify;
+}
+
+.decision-block-simple {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.decision-block-simple strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.decision-block-simple p {
+  font-size: 0.905rem;
+  margin: 0;
+  line-height: 1.60;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  color: var(--text);
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 16px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+.fn-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.760rem;
+  line-height: 1.58;
+  color: var(--text-3);
+}
+
+.fn-marker {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  min-width: 16px;
+  padding-top: 1px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 16px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 24px 32px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 16px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 16px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 16px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 24px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 8px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 0 !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 16px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '→';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   EXCL LIST
+   ============================================================ */
+.excl-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  border: 1px solid #C4C0BA;
+}
+
+.excl-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.excl-list li:last-child { border-bottom: none; }
+.excl-list li:nth-child(even) { background: #EAE7E2; }
+
+.excl-list li::before {
+  content: '\00D7';
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #C44830;
+  flex-shrink: 0;
+  margin-top: 3px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-top: 3px solid var(--accent);
+  padding: 24px;
+  margin: 16px 0 24px;
+}
+
+.inst-lead {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.85;
+}
+
+.inst-body {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.60;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.005em;
+  display: block;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.inst-body strong { color: var(--ink); font-weight: 700; }
+
+.inst-close {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+  margin-top: 16px;
+  display: block;
+  opacity: 0.72;
+}
+
+/* ============================================================
+   RISK ANNEX COMPONENTS
+   ============================================================ */
+.risk-card {
+  border: 1px solid #C4C0BA;
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.risk-card-head {
+  background: #1C1F25;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.risk-card-id {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.risk-card-title {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.72);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.risk-band {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid;
+  flex-shrink: 0;
+}
+
+.risk-band.critical, .risk-band.compounded { color: #C44830; border-color: rgba(196,72,48,0.30); background: rgba(196,72,48,0.05); }
+.risk-band.high     { color: #B07028; border-color: rgba(176,112,40,0.30); background: rgba(176,112,40,0.05); }
+.risk-band.medium   { color: #7A8A4A; border-color: rgba(122,138,74,0.30); background: rgba(122,138,74,0.05); }
+.risk-band.low      { color: #4A8A7A; border-color: rgba(74,138,122,0.30); background: rgba(74,138,122,0.05); }
+
+.risk-card-body { background: #F6F4F0; }
+
+.risk-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid #D4D0CA;
+  padding: 8px 16px;
+  gap: 16px;
+  align-items: start;
+}
+
+.risk-row:last-child { border-bottom: none; }
+
+.risk-attr {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 2px;
+}
+
+.risk-val { font-size: 0.875rem; line-height: 1.60; color: var(--text); text-align: justify; hyphens: auto; }
+.risk-val strong { color: var(--ink); font-weight: 600; }
+
+.td-critical { font-family: var(--mono); font-size: 0.62rem; color: #C44830; font-weight: 600; letter-spacing: 0.08em; }
+.td-high     { font-family: var(--mono); font-size: 0.62rem; color: #B07028; font-weight: 600; letter-spacing: 0.08em; }
+.td-medium   { font-family: var(--mono); font-size: 0.62rem; color: #7A8A4A; font-weight: 600; letter-spacing: 0.08em; }
+.td-low      { font-family: var(--mono); font-size: 0.62rem; color: #4A8A7A; font-weight: 600; letter-spacing: 0.08em; }
+
+/* ============================================================
+   DEF BLOCK
+   ============================================================ */
+.def-block { border: 1px solid #C4C0BA; margin: 16px 0 24px; overflow: hidden; }
+
+.def-block-head {
+  background: #1C1F25;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.def-block-head span { color: var(--accent); }
+
+.def-block-body { padding: 0; background: #F6F4F0; }
+
+.def-item {
+  padding: 8px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  line-height: 1.60;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.def-item:last-child { border-bottom: none; }
+
+.def-term {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 48px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 2px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 8px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 48px; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 40px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 48px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 24px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 64px 16px 48px; }
+
+  footer { margin-left: 0; padding: 24px 16px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 24px; }
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 0; }
+  .doc-id-key { flex: none; }
+
+  .risk-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Residual Risk and<br><span class="italic-part">Assumption Disclosure Annex</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-RISK-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">The normative risk and assumption disclosure annex for the deterministic runtime consent enforcement standard.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s0">0. Executive Disclosure</a>
+      <a class="nav-item sub" href="#s0-1">0.1 Affirmative Scope</a>
+      <a class="nav-item sub" href="#s0-2">0.2 Negative Scope</a>
+      <a class="nav-item" href="#s1">1. Foundational Assumptions</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Assumption Register</a>
+      <a class="nav-item" href="#s2">2. Deterministic Scope Boundary</a>
+      <a class="nav-item sub" href="#s2-1">2.1 What it Means</a>
+      <a class="nav-item sub" href="#s2-2">2.2 What it Does Not Mean</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Enforcement Perimeter</a>
+      <a class="nav-item" href="#s3">3. Residual Technical Risk</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Prompt Injection</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Infrastructure Compromise</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Capability Overhang</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Compounded Failure</a>
+      <a class="nav-item" href="#s4">4. Regulatory Interpretation Risk</a>
+      <a class="nav-item" href="#s5">5. Organizational Dependencies</a>
+      <a class="nav-item" href="#s6">6. Non-Coverage Declaration</a>
+      <a class="nav-item" href="#s7">7. Cryptographic Assumptions</a>
+      <a class="nav-item" href="#s8">8. Operational Misuse Risk</a>
+      <a class="nav-item" href="#s9">9. Abuse and Adversarial Scenarios</a>
+      <a class="nav-item" href="#s10">10. Residual Societal Risk</a>
+      <a class="nav-item" href="#s11">11. No Guarantee Clause</a>
+      <a class="nav-item" href="#s12">12. Transparency Commitment</a>
+      <a class="nav-item" href="#s-conclusion">Closing Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document constitutes the <strong>Residual Risk and Assumption Disclosure Annex</strong> for QODIQA - the deterministic runtime consent enforcement standard for artificial intelligence systems. It is a structural integrity document, not a marketing instrument.</p>
+          <p>The Annex enumerates all operational assumptions required for QODIQA to function as specified, identifies residual risk surfaces that persist under conditions of perfect conformance, declares the explicit non-coverage domains of the standard, and imposes formal constraints on how QODIQA may be characterised by implementors and regulators.</p>
+          <p>This document reduces reputational, regulatory, and legal exposure for all parties operating under or referencing the QODIQA standard. It is issued alongside the Core specification and is a <strong>normative component of the QODIQA corpus</strong>. No deployment may represent itself as QODIQA-conformant without acknowledgement of the disclosures herein.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 0 -->
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 00</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Executive Disclosure Statement</h2>
+
+        <p>QODIQA is a <strong>deterministic runtime consent boundary enforcement layer</strong> for artificial intelligence systems. The following declarations constitute the authoritative characterisation of the standard and supersede any contrary representation in promotional, marketing, or secondary materials.</p>
+
+        <div class="inst-statement">
+          <span class="inst-lead">Formal Declaration - Scope of Coverage</span>
+          <span class="inst-body">QODIQA enforces deterministic consent boundaries at runtime. It does not guarantee AI safety. It does not guarantee model alignment. It does not eliminate hallucination. It does not regulate model weights. It does not inspect latent representations. It does not prevent harm from within its own enforcement perimeter.</span>
+          <span class="inst-close">QODIQA-RISK-2026-001 &nbsp;·&nbsp; Issuing Authority: QODIQA &nbsp;·&nbsp; April 2026</span>
+        </div>
+
+        <div id="s0-1" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">0.1</span>Affirmative Scope</h3>
+          <ul class="prop-list">
+            <li>QODIQA enforces consent policy at the API gateway and execution boundary layer.</li>
+            <li>QODIQA produces deterministic permit/deny decisions based on encoded policy and verified principal identity.</li>
+            <li>QODIQA generates tamper-evident, auditable enforcement logs.</li>
+            <li>QODIQA provides a conformance framework against which implementations may be assessed.</li>
+            <li>QODIQA aligns its control architecture with the requirements of GDPR, the EU AI Act, and NIST AI RMF as documented in the Regulatory Alignment Matrix.</li>
+            <li>QODIQA defines cryptographic attestation mechanisms for principal identity binding and policy integrity.</li>
+          </ul>
+        </div>
+
+        <div id="s0-2" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">0.2</span>Negative Scope - Formal Exclusions</h3>
+          <div class="table-wrapper">
+            <span class="table-caption">Table 0-A - Formal Exclusion Register</span>
+            <table class="table-left-align table-first-col-center table-header-center">
+              <colgroup>
+                <col style="width:220px">
+                <col>
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Excluded Domain</th>
+                  <th>Scope Boundary Statement</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>AI Safety</strong></td>
+                  <td>QODIQA does not constitute an AI safety framework. Enforcement of consent boundaries does not prevent unsafe model outputs within those boundaries.</td>
+                </tr>
+                <tr>
+                  <td><strong>Model Alignment</strong></td>
+                  <td>QODIQA does not verify, assess, or enforce alignment of model behaviour to human values or intent.</td>
+                </tr>
+                <tr>
+                  <td><strong>Hallucination Elimination</strong></td>
+                  <td>QODIQA does not inspect model outputs for factual accuracy. Hallucinated outputs within a permitted execution context are not subject to QODIQA enforcement.</td>
+                </tr>
+                <tr>
+                  <td><strong>Model Weight Regulation</strong></td>
+                  <td>QODIQA operates at the inference boundary. It has no access to, and does not regulate, model weights, training procedures, or fine-tuning processes.</td>
+                </tr>
+                <tr>
+                  <td><strong>Latent Representation Inspection</strong></td>
+                  <td>QODIQA does not inspect internal model states, attention patterns, or embedding spaces.</td>
+                </tr>
+                <tr>
+                  <td><strong>Universal Harm Prevention</strong></td>
+                  <td>QODIQA prevents execution outside of consented scope. It does not prevent harm that occurs within consented scope.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="decision-block-simple">
+            <strong>Normative Notice</strong>
+            <p>This annex is issued as a normative component of the QODIQA corpus. Implementors who represent QODIQA as providing guarantees beyond those enumerated above are in breach of this disclosure. Regulatory submissions citing QODIQA conformance must reproduce or reference this annex.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 01</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Foundational Assumptions Register</h2>
+
+        <p>QODIQA's deterministic enforcement properties hold only when the following assumptions are satisfied. Each assumption is accompanied by its failure mode and systemic consequence. Implementors bear responsibility for ensuring these assumptions hold within their operational environment.</p>
+
+        <div id="s1-1" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">1.1</span>Assumption Register</h3>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-01</span>
+              <span class="risk-card-title">Accurate Principal Identity Binding</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The identity of every principal making consent-governed requests is accurately bound to a cryptographic credential. Identity claims presented at the enforcement boundary are genuine and have not been forged, spoofed, or transferred.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Credential theft, identity spoofing, or compromised binding procedures result in a principal operating under a false identity, rendering consent records non-authoritative.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">All enforcement decisions made under the false identity are attributed to the wrong principal. Audit logs become unreliable. Regulatory accountability is broken.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-02</span>
+              <span class="risk-card-title">Integrity of Cryptographic Key Material</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">All signing keys, verification keys, and session tokens used within QODIQA enforcement flows are generated by approved processes, stored securely, and have not been compromised.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Key compromise, key leakage, or improper key custody allows adversaries to forge valid enforcement tokens or consent attestations.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">The cryptographic foundation of the enforcement layer is voided. Deterministic enforcement guarantees cease to hold. The entire consent record corpus may be rendered untrustworthy.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-03</span>
+              <span class="risk-card-title">Availability of Consent Registry</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The consent registry is available, reachable, and consistent at the time of each enforcement query. The registry reflects the current and authoritative state of principal consent records.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Registry unavailability, network partition, or stale cache states result in enforcement decisions being made against outdated or absent consent data.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">Enforcement may default to permit or deny based on fallback policy, which may not reflect principal intent. Withdrawal of consent may not propagate in time. Regulatory exposure follows.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-04</span>
+              <span class="risk-card-title">Accurate Policy Encoding</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The consent policies encoded in the registry accurately represent the actual consent intentions of the principals they govern. Policy encoding is performed by authorised personnel following documented procedures.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Misconfigured, ambiguous, or fraudulently encoded policies produce enforcement decisions that do not reflect genuine principal consent.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">Technically deterministic enforcement of incorrect policy is indistinguishable from correct enforcement at the system layer. Audits will confirm policy was applied; the policy itself remains the error surface.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-05</span>
+              <span class="risk-card-title">Proper Enforcement Gateway Deployment</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The QODIQA enforcement gateway is deployed in a position of mandatory interception relative to the AI execution environment. No request path exists that bypasses the enforcement layer.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Partial deployment, misconfigured routing, or shadow API access paths allow requests to reach the AI execution environment without enforcement evaluation.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">Enforcement coverage is incomplete. The QODIQA boundary is porous. Conformance claims are invalid if any execution path bypasses the enforcement layer.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-06</span>
+              <span class="risk-card-title">Absence of Side-Channel Bypass</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">No operational, technical, or procedural pathway exists through which the AI model may be accessed or influenced outside of the QODIQA enforcement boundary.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Direct model access via maintenance interfaces, debug endpoints, internal tooling, or vendor backdoors circumvents consent enforcement entirely.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">QODIQA enforcement is rendered meaningless for any execution conducted via the bypass path. No audit record exists for such executions.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-07</span>
+              <span class="risk-card-title">Reliable Time Synchronisation</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">All system components participating in enforcement flows operate on a synchronised time source with sufficient precision for temporal consent window evaluation and log ordering.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Clock skew, NTP manipulation, or time spoofing creates ambiguity in consent window validity, replay attack detection, and log sequencing.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">Time-bound consent assertions may be evaluated incorrectly. Expired tokens may be accepted. Audit log integrity cannot be confirmed across components with divergent clocks.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-08</span>
+              <span class="risk-card-title">Log Immutability Enforcement</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">Enforcement audit logs are written to an append-only store that is technically and procedurally protected against modification, deletion, or suppression.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Log tampering, selective deletion, or access by privileged insiders enables post-hoc modification of the enforcement record.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">The audit trail ceases to be authoritative. Regulatory reliance on QODIQA audit records is undermined. Legal defensibility of enforcement decisions is compromised.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-09</span>
+              <span class="risk-card-title">Honest-but-Curious Infrastructure Operators</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">Infrastructure operators - including cloud providers, managed service vendors, and internal platform teams - are assumed to be honest in their execution of system operations, though they may observe traffic and metadata. They are not assumed to actively subvert enforcement.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">A malicious infrastructure operator may selectively suppress enforcement, replay tokens, alter policy state, or exfiltrate consent records without leaving a detectable trace within the QODIQA layer.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">QODIQA provides no defence against a compromised or adversarial operator at the infrastructure level. This threat surface is explicitly out of scope without Trusted Execution Environment controls.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-10</span>
+              <span class="risk-card-title">Trusted Execution Environment Integrity (Conditional)</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">Where QODIQA deployment profiles specify TEE-based attestation, the TEE is assumed to be correctly provisioned, uncompromised, and attesting to genuine execution state.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">TEE firmware compromise, side-channel attacks on TEE (e.g., Spectre-class), or vendor-supplied TEE backdoors invalidate attestation guarantees.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">TEE-dependent enforcement attestations are untrustworthy. This assumption failure requires remediation at the hardware or firmware layer and is outside QODIQA's operational control.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-11</span>
+              <span class="risk-card-title">Secure Software Supply Chain Integrity</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The QODIQA enforcement gateway, policy engine, registry services, and logging infrastructure are built and deployed from verified software artefacts whose integrity has been cryptographically validated. Build pipelines, dependency graphs, and deployment toolchains have not been compromised at any stage from source to runtime.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Dependency poisoning, malicious package injection, build pipeline compromise, or unauthorised code modification introduces hidden logic into enforcement components prior to or during deployment.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">Deterministic enforcement may be subverted at the implementation level without visible deviation from specification. Audit logs continue to record enforcement events, but the enforcement logic executing those events is no longer trustworthy. Trust in the enforcement layer collapses without any detectable specification violation.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">A-12</span>
+              <span class="risk-card-title">Deterministic Policy Engine Integrity</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Description</span><span class="risk-val">The policy evaluation engine correctly implements the deterministic decision function defined in the QODIQA Core specification. The engine produces permit/deny decisions that are faithful to the specification under all valid input combinations, including boundary conditions and concurrent execution states.</span></div>
+              <div class="risk-row"><span class="risk-attr">Failure Mode</span><span class="risk-val">Logical error, race condition, state corruption, or undefined behaviour in the evaluation engine produces inconsistent permit/deny outcomes under identical inputs, violating the determinism guarantee at the implementation layer.</span></div>
+              <div class="risk-row"><span class="risk-attr">Systemic Consequence</span><span class="risk-val">The deterministic guarantee central to QODIQA's enforcement model is invalidated. Auditability of individual decisions is preserved but does not confirm correctness of the decision logic applied. Conformance claims based on deterministic enforcement cannot be sustained against an implementation with a compromised policy engine.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 02</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Deterministic Scope Boundary</h2>
+
+        <p>The term <em>deterministic runtime consent enforcement</em> as used in the QODIQA standard has a precise and bounded meaning. This section defines that meaning and explicitly delineates what it does not encompass.</p>
+
+        <div id="s2-1" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">2.1</span>What Deterministic Runtime Consent Enforcement Means</h3>
+
+          <div class="def-block">
+            <div class="def-block-head">Formal Definition <span>QODIQA-RISK-2026-001 s. 2.1</span></div>
+            <div class="def-block-body">
+              <div class="def-item">
+                <span class="def-term">Deterministic</span>
+                Given identical inputs - principal identity, request context, consent record state, and current time - the enforcement decision function produces the same output on every invocation. There is no probabilistic element in the permit/deny decision.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Runtime</span>
+                Enforcement occurs at the moment of execution, not at deployment time, design time, or audit time. Each request is evaluated against the current state of the consent registry at the time of that specific request.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Consent Enforcement</span>
+                The enforcement function evaluates whether the described action falls within the scope of valid, current, and applicable consent granted by the relevant principal. It does not evaluate the quality, safety, or downstream effects of the permitted action.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s2-2" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">2.2</span>What Deterministic Runtime Consent Enforcement Does Not Mean</h3>
+
+          <div class="table-wrapper">
+            <span class="table-caption">Table 2-A - Determinism Boundary Clarification Register</span>
+            <table class="table-left-align table-first-col-center table-header-center">
+              <colgroup>
+                <col style="width:260px">
+                <col>
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Assertion</th>
+                  <th>Boundary Clarification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Does not mean the permitted action is safe</strong></td>
+                  <td>A request may be permitted by QODIQA and still produce harmful outputs within the consented scope.</td>
+                </tr>
+                <tr>
+                  <td><strong>Does not mean the policy reflects genuine consent</strong></td>
+                  <td>Determinism applies to policy evaluation, not to the quality of the underlying policy. Incorrectly configured policy is evaluated deterministically.</td>
+                </tr>
+                <tr>
+                  <td><strong>Does not mean the enforcement perimeter is complete</strong></td>
+                  <td>Determinism holds only within the deployed enforcement boundary. Actions taken outside that boundary are not subject to QODIQA evaluation.</td>
+                </tr>
+                <tr>
+                  <td><strong>Does not mean the model is aligned</strong></td>
+                  <td>QODIQA governs access to model execution. It has no visibility into model behaviour during execution.</td>
+                </tr>
+                <tr>
+                  <td><strong>Does not mean the system is compliant</strong></td>
+                  <td>QODIQA provides controls relevant to certain regulatory requirements. Legal compliance requires additional measures and legal assessment.</td>
+                </tr>
+                <tr>
+                  <td><strong>Does not mean all risks are mitigated</strong></td>
+                  <td>Deterministic boundary enforcement is one layer in a defence-in-depth architecture. Residual risk surfaces enumerated in Section 3 persist regardless of QODIQA deployment.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="decision-block-simple">
+            <strong>Precision Requirement</strong>
+            <p>All representations of QODIQA in regulatory submissions, marketing materials, procurement documentation, and technical specifications must respect the boundary defined in this section. Representations that conflate boundary enforcement with AI safety, alignment, or harm elimination are inaccurate and are prohibited under this annex.</p>
+          </div>
+        </div>
+
+        <div id="s2-3" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">2.3</span>Formal Enforcement Perimeter Definition</h3>
+
+          <p>The QODIQA enforcement perimeter is defined as the set of components, interfaces, and processing steps over which the deterministic enforcement guarantee holds. Deterministic guarantees hold exclusively within this defined perimeter. Any execution occurring outside this perimeter is not governed by QODIQA and is not subject to any enforcement, audit, or conformance claim under this standard.</p>
+
+          <div class="def-block">
+            <div class="def-block-head">Perimeter Component Definitions <span>QODIQA-RISK-2026-001 s. 2.3</span></div>
+            <div class="def-block-body">
+              <div class="def-item">
+                <span class="def-term">Ingress Interface Boundary</span>
+                The enforcement perimeter begins at the network or API interface at which an inbound request is first received by the QODIQA enforcement gateway. All traffic received at this interface is subject to enforcement evaluation. Traffic that does not reach this interface - including requests routed directly to the AI execution environment via any path that bypasses the gateway - is outside the perimeter and is not governed by QODIQA.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Identity Verification Point</span>
+                The identity verification point is the component within the enforcement gateway responsible for validating the cryptographic credentials presented by the requesting principal. This component is within the perimeter. The credential issuance infrastructure - including identity providers, certificate authorities, and key management systems - is external to the QODIQA enforcement perimeter and is governed by the assumptions enumerated in Section 1.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Policy Evaluation Function</span>
+                The policy evaluation function is the deterministic decision engine that takes as input the verified principal identity, the request scope parameters, and the current state of the consent registry, and produces a permit or deny decision. The policy evaluation function is within the perimeter. The consent registry itself is an external dependency accessed synchronously at evaluation time; its integrity is governed by assumption A-03.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Token Issuance Boundary</span>
+                Upon a permit decision, the enforcement gateway issues a cryptographically signed enforcement token. The token issuance process - including signing key access, token serialisation, and token delivery to the requesting client - is within the perimeter. The handling, storage, and transmission of the token by the requesting client after delivery is outside the perimeter.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Audit Log Commitment Point</span>
+                The audit log commitment point is the operation by which an enforcement decision record is cryptographically committed to the immutable audit store. The commitment operation and the integrity of records prior to commitment are within the perimeter. The security of the audit store itself - including its physical infrastructure, access controls, and backup procedures - is an organisational dependency governed by assumption A-08.
+              </div>
+              <div class="def-item">
+                <span class="def-term">Egress Handoff to Model Runtime</span>
+                The enforcement perimeter ends at the egress handoff point: the interface at which a permitted request is passed from the QODIQA enforcement gateway to the AI model runtime for execution. From the egress handoff point onward - including all processing by the model runtime, all model outputs, and all downstream systems that consume model outputs - is outside the QODIQA enforcement perimeter. No enforcement, audit, or determinism guarantee applies beyond this point.
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-h"><span class="sh-num">2.3.1</span>Components Explicitly Outside the Enforcement Perimeter</h3>
+          <div class="table-wrapper">
+            <span class="table-caption">Table 2-B - Components Explicitly Outside the Enforcement Perimeter</span>
+            <table class="table-left-align table-first-col-center table-header-center">
+              <colgroup>
+                <col style="width:240px">
+                <col>
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Component</th>
+                  <th>Perimeter Exclusion Statement</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>AI model weights, architecture, and runtime</strong></td>
+                  <td>The model execution environment, including all inference operations, is outside the QODIQA perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Model output handling and downstream systems</strong></td>
+                  <td>Any system that receives, processes, stores, or acts upon model outputs is outside the perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Identity provider infrastructure</strong></td>
+                  <td>Certificate authorities, identity providers, and key management systems that support principal credential issuance are outside the perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Consent registry infrastructure</strong></td>
+                  <td>The physical and logical infrastructure hosting the consent registry, including its database engine, replication systems, and access control layer, is outside the perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Audit store infrastructure</strong></td>
+                  <td>The storage infrastructure, backup systems, and access control layer of the audit log store are outside the perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Network transport layer</strong></td>
+                  <td>The network infrastructure over which requests and responses transit between clients and the enforcement gateway ingress interface is outside the perimeter.</td>
+                </tr>
+                <tr>
+                  <td><strong>Client-side request construction</strong></td>
+                  <td>The process by which a requesting principal constructs a request, including all client-side software, is outside the perimeter.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 03</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Residual Technical Risk Surfaces</h2>
+
+        <p>The following risk surfaces persist under conditions of perfect QODIQA implementation, perfect conformance, and perfect policy encoding. They are structural properties of the threat environment that QODIQA does not and cannot address.</p>
+
+        <p>Risk bands are assigned as follows: <strong>Critical</strong> - systemic failure with no internal mitigation pathway; <strong>High</strong> - significant impact, partial mitigation possible through external controls; <strong>Medium</strong> - meaningful but contained impact; <strong>Low</strong> - limited scope.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 3-A - Residual Technical Risk Register</span>
+          <table class="table-left-align table-first-col-center table-header-center">
+            <colgroup>
+              <col style="width:80px">
+              <col>
+              <col style="width:90px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Risk ID</th>
+                <th>Description</th>
+                <th>Band</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RT-01</td>
+                <td>Model weight bias producing skewed or harmful outputs within permitted execution scope</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-02</td>
+                <td>Training data poisoning contaminating model behaviour prior to deployment</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-03</td>
+                <td>Upstream training corpus contamination by adversarial third-party data</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-04</td>
+                <td>Prompt injection attacks originating within the permitted execution context</td>
+                <td style="text-align:center;"><span class="td-critical">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>RT-05</td>
+                <td>Adversarial input generation that produces harmful model outputs within consented scope</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-06</td>
+                <td>Zero-day runtime exploits targeting the enforcement gateway process itself</td>
+                <td style="text-align:center;"><span class="td-critical">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>RT-07</td>
+                <td>Cryptographic primitive compromise through mathematical advancement or implementation flaw</td>
+                <td style="text-align:center;"><span class="td-critical">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>RT-08</td>
+                <td>Infrastructure-level compromise (hypervisor, network fabric, storage layer) below the enforcement boundary</td>
+                <td style="text-align:center;"><span class="td-critical">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>RT-09</td>
+                <td>Hallucination of false information within permitted execution scope causing downstream harm</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-10</td>
+                <td>Model capability overhang - capabilities not known at policy encoding time operating within permitted scope</td>
+                <td style="text-align:center;"><span class="td-high">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>RT-11</td>
+                <td>Policy staleness - consent records that no longer reflect principal intent due to changed circumstances</td>
+                <td style="text-align:center;"><span class="td-medium">MEDIUM</span></td>
+              </tr>
+              <tr>
+                <td>RT-12</td>
+                <td>Cross-context inference attacks using permitted outputs to reconstruct protected information</td>
+                <td style="text-align:center;"><span class="td-medium">MEDIUM</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="s3-1" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">3.1</span>Prompt Injection Within Boundary (RT-04)</h3>
+          <p>Prompt injection represents a residual risk surface of particular structural significance. QODIQA evaluates whether a request is permitted based on its metadata, scope parameters, and principal consent record. The content of permitted prompts is not inspected by the enforcement layer. A permitted prompt containing adversarial instructions directed at the model is evaluated by QODIQA as a valid request if it falls within the consented scope. The model's response to such instructions is not within QODIQA's governance perimeter.</p>
+        </div>
+
+        <div id="s3-2" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">3.2</span>Infrastructure Compromise (RT-08)</h3>
+          <p>An adversary with access at the infrastructure layer - including hypervisor access, network interception capabilities, or storage layer access - may observe, modify, or suppress enforcement operations without QODIQA being able to detect or prevent such interference. This risk surface is acknowledged but not addressed by QODIQA. Mitigations at the infrastructure layer, including hardware-based attestation and network segmentation, are the responsibility of the deploying organisation.</p>
+        </div>
+
+        <div id="s3-3" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">3.3</span>Model Capability Overhang (RT-10)</h3>
+          <p>Consent policies are encoded against a model's known or anticipated capabilities at the time of policy creation. AI models may exhibit capabilities that were not known, anticipated, or accounted for during policy encoding. Such unanticipated capabilities may operate within the consented scope while producing effects that were not contemplated when consent was obtained. This is a structural limitation of any consent framework applied to systems whose capability boundaries are not fully characterised.</p>
+        </div>
+
+        <div id="s3-4" class="doc-section">
+          <h3 class="sub-h"><span class="sh-num">3.4</span>Risk Interdependency and Compounded Failure</h3>
+          <p>The risk surfaces enumerated in this section and the foundational assumptions enumerated in Section 1 are not independent. Simultaneous failure of multiple assumptions, or concurrent realisation of multiple risk surfaces, compounds the systemic impact beyond the severity classification assigned to any individual risk. The classifications in Table 3-A reflect the impact of each surface in isolation; compounded failure scenarios may exceed those classifications.</p>
+
+          <p>QODIQA does not model probabilistic compounding risk internally. The following scenarios are provided to illustrate the structural nature of risk interdependency. They are not exhaustive.</p>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">CI-01</span>
+              <span class="risk-card-title">Identity Binding Failure + Registry Tampering</span>
+              <span class="risk-band compounded">COMPOUNDED</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Assumptions Failed</span><span class="risk-val">A-01 (Accurate Principal Identity Binding) and A-03 (Availability and Integrity of Consent Registry)</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Scenario</span><span class="risk-val">An adversary operating under a forged principal identity concurrently tampers with the consent registry to insert or modify consent records attributed to the spoofed identity. Enforcement decisions are made against falsified identity claims evaluated against falsified policy. The audit record captures the falsified identity and the falsified policy as though both were legitimate. Post-incident forensic reconstruction cannot distinguish the falsified enforcement record from a legitimate one without out-of-band evidence.</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Impact</span><span class="risk-val">The two individual assumptions, each of which would independently degrade enforcement integrity, together eliminate both the enforcement correctness and the audit reconstructability of the affected session. No compensating control within the QODIQA layer addresses this compound failure.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">CI-02</span>
+              <span class="risk-card-title">Key Compromise + Log Suppression</span>
+              <span class="risk-band compounded">COMPOUNDED</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Assumptions Failed</span><span class="risk-val">A-02 (Cryptographic Key Material Integrity) and A-08 (Log Immutability Enforcement)</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Scenario</span><span class="risk-val">An adversary who has obtained valid signing key material is able to forge enforcement tokens and consent attestations that are indistinguishable from legitimate ones. Concurrently, suppression of audit log entries covering the period of token forgery removes the forensic record of the forged operations. The enforcement layer continues to operate normally for legitimate requests; the adversarial operations are neither detected nor recorded.</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Impact</span><span class="risk-val">Key compromise alone is detectable through anomaly analysis of the audit record. Log suppression alone may be detectable through log gap analysis. The combination eliminates both detection pathways simultaneously. The resulting window of undetected, unrecorded adversarial operation has no internal remediation pathway within the QODIQA layer.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">CI-03</span>
+              <span class="risk-card-title">Infrastructure Compromise + Token Replay</span>
+              <span class="risk-band compounded">COMPOUNDED</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Assumptions Failed</span><span class="risk-val">A-09 (Honest-but-Curious Infrastructure Operators) and risk surface RT-06 (Token Replay, s. 9.2)</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Scenario</span><span class="risk-val">An adversary with infrastructure-layer access observes legitimate enforcement tokens in transit, extracts them without the knowledge of the requesting principal, and replays them to obtain model execution under the legitimate principal's consented scope. The infrastructure-layer adversary can selectively suppress the log entries corresponding to the replayed token usage. The legitimate principal's audit record shows no anomaly; the replayed executions are either unrecorded or appear as legitimate executions by the principal.</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Impact</span><span class="risk-val">Token replay in isolation is detectable through log analysis of usage frequency anomalies. Infrastructure compromise in isolation is a known, bounded assumption failure. Their combination creates a replay capability coupled with suppression of the evidence required for its detection. This compounded scenario has no internal QODIQA mitigation pathway.</span></div>
+            </div>
+          </div>
+
+          <div class="risk-card">
+            <div class="risk-card-head">
+              <span class="risk-card-id">CI-04</span>
+              <span class="risk-card-title">Policy Misconfiguration + Model Capability Overhang</span>
+              <span class="risk-band high">COMPOUNDED</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-row"><span class="risk-attr">Assumptions Failed</span><span class="risk-val">A-04 (Accurate Policy Encoding) and risk surface RT-10 (Model Capability Overhang, s. 3.3)</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Scenario</span><span class="risk-val">A consent policy that was intended to permit a narrowly scoped AI function is encoded with scope parameters that are broader than intended - for example, through ambiguous action type definitions or overly permissive context bindings. The consented model simultaneously exhibits capabilities beyond those anticipated at policy encoding time. The permissive scope admits requests that were not intended to be permitted; the unanticipated model capabilities operate on those requests to produce effects that were not contemplated when consent was granted.</span></div>
+              <div class="risk-row"><span class="risk-attr">Compounded Impact</span><span class="risk-val">Policy misconfiguration alone can be identified and corrected through audit review and policy hygiene procedures. Capability overhang alone can be addressed through model evaluation and policy update cycles. Their simultaneous occurrence creates a window during which unanticipated capabilities operate on improperly scoped permissions with no enforcement-layer signal indicating that anything is anomalous. Both the execution and the policy appear valid from the QODIQA perspective.</span></div>
+            </div>
+          </div>
+
+          <div class="decision-block-simple">
+            <strong>Compounded Failure Classification</strong>
+            <p>QODIQA does not assign a single severity band to compounded failure scenarios. Compounded failures involving two or more Critical-band individual risks should be treated as exceeding the Critical classification for purposes of risk treatment planning. Organisations are responsible for performing their own compounded risk analysis in the context of their specific deployment architecture and threat model.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 04</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Regulatory Interpretation Risk</h2>
+
+        <p>QODIQA maintains a Regulatory Alignment Matrix that maps control points to provisions of GDPR, the EU AI Act, NIST AI RMF, and other frameworks. The following disclosures govern how that alignment matrix must and must not be interpreted.</p>
+
+        <h3 class="sub-h"><span class="sh-num">4.1</span>QODIQA Does Not Constitute Legal Compliance</h3>
+        <p>The QODIQA Regulatory Alignment Matrix maps technical controls to regulatory provisions. This mapping does not constitute a legal determination that an organisation implementing QODIQA is compliant with any cited regulation. Legal compliance requires assessment by qualified legal counsel with jurisdiction-specific expertise. The alignment matrix is a technical reference instrument, not a legal opinion.</p>
+
+        <h3 class="sub-h"><span class="sh-num">4.2</span>QODIQA Does Not Substitute for Legal Counsel</h3>
+        <p>No provision of the QODIQA standard, including this annex, constitutes legal advice. Organisations using QODIQA alignment documentation in regulatory submissions, compliance certifications, or legal proceedings do so at their own risk and must obtain independent legal review of such submissions.</p>
+
+        <h3 class="sub-h"><span class="sh-num">4.3</span>Jurisdictional Divergence</h3>
+        <p>The regulatory landscape for AI governance is evolving at different rates across jurisdictions. Requirements under the EU AI Act do not necessarily correspond to requirements under US federal frameworks, national UK regulations, or emerging frameworks in other jurisdictions. The QODIQA alignment matrix reflects the state of regulation as understood at the time of document issuance. It does not predict, anticipate, or account for regulatory amendments, new guidance documents, or enforcement decisions issued after the document date.</p>
+
+        <h3 class="sub-h"><span class="sh-num">4.4</span>Regulatory Interpretation Variance</h3>
+        <p>Regulatory authorities may interpret the provisions of AI governance frameworks differently from the interpretations reflected in the QODIQA alignment matrix. Enforcement actions, supervisory guidance, and judicial decisions may clarify or alter the requirements attributed to specific provisions. QODIQA alignment with a regulatory provision as documented does not guarantee that a supervising authority will reach the same interpretive conclusion.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Compliance Validation Requirement</div>
+          <p>Organisations subject to regulatory enforcement who rely on QODIQA conformance as a compliance argument must independently validate that the technical controls provided by QODIQA satisfy the specific requirements of the applicable regulatory authority in the relevant jurisdiction.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 05</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Organizational Risk Dependencies</h2>
+
+        <p>QODIQA's technical controls are necessary but not sufficient conditions for effective consent enforcement. The following organisational capabilities must be maintained by the deploying entity. Absence or degradation of these capabilities constitutes residual risk that QODIQA cannot compensate for at the technical layer.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.1</span>Governance Maturity</h3>
+        <p>Effective deployment of QODIQA requires a functioning governance structure capable of making, recording, and communicating policy decisions. Organisations with immature governance - undefined ownership, inconsistent approval processes, or absent policy review cycles - will produce unreliable consent policies regardless of the technical enforcement precision of the QODIQA layer.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.2</span>Internal Policy Hygiene</h3>
+        <p>Consent policies must be reviewed on a defined cycle to remain current with changing operational requirements, regulatory developments, and model capability changes. Policy rot - the accumulation of stale, contradictory, or abandoned consent records - creates a surface for both unintended permissions and unintended restrictions. QODIQA enforces policy as encoded; it does not identify policy that has become obsolete.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.3</span>Incident Response Capability</h3>
+        <p>Detection and response to enforcement anomalies, suspected bypass events, and audit log integrity failures require a functioning incident response capability. QODIQA generates the audit record and enforcement signals. Acting on those signals, investigating anomalies, and executing remediation procedures are organisational responsibilities.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.4</span>Audit Discipline</h3>
+        <p>The value of QODIQA's tamper-evident logging is realised only if logs are reviewed on a defined schedule by personnel with the authority and competence to act on their findings. An unread audit log provides no protective value.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.5</span>Key Rotation Practices</h3>
+        <p>Cryptographic key material used in QODIQA enforcement flows must be rotated at defined intervals and immediately upon any suspected compromise. Organisations that do not maintain a documented and practiced key rotation programme degrade the cryptographic assurance of the enforcement layer over time.</p>
+
+        <h3 class="sub-h"><span class="sh-num">5.6</span>Personnel Competence and Continuity</h3>
+        <p>Correct configuration, maintenance, and operation of QODIQA deployments requires personnel with appropriate technical competence. Staff turnover, knowledge transfer failures, and inadequate training create operational risk that manifests as misconfiguration, policy errors, or delayed incident response.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 06</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Non-Coverage Declaration</h2>
+
+        <p>The following domains are explicitly and entirely outside the scope of QODIQA. No provision of the QODIQA standard, and no implementation conformant with it, provides coverage in these areas. This declaration is not a statement of future roadmap. These domains are structurally distinct from boundary enforcement and are not subject to expansion into QODIQA scope.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 6-A - Non-Coverage Declaration Register</span>
+          <table class="table-left-align table-first-col-center table-header-center">
+            <colgroup>
+              <col style="width:230px">
+              <col>
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Excluded Domain</th>
+                <th>Non-Coverage Statement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>General AI Alignment</strong></td>
+                <td>The alignment of AI model behaviour with human values, intent, or ethical principles is not addressed by QODIQA. QODIQA governs access to model execution; it does not govern what the model does during execution.</td>
+              </tr>
+              <tr>
+                <td><strong>Model Interpretability</strong></td>
+                <td>QODIQA provides no tools, mechanisms, or standards for understanding model internal states, attention distributions, reasoning chains, or decision processes.</td>
+              </tr>
+              <tr>
+                <td><strong>AGI Containment</strong></td>
+                <td>QODIQA does not address the containment of artificial general intelligence systems, their capability trajectories, or the prevention of capability elicitation beyond intended design.</td>
+              </tr>
+              <tr>
+                <td><strong>Economic Displacement Mitigation</strong></td>
+                <td>QODIQA has no provisions relating to the economic effects of AI deployment, including workforce displacement, market concentration, or distributional impacts.</td>
+              </tr>
+              <tr>
+                <td><strong>Ethical Theory Arbitration</strong></td>
+                <td>QODIQA does not adjudicate between competing ethical frameworks, moral positions, or value systems. It does not encode any ethical position beyond the procedural requirement that specified consent boundaries be enforced as specified.</td>
+              </tr>
+              <tr>
+                <td><strong>Human Oversight Frameworks</strong></td>
+                <td>QODIQA provides technical enforcement of consent boundaries. It does not design, certify, or enforce broader human oversight structures, board-level governance requirements, or accountability frameworks beyond its defined control points.</td>
+              </tr>
+              <tr>
+                <td><strong>Model Architecture Design</strong></td>
+                <td>QODIQA makes no requirements on model architecture, training methodology, data provenance, or evaluation procedures. These remain outside the scope of the standard.</td>
+              </tr>
+              <tr>
+                <td><strong>Content Moderation</strong></td>
+                <td>QODIQA does not evaluate the content of model outputs for harmful, offensive, or illegal material. Enforcement of content standards within a permitted execution context is not a QODIQA function.</td>
+              </tr>
+              <tr>
+                <td><strong>Bias Detection and Mitigation</strong></td>
+                <td>QODIQA provides no assessment of, or mitigation for, systematic biases in model outputs, including demographic bias, representational harm, or distributional unfairness.</td>
+              </tr>
+              <tr>
+                <td><strong>Privacy-Preserving Computation</strong></td>
+                <td>QODIQA governs consent to execute. It does not implement differential privacy, federated learning, homomorphic encryption, or other privacy-preserving computation techniques.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-block-simple">
+          <strong>Structural Note</strong>
+          <p>The non-coverage domains listed above represent areas of genuine and significant concern in AI governance. Their exclusion from QODIQA scope is a consequence of the standard's deliberate focus on a well-defined technical function. Organisations addressing these domains must employ additional frameworks appropriate to each area.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 07</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Cryptographic Assumption Disclosure</h2>
+
+        <p>QODIQA's enforcement integrity depends on cryptographic primitives. The security of the standard is computationally bounded, not unconditional. The following disclosures govern the cryptographic trust basis of QODIQA.</p>
+
+        <h3 class="sub-h"><span class="sh-num">7.1</span>Dependence on Cryptographic Primitives</h3>
+        <p>QODIQA relies on hash functions, digital signature algorithms, and authenticated encryption schemes as specified in the Security and Cryptographic Profile. The integrity guarantees provided by QODIQA - including consent attestation, token non-repudiation, and log tamper evidence - are conditional on these primitives remaining computationally infeasible to break under current and near-term adversary capabilities.</p>
+
+        <h3 class="sub-h"><span class="sh-num">7.2</span>Risk of Future Cryptanalytic Breakthrough</h3>
+        <p>Mathematical advances may render currently approved cryptographic primitives insecure before end-of-life dates assigned by standards bodies. Such advances may occur without warning and may pre-date their public announcement by adversaries with classified research capabilities. QODIQA does not provide a mechanism for detecting cryptographic compromise after the fact; the audit record itself would be untrustworthy if the underlying cryptographic primitives were broken.</p>
+
+        <h3 class="sub-h"><span class="sh-num">7.3</span>Quantum Threat Exposure</h3>
+        <p>Current QODIQA cryptographic specifications use algorithms based on the hardness of problems assumed to be computationally infeasible for classical computers. Sufficiently capable quantum computing systems would break widely deployed asymmetric cryptographic algorithms including RSA and elliptic curve schemes. The timeline for such capability remains uncertain. Organisations operating under long-term security requirements should monitor NIST Post-Quantum Cryptography standardisation outputs and assess migration requirements accordingly. QODIQA will issue post-quantum migration guidance under formal change control when relevant standards are ratified.</p>
+
+        <h3 class="sub-h"><span class="sh-num">7.4</span>Key Custody Exposure</h3>
+        <p>The security of QODIQA's cryptographic layer is bounded by the security of key management practices. Keys held in software-only key stores, shared across environment boundaries, or managed without hardware security module controls are materially more exposed than keys managed under high-assurance key custody procedures. QODIQA specifies minimum key management requirements; organisations that fail to implement them degrade the cryptographic assurance of their deployment below the standard's stated security model.</p>
+
+        <h3 class="sub-h"><span class="sh-num">7.5</span>Implementation Flaw Exposure</h3>
+        <p>Correct selection of cryptographic algorithms does not ensure correct implementation. Side-channel vulnerabilities, padding oracle attacks, timing attacks, and random number generator weaknesses have historically compromised otherwise sound cryptographic designs in their implementation. QODIQA does not certify the implementation quality of cryptographic libraries used by conformant deployments.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 08</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Operational Misuse Risk</h2>
+
+        <p>QODIQA may be misconfigured, partially deployed, or misrepresented in ways that produce either inadequate enforcement or false confidence in enforcement coverage. The following misuse scenarios are identified as material risks arising from operational rather than adversarial sources.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.1</span>Improper Policy Configuration</h3>
+        <p>Consent policies encoded with ambiguous scope parameters, incorrect principal bindings, or missing temporal constraints may produce enforcement decisions that do not reflect the intent of the consenting principal. QODIQA enforces policy as encoded. Garbage-in-garbage-out failure modes apply: technically correct enforcement of incorrect policy produces incorrect outcomes.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.2</span>Over-Restrictive Enforcement Blocking</h3>
+        <p>Overly conservative policy encoding may block legitimate requests and create operational friction that incentivises bypass, shadow deployment, or informal workarounds. Organisations that respond to over-restrictive enforcement by routing around the QODIQA layer create the very bypass surfaces that enforcement is intended to prevent.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.3</span>Under-Restrictive Enforcement</h3>
+        <p>Permissive policy encoding, broad scope parameters, or absent expiry controls may result in consent records that provide effective permission to all requests. An enforcement layer that permits everything provides no enforcement value and creates false confidence in governance coverage.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.4</span>Shadow Deployments</h3>
+        <p>Organisational units or teams that deploy AI capabilities outside the QODIQA enforcement perimeter create unmonitored execution surfaces. Such deployments may occur deliberately, through ignorance of the enforcement requirement, or through procurement of third-party AI services that bypass the enforcement gateway. Shadow deployments are not detectable by QODIQA; they require organisational controls including procurement governance and network access controls.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.5</span>Partial Implementation Represented as Full Conformance</h3>
+        <p>Implementation of a subset of QODIQA control points, followed by public representation as QODIQA-conformant, constitutes a misuse of the standard. Partial conformance provides partial protection and partial compliance evidence. It does not constitute the assurance level associated with full conformance. The QODIQA Certification Framework specifies conformance tiers; representations must accurately reflect the tier achieved.</p>
+
+        <h3 class="sub-h"><span class="sh-num">8.6</span>Delegation Misuse</h3>
+        <p>Delegation chains in QODIQA allow principals to delegate enforcement authority to agents. Improperly scoped delegations, expired delegations not removed from the registry, or delegation to untrusted agents create authority transfer paths that were not intended by the original principal.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 09</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Abuse and Adversarial Exploitation Scenarios</h2>
+
+        <p>The following scenarios represent deliberate attempts to defeat or circumvent QODIQA enforcement. Detection limits are noted where relevant.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.1</span>Direct Model Access Bypass</h3>
+        <p>An adversary with credentials or network access sufficient to reach the AI execution environment directly - bypassing the QODIQA enforcement gateway - may interact with the model without any consent evaluation occurring. This attack surface requires operational controls at the infrastructure layer. QODIQA cannot detect bypass events that do not traverse the enforcement boundary; no log entry is generated for requests that circumvent the enforcement layer entirely.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.2</span>Token Replay</h3>
+        <p>A valid, unexpired enforcement token that was legitimately issued for one purpose may be replayed by an adversary for a different purpose if token scope binding is insufficiently specific or if token revocation is not enforced at verification time. Token replay attacks result in QODIQA treating replayed requests as legitimate. Detection requires log analysis to identify statistically anomalous token usage patterns; QODIQA does not implement automated replay detection as a default control point.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.3</span>Registry Tampering</h3>
+        <p>An adversary with write access to the consent registry may modify, delete, or insert consent records to expand or restrict permitted execution scope. Such tampering would cause subsequent enforcement decisions to be made against altered policy, with no indication at the enforcement layer that the registry has been modified. Log immutability and registry integrity monitoring are required compensating controls.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.4</span>Log Suppression</h3>
+        <p>An adversary with access to the logging pipeline may suppress, delete, or alter enforcement log records. If log suppression is achieved before cryptographic commitment of log entries, the tamper-evidence property of the audit trail is defeated. Post-commitment suppression is detectable through log gap analysis if an independent record of expected log entry volume is maintained. QODIQA specifies log integrity requirements; their effectiveness depends on implementation and monitoring discipline.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.5</span>Cross-Domain Request Smuggling</h3>
+        <p>An adversary may craft requests that are evaluated by the enforcement layer as belonging to a permitted scope category while being processed by the model as belonging to a different category. This attack exploits differences between the metadata evaluated by the enforcement layer and the semantic content interpreted by the model. QODIQA evaluates consent based on request metadata and scope parameters; it does not perform semantic analysis of request content.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.6</span>Identity Claim Forgery</h3>
+        <p>Forgery of principal identity claims at the enforcement boundary results in consent evaluation being performed against the wrong principal's consent record. Effective detection requires cryptographic identity binding and the integrity of the key management infrastructure. An adversary able to forge valid cryptographic credentials defeats identity binding entirely.</p>
+
+        <h3 class="sub-h"><span class="sh-num">9.7</span>Detection Limits</h3>
+        <p>QODIQA's detection capabilities are bounded by the enforcement boundary. Events that occur outside that boundary, attacks that achieve access below the enforcement layer, and bypass events that produce no enforcement-layer artefacts are not detectable by QODIQA. External monitoring, network anomaly detection, and independent audit of AI system usage patterns are required to identify exploitation scenarios that operate outside QODIQA's observation horizon.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Residual Societal Risk</h2>
+
+        <p>This section addresses the scope of risk that persists at a societal level even under conditions of universal QODIQA adoption with full conformance.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Structural Disclosure</div>
+          <p>Universal adoption of QODIQA would represent universal deployment of a deterministic consent boundary enforcement layer across AI execution environments. It would not represent the resolution of the broader challenges posed by AI systems to society, democratic institutions, or individual welfare. These disclosures are required to prevent QODIQA from being characterised as a solution to problems it does not address.</p>
+        </div>
+
+        <h3 class="sub-h"><span class="sh-num">10.1</span>AI Misuse Risk Persists</h3>
+        <p>AI systems may be misused within the scope of consent that has been granted. A principal who consents to broad AI-enabled processing retains the ability to direct that processing toward harmful ends. QODIQA enforces that the processing occurred within consented scope; it does not evaluate whether the consented scope was appropriate or whether the consented use is harmful.</p>
+
+        <h3 class="sub-h"><span class="sh-num">10.2</span>Model Misuse Risk Persists</h3>
+        <p>AI models with the capacity to produce harmful outputs - disinformation, manipulation, dual-use content - retain that capacity when operated within QODIQA-enforced consent boundaries. The enforcement layer governs access; it does not govern capability. Harmful outputs produced within consented scope are not addressed by QODIQA.</p>
+
+        <h3 class="sub-h"><span class="sh-num">10.3</span>Strategic AI Competition Risk Persists</h3>
+        <p>The deployment of AI systems in strategic competition between state and non-state actors involves risk surfaces - capability asymmetry, surveillance infrastructure, autonomous decision systems, information operations - that are not addressed by consent boundary enforcement. These risks require responses at levels of governance, international coordination, and policy that are beyond the scope of any technical standard.</p>
+
+        <h3 class="sub-h"><span class="sh-num">10.4</span>Consent Framework Limitations at Scale</h3>
+        <p>Consent as a governance mechanism has known limitations at population scale. Informed consent requires genuine understanding of the consequences of the decision being made. At scale, the cognitive demands of evaluating AI consent decisions may exceed practical human capacity, consent may be aggregated and transferred in ways that no longer reflect individual intent, and the power asymmetry between consent-requesting entities and consenting individuals may render consent formally valid but substantively non-autonomous. QODIQA enforces the technical expression of consent; it does not resolve these structural challenges in consent theory.</p>
+
+        <h3 class="sub-h"><span class="sh-num">10.5</span>Coordination Failure Risk</h3>
+        <p>Jurisdictions, organisations, and actors that do not adopt QODIQA or equivalent standards create unmonitored AI execution environments that represent potential competitive advantages for actors willing to operate without consent boundaries. Partial adoption of consent enforcement standards does not eliminate the incentive for non-adopting actors to exploit the absence of constraints.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>No Guarantee Clause</h2>
+
+        <div class="inst-statement">
+          <span class="inst-lead">Formal Statement - No Guarantee of Safety, Alignment, or Ethics</span>
+          <span class="inst-body">QODIQA provides deterministic boundary enforcement - not safety guarantees, not alignment guarantees, not ethical guarantees. Conformance with QODIQA does not constitute a guarantee that an AI system is safe, aligned, ethical, or legally compliant. QODIQA is an infrastructure standard for consent boundary enforcement. It operates within a broader system of AI governance and does not substitute for any other component of that system.</span>
+          <span class="inst-close">QODIQA-RISK-2026-001 &nbsp;·&nbsp; No Guarantee Clause &nbsp;·&nbsp; Normative</span>
+        </div>
+
+        <h3 class="sub-h"><span class="sh-num">11.1</span>Scope of the No Guarantee Clause</h3>
+        <p>The no guarantee clause applies to all representations of QODIQA made by: the issuing authority; implementing organisations; certification bodies issuing QODIQA conformance certificates; regulatory bodies citing QODIQA conformance as evidence of compliance; and any third party characterising QODIQA capabilities in any medium.</p>
+
+        <h3 class="sub-h"><span class="sh-num">11.2</span>What QODIQA Does Provide</h3>
+        <p>QODIQA provides a structured, auditable, cryptographically attested boundary enforcement mechanism. Within the scope of that mechanism - and subject to the assumptions enumerated in Section 1 - QODIQA provides deterministic enforcement decisions, tamper-evident audit records, and a conformance framework for third-party assessment. These properties are bounded by the technical and operational conditions set forth in this annex.</p>
+
+        <h3 class="sub-h"><span class="sh-num">11.3</span>Liability Disclaimer</h3>
+        <p>The QODIQA standard is issued as a technical reference framework. The issuing authority makes no warranty, express or implied, regarding the fitness of QODIQA for any particular purpose, its effectiveness against any specific threat, or its sufficiency for any regulatory requirement. Organisations implementing QODIQA bear full responsibility for the adequacy of their implementation, the correctness of their policy configuration, and the completeness of their governance arrangements.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Transparency Commitment Statement</h2>
+
+        <p>The QODIQA issuing authority commits to the following transparency obligations with respect to the disclosures contained in this annex. These commitments are normative and are subject to oversight under the QODIQA Governance Charter.</p>
+
+        <h3 class="sub-h"><span class="sh-num">12.1</span>Periodic Risk Re-Evaluation</h3>
+        <p>The assumption register, residual risk surfaces, and non-coverage declarations in this annex will be reviewed at intervals not exceeding twelve months from the date of issuance, and additionally upon: any material change to the QODIQA core specification; any significant development in the AI threat landscape that materially alters the risk assessment; any cryptographic standard deprecation affecting the primitives used in QODIQA deployments; and any regulatory development that materially alters the interpretive risk described in Section 4.</p>
+
+        <h3 class="sub-h"><span class="sh-num">12.2</span>Versioned Disclosure Updates</h3>
+        <p>All revisions to this annex will be issued as versioned documents under the QODIQA document identifier scheme. Revision history will be maintained and publicly accessible. Prior versions will be retained in the document archive. No version of this annex will be suppressed, and no revision will reduce the scope or rigor of the disclosures without publication of a formal rationale under the Governance Charter change process.</p>
+
+        <h3 class="sub-h"><span class="sh-num">12.3</span>Formal Change Control</h3>
+        <p>Amendments to this annex are subject to the change control procedures defined in the QODIQA Governance Charter v2.0. All proposed revisions must pass the designated review process. Emergency revisions - required in response to a critical security finding - follow the expedited process defined in the Governance Charter and are subject to retroactive formal review.</p>
+
+        <h3 class="sub-h"><span class="sh-num">12.4</span>Publicly Documented Assumption Revisions</h3>
+        <p>If a foundational assumption in Section 1 is revised - whether because the assumption has been strengthened by new technical controls, weakened by new threat intelligence, or determined to be invalid in specific deployment contexts - the revision will be publicly documented with a rationale explaining the change and its implications for existing QODIQA conformant deployments.</p>
+
+        <h3 class="sub-h"><span class="sh-num">12.5</span>Disclosure of Known Limitation Instances</h3>
+        <p>If the QODIQA issuing authority becomes aware of a confirmed exploitation of a residual risk surface identified in this annex, or a failure mode in a foundational assumption that has materially impacted a conformant deployment, the issuing authority will issue a formal advisory under the QODIQA advisory process. Such advisories will not identify affected organisations without consent but will provide sufficient technical detail for the broader implementing community to assess their own exposure.</p>
+
+        <div class="footnotes">
+          <div class="fn-item"><span class="fn-marker">&dagger;</span><span>This annex supersedes all prior informal characterisations of QODIQA's scope limitations. In cases of conflict between this document and any other QODIQA document, the more restrictive characterisation of QODIQA's scope and guarantees governs.</span></div>
+          <div class="fn-item"><span class="fn-marker">&Dagger;</span><span>Document identifier QODIQA-RISK-2026-001. Issued March 2026. Next scheduled review: March 2027 or upon material change to the QODIQA corpus, whichever occurs first.</span></div>
+          <div class="fn-item"><span class="fn-marker">&sect;</span><span>This document is a normative component of the QODIQA corpus and is governed by the QODIQA Governance Charter. Reproduction for purposes of regulatory submission, procurement assessment, or academic citation is permitted with attribution.</span></div>
+        </div>
+      </div>
+
+      <!-- CLOSING STATEMENT -->
+      <div id="s-conclusion" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Annex</span>
+        <h2><a class="anchor-link" href="#s-conclusion">#</a>Closing Statement</h2>
+
+        <div class="inst-statement">
+          <span class="inst-lead">Residual Risk and Assumption Disclosure Annex - Closing</span>
+          <span class="inst-body">This document has enumerated the foundational assumptions, residual risk surfaces, non-coverage domains, and explicit scope limitations of the QODIQA standard. It has been produced without advocacy, without marketing language, and without suppression of material limitations.</span>
+          <span class="inst-close">The disclosures herein are complete as of the date of issuance. They will be updated as required by the transparency commitments in Section 12. QODIQA-RISK-2026-001.</span>
+        </div>
+
+        <p>The QODIQA standard is a technical instrument of bounded scope. Its value lies in what it precisely and reliably delivers: deterministic, auditable, cryptographically attested consent boundary enforcement at the AI execution layer. That value is best protected by accurate characterisation of its limits.</p>
+
+        <p>Organisations, regulators, and auditors who treat this annex as a constraint on QODIQA's utility misunderstand the function of disclosure. Accurate scope definition does not diminish the value of deterministic enforcement; it locates that value correctly within a broader architecture of AI governance in which QODIQA is one necessary component among several.</p>
+
+        <ul class="prop-list">
+          <li>QODIQA enforces consent boundaries. It does not resolve the harder problems of AI governance.</li>
+          <li>The harder problems of AI governance remain open. They require different instruments.</li>
+          <li>This annex documents both what QODIQA addresses and what it does not. Both are required for honest assessment.</li>
+        </ul>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document constitutes the normative Residual Risk and Assumption Disclosure Annex for QODIQA - the deterministic runtime consent enforcement standard for artificial intelligence systems. It is a structural integrity document issued as a normative component of the QODIQA corpus. No deployment may represent itself as QODIQA-conformant without acknowledgement of the disclosures herein.</p>
+
+          <p>It is issued alongside the Core specification and is not a marketing instrument, a product specification, or a legal instrument. All technical principles described in this document are designed to be production-oriented, cryptographically anchored, and architected for integration within large-scale AI ecosystems.</p>
+
+          <p>The material contained herein is intended for:</p>
+
+          <ul class="audience-list">
+            <li>Systems architects and infrastructure engineers</li>
+            <li>Enterprise AI platform designers</li>
+            <li>Security and governance officers</li>
+            <li>Regulatory and policy stakeholders</li>
+            <li>Organizations building or operating autonomous AI systems</li>
+            <li>Legal and compliance professionals engaged in AI governance</li>
+          </ul>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+            <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Du&#x163;escu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Title</span>
+            <span class="doc-id-val">Residual Risk and Assumption Disclosure Annex</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Corpus Position</span>
+            <span class="doc-id-val">Normative Annex - QODIQA Standard Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Code</span>
+            <span class="doc-id-val">QODIQA-RISK-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Normative Status</span>
+            <span class="doc-id-val">Normative - Residual Risk and Assumption Disclosure Annex</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA - Residual Risk and Assumption Disclosure Annex</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-RISK-2026-001</p>
+      <p>Normative Annex</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document is a normative component of the QODIQA corpus. No deployment may claim QODIQA conformance without acknowledgement of the disclosures herein. This document does not constitute legal advice. All disclosure procedures described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-RISK-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  var navItems = document.querySelectorAll('.nav-item');
+  var sectionIds = [
+    'cover','s-abstract','s0','s0-1','s0-2',
+    's1','s1-1',
+    's2','s2-1','s2-2','s2-3',
+    's3','s3-1','s3-2','s3-3','s3-4',
+    's4','s5','s6','s7','s8','s9','s10','s11','s12',
+    's-conclusion','s-status'
+  ];
+  var sections = sectionIds.map(function(id) { return document.getElementById(id); }).filter(Boolean);
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var btt = document.getElementById('back-to-top');
+  var toggle = document.getElementById('navToggle');
+
+  function setActive(id) {
+    navItems.forEach(function(item) {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  /* CANONICAL SCROLLSPY — min-distance algorithm, single observer */
+  var intersecting = new Set();
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        intersecting.add(entry.target);
+      } else {
+        intersecting.delete(entry.target);
+      }
+    });
+    if (intersecting.size === 0) return;
+    var best = null;
+    var bestDist = Infinity;
+    intersecting.forEach(function(el) {
+      var dist = Math.abs(el.getBoundingClientRect().top);
+      if (dist < bestDist) { bestDist = dist; best = el; }
+    });
+    if (best) setActive(best.id);
+  }, { root: null, rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+  sections.forEach(function(sec) { observer.observe(sec); });
+
+  /* NAV CLICKS */
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href.charAt(0) === '#') {
+        e.preventDefault();
+        var target = document.getElementById(href.slice(1));
+        if (target) {
+          var offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* BACK TO TOP */
+  window.addEventListener('scroll', function() {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  /* MOBILE SIDEBAR */
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

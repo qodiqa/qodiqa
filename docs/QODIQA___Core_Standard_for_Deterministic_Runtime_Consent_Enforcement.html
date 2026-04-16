@@ -1,0 +1,2809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement · v1.0</title>
+<meta name="description" content="QODIQA Core Standard for Deterministic Runtime Consent Enforcement v1.0, Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA: Core Standard for Deterministic Runtime Consent Enforcement">
+<meta property="og:description" content="A minimal runtime consent enforcement layer for artificial intelligence systems, forming the foundational conformance tier of an institutional governance framework.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --bg:         #F6F4F0;
+  --bg-raised:  #EFECEA;
+  --bg-sunken:  #E8E5E0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 37px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 53px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 26px;
+  opacity: 0.40;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 9px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 26px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 1px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 26px 0 22px;
+  margin: 0 0 37px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 18px 0 22px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 22px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+.code-block {
+  margin: 18px 0 22px;
+  border: 1px solid #C4C0BA;
+  overflow: hidden;
+}
+
+.code-bar {
+  background: #191C21;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 9px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.code-dots { display: flex; gap: 5px; }
+.code-dots span { width: 7px; height: 7px; border-radius: 50%; background: #2C2F36; }
+
+.code-title {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.30);
+}
+
+.code-lang-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.65);
+  border: 1px solid rgba(122,106,80,0.25);
+  padding: 2px 8px;
+}
+
+.code-block pre { margin: 0; border-left: none; }
+
+/* Code block wrapper (normative blocks) */
+.code-block-wrapper {
+  margin: 12px 0 16px;
+  border: 1px solid #2A2F3C;
+  overflow: hidden;
+}
+
+.code-block-header {
+  background: #191C21;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-block-title {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.30);
+}
+
+.code-block-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.65);
+  border: 1px solid rgba(122,106,80,0.25);
+  padding: 2px 8px;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+  border-left: none;
+  background: #1A1C20;
+  padding: 16px 20px;
+  font-size: 0.78rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+pre .kw, .kw  { color: #A8C4D8; }
+pre .fn, .fn  { color: #9DBBD0; }
+pre .cl, .cl  { color: #D4C498; }
+pre .st, .st  { color: #90B890; }
+pre .cm, .cm  { color: #4A5468; font-style: italic; }
+pre .nm, .nm  { color: #C4A870; }
+pre .se, .se  { color: #A8C4D8; }
+pre .op, .op  { color: #7a8898; }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 22px 0 28px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.48);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* Normative level badges in tables */
+.td-must {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #E8C87A;
+  background: #2A2210;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.td-should {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #88C4A4;
+  background: #102018;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 10px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 13px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: left;
+  hyphens: none;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  text-align: justify;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   NORMATIVE BLOCK (Core-specific)
+   ============================================================ */
+.normative-block {
+  border: 1px solid var(--ink-2);
+  margin: 20px 0 28px;
+  overflow: hidden;
+}
+
+.normative-block-head {
+  background: var(--ink);
+  padding: 11px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.nb-id {
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.nb-title {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  flex: 1;
+  min-width: 0;
+}
+
+.nb-level {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border: 1px solid;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.nb-level.must      { color: #E8C87A; border-color: #5A4A20; background: #2A2210; }
+.nb-level.should    { color: #88C4A4; border-color: #2A5A42; background: #102018; }
+.nb-level.must-not  { color: #E87A7A; border-color: #5A2020; background: #2A1010; }
+
+.normative-block-body {
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+}
+
+.nb-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 18px;
+  gap: 16px;
+  align-items: start;
+}
+
+.nb-row:last-child { border-bottom: none; }
+
+.nb-attr {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 3px;
+  flex-shrink: 0;
+  word-break: break-word;
+  text-align: left;
+}
+
+.nb-val {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text);
+  overflow-wrap: break-word;
+  min-width: 0;
+  text-align: left;
+  hyphens: none;
+}
+
+.nb-val strong { color: var(--text); font-weight: 700; }
+.nb-val code   { font-size: 0.82em; }
+
+/* ============================================================
+   DEFINITION BLOCK
+   ============================================================ */
+.def-block { border: 1px solid var(--ink-2); margin: 20px 0 24px; }
+
+.def-block-head {
+  background: var(--bg-raised);
+  padding: 9px 18px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--ink-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.def-block-head span { color: var(--accent); }
+
+.def-block-body { padding: 6px 18px; background: var(--bg); }
+
+.def-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.def-item:last-child { border-bottom: none; }
+
+.def-item .def-term {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '•';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   ARCHITECTURE DIAGRAM
+   ============================================================ */
+.arch-diagram {
+  border: 1px solid var(--ink-2);
+  padding: 28px 32px;
+  margin: 28px 0;
+  background: var(--bg);
+}
+
+.arch-diagram-caption {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-2);
+}
+
+.flow-row { display: flex; align-items: stretch; gap: 0; }
+
+.flow-node {
+  flex: 1;
+  border: 1px solid var(--ink-2);
+  padding: 14px 10px;
+  text-align: center;
+  background: var(--bg-raised);
+}
+
+.flow-node.dark { background: #1A1C20; border-color: #2A2D33; }
+
+.flow-node-title {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.flow-node.dark .flow-node-title { color: #D0D4DC; }
+
+.flow-node-sub {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: var(--rule);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.stage-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--ink-2);
+  margin-top: 16px;
+}
+
+.stage-cell { background: #1A1C20; padding: 12px 6px; text-align: center; }
+.stage-num  { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); display: block; margin-bottom: 4px; }
+.stage-name { font-family: var(--sans); font-size: 0.68rem; color: #8A909A; font-weight: 600; display: block; line-height: 1.3; }
+.stage-ref  { font-family: var(--mono); font-size: 0.58rem; color: #4A505A; display: block; margin-top: 4px; }
+
+/* ============================================================
+   PROFILE CARDS
+   ============================================================ */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--ink-2);
+  margin: 20px 0 24px;
+  border: 1px solid var(--ink-2);
+}
+
+.profile-card { background: var(--bg); padding: 20px; }
+
+.profile-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(122,106,80,0.06);
+  border: 1px solid rgba(122,106,80,0.2);
+  display: inline-block;
+  padding: 3px 10px;
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.profile-desc {
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+  hyphens: none;
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 32px 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.inst-lead  { font-family: var(--serif); font-size: 0.88rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; font-style: normal !important; }
+.inst-body  { font-family: var(--serif); font-size: 1.15rem; line-height: 1.72; color: var(--ink-2); margin-bottom: 16px; }
+.inst-close { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); letter-spacing: 0.08em; margin: 0; font-style: normal !important; }
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 13px;
+  margin-top: 30px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 18px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 82vw;
+    max-width: 320px;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.26s ease;
+    z-index: 200;
+    overflow-y: auto;
+    overflow-x: hidden;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  .layout { display: block; }
+
+  #content { padding: 76px 16px 56px; min-width: 0; overflow-x: hidden; max-width: 100%; }
+
+  footer { margin-left: 0; padding: 26px 18px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 18px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  h2 .anchor-link { display: none; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .stage-grid { grid-template-columns: repeat(3, 1fr); }
+  .nb-row { grid-template-columns: 120px 1fr; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Core Standard<br>for <span class="italic-part">Deterministic Runtime Consent Enforcement</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-CORE-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">A minimal runtime consent enforcement layer for artificial intelligence systems, forming the foundational conformance tier of an institutional governance framework.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Executive Summary</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Problem Statement</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Systemic Infrastructure Gap</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Runtime Enforcement</a>
+      <a class="nav-item sub" href="#s1-4">1.4 Why a Minimal Standard</a>
+      <a class="nav-item sub" href="#s1-5">1.5 Scope</a>
+      <a class="nav-item sub" href="#s1-6">1.6 Explicit Exclusions</a>
+      <a class="nav-item sub" href="#s1-7">1.7 Immediate Adoption Value</a>
+      <a class="nav-item" href="#s2">2. Normative Scope and Conformance</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Normative Language</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Scope of Applicability</a>
+      <a class="nav-item sub" href="#s2-3">2.3 System Boundary</a>
+      <a class="nav-item sub" href="#s2-4">2.4 Conformant Implementation</a>
+      <a class="nav-item sub" href="#s2-5">2.5 Conformance Profiles</a>
+      <a class="nav-item" href="#s3">3. Threat and Risk Model</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Authorization vs. Consent</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Consent Failure Taxonomy</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Runtime vs. Training-Phase</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Liability Surface</a>
+      <a class="nav-item" href="#s4">4. Core Architecture</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Component Model</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Component Responsibilities</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Decision Semantics</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Conflict Resolution Rules</a>
+      <a class="nav-item" href="#s5">5. The Twelve Core Control Points</a>
+      <a class="nav-item" href="#s6">6. Formal Determinism</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Frozen Evaluation Context</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Evaluation Function</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Determinism Invariant</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Non-Determinism Exclusion</a>
+      <a class="nav-item sub" href="#s6-5">6.5 Artifact Stability</a>
+      <a class="nav-item" href="#s7">7. Implementation Model</a>
+      <a class="nav-item sub" href="#s7-1">7.1 API Enforcement Pattern</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Reference Data Structures</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Normative Pseudocode</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Deployment Topologies</a>
+      <a class="nav-item" href="#s8">8. Interoperability</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Interoperability Posture</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Vocabulary Registry</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Third-Party Implementation</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Compatibility</a>
+      <a class="nav-item" href="#s9">9. Adoption Model</a>
+      <a class="nav-item sub" href="#s9-1">9.1 30-Day Integration Path</a>
+      <a class="nav-item sub" href="#s9-2">9.2 60-Day Path to CORE-ENT</a>
+      <a class="nav-item" href="#s10">10. Regulatory Alignment</a>
+      <a class="nav-item sub" href="#s10-1">10.1 GDPR Consent Principles</a>
+      <a class="nav-item sub" href="#s10-2">10.2 EU AI Act</a>
+      <a class="nav-item" href="#s11">11. Economic Model Overview</a>
+      <a class="nav-item sub" href="#s11-1">11.1 Infrastructure Certification</a>
+      <a class="nav-item sub" href="#s11-2">11.2 Operating Models</a>
+      <a class="nav-item" href="#s12">12. Governance and Versioning</a>
+      <a class="nav-item sub" href="#s12-1">12.1 Amendment Process</a>
+      <a class="nav-item sub" href="#s12-2">12.2 Version Numbering</a>
+      <a class="nav-item sub" href="#s12-3">12.3 Governance Authority</a>
+      <a class="nav-item" href="#s13">13. Conformance Statement Template</a>
+      <a class="nav-item" href="#s-conclusion">Institutional Closing Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <span class="section-label">Abstract</span>
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>Artificial intelligence systems routinely operationalize data at scale while Consent remains external to runtime execution, captured in static terms, batch permissions, or policy documents that do not deterministically constrain model invocation at the moment of use. The resulting infrastructure gap is structural: Authorization governs system access, but no machine-verifiable mechanism evaluates, at the execution boundary, whether the specific action is legitimate under present Consent constraints.</p>
+          <p>This document specifies <strong>QODIQA Core</strong> — the minimal adoptable runtime Consent enforcement layer, derived from the QODIQA 68-Point Enforcement Framework. QODIQA Core defines twelve Control Points, a deterministic enforcement lifecycle, Fail-Closed semantics, and tamper-evident Decision Artifacts sufficient to make Consent enforceable as a runtime control plane without requiring model retraining or infrastructure replacement.</p>
+          <p>The standard is intended for adoption by enterprises, public institutions, and AI infrastructure providers within a 30–60 day integration horizon. It is the entry-level Conformance tier of a unified QODIQA institutional corpus and constitutes the foundational layer from which full 68-point Conformance is built.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Executive Summary</h2>
+
+        <h3 id="s1-1">1.1 Problem Statement: Unenforced Consent in AI Execution Paths</h3>
+        <p>AI systems operationalize data at scale while Consent remains external to runtime execution, captured via static terms, batch permissions, or informal policy assertions that do not deterministically constrain model invocation at the moment of use. This produces an infrastructure gap: the technical act of calling an AI system proceeds under Authorization: API keys, role-based access controls, vendor entitlements, but without a machine-verifiable, context-bound evaluation of whether the specific action is legitimate under present Consent constraints encompassing purpose, scope, time, jurisdiction, and Revocation state.</p>
+        <p>QODIQA's foundational position is that <strong>Consent is a first-class infrastructure primitive</strong>: machine-readable, replayable, and enforced as a Gating Function before execution. The practical deficiency is not the absence of policy documents; it is the absence of Deterministic Enforcement at the decision boundary where an AI system is invoked.</p>
+
+        <h3 id="s1-2">1.2 The Systemic Infrastructure Gap</h3>
+        <p>The absence of runtime Consent enforcement is not an edge-case deficiency. It is a structural failure class with predictable scaling properties.</p>
+        <p>Contemporary AI governance frameworks establish obligations: documentation requirements, data processing agreements, access control policies, audit procedures. These instruments are necessary and insufficient at the execution boundary. A policy document that describes permitted purposes does not prevent an AI system from acting on an impermissible purpose. An audit log that records what happened does not prevent its occurrence. Authorization that grants system access does not evaluate whether the specific action under the specific context is legitimate at the moment it is taken.</p>
+        <p>This is a missing runtime invariant, not a missing policy but a missing enforcement layer. Current AI governance architecture provides controls that observe or describe behavior. It lacks controls that deterministically gate it.</p>
+
+        <div class="callout">
+          <p>The absence of Consent enforcement at runtime is structurally analogous to operating a cryptographic system without key verification: authentication exists at configuration time, but verification is absent at the moment it matters. In both cases, the gap is not philosophical; it is architectural.</p>
+        </div>
+
+        <p>This gap scales adversely. In single-model, single-purpose deployments, the risk is bounded. In multi-agent architectures where models call other models, where orchestration layers route requests across vendors, and where a single authorization event is reused across hundreds of downstream actions, the gap becomes a systemic risk amplifier.</p>
+        <p>The only architecturally sound response is to treat runtime Consent enforcement as infrastructure: present at every boundary, deterministic in behavior, and independent of the intelligence of the system it governs.</p>
+
+        <h3 id="s1-3">1.3 Runtime Enforcement as the Non-Substitutable Control Layer</h3>
+        <p>Training-phase controls, including dataset audits, provenance records, pre-training permissions, are necessary and insufficient for operational governance because: (a) Consent changes over time through Revocation or expiry; (b) purpose drift occurs at inference time independent of training-phase Authorization basis; and (c) deployment patterns route prompts and content across systems and vendors where retrospective governance cannot reconstruct what was permitted at the moment of use.</p>
+        <p>Runtime is the only boundary where purpose, actor identity, jurisdiction, and Revocation state are simultaneously present, evaluable, and current. Controls applied at any other lifecycle point cannot substitute for enforcement at execution. QODIQA Core positions its twelve Control Points at this boundary and at no other.</p>
+
+        <h3 id="s1-4">1.4 Why a Minimal Standard Is Required</h3>
+        <p>Enterprises and public institutions require a practical, low-friction adoption layer that can be implemented within 30–60 days, does not require model retraining, and does not require rewriting existing AI infrastructure. A minimal standard is necessary to ensure: (i) interoperability across heterogeneous AI stacks; (ii) Deterministic Governance for regulated and contractual contexts; and (iii) a clear Conformance boundary that can be audited and independently certified.</p>
+
+        <h3 id="s1-5">1.5 Scope: What QODIQA Core Covers</h3>
+        <ul class="prop-list">
+          <li>A closed, explicit intent declaration interface prohibiting inferred intent</li>
+          <li>Cryptographically verifiable Consent Tokens and Deterministic validation logic</li>
+          <li>Purpose- and scope-bound Policy Evaluation with Fail-Closed semantics</li>
+          <li>Revocation and expiry enforcement at runtime with defined Conflict Resolution Rules</li>
+          <li>Immutable Decision Artifacts and Audit Logging enabling independent Replay Verification</li>
+        </ul>
+
+        <h3 id="s1-6">1.6 Explicit Exclusions</h3>
+        <p>QODIQA Core does not define or require: model retraining or weight alteration; content inspection, semantic classification, or probabilistic risk scoring as part of the enforcement decision; economic rights or royalty distribution infrastructure; full lifecycle controls for training and fine-tuning governance; or user interfaces, dispute workflows, or appeals dashboards. The enforcement layer decides predictably, not interpretively.</p>
+
+        <h3 id="s1-7">1.7 Immediate Adoption Value</h3>
+        <p>QODIQA Core makes Consent enforceable as a Deterministic runtime control plane, producing reproducible Decision Artifacts and tamper-evident Audit Logs that support independent Replay Verification. Adoption reduces ambiguity at the execution boundary, eliminates purpose drift, and establishes institutional defensibility without changes to deployed AI models.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Normative Scope and Conformance</h2>
+
+        <h3 id="s2-1">2.1 Normative Language</h3>
+        <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC 2119] [RFC 8174]. Non-implementation of any MUST-level requirement constitutes non-Conformance with this standard across all profiles. Deviation from any SHOULD-level requirement MUST be explicitly documented with written justification and recorded in the Conformance Statement (Section 13).</p>
+
+        <h3 id="s2-2">2.2 Scope of Applicability</h3>
+        <p>This standard applies to AI systems, including large language model systems, inference APIs, and tool-using agent runtimes, where an organization requires runtime enforcement of Consent constraints over AI actions that use, transform, generate, disclose, or otherwise operationalize data subject to Consent conditions. A Conformant implementation requires that a deterministic Enforcement Gateway be positioned on the request path before model invocation. This standard is model-agnostic and requires no access to model internals, weight parameters, or training artifacts.</p>
+
+        <h3 id="s2-3">2.3 System Boundary</h3>
+        <p>A Conformant QODIQA Core implementation governs the decision boundary between a Calling System (application, service, or agent) requesting an AI action, and an AI System (model endpoint, orchestration service, or tool-using agent runtime) that would execute that action. The Enforcement Gateway MUST operate as a pre-execution gate and MUST be capable of failing closed on any missing, malformed, or unresolvable input.</p>
+
+        <h3 id="s2-4">2.4 Conformant Implementation</h3>
+        <p>A Conformant implementation MUST: require explicit intent declarations via a closed DecisionRequest contract; validate Consent state at runtime including expiry and Revocation prior to execution; enforce purpose- and scope-bound Policy deterministically with Fail-Closed behavior on missing, malformed, or unavailable inputs; and emit Decision Artifacts and Audit Records sufficient for independent Replay Verification.</p>
+        <p>A non-Conformant system is any system that: infers or approximates intent in the absence of explicit declaration; treats Consent enforcement as an advisory check that can be bypassed; defaults to allow on incomplete, inconsistent, or unresolvable context; or cannot produce a tamper-evident Audit Trail traceable to a Frozen Evaluation Context.</p>
+
+        <h3 id="s2-5">2.5 Conformance Profiles</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:110px;">Profile</th>
+                <th style="width:160px;">Name</th>
+                <th>Requirements</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="white-space:nowrap;text-align:center;font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent);">CORE-MIN</td>
+                <td style="text-align:left;">Minimal Runtime</td>
+                <td style="text-align:left;">All QCC-01 through QCC-10 at MUST level. QCC-11 and QCC-12 implemented or declared as deviations with written justification.</td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;text-align:center;font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent);">CORE-VER</td>
+                <td style="text-align:left;">Verifiable Runtime</td>
+                <td style="text-align:left;">CORE-MIN plus cryptographic Audit Log chaining and externally verifiable Decision Artifact export suitable for third-party audit.</td>
+              </tr>
+              <tr>
+                <td style="white-space:nowrap;text-align:center;font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent);">CORE-ENT</td>
+                <td style="text-align:left;">Enterprise Runtime</td>
+                <td style="text-align:left;">CORE-VER plus defined operational SLAs for Revocation propagation, Audit Log retention, and a documented Control Effectiveness Testing cadence.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A Conformant implementation MUST declare exactly one profile. Declaration of a higher profile without satisfaction of all requirements of that profile constitutes non-Conformance.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Threat and Risk Model</h2>
+
+        <h3 id="s3-1">3.1 Authorization vs. Consent: Formal Distinction</h3>
+        <div class="def-block">
+          <div class="def-block-head">Defined Terms: <span>Adopted from QODIQA Whitepaper Section 3.3</span></div>
+          <div class="def-block-body">
+            <div class="def-item">
+              <span class="def-term">Authorization</span>
+              Standing technical permission granted to an actor or system to access a resource or perform a class of operations. Expressed through roles, access control lists, API keys, or service identities. Generally static, coarse-grained, and context-independent. Answers: <em>Is this actor permitted to perform this class of operation?</em>
+            </div>
+            <div class="def-item">
+              <span class="def-term">Consent</span>
+              Contextual, conditional legitimacy for a specific action under explicitly declared purpose, scope, time constraints, jurisdictional binding, and current Revocation state. Granular, time-bounded, and revocable. Answers: <em>Is this specific action legitimate under present conditions?</em>
+            </div>
+          </div>
+        </div>
+        <p>A system may hold Authorization for a class of operations and still lack valid Consent for a specific action within that class. Runtime enforcement MUST evaluate Consent independently of Authorization. The presence of Authorization does not satisfy the Consent requirement.</p>
+
+        <h3 id="s3-2">3.2 Consent Failure Taxonomy</h3>
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1: Consent Failure Taxonomy</span>
+          <table>
+            <thead><tr><th style="white-space:nowrap;width:52px;">ID</th><th style="text-align:left;">Threat Class</th><th>Mechanism</th><th>Primary Control</th></tr></thead>
+            <tbody>
+              <tr><td style="white-space:nowrap;">T-01</td><td style="text-align:left;">Implicit Consent Assumption</td><td>Execution proceeds without machine-verifiable Consent proof at the moment of action</td><td>QCC-01, QCC-02</td></tr>
+              <tr><td style="white-space:nowrap;">T-02</td><td style="text-align:left;">Purpose Drift</td><td>Capabilities operationalized for purposes not explicitly granted in the applicable Consent Token</td><td>QCC-03</td></tr>
+              <tr><td style="white-space:nowrap;">T-03</td><td style="text-align:left;">Temporal Decay</td><td>Consent has expired or been revoked; downstream execution continues without re-evaluation</td><td>QCC-05, QCC-06</td></tr>
+              <tr><td style="white-space:nowrap;">T-04</td><td style="text-align:left;">Context Collapse</td><td>Requests lack differentiating metadata; coarse permissions applied where granular evaluation is required</td><td>QCC-01, QCC-04</td></tr>
+              <tr><td style="white-space:nowrap;">T-05</td><td style="text-align:left;">Consent Forgery and Replay</td><td>Fabricated or previously-captured tokens presented to obtain execution Authorization</td><td>QCC-02, QCC-06</td></tr>
+              <tr><td style="white-space:nowrap;">T-06</td><td style="text-align:left;">Revocation Non-Propagation</td><td>Revocation event does not reach all enforcement nodes within the required propagation window</td><td>QCC-06, QCC-12</td></tr>
+              <tr><td style="white-space:nowrap;">T-07</td><td style="text-align:left;">Audit Evasion</td><td>Actions occur without durable, tamper-evident records; enforcement cannot be independently verified</td><td>QCC-09, QCC-10</td></tr>
+              <tr><td style="white-space:nowrap;">T-08</td><td style="text-align:left;">Registry Unavailability Bypass</td><td>System defaults to allow when Consent Registry is temporarily unavailable, converting transient failure into governance gap</td><td>QCC-06, QCC-08</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-3">3.3 Runtime vs. Training-Phase: Irreducible Distinction</h3>
+        <p>Training-phase governance addresses: <em>What data was used to construct model capabilities, and under what conditions?</em> Runtime governance addresses: <em>What actions are performed now, by which actor, for which purpose, under which present Consent state?</em> These are non-substitutable control layers. Training-phase controls cannot substitute runtime enforcement because: (a) Revocation and expiry affect Consent validity independently of training provenance; (b) purpose drift emerges at inference time without correlation to the training-phase Authorization basis; and (c) multi-vendor and agentic deployment chains introduce runtime actors and data flows that were not present or knowable at training time.</p>
+
+        <h3 id="s3-4">3.4 Liability Surface and Evidentiary Posture</h3>
+        <p>The institutional liability surface expands in direct proportion to the inability to demonstrate with objective, reproducible evidence: what the AI system was instructed to perform; the Policy Version under which the enforcement decision was made; the Consent state that applied at the precise moment of the decision; and whether Revocation and expiry were evaluated and enforced.</p>
+        <p>Without deterministic Decision Artifacts, an organization cannot objectively demonstrate lawful runtime behavior. Policy documents, intent statements, and log entries do not constitute proof that a specific action was authorized under a specific Consent state at a specific time. QODIQA's "proof over explanation" posture defines institutional defensibility as the ability to reproduce decisions from a Frozen Evaluation Context.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Core Architecture</h2>
+
+        <h3 id="s4-1">4.1 Minimal Enforceable Component Model</h3>
+        <div class="arch-diagram">
+          <span class="arch-diagram-caption">Figure 1: QODIQA Core Enforcement Architecture</span>
+
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0;max-width:420px;margin:0 auto;">
+
+            <!-- Node: Calling System -->
+            <div style="width:100%;border:1px solid #C4C0BA;padding:14px 20px;text-align:center;background:var(--bg-raised);">
+              <span style="font-family:var(--sans);font-size:0.82rem;font-weight:600;color:var(--ink-2);display:block;">Calling System</span>
+              <span style="font-family:var(--mono);font-size:0.60rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">App / Agent / API</span>
+            </div>
+
+            <!-- Arrow -->
+            <div style="display:flex;flex-direction:column;align-items:center;padding:6px 0;">
+              <div style="width:1px;height:14px;background:#C4C0BA;"></div>
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M5 8L0 0H10L5 8Z" fill="#C4C0BA"/></svg>
+            </div>
+
+            <!-- Node: Enforcement Gateway -->
+            <div style="width:100%;border:1px solid #2A2D33;padding:14px 20px;text-align:center;background:#1A1C20;">
+              <span style="font-family:var(--sans);font-size:0.82rem;font-weight:600;color:#D0D4DC;display:block;">Enforcement Gateway</span>
+              <span style="font-family:var(--mono);font-size:0.60rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">6-Stage Lifecycle</span>
+            </div>
+
+            <!-- Stage grid inside gateway -->
+            <div style="width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#2A2D33;border:1px solid #2A2D33;border-top:none;">
+              <div style="background:#1A1C20;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 1</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Intent Validation</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-01</span>
+              </div>
+              <div style="background:#1A1C20;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 2</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Token Verification</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-02</span>
+              </div>
+              <div style="background:#1A1C20;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 3</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Consent Resolution</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-05, 06</span>
+              </div>
+              <div style="background:#191C21;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 4</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Policy Evaluation</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-03–08</span>
+              </div>
+              <div style="background:#191C21;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 5</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Artifact Generation</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-09</span>
+              </div>
+              <div style="background:#191C21;padding:10px 6px;text-align:center;">
+                <span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);display:block;margin-bottom:3px;">Stage 6</span>
+                <span style="font-family:var(--sans);font-size:0.64rem;color:#8A909A;font-weight:600;display:block;line-height:1.3;">Audit Log Write</span>
+                <span style="font-family:var(--mono);font-size:0.55rem;color:#4A505A;display:block;margin-top:3px;">QCC-10</span>
+              </div>
+            </div>
+
+            <!-- Arrow -->
+            <div style="display:flex;flex-direction:column;align-items:center;padding:6px 0;">
+              <div style="width:1px;height:14px;background:#C4C0BA;"></div>
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M5 8L0 0H10L5 8Z" fill="#C4C0BA"/></svg>
+            </div>
+
+            <!-- Node: AI System -->
+            <div style="width:100%;border:1px solid #C4C0BA;padding:14px 20px;text-align:center;background:var(--bg-raised);">
+              <span style="font-family:var(--sans);font-size:0.82rem;font-weight:600;color:var(--ink-2);display:block;">AI System</span>
+              <span style="font-family:var(--mono);font-size:0.60rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;">Model Endpoint</span>
+            </div>
+
+          </div>
+        </div>
+
+        <h3 id="s4-2">4.2 Component Responsibilities</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Component</th><th>Responsibility</th><th>Invocation Constraint</th></tr></thead>
+            <tbody>
+              <tr><td>Enforcement Gateway</td><td>Intercepts all AI-bound requests on the critical path; implements six-stage lifecycle</td><td>MUST be on the critical path; architectural bypass constitutes non-Conformance</td></tr>
+              <tr><td>Policy Engine</td><td>Executes Deterministic Evaluation as a pure function over a Frozen Evaluation Context</td><td>No side effects; no external calls during evaluation</td></tr>
+              <tr><td>Consent Registry</td><td>Stores and resolves current Consent state including grants, expiry, and Revocation status</td><td>Authoritative source for Consent state; unavailability triggers DENY</td></tr>
+              <tr><td>Decision Engine</td><td>Computes ALLOW or DENY; generates Decision Artifact</td><td>Artifact generation failure triggers DENY</td></tr>
+              <tr><td>Audit Layer</td><td>Writes tamper-evident, hash-chained Audit Log entries</td><td>Write-before-execute on ALLOW path; write failure triggers DENY</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-3">4.3 Allow and Deny Decision Semantics</h3>
+        <p><strong>ALLOW</strong> is issued if and only if all conditions are simultaneously satisfied: the intent declaration is explicit and structurally complete; Consent Token cryptographic integrity is verified; the Consent Token is ACTIVE for the requested purpose, scope, jurisdictional binding, and data categories; all applicable Policy conditions are satisfied; and the Decision Artifact and Audit Log entry are successfully generated and written.</p>
+        <p><strong>DENY</strong> MUST be issued on any of: missing or malformed intent fields; invalid or unverifiable Consent Token; expired, revoked, or unresolvable Consent state; purpose mismatch; scope violation; jurisdictional constraint violation; Policy evaluation failure; Decision Artifact generation failure; or Audit Log write failure. No partial execution occurs on any DENY path.</p>
+
+        <h3 id="s4-4">4.4 Conflict Resolution Rules</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Rule</th><th>Name</th><th>Binding Effect</th></tr></thead>
+            <tbody>
+              <tr><td style="white-space:nowrap;">R-01</td><td style="text-align:left;">Revocation Supersedes</td><td>Any Revocation event cancels all prior grants. No prior ALLOW decision or cached state overrides a REVOKED status.</td></tr>
+              <tr><td style="white-space:nowrap;">R-02</td><td style="text-align:left;">Most Restrictive Scope</td><td>Where multiple applicable Consent grants exist, the narrowest defined scope governs.</td></tr>
+              <tr><td style="white-space:nowrap;">R-03</td><td style="text-align:left;">Subject Jurisdiction Precedence</td><td>In cross-border conflicts, the subject's local jurisdiction requirements SHALL apply in full.</td></tr>
+              <tr><td style="white-space:nowrap;">R-04</td><td style="text-align:left;">Explicit Override Required</td><td>Broader scope application requires explicit Authorization. Inference or assumption of broader scope is prohibited.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>The Twelve Core Control Points (QCC-01 through QCC-12)</h2>
+
+        <p>The twelve Control Points defined in this section are the minimal, non-redundant enforcement nucleus of QODIQA Core. QCC-01 through QCC-10 are MUST-level; non-implementation of any constitutes non-Conformance across all profiles. QCC-11 and QCC-12 are SHOULD-level; non-implementation MUST be declared with written justification in the Conformance Statement.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2: Control Point Summary</span>
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Level</th><th>Framework Alignment</th></tr></thead>
+            <tbody>
+              <tr><td>QCC-01</td><td>Closed Intent Declaration</td><td class="td-must">MUST</td><td>CP-01; Whitepaper Section 5.2</td></tr>
+              <tr><td>QCC-02</td><td>Consent Token Cryptographic Verification</td><td class="td-must">MUST</td><td>CP-11, CP-63, CP-64; Gate 02</td></tr>
+              <tr><td>QCC-03</td><td>Purpose Binding</td><td class="td-must">MUST</td><td>CP-02; Whitepaper Section 3.2</td></tr>
+              <tr><td>QCC-04</td><td>Scope Binding</td><td class="td-must">MUST</td><td>CP-02, CP-16; Gate 03</td></tr>
+              <tr><td>QCC-05</td><td>Temporal Validity Enforcement</td><td class="td-must">MUST</td><td>CP-43, CP-47, CP-48</td></tr>
+              <tr><td>QCC-06</td><td>Revocation Enforcement</td><td class="td-must">MUST</td><td>CP-04, CP-45, CP-65; R-01</td></tr>
+              <tr><td>QCC-07</td><td>Deterministic Policy Evaluation</td><td class="td-must">MUST</td><td>Whitepaper Sections 6.4–7.3</td></tr>
+              <tr><td>QCC-08</td><td>Fail-Closed Default Denial</td><td class="td-must">MUST</td><td>Whitepaper Sections 5.6, 6.7, 9.4</td></tr>
+              <tr><td>QCC-09</td><td>Decision Artifact Generation</td><td class="td-must">MUST</td><td>Whitepaper Sections 6.6, 7.2, 7.5</td></tr>
+              <tr><td>QCC-10</td><td>Tamper-Evident Audit Logging</td><td class="td-must">MUST</td><td>CP-25, CP-49, CP-67; Section 13.3</td></tr>
+              <tr><td>QCC-11</td><td>Jurisdictional Contextual Binding</td><td class="td-should">SHOULD</td><td>R-03; Whitepaper Section 4.2</td></tr>
+              <tr><td>QCC-12</td><td>Consent Withdrawal Operability</td><td class="td-should">SHOULD</td><td>CP-04, CP-45, CP-65</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- QCC-01 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-01</span><span class="nb-title">Closed Intent Declaration</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Enforce a closed, explicit intent declaration for every AI action request. Prohibit inferred, approximated, or partially-specified intent.</div></div>
+            <div class="nb-row"><div class="nb-attr">Required Inputs</div><div class="nb-val"><code>actor_id</code>, <code>action</code> (enumerated), <code>purpose</code> (enumerated), <code>data_types</code> (non-empty array), <code>jurisdiction</code> (ISO 3166-1 alpha-2), <code>timestamp</code> (ISO 8601)</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="cm">// Any missing or null required field</span>
+<span class="kw">if</span> any_required_field_absent → DENY(<span class="st">"INTENT_FIELD_MISSING"</span>)
+<span class="cm">// Purpose not in registered vocabulary</span>
+<span class="kw">if</span> purpose ∉ purpose_registry → DENY(<span class="st">"PURPOSE_UNRECOGNIZED"</span>)
+<span class="cm">// Action not in registered vocabulary</span>
+<span class="kw">if</span> action ∉ action_registry → DENY(<span class="st">"ACTION_UNRECOGNIZED"</span>)
+<span class="cm">// Empty or unrecognized data categories</span>
+<span class="kw">if</span> data_types = ∅ or any ∉ data_type_registry → DENY(<span class="st">"DATA_TYPE_INVALID"</span>)
+<span class="cm">// Extra unknown fields</span>
+<span class="kw">if</span> extra_fields_present → DENY(<span class="st">"SCHEMA_VIOLATION"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 400 (malformed contract) or HTTP 403 (Consent required). MUST be Fail-Closed: no partial evaluation proceeds.</div></div>
+            <div class="nb-row"><div class="nb-attr">Audit Requirements</div><div class="nb-val">Log canonicalized DecisionRequest hash, schema version, validation result, and denial reason code.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-01 (Explicit Opt-In Gate); Whitepaper Section 5.2 (Input Contract: Closed by Design)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-02 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-02</span><span class="nb-title">Consent Token Cryptographic Verification</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Verify cryptographic integrity and authenticity of the Consent Token before any further evaluation proceeds. Reject unsigned, malformed, or issuer-untrusted tokens.</div></div>
+            <div class="nb-row"><div class="nb-attr">Required Inputs</div><div class="nb-val"><code>consent_token</code>, <code>issuer</code>, <code>verification_key_material</code> (trust anchor), <code>algorithm_identifier</code>. Ed25519 RECOMMENDED. ECDSA P-256 PERMITTED. RSA-PSS NOT RECOMMENDED. Algorithm negotiation MUST be server-authoritative.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">if</span> consent_token = null → DENY(<span class="st">"CONSENT_TOKEN_MISSING"</span>)
+<span class="kw">if</span> signature absent or structurally malformed → DENY(<span class="st">"TOKEN_SIGNATURE_ABSENT"</span>)
+<span class="kw">if</span> verify_signature(token, trust_anchor) = false → DENY(<span class="st">"CONSENT_SIGNATURE_INVALID"</span>)
+<span class="kw">if</span> issuer ∉ trusted_issuer_registry → DENY(<span class="st">"ISSUER_UNTRUSTED"</span>)
+<span class="kw">if</span> algorithm_identifier ∉ approved_algorithms → DENY(<span class="st">"ALGORITHM_UNSUPPORTED"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 401 or HTTP 403. Bypass of this control by any means constitutes a critical-severity violation.</div></div>
+            <div class="nb-row"><div class="nb-attr">Audit Requirements</div><div class="nb-val">Log Consent Token fingerprint (SHA-256), issuer identifier, algorithm identifier, and verification outcome.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-11, CP-63, CP-64 (Cryptographic Consent Layer); Gate 02 (API Consent Handshake)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-03 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-03</span><span class="nb-title">Purpose Binding</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Bind Consent to declared purpose at runtime. Prevent purpose drift by requiring exact match between requested purpose and purposes explicitly authorized in the Consent Token. No inference, approximation, or semantic similarity matching is permitted.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="cm">// Exact string match required — no semantic approximation</span>
+<span class="kw">if</span> request.purpose ∉ token.purposes → DENY(<span class="st">"PURPOSE_NOT_AUTHORIZED"</span>)
+<span class="cm">// Token-encoded restrictions contradicted by request</span>
+<span class="kw">if</span> purpose_restriction_violated → DENY(<span class="st">"PURPOSE_RESTRICTION_VIOLATED"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 403 (purpose not authorized).</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-02 (Granular Scope Binding); Whitepaper Section 3.2 (Purpose Drift as Primary Failure Mode)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-04 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-04</span><span class="nb-title">Scope Binding</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Enforce scope binding: requested action and data categories must fall within the scope explicitly authorized in the Consent Token. Conflict Rule R-02 (Most Restrictive Scope) applies.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">if</span> request.action ∉ token.scope.actions → DENY(<span class="st">"ACTION_OUT_OF_SCOPE"</span>)
+<span class="kw">if</span> ∃ dt ∈ request.data_types : dt ∉ token.scope.data_types → DENY(<span class="st">"DATA_TYPE_OUT_OF_SCOPE"</span>)
+<span class="cm">// Where multiple applicable scopes exist, apply the most restrictive (R-02)</span>
+applicable_scope ← min_restrictive(matching_scopes)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 403 (scope violation). Partial scope matches do not satisfy this control.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-02, CP-16 (Scope Validation Engine); Gate 03 (Scope Validation); R-02</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-05 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-05</span><span class="nb-title">Temporal Validity Enforcement</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Enforce temporal validity. Consent MUST be valid at the exact moment of execution. Consent that has expired MUST NOT authorize execution.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">if</span> request_time > token.exp → DENY(<span class="st">"CONSENT_EXPIRED"</span>)
+<span class="kw">if</span> token.nbf present and request_time &lt; token.nbf → DENY(<span class="st">"CONSENT_NOT_YET_VALID"</span>)
+<span class="kw">if</span> |request_time − token.iat| > clock_tolerance_seconds → DENY(<span class="st">"CLOCK_SKEW_EXCEEDED"</span>)
+<span class="kw">if</span> clock_source unavailable or unsynchronized → DENY(<span class="st">"CLOCK_UNRESOLVABLE"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 403 (consent expired / not yet valid). <code>clock_tolerance_seconds</code> MUST NOT exceed 300s without documented justification.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-43 (Consent Expiry Enforcement), CP-47 (Stale Consent Invalidation), CP-48 (Time-Bound Use Restriction)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-06 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-06</span><span class="nb-title">Revocation Enforcement</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Enforce Revocation at runtime. Revocation supersedes all prior grants (R-01). A revoked Consent Token MUST NOT authorize execution regardless of its temporal validity or scope.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">if</span> registry.lookup(token_id) = REVOKED → DENY(<span class="st">"CONSENT_REVOKED"</span>)  <span class="cm">// R-01</span>
+<span class="kw">if</span> registry_state = UNKNOWN or registry_unavailable → DENY(<span class="st">"REVOCATION_UNRESOLVED"</span>)
+<span class="kw">if</span> cache_age > cache_ttl_seconds and registry_unavailable → DENY(<span class="st">"REVOCATION_CACHE_STALE"</span>)
+<span class="cm">// Revocation supersedes all prior grants — no exception</span></pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 403 (revoked) or HTTP 503/403 (registry unavailable). MUST be Fail-Closed in all registry-unavailable scenarios. CORE-ENT revocation propagation SLA: MUST NOT exceed 300 seconds.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-04 (Revocation Propagation), CP-45 (Retroactive Revocation Handling), CP-65 (Revocation Registry Sync); R-01</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-07 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-07</span><span class="nb-title">Deterministic Policy Evaluation</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Policy Evaluation MUST be deterministic: given identical Frozen Evaluation Contexts, the decision MUST be identical across any Conformant implementation instance, time, or environment. See Section 6 (Formal Determinism) for the formal invariant.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre>frozen ← canonicalize(request, consent_ref, policy_version, ruleset_version)
+decision ← policy_engine.evaluate(frozen)  <span class="cm">// pure function — no side effects</span>
+<span class="cm">// Invariant: evaluate(frozen) = replay(frozen) for all valid frozen contexts</span>
+<span class="kw">if</span> policy_engine cannot guarantee determinism → DENY(<span class="st">"POLICY_ENGINE_FAULT"</span>) + SYSTEM_FAULT</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">SYSTEM_FAULT with DENY outcome. The fault condition MUST be logged and escalated. No execution proceeds under a non-deterministic or faulted policy engine.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">Whitepaper Sections 6.4–6.5, 7.1–7.3 (Determinism as First-Class Property; Replay as Correctness Invariant)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-08 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-08</span><span class="nb-title">Fail-Closed Default Denial</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Enforce Fail-Closed behavior across all Enforcement Gateway stages. Ambiguity, missing data, unresolvable state, or any processing exception MUST result in DENY. No partial evaluation, best-effort evaluation, or exception-to-allow path is permissible.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="cm">// Default state of the Policy Engine MUST be DENY</span>
+default_effect = DENY
+<span class="cm">// ALLOW requires all conditions satisfied; any unsatisfied → DENY</span>
+<span class="kw">if</span> evaluation_exception → DENY(<span class="st">"POLICY_ENGINE_FAULT"</span>)
+<span class="kw">if</span> partial_evaluation_required → DENY(<span class="st">"EVALUATION_INCOMPLETE"</span>)
+<span class="cm">// No "best-effort" or "optimistic" evaluation paths permitted</span></pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Failure State</div><div class="nb-val">HTTP 403 (default deny). Any ALLOW path must be explicitly computed, not assumed.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">Whitepaper Sections 5.6, 6.7, 9.4 (Fail-Safe Defaults; Conservative Execution Model)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-09 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-09</span><span class="nb-title">Decision Artifact Generation</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Generate a stable, tamper-evident Decision Artifact for every evaluation, covering both ALLOW and DENY outcomes. The artifact must contain sufficient information to replay and verify the decision independently.</div></div>
+            <div class="nb-row"><div class="nb-attr">Required Fields</div><div class="nb-val"><code>artifact_id</code> (deterministic hash), <code>decision</code> (ALLOW|DENY), <code>reason_code</code>, <code>frozen_context_hash</code>, <code>policy_version</code>, <code>ruleset_version</code>, <code>timestamp</code> (ISO 8601, NTP-verified)</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Artifact Identity</span><span class="code-block-badge">NORMATIVE</span></div><pre>artifact_id ← H(canonical(R̂ ‖ S ‖ V_p ‖ V_r ‖ outcome))
+
+<span class="cm">// where H = SHA-256 (minimum); SHA-512 RECOMMENDED</span>
+<span class="cm">// identical FEC + identical outcome → identical artifact_id</span>
+<span class="cm">// independently recomputable by any party with access to FEC inputs</span>
+<span class="kw">if</span> artifact_generation_fails → DENY(<span class="st">"ARTIFACT_GENERATION_FAILED"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">Whitepaper Sections 6.6, 7.2, 7.5 (Decision as Artifact; Proof Over Explanation)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-10 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-10</span><span class="nb-title">Tamper-Evident Audit Logging</span><span class="nb-level must">MUST</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Write a tamper-evident, hash-chained Audit Log entry for every enforcement decision. Write MUST precede execution on the ALLOW path. Write failure MUST trigger DENY (integrity over availability).</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Write-Before-Execute Constraint</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="cm">// ALLOW path: write audit entry BEFORE execution signal</span>
+<span class="kw">if</span> audit_write(artifact, ALLOW) = FAILURE → DENY(<span class="st">"AUDIT_WRITE_FAILED"</span>)
+<span class="cm">// integrity &gt; availability — audit failure blocks execution</span>
+<span class="cm">// Hash chaining: entry_n.hash = H(entry_n.content ‖ entry_{n-1}.hash)</span>
+<span class="cm">// Append-only; deletion before minimum retention = non-Conformance event</span></pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Retention</div><div class="nb-val">Declared minimum retention period in Conformance Statement. CORE-ENT minimum: 365 days. Durable, append-only or write-once storage required.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-25 (Audit Trail Mandate), CP-49 (Temporal Audit Sequencing), CP-67 (Immutable Consent Ledger)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-11 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-11</span><span class="nb-title">Jurisdictional Contextual Binding</span><span class="nb-level should">SHOULD</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Apply jurisdictional contextual binding to Consent decisions when jurisdiction is declared. Enforce Conflict Rule R-03 when subject jurisdiction and processing jurisdiction differ.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">if</span> jurisdictions_conflict → apply subject_jurisdiction precedence (R-03)
+<span class="kw">if</span> jurisdiction declared but unrecognized → DENY(<span class="st">"JURISDICTION_UNRECOGNIZED"</span>)
+<span class="kw">if</span> jurisdiction required by profile and absent → DENY(<span class="st">"JURISDICTION_REQUIRED"</span>)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Deviation</div><div class="nb-val">Non-implementation MUST be declared in Conformance Statement with written justification and named risk acceptance authority.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">R-03 (Subject Jurisdiction Precedence); Whitepaper Section 4.2 (Contextual Binding)</div></div>
+          </div>
+        </div>
+
+        <!-- QCC-12 -->
+        <div class="normative-block">
+          <div class="normative-block-head"><span class="nb-id">QCC-12</span><span class="nb-title">Consent Withdrawal Operability</span><span class="nb-level should">SHOULD</span></div>
+          <div class="normative-block-body">
+            <div class="nb-row"><div class="nb-attr">Objective</div><div class="nb-val">Ensure Consent withdrawal, once accepted, propagates to enforcement within a declared propagation SLA and is operationally effective. The Revocation Registry MUST reflect the withdrawn state before the SLA expires.</div></div>
+            <div class="nb-row"><div class="nb-attr">Decision Logic</div><div class="nb-val">
+              <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Decision Logic</span><span class="code-block-badge">NORMATIVE</span></div><pre><span class="kw">on</span> accepted_revocation:
+  registry.mark_revoked(token_ref)
+  next_evaluation(token_ref) → DENY(<span class="st">"CONSENT_REVOKED"</span>)  <span class="cm">// guaranteed</span>
+<span class="kw">if</span> propagation_time > propagation_sla → CONTROL_FAILURE
+  log_and_escalate(REVOCATION_SLA_BREACH)</pre></div>
+            </div></div>
+            <div class="nb-row"><div class="nb-attr">Deviation</div><div class="nb-val">Non-implementation MUST be declared in Conformance Statement with written justification and named risk acceptance authority.</div></div>
+            <div class="nb-row"><div class="nb-attr">Framework Alignment</div><div class="nb-val">CP-04 (Revocation Propagation), CP-45, CP-65; 68-point Section 13.2 (Revocation SLA Windows)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Formal Determinism and Replay Invariants</h2>
+
+        <h3 id="s6-1">6.1 Frozen Evaluation Context: Formal Definition</h3>
+        <p>The Frozen Evaluation Context is the minimal immutable input set from which any Conformant enforcement decision can be independently reproduced.</p>
+
+        <div class="def-block">
+          <div class="def-block-head">Definition: <span>Frozen Evaluation Context (FEC)</span></div>
+          <div class="def-block-body">
+            <div class="def-item">
+              <span class="def-term">FEC = (R̂, S, V<sub>p</sub>, V<sub>r</sub>)</span>
+              <strong>R̂</strong> = canonicalize(R): canonical serialization of the DecisionRequest R, deterministically produced from its required fields using a specified canonicalization algorithm (e.g., canonical JSON, RFC 8785).<br><br>
+              <strong>S</strong> = consent_state_ref: an immutable reference to the resolved Consent state snapshot at evaluation time. S is not the live Consent store; it is the state as resolved and frozen at the moment of evaluation.<br><br>
+              <strong>V<sub>p</sub></strong> = policy_version: the version identifier of the Policy document in effect at evaluation time. References an immutable, versioned policy artifact.<br><br>
+              <strong>V<sub>r</sub></strong> = ruleset_version: the version identifier of the Ruleset applied during Policy Evaluation.
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s6-2">6.2 Formal Evaluation Function</h3>
+        <p>Policy Evaluation is defined as a total, deterministic function over the Frozen Evaluation Context:</p>
+
+        <div class="def-block">
+          <div class="def-block-head">Definition: <span>Evaluation Function</span></div>
+          <div class="def-block-body">
+            <div class="def-item">
+              <span class="def-term">f : FEC → {ALLOW, DENY}</span>
+              <strong>decision = f(R̂, S, V<sub>p</sub>, V<sub>r</sub>)</strong><br><br>
+              where f is <strong>Total</strong> (defined for all well-formed FEC inputs), <strong>Deterministic</strong> (f(C) = f(C) for all C), <strong>Pure</strong> (produces no observable side effects), and <strong>Time-independent</strong> (does not take the current time as an input beyond the frozen context).
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s6-3">6.3 Determinism Invariant</h3>
+        <div class="callout">
+          <p><strong>Replay Invariant:</strong> For all frozen evaluation contexts C and for all Conformant implementations I₁, I₂ operating over the same policy and ruleset versions: I₁.evaluate(C) = I₂.evaluate(C) = I₁.replay(C). A decision that cannot be replayed to the same outcome cannot be proven. A Conformant implementation that fails this invariant is incorrect.</p>
+        </div>
+
+        <h3 id="s6-4">6.4 Non-Determinism Exclusion Clause</h3>
+        <p>The following inputs and behaviors are explicitly prohibited during Policy Evaluation:</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Prohibited Input / Behavior</th><th>Requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Randomness</td><td>No calls to random number generators, probabilistic functions, or stochastic sampling</td></tr>
+              <tr><td>External service calls</td><td>No network calls, database reads, cache lookups, or API invocations during evaluation</td></tr>
+              <tr><td>Current time access</td><td>No access to wall-clock time or system time during evaluation. Temporal bounds were resolved in QCC-05 and are encoded in S</td></tr>
+              <tr><td>Mutable configuration</td><td>No reads from mutable configuration stores, feature flags, or dynamic policy sources</td></tr>
+              <tr><td>Environment-dependent behavior</td><td>Evaluation outcome MUST NOT depend on hardware, OS, locale, timezone, or execution environment state</td></tr>
+              <tr><td>Side effects</td><td>f MUST NOT write to any external store, emit events, or mutate any shared state during execution</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s6-5">6.5 Decision Identity and Artifact Stability</h3>
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Artifact Identity</span><span class="code-block-badge">NORMATIVE</span></div><pre>artifact_id ← H(canonical(R̂ ‖ S ‖ V_p ‖ V_r ‖ outcome))
+
+<span class="cm">// where H = SHA-256 (minimum); SHA-512 RECOMMENDED</span>
+<span class="cm">// Properties:</span>
+<span class="cm">//   · identical FEC + identical outcome → identical artifact_id</span>
+<span class="cm">//   · no raw sensitive data stored in artifact</span>
+<span class="cm">//   · independently recomputable by any party with access to FEC inputs</span>
+<span class="cm">//   · suitable for audit, litigation, and regulatory evidence production</span></pre></div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Implementation Model</h2>
+
+        <h3 id="s7-1">7.1 API Enforcement Pattern</h3>
+        <p>Every AI-bound request MUST pass through a preflight evaluation by the Enforcement Gateway before reaching the AI System. The Calling System MUST NOT invoke the AI System without a valid ALLOW decision accompanied by a Decision Artifact. The AI System MUST NOT be reachable via any path that bypasses the Enforcement Gateway. Architectural bypass constitutes non-Conformance.</p>
+
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Enforcement Interaction Pattern</span><span class="code-block-badge">NORMATIVE</span></div><pre>Calling System → (1) DecisionRequest + ConsentToken → Enforcement Gateway
+Enforcement Gateway → (2) ALLOW + DecisionArtifact → Calling System
+Calling System → (3) AI Request + ArtifactReference → AI System
+
+<span class="cm">// AI System MUST NOT be reached without a valid ALLOW + ArtifactReference</span>
+<span class="cm">// DENY path: Enforcement Gateway → DenyDecision + reason_code → Calling System</span>
+<span class="cm">// AI System is not invoked on DENY path</span></pre></div>
+
+        <h3 id="s7-2">7.2 Reference Data Structures</h3>
+
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">DecisionRequest — Closed Contract</span><span class="code-block-badge">JSON</span></div><pre>{
+  <span class="st">"request_id"</span>:    <span class="st">"b9d4f0c0-7f7c-4c0b-9b2c-2d14f6b0df53"</span>,
+  <span class="st">"actor_id"</span>:      <span class="st">"did:example:actor-123"</span>,       <span class="cm">// DID-format RECOMMENDED</span>
+  <span class="st">"action"</span>:        <span class="st">"inference.generate_text"</span>,      <span class="cm">// enumerated action code</span>
+  <span class="st">"purpose"</span>:       <span class="st">"customer_support"</span>,             <span class="cm">// enumerated purpose code</span>
+  <span class="st">"data_types"</span>:    [<span class="st">"user_provided_text"</span>],         <span class="cm">// non-empty; enumerated</span>
+  <span class="st">"jurisdiction"</span>:  <span class="st">"EU"</span>,                          <span class="cm">// ISO 3166-1 alpha-2</span>
+  <span class="st">"target_system"</span>: <span class="st">"llm.vendorX.chat"</span>,
+  <span class="st">"timestamp"</span>:     <span class="st">"2026-02-26T12:00:00Z"</span>
+}</pre></div>
+
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Consent Token — Minimal Normative Schema</span><span class="code-block-badge">JSON</span></div><pre>{
+  <span class="st">"token_id"</span>:           <span class="st">"consent:01HZZ...9K"</span>,
+  <span class="st">"subject_id"</span>:         <span class="st">"did:example:subject-456"</span>,
+  <span class="st">"issuer"</span>:             <span class="st">"did:example:consent-authority"</span>,
+  <span class="st">"issued_at"</span>:          <span class="st">"2026-01-01T00:00:00Z"</span>,
+  <span class="st">"expires_at"</span>:         <span class="st">"2026-12-31T23:59:59Z"</span>,
+  <span class="st">"purposes"</span>:           [<span class="st">"customer_support"</span>],
+  <span class="st">"scope"</span>: {
+    <span class="st">"actions"</span>:           [<span class="st">"inference.generate_text"</span>],
+    <span class="st">"data_types"</span>:        [<span class="st">"user_provided_text"</span>],
+    <span class="st">"systems"</span>:           [<span class="st">"llm.vendorX.chat"</span>]
+  },
+  <span class="st">"jurisdiction"</span>:       <span class="st">"EU"</span>,
+  <span class="st">"revocation_registry"</span>: <span class="st">"https://consent.example.org/revocations"</span>,
+  <span class="st">"signature"</span>: {
+    <span class="st">"alg"</span>: <span class="st">"Ed25519"</span>,
+    <span class="st">"value"</span>: <span class="st">"BASE64URL_ENCODED_SIGNATURE"</span>
+  }
+}</pre></div>
+
+        <h3 id="s7-3">7.3 Normative Enforcement Pseudocode</h3>
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Enforcement Decision Function — Normative Reference</span><span class="code-block-badge">PSEUDOCODE</span></div><pre><span class="kw">function</span> decide(request, token):
+  now ← gateway_synchronized_time()  <span class="cm">// NTP-verified source</span>
+
+  <span class="cm">// QCC-01 · Closed intent contract</span>
+  <span class="kw">if</span> ¬validate_intent_schema(request):
+    <span class="kw">return</span> deny(<span class="st">"INTENT_INVALID"</span>, null)
+
+  <span class="cm">// QCC-02 · Cryptographic token verification</span>
+  <span class="kw">if</span> token = null:    <span class="kw">return</span> deny(<span class="st">"CONSENT_TOKEN_MISSING"</span>, null)
+  <span class="kw">if</span> ¬verify_signature(token, trust_anchor):
+    <span class="kw">return</span> deny(<span class="st">"CONSENT_SIGNATURE_INVALID"</span>, null)
+
+  <span class="cm">// QCC-05 · Temporal validity</span>
+  <span class="kw">if</span> now > token.expires_at:  <span class="kw">return</span> deny(<span class="st">"CONSENT_EXPIRED"</span>, null)
+  <span class="kw">if</span> token.nbf ∧ now &lt; token.nbf:  <span class="kw">return</span> deny(<span class="st">"CONSENT_NOT_YET_VALID"</span>, null)
+
+  <span class="cm">// QCC-06 · Revocation — fail-closed on registry unavailability (R-01)</span>
+  rev ← revocation_registry.lookup(token.token_id)
+  <span class="kw">if</span> rev = REVOKED:         <span class="kw">return</span> deny(<span class="st">"CONSENT_REVOKED"</span>, null)
+  <span class="kw">if</span> rev = UNKNOWN ∨ registry_unavailable():
+    <span class="kw">return</span> deny(<span class="st">"REVOCATION_UNRESOLVED"</span>, null)
+
+  <span class="cm">// QCC-03 · Purpose binding — exact match</span>
+  <span class="kw">if</span> request.purpose ∉ token.purposes:
+    <span class="kw">return</span> deny(<span class="st">"PURPOSE_NOT_AUTHORIZED"</span>, null)
+
+  <span class="cm">// QCC-04 · Scope binding — strict set containment</span>
+  <span class="kw">if</span> request.action ∉ token.scope.actions:
+    <span class="kw">return</span> deny(<span class="st">"ACTION_OUT_OF_SCOPE"</span>, null)
+
+  <span class="cm">// QCC-07 + QCC-08 · Deterministic policy evaluation, fail-closed</span>
+  frozen ← freeze(request, token.token_id, policy_version(), ruleset_version())
+  <span class="kw">try</span>:
+    decision ← policy_engine.evaluate(frozen)
+  <span class="kw">except</span>:
+    <span class="kw">return</span> deny(<span class="st">"POLICY_ENGINE_FAULT"</span>, null)
+
+  <span class="cm">// ALLOW path — artifact and audit write MUST precede execution</span>
+  artifact ← generate_artifact(frozen, ALLOW)  <span class="cm">// QCC-09</span>
+  <span class="kw">if</span> artifact = null: <span class="kw">return</span> deny(<span class="st">"ARTIFACT_GENERATION_FAILED"</span>, null)
+
+  <span class="kw">if</span> audit_write(artifact, ALLOW) = FAILURE:   <span class="cm">// QCC-10 — write-before-execute</span>
+    <span class="kw">return</span> deny(<span class="st">"AUDIT_WRITE_FAILED"</span>, null)
+
+  <span class="kw">return</span> allow(artifact)</pre></div>
+
+        <h3 id="s7-4">7.4 Deployment Topologies</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th style="text-align:left;">Topology</th><th style="text-align:left;">Description</th><th style="text-align:left;">Key Constraint</th></tr></thead>
+            <tbody>
+              <tr><td style="text-align:left;">SaaS Gateway</td><td style="text-align:left;">Hosted enforcement; organizations integrate via API</td><td style="text-align:left;">Contractual evidence-integrity guarantees from service provider; key management and data minimization in transit</td></tr>
+              <tr><td style="text-align:left;">On-Premises Gateway</td><td style="text-align:left;">Runs within organization boundary; Consent Registry may be fully internal</td><td style="text-align:left;">Suitable where data locality constraints or regulatory requirements preclude external processing</td></tr>
+              <tr><td style="text-align:left;">Edge / API Plugin</td><td style="text-align:left;">Lightweight Policy and token checks at edge with Registry sync via cache</td><td style="text-align:left;">Revocation TTL strictly enforced; cache-stale denial operationally accepted</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Interoperability and Ecosystem Compatibility</h2>
+
+        <h3 id="s8-1">8.1 Interoperability Posture</h3>
+        <p>QODIQA Core is implementable by independent vendors, open-source projects, and institutional operators without weakening enforcement semantics. Interoperability does not require shared infrastructure; it requires semantic equivalence of enforcement behavior under the same Frozen Evaluation Context.</p>
+        <p>Two independent implementations are interoperable at the enforcement layer if and only if: for any valid DecisionRequest and Consent Token pair, both reach the same decision outcome; both produce artifact IDs recomputable from the same frozen context; and both reject the same classes of invalid or incomplete inputs under Fail-Closed semantics.</p>
+
+        <h3 id="s8-2">8.2 Vocabulary Registry Governance</h3>
+        <p>Interoperability at the intent layer depends on shared enumerated vocabularies for purpose codes, action codes, and data type codes. The QODIQA governance authority MUST maintain versioned, published registries for these vocabularies. Implementations MUST declare the vocabulary version in use in their Conformance Statement.</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th style="text-align:left;">Registry</th><th style="text-align:left;">Description</th></tr></thead>
+            <tbody>
+              <tr><td style="text-align:left;">Purpose Code Registry</td><td style="text-align:left;">Versioned enumeration of permitted purpose identifiers</td></tr>
+              <tr><td style="text-align:left;">Action Code Registry</td><td style="text-align:left;">Versioned enumeration of permitted action identifiers; structured as a hierarchical namespace (e.g., <code>inference.generate_text</code>)</td></tr>
+              <tr><td style="text-align:left;">Data Type Code Registry</td><td style="text-align:left;">Versioned enumeration of data category identifiers</td></tr>
+              <tr><td style="text-align:left;">Reason Code Registry</td><td style="text-align:left;">Versioned enumeration of denial reason codes; implementations MUST map internal error states to registered reason codes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s8-3">8.3 Third-Party Implementation Model</h3>
+        <p>Any party may implement a Conformant QODIQA Core enforcement gateway without license from QODIQA, provided the implementation satisfies all MUST-level requirements and declares a Conformance Profile in accordance with Section 13. Third-party implementations are subject to the same Conformance test suite as any other implementation.</p>
+
+        <h3 id="s8-4">8.4 Compatibility with Existing AI Stacks</h3>
+        <p>QODIQA Core is compatible with vendor LLM APIs, open-source inference servers, agent frameworks, retrieval-augmented generation stacks, and tool-calling runtimes, provided a deterministic Enforcement Gateway can be positioned before model invocation on the critical path. QODIQA Core does not require access to model weights, internals, or training artifacts.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Adoption Model</h2>
+
+        <h3 id="s9-1">9.1 30-Day Integration Path to CORE-MIN</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th style="text-align:left;width:60px;">Week</th><th style="text-align:left;">Activities</th><th style="text-align:left;width:160px;">Controls Addressed</th></tr></thead>
+            <tbody>
+              <tr><td style="white-space:nowrap;text-align:left;">Week 1</td><td>Identify AI call boundaries and insertion point. Define enumerated purpose, action, and data type vocabularies. Establish trust anchor for Consent Token verification.</td><td style="text-align:left;hyphens:none;white-space:nowrap;">QCC-01 (vocabulary definition)</td></tr>
+              <tr><td style="white-space:nowrap;text-align:left;">Week 2</td><td>Implement intent validation and fail-closed handler. Implement Consent Token signature verification with trust anchor. Establish Policy Engine with <code>default_effect: DENY</code>.</td><td style="text-align:left;hyphens:none;white-space:nowrap;">QCC-01, QCC-02, QCC-08</td></tr>
+              <tr><td style="white-space:nowrap;text-align:left;">Week 3</td><td>Implement Consent Registry integration and Revocation checks. Implement purpose and scope binding with enumerated code comparison.</td><td style="text-align:left;hyphens:none;white-space:nowrap;">QCC-05, QCC-06, QCC-03, QCC-04</td></tr>
+              <tr><td style="white-space:nowrap;text-align:left;">Week 4</td><td>Implement Deterministic Policy Evaluation and Frozen Evaluation Context. Implement Decision Artifact generation and Audit Log writing. Execute Conformance tests. Produce initial Conformance Statement.</td><td style="text-align:left;hyphens:none;white-space:nowrap;">QCC-07, QCC-09, QCC-10</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s9-2">9.2 60-Day Path to CORE-ENT Readiness</h3>
+        <p><strong>Days 31–45:</strong> Formalize Policy versioning, Audit Log retention, and Revocation propagation SLAs. Implement jurisdictional overlays if applicable (QCC-11). Define and test the Audit evidence export mechanism.</p>
+        <p><strong>Days 46–60:</strong> Independent replay verification audit of a sample of Decision Artifacts. Document all SHOULD-control deviations. Finalize Conformance Statement signed by the organizational authority. Publish or retain for audit.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Regulatory Alignment</h2>
+
+        <p>This section describes technical mechanisms provided by QODIQA Core that may support demonstrability of alignment with existing regulatory frameworks. This section does not interpret law, does not assert legal compliance, and does not constitute legal advice. Organizations are solely responsible for their own compliance assessments.</p>
+
+        <h3 id="s10-1">10.1 GDPR Consent Principles</h3>
+        <p>The General Data Protection Regulation requires Consent to be freely given, specific, informed, and unambiguous; demonstrability of Consent is required; and withdrawal must be as easy as giving Consent. QODIQA Core provides technical mechanisms that support demonstrability of these requirements:</p>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>GDPR Requirement</th><th>QODIQA Core Mechanism</th></tr></thead>
+            <tbody>
+              <tr><td>Purpose specificity</td><td>Explicit purpose binding (QCC-03) and scope enforcement (QCC-04) provide technical mechanisms supporting demonstrability of specific Consent and function-creep constraint</td></tr>
+              <tr><td>Demonstrability</td><td>Immutable Decision Artifacts and Replay Verification (QCC-09, QCC-10) provide reproducible evidence that a specific action was authorized under a specific Consent state at a specific time</td></tr>
+              <tr><td>Withdrawal operability</td><td>Revocation enforcement and propagation (QCC-06, QCC-12) ensure that withdrawal takes practical effect within a declared propagation window</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s10-2">10.2 EU AI Act</h3>
+        <p>The EU AI Act imposes record-keeping and logging requirements for high-risk AI systems and deployer obligations related to log retention, transparency, and instructions for use. QODIQA Core provides technical mechanisms supporting demonstrability of alignment: deterministic logs and tamper-evident Audit Trails (QCC-10) provide structured evidence supporting traceability and monitoring obligations; structured Decision Artifacts (QCC-09) provide context supporting deployer documentation requirements.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Economic Model Overview</h2>
+
+        <h3 id="s11-1">11.1 Infrastructure Certification Layer</h3>
+        <p>QODIQA Core functions as an infrastructure certification boundary: organizations that implement it can demonstrate, through reproducible Decision Artifacts and independent Conformance testing, that their AI execution paths operate within deterministic Consent constraints. Conformance is an assurance asset: evidence of operational discipline producible to regulators, auditors, counterparties, and institutional customers.</p>
+
+        <h3 id="s11-2">11.2 Implementation and Certification Operating Models</h3>
+        <p><strong>Licensing:</strong> Implementers may license reference implementations, Consent Token libraries, and Conformance testing tooling. Licensing terms are external to this standard and do not affect Conformance obligations.</p>
+        <p><strong>Certification:</strong> Organizations may seek third-party attestation of CORE-VER or CORE-ENT Conformance, focusing on Deterministic Enforcement, Revocation handling, and Audit Replay Verification.</p>
+        <p><strong>Enforcement-as-a-Service:</strong> A hosted gateway may be operated as a shared Enforcement Gateway provided it preserves Fail-Closed semantics, evidence integrity, and the contractual basis for the customer's Audit evidence chain. SaaS operation does not alter Conformance obligations; it transfers operational responsibility under a defined contractual model.</p>
+        <p class="section-note">This section is descriptive. It does not project markets, revenues, or adoption timelines, and does not alter the technical requirements of Conformance.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Governance and Versioning</h2>
+
+        <h3 id="s12-1">12.1 Amendment Process</h3>
+        <p>Proposed amendments MUST be submitted as written change requests containing: technical rationale, security implications, interoperability impact, and backward compatibility analysis. Amendments that weaken Fail-Closed semantics, reduce Determinism guarantees, or reduce the normative level of any MUST-level Control Point MUST be treated as breaking changes requiring a MAJOR version increment.</p>
+
+        <h3 id="s12-2">12.2 Version Numbering</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Increment</th><th>Trigger</th></tr></thead>
+            <tbody>
+              <tr><td>MAJOR</td><td>Breaking changes to Control Point semantics, required interface contracts, or Conformance requirements. Any change weakening Fail-Closed semantics or Determinism guarantees.</td></tr>
+              <tr><td>MINOR</td><td>Backward-compatible additions (new optional fields, new SHOULD-level controls). MUST NOT affect existing MUST-level behavior.</td></tr>
+              <tr><td>PATCH</td><td>Clarifications without behavioral change. No impact on Decision Artifact computation or enforcement logic.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s12-3">12.3 Governance Authority Responsibilities</h3>
+        <ul class="prop-list">
+          <li>Maintain versioned registries of purpose codes, action codes, data type codes, and reason codes</li>
+          <li>Publish reference test vectors for Consent Token signature verification and Decision Artifact hashing</li>
+          <li>Publish Conformance test suites covering all MUST-level Control Points with deterministic pass/fail criteria</li>
+          <li>Maintain a public attestation registry for CORE-VER and CORE-ENT declarations</li>
+          <li>Publish a trust anchor registry at <code>/.well-known/qodiqa-trust</code> for federation and third-party verification</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Conformance Statement Template</h2>
+
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Conformance Statement — Normative Template</span><span class="code-block-badge">VERBATIM</span></div><pre>Organization Name:          ______________________________
+System Name / Product:      ______________________________
+Conformance Profile:        CORE-MIN  /  CORE-VER  /  CORE-ENT
+Standard Version:           QODIQA Core v1.0
+Standard Identifier:        QODIQA-CORE-1.0-202603
+Deployment Topology:        SaaS / On-Premises / Gateway Plugin / Other
+Date of Declaration:        ______________________________
+Responsible Authority:      ______________________________  (Title / Role)
+
+─────────────────────────────────────────────────
+CONFORMANCE DECLARATION
+─────────────────────────────────────────────────
+We hereby declare that the above-identified system implements the QODIQA Core Standard
+for Deterministic Runtime Consent Enforcement (QODIQA-CORE-2026-001) in accordance
+with the Conformance Profile specified above, including all MUST-level Control Points
+QCC-01 through QCC-10 and the profile-appropriate treatment of QCC-11 and QCC-12.
+
+We affirm that:
+  · Consent is enforced deterministically at runtime with Fail-Closed behavior.
+  · Consent Token cryptographic verification is performed before every decision.
+  · Revocation state is evaluated at runtime before every decision.
+  · Decision Artifacts and Audit Log entries are generated and retained per declared policy.
+  · evaluate(context) = replay(context) for all Frozen Evaluation Contexts.
+
+─────────────────────────────────────────────────
+DEVIATION DECLARATIONS (SHOULD-level controls)
+─────────────────────────────────────────────────
+QCC-11 (Jurisdictional Binding):
+  [ ] Implemented  [ ] Not Implemented
+  Justification: _______________________________________
+  Risk Accepted By: _______________ (Title / Role / Date)
+
+QCC-12 (Withdrawal Operability):
+  [ ] Implemented  [ ] Not Implemented
+  Justification: _______________________________________
+  Risk Accepted By: _______________ (Title / Role / Date)
+
+─────────────────────────────────────────────────
+OPERATIONAL PARAMETERS
+─────────────────────────────────────────────────
+  Revocation Propagation SLA (seconds):   ______
+  Audit Log Minimum Retention (days):     ______
+  Clock Tolerance (seconds):              ______
+  Revocation Cache TTL (seconds):         ______
+  Policy Version in Effect:               ______
+  Ruleset Version in Effect:              ______
+  Signature Algorithm:                    ______
+  Audit Hash Algorithm:                   ______
+
+─────────────────────────────────────────────────
+Authorized Signature:   ______________________________
+Title / Role:           ______________________________
+Date:                   ______________________________</pre></div>
+
+        <h3>13.1 Machine-Readable Declaration (RECOMMENDED)</h3>
+
+        <div class="code-block-wrapper"><div class="code-block-header"><span class="code-block-title">Machine-Readable Conformance Declaration</span><span class="code-block-badge">JSON</span></div><pre>{
+  <span class="st">"standard"</span>:                    <span class="st">"QODIQA-CORE-1.0-202603"</span>,
+  <span class="st">"org"</span>:                         <span class="st">"Example Institution"</span>,
+  <span class="st">"system"</span>:                      <span class="st">"Example AI Enforcement Gateway"</span>,
+  <span class="st">"profile"</span>:                     <span class="st">"CORE-VER"</span>,
+  <span class="st">"declaration_date"</span>:            <span class="st">"2026-03-01T00:00:00Z"</span>,
+  <span class="st">"implemented_controls"</span>: [
+    <span class="st">"QCC-01"</span>,<span class="st">"QCC-02"</span>,<span class="st">"QCC-03"</span>,<span class="st">"QCC-04"</span>,<span class="st">"QCC-05"</span>,
+    <span class="st">"QCC-06"</span>,<span class="st">"QCC-07"</span>,<span class="st">"QCC-08"</span>,<span class="st">"QCC-09"</span>,<span class="st">"QCC-10"</span>,
+    <span class="st">"QCC-11"</span>,<span class="st">"QCC-12"</span>
+  ],
+  <span class="st">"deviations"</span>: [],
+  <span class="st">"policy_version"</span>:              <span class="st">"1.0.0"</span>,
+  <span class="st">"ruleset_version"</span>:             <span class="st">"2026-03-01"</span>,
+  <span class="st">"audit_retention_days"</span>:        <span class="nm">365</span>,
+  <span class="st">"revocation_propagation_sla_s"</span>: <span class="nm">300</span>,
+  <span class="st">"clock_tolerance_seconds"</span>:     <span class="nm">60</span>,
+  <span class="st">"signature_algorithm"</span>:         <span class="st">"Ed25519"</span>,
+  <span class="st">"audit_hash_algorithm"</span>:        <span class="st">"SHA-256"</span>,
+  <span class="st">"attesting_authority"</span>: {
+    <span class="st">"role"</span>: <span class="st">"CISO"</span>,
+    <span class="st">"signed_date"</span>: <span class="st">"2026-03-01T00:00:00Z"</span>
+  }
+}</pre></div>
+
+        <h3>13.2 Normative References</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Reference</th><th>Citation</th></tr></thead>
+            <tbody>
+              <tr><td>[RFC2119]</td><td>Bradner, S. "Key words for use in RFCs." BCP 14, RFC 2119, March 1997.</td></tr>
+              <tr><td>[RFC8174]</td><td>Leiba, B. "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words." BCP 14, RFC 8174, May 2017.</td></tr>
+              <tr><td>[RFC8032]</td><td>Josefsson, S., Liusvaara, I. "Edwards-Curve Digital Signature Algorithm (EdDSA)." RFC 8032, January 2017.</td></tr>
+              <tr><td>[RFC8785]</td><td>Rundgren, A. et al. "JSON Canonicalization Scheme (JCS)." RFC 8785, June 2020.</td></tr>
+              <tr><td>[JSON-LD]</td><td>Sporny, M. et al. "JSON-LD 1.1." W3C Recommendation, July 2020.</td></tr>
+              <tr><td>[DID-CORE]</td><td>Sporny, M. et al. "Decentralized Identifiers (DIDs) v1.0." W3C Recommendation, July 2022.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>13.3 Informative References</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Reference</th><th>Citation</th></tr></thead>
+            <tbody>
+              <tr><td>[QODIQA-WP]</td><td>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</td></tr>
+              <tr><td>[QODIQA-68]</td><td>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</td></tr>
+              <tr><td>[ISO-27001]</td><td>ISO/IEC 27001:2013. Information security management systems: Requirements.</td></tr>
+              <tr><td>[NIST-AIRM]</td><td>NIST AI Risk Management Framework 1.0. January 2023.</td></tr>
+              <tr><td>[GDPR]</td><td>Regulation (EU) 2016/679. General Data Protection Regulation. April 2016.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INSTITUTIONAL CLOSING STATEMENT -->
+      <div id="s-conclusion" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional Closing Statement</span>
+        <h2><a class="anchor-link" href="#s-conclusion">#</a>Institutional Closing Statement</h2>
+
+        <p>QODIQA Core defines a minimal Consent enforcement layer that is intentionally narrow in scope. It does not interpret law, inspect content semantics, or modify AI model behavior through probabilistic governance. Its function is infrastructural: placing Deterministic Consent enforcement on the runtime execution path as a precondition to AI invocation, and producing reproducible Decision Artifacts that support independent Replay Verification.</p>
+
+        <p>This minimalism is not a reduction of the underlying thesis. It is the operational boundary required to make Consent enforceable in complex, heterogeneous AI systems without relying on retrospective narrative, probabilistic judgment, or assumption about prior state. The Frozen Evaluation Context requirement, the Replay Invariant, the Fail-Closed semantics, and the tamper-evident audit architecture constitute the minimum viable infrastructure layer through which Consent graduates from declaration to proof.</p>
+
+        <div class="inst-statement">
+          <p class="inst-lead">Where Consent must be demonstrable, deterministic, and auditable:</p>
+          <p class="inst-body">not a statement of intent, but a verifiable runtime fact; a <strong>Consent Enforcement Gateway</strong> is a necessary technical instrument at every AI execution boundary.</p>
+          <p class="inst-close">QODIQA Core defines that instrument.</p>
+        </div>
+
+        <p>The QODIQA Whitepaper establishes the conceptual and philosophical foundation. The 68-Point Enforcement Framework establishes the full governance architecture. QODIQA Core is the adoptable, testable, and certifiable entry point into that architecture, the first layer any organization can deploy, and the foundation upon which full institutional Conformance is built.</p>
+
+        <p>The runtime Consent enforcement gap is not a problem that resolves through policy refinement, documentation improvements, or organizational discipline. It is a structural defect in AI infrastructure. QODIQA Core is the structural remedy: deterministic, verifiable, and enforceable by design.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document defines the minimal normative core of the QODIQA framework. It specifies the smallest enforceable set of requirements required to implement deterministic runtime consent enforcement in AI systems, and serves as the foundational Conformance tier from which full 68-Point compliance is constructed.</p>
+
+          <p>QODIQA Core is not presented as a theoretical framework, but as an implementable infrastructure standard designed to introduce enforceable authorization, deterministic policy execution, runtime verifiability, and auditable proof mechanisms into AI-native systems without requiring model retraining or infrastructure replacement.</p>
+
+          <p>The material contained herein is intended for:</p>
+          <ul class="audience-list">
+            <li>Systems architects and infrastructure engineers</li>
+            <li>Enterprise AI platform designers</li>
+            <li>Security and governance officers</li>
+            <li>Regulatory and policy stakeholders</li>
+            <li>Organizations building or operating autonomous AI systems</li>
+          </ul>
+
+          <p>All technical principles described in this document are designed to be production-oriented, cryptographically anchored, and architected for integration within large-scale AI ecosystems. No model retraining, weight access, or infrastructure replacement is required for Conformance.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-CORE-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Core Standard for Deterministic Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Minimal Adoptable Runtime Consent Enforcement Layer for AI Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative, Core Standard</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-CORE-2026-001</p>
+      <p>Normative Specification</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a normative technical specification and does not constitute legal advice. All architectural principles described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-CORE-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s1-1','s1-2','s1-3','s1-4','s1-5','s1-6','s1-7',
+    's2','s2-1','s2-2','s2-3','s2-4','s2-5',
+    's3','s3-1','s3-2','s3-3','s3-4',
+    's4','s4-1','s4-2','s4-3','s4-4',
+    's5',
+    's6','s6-1','s6-2','s6-3','s6-4','s6-5',
+    's7','s7-1','s7-2','s7-3','s7-4',
+    's8','s8-1','s8-2','s8-3','s8-4',
+    's9','s9-1','s9-2',
+    's10','s10-1','s10-2',
+    's11','s11-1','s11-2',
+    's12','s12-1','s12-2','s12-3',
+    's13','s-conclusion','s-status'
+  ];
+
+  /* Build ordered array of {id, el} — skip missing elements */
+  const sections = sectionIds
+    .map(id => ({ id, el: document.getElementById(id) }))
+    .filter(s => s.el);
+
+  function activate(id) {
+    navItems.forEach(item =>
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id)
+    );
+  }
+
+  /* ---- Scroll-position ScrollSpy ---- *
+   * Uses getBoundingClientRect so it works for both tall div sections
+   * and short h3 headings. Picks the last section whose top edge has
+   * crossed 22% down from the viewport top (a stable trigger line).
+   * Falls back to the first section if none has crossed yet, and
+   * always activates the last section when at the bottom of the page. */
+  function updateSpy() {
+    const triggerY = window.innerHeight * 0.22;
+    const scrollBottom = window.scrollY + window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+
+    /* At bottom of page — always activate last */
+    if (scrollBottom >= docHeight - 2) {
+      activate(sections[sections.length - 1].id);
+      return;
+    }
+
+    let activeId = sections[0].id;
+    for (let i = 0; i < sections.length; i++) {
+      const top = sections[i].el.getBoundingClientRect().top;
+      if (top <= triggerY) {
+        activeId = sections[i].id;
+      } else {
+        break;
+      }
+    }
+    activate(activeId);
+  }
+
+  /* Throttle scroll handler with rAF */
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { updateSpy(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* Run once on load */
+  updateSpy();
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+  const isMobile = () => window.innerWidth <= 768;
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.getElementById(href.slice(1));
+        if (target) {
+          const offset = isMobile() ? 60 : 20;
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: 'smooth'
+          });
+          if (isMobile()) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.classList.remove('nav-open');
+          }
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () =>
+    btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () =>
+    window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+      document.body.classList.toggle('nav-open');
+    });
+  }
+
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.classList.remove('nav-open');
+  });
+
+})();
+</script>
+</body>
+</html>

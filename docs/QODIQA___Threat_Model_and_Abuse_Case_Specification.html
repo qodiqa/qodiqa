@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Threat Model and Abuse Case Specification · v1.0</title>
+<meta name="description" content="QODIQA Threat Model and Abuse Case Specification v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Threat Model and Abuse Case Specification">
+<meta property="og:description" content="Formal adversarial threat model for the QODIQA runtime enforcement architecture. Enumerates threat actors, attack surfaces, bypass scenarios, cryptographic compromise risks, and residual risks.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* Severity table */
+.tbl-level th { padding: 11px 12px; }
+.tbl-level td { padding: 10px 12px; }
+.tbl-level td:first-child { text-align: center; }
+
+/* Threat coverage matrix */
+.tbl-coverage td:first-child { text-align: left; font-weight: 600; }
+.tbl-coverage td.sev         { text-align: center; font-weight: 600; }
+
+/* Mitigation table */
+.tbl-mitigation td:first-child { text-align: left; font-weight: 600; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 24px 0 24px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Threat Model and Abuse Case<br><span class="italic-part">Specification</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Threat Model &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Formal adversarial threat model for deterministic runtime consent enforcement architecture describing threat actors, attack surfaces, bypass scenarios, and residual risks.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s0">0. Introduction</a>
+      <a class="nav-item" href="#s1">1. Methodology</a>
+      <a class="nav-item sub" href="#s1-1">1.1 STRIDE Integration</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Trust Boundary Analysis</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Misuse Case Modeling</a>
+      <a class="nav-item" href="#s2">2. System Boundary</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Inside the Boundary</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Outside the Boundary</a>
+      <a class="nav-item" href="#s2-diag">Boundary Diagram</a>
+      <a class="nav-item" href="#s3">3. Modeling Assumptions</a>
+      <a class="nav-item" href="#s4">4. Severity Classification</a>
+      <a class="nav-item" href="#s5">5. Threat Actor Taxonomy</a>
+      <a class="nav-item sub" href="#s5-1">5.1 External Attacker</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Malicious Integrator</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Model Operator Bypass</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Compromised Infrastructure</a>
+      <a class="nav-item sub" href="#s5-5">5.5 Governance Abuse Actor</a>
+      <a class="nav-item" href="#s6">6. Attack Surface Enumeration</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Inference Request Path</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Consent Verification</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Cryptographic Key Infrastructure</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Policy Evaluation System</a>
+      <a class="nav-item sub" href="#s6-5">6.5 Audit Logging</a>
+      <a class="nav-item sub" href="#s6-6">6.6 Governance &amp; Certification</a>
+      <a class="nav-item" href="#s7">7. Adversarial Objective Model</a>
+      <a class="nav-item" href="#s8">8. Runtime Bypass Scenarios</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Direct Endpoint Bypass</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Token Injection</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Gateway Removal</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Replay Attack</a>
+      <a class="nav-item" href="#s9">9. Cryptographic Compromise</a>
+      <a class="nav-item sub" href="#s9-1">9.1 Signing Key Compromise</a>
+      <a class="nav-item sub" href="#s9-2">9.2 Artifact Signature Forgery</a>
+      <a class="nav-item sub" href="#s9-3">9.3 Compromised Identity Providers</a>
+      <a class="nav-item sub" href="#s9-4">9.4 Replay of Signed Artifacts</a>
+      <a class="nav-item" href="#s10">10. Governance Abuse</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Fraudulent Certification</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Manipulated Conformance Tests</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Certification Body Capture</a>
+      <a class="nav-item sub" href="#s10-4">10.4 Supply Chain Manipulation</a>
+      <a class="nav-item" href="#s11">11. Integration Failure</a>
+      <a class="nav-item sub" href="#s11-1">11.1 Registry Outage</a>
+      <a class="nav-item sub" href="#s11-2">11.2 Misconfigured Gateways</a>
+      <a class="nav-item sub" href="#s11-3">11.3 Network Partitioning</a>
+      <a class="nav-item sub" href="#s11-4">11.4 Dependency Compromise</a>
+      <a class="nav-item" href="#s12">12. Invariant Violation</a>
+      <a class="nav-item sub" href="#s12-1">12.1 Core Invariants</a>
+      <a class="nav-item sub" href="#s12-2">12.2 Consequences</a>
+      <a class="nav-item" href="#s12-mit">Mitigation Mapping</a>
+      <a class="nav-item" href="#s13">13. Residual Risk</a>
+      <a class="nav-item" href="#s14">14. Threat Coverage Matrix</a>
+      <a class="nav-item" href="#s15">15. Formal Security Posture</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>Deterministic authorization systems require explicit adversarial analysis. This document provides a formal threat model for the QODIQA runtime enforcement architecture, analyzing the complete adversarial surface of a system whose security guarantees depend on the integrity of cryptographic identity, registry availability, policy evaluation determinism, and governance certification fidelity. The analysis enumerates threat actors, identifies attack surfaces, documents bypass scenarios, evaluates cryptographic compromise risks, and characterizes residual risks that persist under correct implementation. The document does not prescribe deployment controls; it defines the conditions under which architectural guarantees hold and the conditions under which they fail. QODIQA does not eliminate adversarial risk. It defines deterministic enforcement boundaries.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 0 -->
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 0</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Introduction</h2>
+
+        <p>This document defines a formal adversarial threat model for the QODIQA runtime enforcement architecture. The purpose of adversarial modeling is to identify conditions under which the enforcement guarantees described in the QODIQA — Core Standard for Deterministic Runtime Consent Enforcement, the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement, and the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement may be weakened, bypassed, or invalidated by intentional adversarial action.</p>
+
+        <p>The importance of documenting enforcement failure modes is structural. A deterministic consent enforcement system derives its value from the predictability of its decisions. When adversarial actors successfully manipulate inputs, compromise infrastructure, or exploit deployment configurations, the resulting behavior may appear valid to the system while producing outcomes that violate the consent constraints it is designed to enforce. Understanding these scenarios is a prerequisite for meaningful conformance evaluation and operational security planning.</p>
+
+        <p>The scope of this analysis encompasses the complete QODIQA enforcement boundary as defined in the QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement, including the consent registry, enforcement gateway, cryptographic verification layer, policy evaluation engine, identity infrastructure, and audit logging infrastructure. External AI inference systems that interface with the enforcement boundary are considered within the analysis to the extent that they represent attack vectors targeting enforcement integrity.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Scope Limitation</div>
+          <p>This document does not model threats to AI model behavior, training data integrity, or application-layer security posture beyond the enforcement boundary. Those threat domains are addressed in separate corpus documents. The analysis is bounded to the enforcement architecture as specified.</p>
+        </div>
+
+        <p>The limitations of this threat model follow from three constraints. First, the model assumes correct specification of the QODIQA architecture; defects in the underlying specification may introduce additional threat classes not enumerated here. Second, the model does not account for regulatory, legal, or contractual coercion mechanisms that operate outside the technical boundary. Third, adversarial capabilities are characterized at the class level; specific implementation vulnerabilities in particular deployments may alter the residual risk profile materially.</p>
+
+        <p>Readers should interpret this document as a formal analytical baseline, not as a comprehensive operational risk assessment for any specific deployment. Organizations implementing QODIQA-conformant systems are expected to perform deployment-specific threat assessments that extend from this baseline.</p>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Threat Modeling Methodology</h2>
+
+        <p>This document employs a hybrid threat modeling methodology that combines the STRIDE threat taxonomy, trust boundary analysis, misuse case modeling, and adversarial objective decomposition. A hybrid methodology is required because the QODIQA enforcement architecture combines four distinct security domains: cryptographic identity, runtime enforcement, governance infrastructure, and certification frameworks. Each of these domains presents distinct threat classes and requires different analytical approaches to characterize adequately.</p>
+
+        <div id="s1-1" class="doc-section">
+          <h3>1.1 STRIDE Integration</h3>
+          <p>The STRIDE taxonomy (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) is applied systematically across identified attack surfaces. Each surface is evaluated against all six STRIDE categories to ensure coverage of both active and passive threat classes. The taxonomy is applied at the interface level rather than the component level, consistent with the enforcement boundary defined in the QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement.</p>
+        </div>
+
+        <div id="s1-2" class="doc-section">
+          <h3>1.2 Trust Boundary Analysis</h3>
+          <p>Trust boundary analysis identifies the points at which data or control flow crosses a trust domain boundary within the QODIQA enforcement architecture. The enforcement gateway represents the primary trust boundary; all requests crossing this boundary are subject to adversarial scrutiny. Secondary boundaries exist between the gateway and the consent registry, between the registry and the identity infrastructure, and between the policy evaluation engine and the audit logging infrastructure. Each boundary transition is a candidate for tampering, injection, or interception attacks.</p>
+        </div>
+
+        <div id="s1-3" class="doc-section">
+          <h3>1.3 Misuse Case Modeling and Adversarial Objective Decomposition</h3>
+          <p>Misuse case modeling extends the system use case model to represent adversarial interaction patterns. Each enforcement use case is paired with a corresponding misuse case that inverts the intended preconditions or outcomes. Adversarial objective decomposition structures the analysis around adversarial goals rather than system components, ensuring that multi-step attacks that traverse multiple components are captured as coherent threat scenarios rather than fragmented component-level events.</p>
+          <p>The combination of these methods provides layered coverage: STRIDE ensures no standard threat category is omitted; trust boundary analysis ensures boundary transitions are analyzed; misuse cases ensure adversarial intent is represented; and objective decomposition ensures that complex attack chains are captured at the scenario level.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>System Boundary Definition</h2>
+
+        <p>The QODIQA enforcement boundary defines the set of components whose integrity is necessary and sufficient for the enforcement guarantees of the architecture to hold. The boundary is specified at the architectural level; deployment-specific instantiations may vary in topology and implementation, but the logical boundary remains constant.</p>
+
+        <div id="s2-1" class="doc-section">
+          <h3>2.1 Components Inside the Enforcement Boundary</h3>
+          <p>The following components are considered inside the enforcement boundary for the purposes of this threat model:</p>
+          <ul>
+            <li><strong>Enforcement Gateway.</strong> The primary interception point for all AI inference requests. The gateway is responsible for intercepting requests, invoking consent verification, evaluating policy decisions, and either permitting or blocking execution. The integrity of the gateway is the single most critical component in the enforcement architecture.</li>
+            <li><strong>Consent Registry.</strong> The authoritative store of consent state, scoped by subject, purpose, data category, and temporal validity. The registry must maintain integrity and availability to support enforcement decisions. Consent state is read-only from the perspective of the enforcement gateway.</li>
+            <li><strong>Identity Infrastructure.</strong> The cryptographic identity layer that authenticates requestors, data subjects, and purpose declarations. This includes public key infrastructure, identity providers, and certificate management systems to the extent they are used in consent artifact generation and verification.</li>
+            <li><strong>Cryptographic Verification Layer.</strong> The component responsible for verifying the cryptographic authenticity and integrity of consent artifacts, decision tokens, and audit records. This layer validates signatures, checks certificate chains, and enforces expiration constraints on signed artifacts.</li>
+            <li><strong>Policy Evaluation Engine.</strong> The component that evaluates enforcement rules against declared intent, resolved consent state, and active policy versions. Policy evaluation must be deterministic, stateless with respect to external mutable state, and isolated from execution context.</li>
+            <li><strong>Audit Log Infrastructure.</strong> The tamper-evident logging system that records all enforcement decisions, inputs, and outcomes. Audit log integrity is required for post hoc verification of enforcement claims and conformance assessments.</li>
+          </ul>
+        </div>
+
+        <div id="s2-2" class="doc-section">
+          <h3>2.2 Components Outside the Enforcement Boundary</h3>
+          <p>The following are explicitly outside the enforcement boundary and are treated as untrusted inputs or external dependencies:</p>
+          <ul>
+            <li><strong>AI Inference Systems.</strong> AI models, inference services, and model APIs are outside the boundary. The enforcement gateway controls whether these systems are invoked, but the behavior of the models themselves — including prompt handling, output generation, and sampling — is outside the enforcement scope. Compromise of an AI inference system does not by itself compromise enforcement decisions, provided the gateway remains intact.</li>
+            <li><strong>Application Layer.</strong> Client applications, orchestration frameworks, and integration middleware that construct and submit requests to the enforcement gateway are outside the boundary. These components are considered adversarial by default in the threat model.</li>
+            <li><strong>Consent Collection Interfaces.</strong> User interfaces, consent forms, and mechanisms by which data subjects provide or revoke consent operate outside the boundary. The accuracy and completeness of consent state in the registry depends on the integrity of these interfaces, but they are not components of the enforcement architecture.</li>
+            <li><strong>Governance and Certification Bodies.</strong> External organizations responsible for issuing QODIQA conformance certifications operate outside the enforcement boundary. Their integrity affects the trust value of certification claims but does not alter enforcement behavior.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- DIAGRAM -->
+      <div id="s2-diag" class="doc-section">
+        <h3>Diagram — Enforcement Boundary Overview</h3>
+        <div class="diagram-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 500" style="display:block;width:100%;max-width:560px;margin:0 auto;" aria-label="Enforcement Boundary Overview diagram">
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                <path d="M1,1 L7,4 L1,7 Z" fill="#B0AAA0"/>
+              </marker>
+            </defs>
+
+            <!-- CLIENT APPLICATION (outside) -->
+            <rect x="165" y="10" width="250" height="38" rx="2" fill="#F4F2EE" stroke="#C0BCB6" stroke-width="1" stroke-dasharray="5,3"/>
+            <text x="290" y="25" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" fill="#5A6070">Client Application</text>
+            <text x="290" y="41" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="9" fill="#9AA0AC">untrusted · outside boundary</text>
+
+            <!-- Arrow down to Gateway -->
+            <line x1="290" y1="48" x2="290" y2="78" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- ENFORCEMENT GATEWAY -->
+            <rect x="130" y="80" width="320" height="40" rx="2" fill="#1C1F25" stroke="#333840" stroke-width="1"/>
+            <text x="290" y="105" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="12" font-weight="600" fill="#D4D0C8">Enforcement Gateway</text>
+
+            <!-- primary trust boundary label -->
+            <text x="290" y="133" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="8.5" fill="#9AA0AC" letter-spacing="0.05em">primary trust boundary</text>
+
+            <!-- Branch down from gateway center -->
+            <line x1="290" y1="140" x2="290" y2="158" stroke="#B0AAA0" stroke-width="1"/>
+            <!-- Horizontal branch line -->
+            <line x1="190" y1="158" x2="390" y2="158" stroke="#B0AAA0" stroke-width="1"/>
+            <!-- Left drop to Consent Registry -->
+            <line x1="190" y1="158" x2="190" y2="178" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+            <!-- Right drop to Policy Engine -->
+            <line x1="390" y1="158" x2="390" y2="178" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- CONSENT REGISTRY -->
+            <rect x="90" y="180" width="200" height="38" rx="2" fill="#EDEAE5" stroke="#C8C4BE" stroke-width="1"/>
+            <text x="190" y="204" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" font-weight="500" fill="#2C2F36">Consent Registry</text>
+
+            <!-- POLICY ENGINE -->
+            <rect x="290" y="180" width="200" height="38" rx="2" fill="#EDEAE5" stroke="#C8C4BE" stroke-width="1"/>
+            <text x="390" y="204" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" font-weight="500" fill="#2C2F36">Policy Engine</text>
+
+            <!-- Merge lines back to center -->
+            <line x1="190" y1="218" x2="190" y2="242" stroke="#B0AAA0" stroke-width="1"/>
+            <line x1="390" y1="218" x2="390" y2="242" stroke="#B0AAA0" stroke-width="1"/>
+            <line x1="190" y1="242" x2="390" y2="242" stroke="#B0AAA0" stroke-width="1"/>
+            <line x1="290" y1="242" x2="290" y2="262" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- CRYPTOGRAPHIC VERIFICATION -->
+            <rect x="165" y="264" width="250" height="38" rx="2" fill="#EDEAE5" stroke="#C8C4BE" stroke-width="1"/>
+            <text x="290" y="288" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" font-weight="500" fill="#2C2F36">Cryptographic Verification</text>
+
+            <!-- Arrow down -->
+            <line x1="290" y1="302" x2="290" y2="332" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- AUDIT LOG INFRASTRUCTURE -->
+            <rect x="165" y="334" width="250" height="38" rx="2" fill="#E4E1DB" stroke="#C0BDB7" stroke-width="1"/>
+            <text x="290" y="358" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" font-weight="500" fill="#3A3F48">Audit Log Infrastructure</text>
+
+            <!-- Arrow down -->
+            <line x1="290" y1="372" x2="290" y2="402" stroke="#B0AAA0" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- AI INFERENCE SYSTEM (outside) -->
+            <rect x="165" y="404" width="250" height="38" rx="2" fill="#F4F2EE" stroke="#C0BCB6" stroke-width="1" stroke-dasharray="5,3"/>
+            <text x="290" y="419" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="11" fill="#5A6070">AI Inference System</text>
+            <text x="290" y="435" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="9" fill="#9AA0AC">outside boundary</text>
+
+            <!-- Boundary bracket -->
+            <line x1="28" y1="80" x2="28" y2="372" stroke="#C8C4BE" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="24" y1="80"  x2="34" y2="80"  stroke="#C8C4BE" stroke-width="1"/>
+            <line x1="24" y1="372" x2="34" y2="372" stroke="#C8C4BE" stroke-width="1"/>
+            <text x="18" y="228" text-anchor="middle" font-family="'SFMono-Regular',Consolas,monospace" font-size="8" fill="#B0AAA0" transform="rotate(-90,18,228)">enforcement boundary</text>
+          </svg>
+
+          <div class="diagram-caption">The enforcement boundary encompasses all components from the Enforcement Gateway through the Audit Log Infrastructure. The Client Application and AI Inference System are outside the boundary and are treated as untrusted. All consent resolution, policy evaluation, cryptographic verification, and audit logging occur before inference execution is permitted.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Modeling Assumptions</h2>
+
+        <p>The threat model presented in this document is valid subject to the following baseline assumptions. Violation of any assumption does not invalidate the architecture, but it may render specific threat mitigations ineffective and may alter the residual risk profile materially.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Foundational Constraint</div>
+          <p>Incorrect operational practices invalidate the threat model. The architectural guarantees described in this document presuppose that the implementation, configuration, and operational management of QODIQA components conform to the specifications referenced in the corpus alignment section. Deviations from these specifications constitute conditions outside the scope of this analysis.</p>
+        </div>
+
+        <p>The following assumptions are stated explicitly for analytical scope:</p>
+
+        <ul>
+          <li><strong>Correct cryptographic implementation.</strong> Cryptographic primitives — signature schemes, hash functions, key derivation functions, and random number generation — are implemented correctly and conform to the algorithm profiles specified in the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement. Cryptographic implementation defects are out of scope.</li>
+          <li><strong>Integrity of the consent registry at rest.</strong> The consent registry is assumed to be correctly initialized with authentic consent state. Threats to the accuracy of initial consent state captured by collection interfaces are out of scope.</li>
+          <li><strong>Correct deployment configuration.</strong> The enforcement gateway is deployed in a network topology that ensures all AI inference requests traverse the gateway. Architectural bypass through misconfiguration, such as direct routing to inference endpoints that circumvents the gateway, is a deployment failure, not an architectural vulnerability.</li>
+          <li><strong>Secure key management.</strong> Private keys used in consent artifact signing and enforcement token issuance are managed in conformance with the key management provisions of the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement. Key material is not accessible to components outside the defined trust boundary.</li>
+          <li><strong>Audit log write integrity.</strong> The audit logging infrastructure is write-only from the perspective of the enforcement components that generate records. Audit records cannot be modified or deleted by components within the enforcement boundary.</li>
+          <li><strong>Policy version immutability.</strong> Policy versions, once published, are immutable. Policy evaluation always references a specific, frozen version. Retroactive modification of published policy versions is not possible within the architecture.</li>
+        </ul>
+
+        <h3>Security Assumptions</h3>
+        <p>In addition to the modeling assumptions above, the threat analysis presented in this document rests on a set of foundational security conditions. These conditions are assumed to hold at the time of enforcement system deployment and operation. The cryptographic primitives used for consent artifact integrity, including signature schemes and hash functions, are assumed to be computationally secure and not subject to known breaks or feasible cryptanalytic attacks. Private keys used for artifact signing and enforcement token issuance are assumed to be stored and managed using secure key-management mechanisms, such as hardware security modules or operationally equivalent controls that prevent unauthorized extraction. Communication between all enforcement boundary components is assumed to occur over authenticated and encrypted transport channels, such that in-transit interception or modification is not feasible for the threat actor classes defined in Section 5. Enforcement Gateway components are assumed to execute within trusted runtime environments whose process integrity is protected against unauthorized modification during operation. The Consent Registry is assumed to maintain append-only integrity guarantees, such that previously recorded consent state cannot be silently overwritten or deleted by components operating within the enforcement boundary.</p>
+        <p>Violation of any of these security assumptions may invalidate specific portions of the threat analysis presented in this document. Where an assumption is violated, the mitigations described for associated threats should not be relied upon without independent evaluation of the resulting risk exposure.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Severity Classification</h2>
+
+        <p>Threat severity is classified on a four-level scale. Classification is determined by the intersection of four criteria: enforcement bypass feasibility, scale of impact, detectability, and reversibility. Threats that achieve a high score across multiple criteria receive the highest severity designation.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1 — Severity Classification Model</span>
+          <table class="tbl-level" style="table-layout:fixed;">
+            <colgroup>
+              <col style="width:8%">
+              <col style="width:13%">
+              <col style="width:20%">
+              <col style="width:21%">
+              <col style="width:19%">
+              <col style="width:19%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Designation</th>
+                <th>Bypass Feasibility</th>
+                <th>Scale of Impact</th>
+                <th>Detectability</th>
+                <th>Reversibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td style="text-align:center;">Critical</td>
+                <td>Direct or near-direct</td>
+                <td>System-wide; affects all enforcement decisions</td>
+                <td>Low; may be undetectable during active exploitation</td>
+                <td>Irreversible without full re-keying or re-deployment</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td style="text-align:center;">High</td>
+                <td>Feasible with moderate capability</td>
+                <td>Targeted; affects specific decision classes or data domains</td>
+                <td>Low to moderate; detectable only via forensic review</td>
+                <td>Reversible with intervention; may require policy revision</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td style="text-align:center;">Medium</td>
+                <td>Requires specific preconditions</td>
+                <td>Limited; affects single request flows or isolated subjects</td>
+                <td>Moderate; detectable through audit log analysis</td>
+                <td>Reversible; correctable through operational controls</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td style="text-align:center;">Low</td>
+                <td>Theoretically possible; requires high effort or rare conditions</td>
+                <td>Minimal; affects fringe cases or degrades secondary properties</td>
+                <td>High; typically generates observable artifacts</td>
+                <td>Reversible; self-healing or administratively correctable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Enforcement bypass feasibility is the primary criterion. A threat that achieves any degree of direct enforcement bypass is classified as Critical or High regardless of detection properties or reversibility, because the foundational security property of the architecture — that no inference executes without verified consent — is the invariant most requiring protection.</p>
+
+        <h3>Threat Likelihood Model</h3>
+        <p>Threats within this model are evaluated not only by severity of impact but also by the likelihood of occurrence in realistic adversarial conditions. Likelihood is assessed against three qualitative categories. <strong>Low Likelihood</strong> threats are those requiring exceptional technical capabilities, privileged access to protected infrastructure, or the coordinated compromise of multiple independent system components; such threats are theoretically feasible but demand resources and coordination that substantially constrain the population of credible adversaries. <strong>Medium Likelihood</strong> threats are those achievable by well-resourced adversaries, insiders with partial access, or sophisticated external attackers who have acquired partial knowledge of system configuration or internal trust domain structure. <strong>High Likelihood</strong> threats are those arising from configuration errors, operational mistakes, weak integration practices, or predictable patterns of misuse that do not require specialized adversarial capability to exploit.</p>
+        <p>Risk evaluation in the QODIQA threat model considers both impact severity and likelihood of occurrence. Likelihood is described qualitatively rather than through numerical probability scoring, as the adversarial conditions for enforcement bypass are highly deployment-specific and do not admit meaningful quantification at the architectural level. Readers should map likelihood categories to their specific deployment context when conducting deployment-specific risk assessments.</p>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Threat Actor Taxonomy</h2>
+
+        <p>This document recognizes five adversarial actor classes. The classification is based on the actor's position relative to the enforcement boundary, their technical capability, and their primary adversarial objective.</p>
+
+        <div id="s5-1" class="doc-section">
+          <h3>5.1 External Attacker</h3>
+          <p>An external attacker operates outside the deployment boundary and has no legitimate access to enforcement infrastructure. Capabilities include network-level interception, public API enumeration, and exploitation of exposed interfaces. The primary goal of an external attacker is to inject forged requests, replay valid consent artifacts, or enumerate information about policy configuration that facilitates more targeted attacks. External attackers have limited visibility into internal trust domain configurations and must operate through externally observable interfaces.</p>
+        </div>
+
+        <div id="s5-2" class="doc-section">
+          <h3>5.2 Malicious Integrator</h3>
+          <p>A malicious integrator is an organization or entity that has been granted legitimate access to the enforcement gateway as an authorized integration partner, but that intentionally or negligently constructs requests in ways designed to obtain enforcement decisions beyond the scope of legitimate authorization. Capabilities include direct access to the request submission interface, knowledge of request schema, and the ability to craft syntactically valid but semantically manipulative intent declarations. The primary goal is to obtain permit decisions for actions that should be denied, through purpose misrepresentation or scope inflation in declared intent.</p>
+        </div>
+
+        <div id="s5-3" class="doc-section">
+          <h3>5.3 Model Operator Attempting Bypass</h3>
+          <p>A model operator is a legitimate operator of an AI inference system that is subject to QODIQA enforcement constraints. The bypass goal is to route inference requests such that they avoid traversal of the enforcement gateway, obtaining the benefits of AI inference without the costs of enforcement compliance. Capabilities include control over the infrastructure topology in which the inference system is deployed, the ability to modify routing configurations, and knowledge of the expected enforcement behavior for specific request types. The primary risk vector is architectural: unauthorized direct routing to inference endpoints, circumventing gateway traversal requirements.</p>
+        </div>
+
+        <div id="s5-4" class="doc-section">
+          <h3>5.4 Compromised Infrastructure Provider</h3>
+          <p>A compromised infrastructure provider is a component or service within the QODIQA enforcement boundary that has been subjected to supply chain compromise, insider attack, or external breach. This actor class differs from the others in that the threat originates from inside the trust boundary. Capabilities may include read or write access to the consent registry, access to signing key material, modification of policy evaluation logic, or suppression of audit records. The primary goal is to enable silent enforcement bypass or to introduce deniability into enforcement decisions. This actor class presents the highest severity risk profile because detection through audit logs may be compromised simultaneously with the enforcement integrity breach.</p>
+        </div>
+
+        <div id="s5-5" class="doc-section">
+          <h3>5.5 Governance Abuse Actor</h3>
+          <p>A governance abuse actor targets the certification and conformance infrastructure that underlies trust in QODIQA-conformant systems. This actor may be a fraudulent certification applicant, a compromised auditor, a certification body subject to regulatory or economic capture, or an actor manipulating the supply chain of conformance test tooling. The primary goal is to obtain or confer certifications that falsely represent enforcement capability, creating systemic trust failures in the broader deployment ecosystem. Governance abuse does not directly bypass enforcement in any specific deployment but undermines the governance trust layer that enables relying parties to make deployment decisions based on certification claims.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Attack Surface Enumeration</h2>
+
+        <p>The following attack surfaces are identified across the enforcement boundary. Each surface is mapped to relevant STRIDE threat categories and to the actor classes most likely to exploit them.</p>
+
+        <div id="s6-1" class="doc-section">
+          <h3>6.1 Inference Request Path</h3>
+          <p>The inference request path spans from the initial request submission by an integrator to the enforcement gateway, through gateway processing, and to the final permit or deny decision. Attack surfaces include the request submission interface, the declared intent structure embedded in the request, and the protocol used for transport. Relevant STRIDE categories: Spoofing (impersonation of authorized requestors), Tampering (modification of declared intent), Repudiation (ambiguous requestor identity), and Elevation of Privilege (scope inflation in declared purpose). This surface is exploitable by external attackers and malicious integrators.</p>
+        </div>
+
+        <div id="s6-2" class="doc-section">
+          <h3>6.2 Consent Verification Interface</h3>
+          <p>The consent verification interface is the internal boundary crossing between the enforcement gateway and the consent registry. Attacks targeting this surface may inject false consent state, manipulate consent resolution results, or cause the verification to return incorrect validity signals for specific subjects or purposes. Relevant STRIDE categories: Tampering (manipulation of registry responses), Spoofing (impersonation of registry), Denial of Service (registry unavailability forcing fail behavior). This surface is exploitable by compromised infrastructure providers and by external attackers who achieve lateral movement into the internal trust domain.</p>
+        </div>
+
+        <div id="s6-3" class="doc-section">
+          <h3>6.3 Cryptographic Key Infrastructure</h3>
+          <p>The cryptographic key infrastructure encompasses the key generation, storage, distribution, and rotation mechanisms used by the QODIQA enforcement components. Compromise of signing key material is the highest-severity attack surface in the architecture, as it enables the creation of forged consent artifacts and decision tokens that are indistinguishable from legitimate ones. Relevant STRIDE categories: Spoofing (use of compromised keys to impersonate legitimate signers), Elevation of Privilege (forged decision tokens). Exploitable primarily by compromised infrastructure providers and advanced external attackers.</p>
+        </div>
+
+        <div id="s6-4" class="doc-section">
+          <h3>6.4 Policy Evaluation System</h3>
+          <p>The policy evaluation system processes declared intent and resolved consent state against active policy versions to produce enforcement decisions. Attack surfaces include the policy loading mechanism, the policy version reference integrity, the evaluation context construction, and the decision output path. Relevant STRIDE categories: Tampering (policy content modification), Repudiation (unclear policy version at time of evaluation), Elevation of Privilege (policy configuration enabling decisions that should be denied). Exploitable by malicious integrators with knowledge of policy logic and by compromised infrastructure providers.</p>
+        </div>
+
+        <div id="s6-5" class="doc-section">
+          <h3>6.5 Audit Logging Infrastructure</h3>
+          <p>The audit logging infrastructure records enforcement decisions and serves as the primary mechanism for post hoc verification of enforcement claims. Attacks targeting the audit log aim to suppress records, retroactively modify records, or introduce false records that create misleading audit trails. Relevant STRIDE categories: Tampering (record modification), Repudiation (record suppression enabling deniability), Information Disclosure (audit log content exposure). Exploitable by compromised infrastructure providers; suppression attacks are of particular concern in scenarios where enforcement bypass is occurring simultaneously.</p>
+        </div>
+
+        <div id="s6-6" class="doc-section">
+          <h3>6.6 Governance and Certification Processes</h3>
+          <p>The governance and certification processes that enable relying parties to trust QODIQA-conformant deployments constitute an attack surface at the ecosystem level. Attacks include fraudulent certification applications, manipulation of conformance test tooling to produce false pass results, and capture of certification bodies through economic or regulatory pressure. Relevant STRIDE categories: Spoofing (fraudulent certification claims), Tampering (manipulation of conformance test tooling). Exploitable by governance abuse actors.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Adversarial Objective Model</h2>
+
+        <p>Adversarial objectives are decomposed into goal hierarchies that map top-level outcomes to the enabling sub-goals required for their achievement. This structure enables the identification of intermediate attack steps that may be independently detectable or preventable.</p>
+
+        <div class="decision-block">
+          <strong>Objective Class A — Enforcement Bypass</strong>
+          <ul>
+            <li>Bypass consent verification: obtain a permit decision for a request that would not receive one under correct enforcement.</li>
+            <li>Replay authorization artifacts: reuse a consent artifact valid for one context, purpose, or time window in a different context where consent has not been granted.</li>
+          </ul>
+        </div>
+
+        <div class="decision-block">
+          <strong>Objective Class B — Authorization Forgery</strong>
+          <ul>
+            <li>Forge authorization signals: create consent artifacts or decision tokens whose cryptographic structure is valid but whose semantic content is unauthorized.</li>
+            <li>Inject fabricated decision tokens: introduce forged permit tokens into the processing pipeline without a corresponding enforcement decision having occurred.</li>
+          </ul>
+        </div>
+
+        <div class="decision-block">
+          <strong>Objective Class C — Enforcement Integrity Disruption</strong>
+          <ul>
+            <li>Corrupt enforcement logs: prevent accurate post hoc reconstruction of enforcement decisions or introduce false records that attribute compliance where violations occurred.</li>
+            <li>Disable enforcement gateway: cause the enforcement gateway to become unavailable or to fail in a non-closed manner, permitting inference execution without enforcement.</li>
+            <li>Manipulate policy state: modify active policy versions or load unauthorized policy configurations that expand the set of permitted decisions.</li>
+          </ul>
+        </div>
+
+        <div class="decision-block">
+          <strong>Objective Class D — Identity Manipulation</strong>
+          <ul>
+            <li>Compromise identity binding: sever the binding between declared requestor identity and the cryptographic identity verified during enforcement, enabling impersonation.</li>
+          </ul>
+        </div>
+
+        <p>Each primary objective requires one or more enabling sub-goals. For example, bypassing consent verification may require compromising the consent registry query path, forging a consent artifact that passes verification, or preventing the gateway from performing verification entirely. The sub-goal structure informs the defense-in-depth controls that are most effective at disrupting attack chains before a primary objective is achieved.</p>
+
+        <p>Adversarial success requires satisfying enabling sub-goals in a sequence that does not produce detectable artifacts prior to the primary objective being achieved. The architecture is designed such that enabling sub-goals for high-severity objectives are individually detectable through audit log analysis. The residual risk in this model is that audit log integrity may be compromised simultaneously with enforcement integrity.</p>
+
+        <h3>Economic Attack Considerations</h3>
+        <p>Attacks against deterministic consent enforcement are not exclusively motivated by technical objectives; they are frequently motivated by economic incentives that make non-compliant access commercially rational. Specific economic motivations include unauthorized inference access that avoids licensing, service, or compliance costs; circumvention of consent restrictions that would otherwise prevent access to commercially valuable data; and extraction of data for secondary commercial use in contexts where consent has not been granted for that purpose. These motivations are structurally relevant because they affect the resources adversaries are willing to expend on enforcement bypass and the persistence with which bypass attempts are likely to be repeated following detection and remediation.</p>
+        <p>The QODIQA enforcement architecture is designed to increase the operational cost of bypassing enforcement controls, creating economic asymmetry between compliant and non-compliant behavior. By requiring cryptographically grounded consent verification for each enforcement decision, the architecture raises the marginal cost of unauthorized access above the level achievable through configuration manipulation alone. While the threat model focuses on technical mechanisms, economic motivations are considered part of the adversarial landscape and should inform deployment-specific risk prioritization, particularly in commercial environments where data access carries direct monetary value.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Runtime Bypass Scenarios</h2>
+
+        <p>The following misuse cases describe concrete runtime bypass scenarios against the enforcement architecture. Each case is analyzed along five dimensions: attack description, preconditions required, exploit mechanism, detection feasibility, and enforcement response under correct operation.</p>
+
+        <div id="s8-1" class="doc-section">
+          <h3>8.1 Direct Inference Endpoint Bypass</h3>
+          <div class="key-prop">
+            <div class="key-prop-title">Attack Description</div>
+            <p>An adversary routes inference requests directly to the AI inference endpoint, circumventing the enforcement gateway entirely. No consent verification or policy evaluation occurs.</p>
+          </div>
+          <p><strong>Preconditions.</strong> The adversary must have network-level or application-level access to the inference endpoint address that is not mediated by the enforcement gateway. This requires either a deployment misconfiguration that exposes the inference endpoint directly, or lateral movement within the deployment environment that grants access to internal routing.</p>
+          <p><strong>Exploit Mechanism.</strong> The adversary constructs valid inference requests and submits them directly to the inference endpoint using the native API of the inference system, bypassing all QODIQA enforcement components.</p>
+          <p><strong>Detection Feasibility.</strong> Low under this bypass scenario. Because the enforcement gateway is not traversed, no enforcement records are generated. Detection requires cross-correlation of inference system access logs with enforcement gateway logs to identify inference activity not accompanied by a corresponding enforcement decision record.</p>
+          <p><strong>Enforcement Response.</strong> Under correct deployment, the inference endpoint is not accessible without traversal of the enforcement gateway. Correct deployment is a deployment-layer control, not an architectural enforcement guarantee. The QODIQA architecture does not and cannot prevent direct endpoint access if the deployment topology exposes it.</p>
+        </div>
+
+        <div id="s8-2" class="doc-section">
+          <h3>8.2 Forged Authorization Token Injection</h3>
+          <div class="key-prop">
+            <div class="key-prop-title">Attack Description</div>
+            <p>An adversary injects a forged enforcement decision token into the request processing pipeline, causing the downstream inference system to treat the request as having received a valid permit decision without actual enforcement having occurred.</p>
+          </div>
+          <p><strong>Preconditions.</strong> The adversary must have access to a valid signing key or must be able to exploit a vulnerability in the decision token verification path that allows a token with an invalid or missing signature to be accepted as valid.</p>
+          <p><strong>Exploit Mechanism.</strong> The adversary constructs a syntactically valid decision token containing a permit decision and injects it into the request pipeline at a point downstream of the enforcement gateway. The token's cryptographic validity is not re-verified, or the verification is bypassed.</p>
+          <p><strong>Detection Feasibility.</strong> Moderate. If audit logs are correctly maintained, the absence of an enforcement record for a specific request, paired with evidence of inference execution, indicates a potential token injection event. However, if the injected token includes fabricated log entries, detection requires cryptographic verification of audit record integrity.</p>
+          <p><strong>Enforcement Response.</strong> The enforcement architecture requires that decision tokens be cryptographically signed by the enforcement gateway with a key that is not accessible to components outside the trust boundary. Downstream systems must verify this signature before treating a token as valid. Correct implementation of this verification provides strong resistance to token injection attacks that do not involve key compromise.</p>
+        </div>
+
+        <div id="s8-3" class="doc-section">
+          <h3>8.3 Enforcement Gateway Removal</h3>
+          <div class="key-prop">
+            <div class="key-prop-title">Attack Description</div>
+            <p>An adversary with infrastructure access removes or disables the enforcement gateway component from the deployment, either transiently or permanently, causing inference requests to be processed without enforcement.</p>
+          </div>
+          <p><strong>Preconditions.</strong> The adversary must have administrative access to the deployment infrastructure, or must be able to exploit a vulnerability in the gateway process that causes it to crash or become unavailable.</p>
+          <p><strong>Exploit Mechanism.</strong> The gateway is halted, misconfigured to pass all requests, or replaced with a non-enforcing proxy that forwards requests without consent verification or policy evaluation.</p>
+          <p><strong>Detection Feasibility.</strong> Moderate to high. Gateway availability monitoring provides detection for outage events. Replacement with a non-enforcing proxy may be detectable through audit log analysis if record formats or signing keys differ from canonical gateway behavior.</p>
+          <p><strong>Enforcement Response.</strong> The enforcement architecture does not specify availability controls for the gateway itself; those are deployment concerns. The architectural response to gateway unavailability is fail-closed behavior: inference endpoints must refuse requests in the absence of a valid, current enforcement decision token. Correct implementation of fail-closed semantics limits the impact of gateway removal to service denial, not enforcement bypass.</p>
+        </div>
+
+        <div id="s8-4" class="doc-section">
+          <h3>8.4 Replay Attack on Consent Artifacts</h3>
+          <div class="key-prop">
+            <div class="key-prop-title">Attack Description</div>
+            <p>An adversary replays a consent artifact that was valid for a prior request, with a different purpose, time window, or data scope, to obtain a permit decision in a context where consent has not been granted or has been revoked.</p>
+          </div>
+          <p><strong>Preconditions.</strong> The adversary must have access to a previously captured consent artifact and must be able to submit it to the enforcement gateway in a context where the artifact's cryptographic validity would be confirmed but its contextual validity has not been verified.</p>
+          <p><strong>Exploit Mechanism.</strong> The adversary submits the captured consent artifact with a new request whose declared intent differs from the purpose for which the artifact was originally granted. If the enforcement gateway verifies the artifact's cryptographic signature but does not verify purpose binding, temporal validity, or request-level contextual hash, the replay succeeds.</p>
+          <p><strong>Detection Feasibility.</strong> Moderate. Replay attacks generate enforcement records, but the record may appear valid to a reviewer examining only the artifact signature. Detection requires cross-referencing the purpose binding in the artifact against the declared intent in the request, which requires semantic analysis of enforcement records beyond signature verification.</p>
+          <p><strong>Enforcement Response.</strong> The QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement requires that consent artifacts bind to the specific context, purpose, and time window of the granted consent, and that enforcement decisions verify this binding explicitly. Correct implementation of context-bound artifact verification provides direct mitigation for replay attacks.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Cryptographic Compromise Analysis</h2>
+
+        <p>Cryptographic compromise represents the highest-severity threat class in the QODIQA threat model, because the enforcement architecture's authenticity and integrity guarantees are grounded in cryptographic properties. Failure of these properties may be silent, may affect all enforcement decisions system-wide, and may be irreversible without full re-keying.</p>
+
+        <h3 id="s9-1">9.1 Signing Key Compromise</h3>
+        <p>Compromise of the private signing key used by the enforcement gateway to sign decision tokens enables an adversary to generate forged tokens that are cryptographically indistinguishable from legitimate ones. The impact is system-wide: all relying components that verify decision token signatures using the corresponding public key will accept forged decisions as valid. Mitigation requires key rotation, revocation of the compromised key, and forensic reconstruction of enforcement decisions made during the compromise window.</p>
+
+        <h3 id="s9-2">9.2 Consent Artifact Signature Forgery</h3>
+        <p>Forgery of consent artifact signatures requires compromise of the signing key material used by the identity infrastructure to issue consent artifacts. Successful forgery enables the creation of consent artifacts for any subject, purpose, and data scope, effectively nullifying all consent constraints. The severity is Critical. The enforcement boundary assumes the integrity of the identity infrastructure; forgery that compromises this assumption requires evaluation outside the scope of this threat model as a dependent trust anchor failure.</p>
+
+        <h3 id="s9-3">9.3 Compromised Identity Providers</h3>
+        <p>If the identity provider responsible for authenticating requestors and binding identities to consent artifacts is compromised, an adversary can obtain authentic credentials for arbitrary identities and use them to request consent artifacts that appear legitimately granted. This threat class is particularly significant for multi-tenant deployments where a shared identity provider serves multiple data subjects. Compromise does not require forging cryptographic signatures; it exploits the legitimate issuance path.</p>
+
+        <h3 id="s9-4">9.4 Replay of Signed Consent Artifacts</h3>
+        <p>As described in Section 8.4, replay of previously valid signed artifacts represents a cryptographic-layer attack vector. The cryptographic signature on a replayed artifact may be valid, but the semantic binding to the current request context is not. This distinction is critical: replay attacks succeed in implementations that verify cryptographic authenticity without separately verifying contextual binding. The QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement requirement for contextual hashing is the primary architectural control for this scenario.</p>
+
+        <p>Across all cryptographic compromise scenarios, the impact on enforcement guarantees follows a common pattern: the architectural properties of determinism and verifiability are undermined because the inputs to enforcement decisions — consent artifacts and identity assertions — can no longer be trusted to represent their stated semantics. Recovery requires establishing a new trusted baseline, which may involve re-issuing all consent artifacts issued by the compromised infrastructure.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Governance and Certification Abuse</h2>
+
+        <p>Governance abuse threats operate at the ecosystem level and represent a category of attacks that do not directly bypass enforcement in any specific deployment, but that undermine the governance trust layer on which relying parties depend when making deployment and integration decisions.</p>
+
+        <h3 id="s10-1">10.1 Fraudulent Certification Claims</h3>
+        <p>An organization may claim QODIQA conformance without having undergone valid certification processes. Fraudulent certification claims mislead relying parties into trusting enforcement guarantees that are not present. Detection requires that relying parties verify certification claims against records maintained by the governing authority. The QODIQA — Governance Charter for the QODIQA Standard Corpus and the QODIQA — Conformance Test Suite Specification define the certification process; fraudulent claims exploit the absence of a universally accessible certification verification mechanism.</p>
+
+        <h3 id="s10-2">10.2 Manipulated Conformance Tests</h3>
+        <p>Conformance test tooling used to evaluate implementations against the QODIQA — Conformance Test Suite Specification may itself be subject to supply chain manipulation. If test tooling is compromised to produce false pass results for implementations that do not conform to specification, certifications issued on the basis of those results are invalid. Mitigation requires cryptographic signing of conformance test tooling by the governing authority, verification of tooling integrity before use, and independent audit of certification decisions.</p>
+
+        <h3 id="s10-3">10.3 Certification Body Capture</h3>
+        <p>The certification body responsible for issuing conformance certifications may be subject to regulatory capture, economic pressure, or direct compromise. Captured certification bodies may issue certifications to non-conformant implementations, reduce the rigor of audit requirements, or extend certifications without revalidation. Detection requires independent oversight of certification body processes and periodic meta-audit of certification decisions against implementation evidence. This threat class is addressed in the QODIQA — Governance Charter for the QODIQA Standard Corpus through provisions for governing authority oversight and audit record maintenance.</p>
+
+        <h3 id="s10-4">10.4 Supply Chain Manipulation</h3>
+        <p>Supply chain manipulation affects the integrity of enforcement components themselves: enforcement gateways, consent registry implementations, cryptographic libraries, or policy evaluation engines obtained from third-party sources may contain backdoors, weakened cryptography, or logic that enables adversarial outcomes. Mitigation requires verification of software supply chain provenance, cryptographic integrity verification of component artifacts, and conformance testing of third-party implementations against the QODIQA — Conformance Test Suite Specification before deployment.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Integration and Dependency Failure</h2>
+
+        <p>Integration failures are distinct from adversarial attacks in that they arise from operational or environmental conditions rather than intentional action. However, their impact on enforcement guarantees may be equivalent to that of targeted attacks, and they must be addressed in the threat model to characterize the full residual risk profile.</p>
+
+        <h3 id="s11-1">11.1 Consent Registry Outage</h3>
+        <p>Unavailability of the consent registry prevents the enforcement gateway from resolving consent state for incoming requests. The expected architectural response is fail-closed behavior: requests for which consent state cannot be resolved must be denied. Fail-closed semantics ensure that registry outages degrade service availability without compromising enforcement integrity. Residual risk exists if fail-closed behavior is not correctly implemented; in that case, registry outages create a denial-of-service-equivalent enforcement bypass window.</p>
+
+        <h3 id="s11-2">11.2 Misconfigured Enforcement Gateways</h3>
+        <p>Misconfigured gateways represent one of the most common operational failure modes. Configurations that disable cryptographic verification, suppress audit logging, or alter fail-closed behavior from the default may introduce enforcement gaps that are indistinguishable from deliberate bypass. Operational controls must include configuration auditing against a canonical baseline, automated detection of configuration drift, and immutable configuration management practices that prevent unauthorized modification.</p>
+
+        <h3 id="s11-3">11.3 Network Partitioning</h3>
+        <p>Network partitioning that isolates the enforcement gateway from the consent registry or from the policy evaluation system creates a dependency failure equivalent to component outage. The fail-closed requirement applies equally to network-induced unavailability. In multi-region or multi-cloud deployments, partitioning scenarios must be explicitly tested and enforced during conformance evaluation.</p>
+
+        <h3 id="s11-4">11.4 Dependency Compromise</h3>
+        <p>Dependencies of the enforcement gateway — TLS libraries, operating system components, container runtimes, or secret management systems — may be compromised through supply chain attacks or zero-day exploitation. Compromise of a dependency that handles cryptographic operations or controls gateway process execution may provide an adversary with capabilities equivalent to those of a compromised infrastructure provider. Defense requires dependency inventory management, vulnerability monitoring, and rapid patching processes that operate with awareness of enforcement impact.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Invariant Violation Analysis</h2>
+
+        <p>The QODIQA enforcement architecture defines a set of core invariants — conditions that must hold for all enforcement decisions for the architectural guarantees to be valid. Invariant violations represent the most fundamental failure mode of the system and require explicit analysis of both causes and consequences.</p>
+
+        <h3 id="s12-1">12.1 Core Invariants</h3>
+        <div class="decision-block">
+          <strong>Invariant I-1 — No Execution Without Verified Consent</strong>
+          <p>An AI inference request must not proceed to execution unless the enforcement gateway has issued a valid permit decision based on verified consent state for the specific request context. <em>Violation:</em> any inference execution that occurs without a corresponding permit decision from the enforcement gateway constitutes a direct bypass of the enforcement architecture, enabling unauthorized data processing or action execution.</p>
+        </div>
+        <div class="decision-block">
+          <strong>Invariant I-2 — Cryptographic Verifiability of Consent Artifacts</strong>
+          <p>All consent artifacts evaluated by the enforcement gateway must carry a cryptographic signature whose chain of trust is traceable to a recognized identity anchor, and that signature must be verified before any enforcement decision is issued. <em>Violation:</em> acceptance of unsigned or unverified consent artifacts allows forged or replayed artifacts to produce valid permit decisions, nullifying the authenticity guarantees of the enforcement model.</p>
+        </div>
+        <div class="decision-block">
+          <strong>Invariant I-3 — Pre-Execution Enforcement Decision</strong>
+          <p>The enforcement gateway must produce a permit or deny decision before the inference request is forwarded to the AI system. No mechanism exists within the architecture for retroactive enforcement of decisions after execution. <em>Violation:</em> post hoc enforcement converts the architecture from a pre-execution control to an audit mechanism, eliminating its deterministic enforcement property and allowing unauthorized execution to occur before any governance response is possible.</p>
+        </div>
+        <div class="decision-block">
+          <strong>Invariant I-4 — Policy Version Recoverability</strong>
+          <p>The audit record for every enforcement decision must contain sufficient information to identify the policy version applied, enabling the decision to be reconstructed independently. <em>Violation:</em> absence of policy version in audit records prevents independent reproduction of enforcement decisions, rendering audit claims non-verifiable and eliminating the architecture's proof-of-compliance capability.</p>
+        </div>
+        <div class="decision-block">
+          <strong>Invariant I-5 — Audit Record Commitment Before Permit Issuance</strong>
+          <p>The audit record for an enforcement decision must be committed before the corresponding permit is issued. No enforcement decision may be issued speculatively or without a corresponding audit record. <em>Violation:</em> speculative permit issuance without committed audit records enables enforcement bypass that leaves no audit trail, eliminating the ability to detect, investigate, or prove enforcement failures after the fact.</p>
+        </div>
+
+        <h3 id="s12-2">12.2 Consequences of Invariant Violation</h3>
+        <p>Violation of Invariant I-1 directly enables unauthorized inference execution. Violation of I-2 enables the acceptance of forged consent artifacts. Violation of I-3 converts QODIQA from a pre-execution enforcement layer to a post hoc audit mechanism, eliminating its deterministic enforcement property. Violation of I-4 prevents independent reproduction of enforcement decisions and renders audit claims non-verifiable. Violation of I-5 enables enforcement bypass that leaves no audit trail, eliminating the ability to detect or investigate enforcement failures.</p>
+        <p>Invariant violations may be caused by implementation defects, adversarial manipulation, or operational failures. The severity classification for any vulnerability or failure mode that causes an invariant violation is at minimum High, and Critical where the violation is undetectable or systemic.</p>
+      </div>
+
+      <!-- MITIGATION MAPPING -->
+      <div id="s12-mit" class="doc-section">
+        <div class="section-divider"></div>
+        <h3>Mitigation Mapping</h3>
+        <p>The QODIQA architecture addresses identified threat categories through specific enforcement mechanisms and architectural components rather than through abstract policy declarations. The purpose of this mapping is to demonstrate how the architecture operationalizes threat containment, connecting each threat class to the concrete system element responsible for its mitigation. Where multiple components participate in containment, the primary accountable element is identified. This mapping is intended to support conformance evaluators and deployment architects in verifying that each identified threat class has a corresponding architectural control with a defined locus of enforcement responsibility.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table — Mitigation Mapping by Threat Category</span>
+          <table class="tbl-mitigation" style="table-layout:fixed;">
+            <colgroup>
+              <col style="width:30%">
+              <col style="width:40%">
+              <col style="width:30%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Threat Category</th>
+                <th>Mitigation Mechanism</th>
+                <th>QODIQA Component</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Consent Artifact Tampering</td>
+                <td>Cryptographic signatures and artifact integrity verification</td>
+                <td>Artifact Generator</td>
+              </tr>
+              <tr>
+                <td>Runtime Policy Bypass</td>
+                <td>Deterministic enforcement at the inference boundary</td>
+                <td>Enforcement Gateway</td>
+              </tr>
+              <tr>
+                <td>Consent Registry Manipulation</td>
+                <td>Append-only registry integrity guarantees</td>
+                <td>Consent Registry</td>
+              </tr>
+              <tr>
+                <td>Unauthorized Inference Execution</td>
+                <td>Mandatory consent verification before inference execution</td>
+                <td>Enforcement Gateway</td>
+              </tr>
+              <tr>
+                <td>Certification or Governance Abuse</td>
+                <td>Independent conformance testing and certification requirements</td>
+                <td>QODIQA Certification Framework</td>
+              </tr>
+              <tr>
+                <td>Supply Chain or Integration Risk</td>
+                <td>Explicit trust boundaries and verifiable artifact generation</td>
+                <td>Reference Architecture</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Residual Risk Summary</h2>
+
+        <p>Residual risks are threat conditions that persist under correct implementation of the QODIQA architecture. These risks are not mitigated by architectural controls alone and require operational, governance, or external controls to address.</p>
+
+        <h3>13.1 Insider Abuse</h3>
+        <p>Administrators with legitimate access to enforcement infrastructure retain the capability to modify configurations, access key material, or suppress audit records through authorized administrative channels. Insider threat is a residual risk in any architecture that requires human administration. Detection depends on administrative access audit logs maintained by a system that is itself independent of the enforcement infrastructure. Mitigation requires separation of duties in administrative roles, multi-party authorization for sensitive operations, and independent audit oversight.</p>
+
+        <h3>13.2 Compromised Governance Infrastructure</h3>
+        <p>Systematic compromise of the governance layer, including the certification authority, the governing charter administration, and the conformance test infrastructure, undermines the ecosystem-level trust guarantees that QODIQA provides to relying parties. This risk persists regardless of the technical security properties of any individual deployment. The absence of an independently verifiable, globally accessible registry of valid certifications is a structural residual risk in the current governance model.</p>
+
+        <h3>13.3 Economic Coercion</h3>
+        <p>Operators subject to QODIQA enforcement constraints may be subject to economic pressure from clients, regulators, or market conditions that create incentives for bypass. Economic coercion does not alter the technical enforcement properties of the architecture, but it may motivate deliberate deployment misconfiguration, selective enforcement gateway disablement, or fraudulent certification claims. This risk is addressed at the governance level through audit requirements and certification revocation provisions, but it is not eliminable through technical controls.</p>
+
+        <h3>13.4 Large-Scale Key Compromise</h3>
+        <p>Cryptanalytic advances, implementation vulnerabilities in widely deployed cryptographic libraries, or supply chain attacks on hardware security modules could compromise key material at scale across multiple deployments simultaneously. This scenario is outside the scope of deployment-level mitigations and requires protocol-level responses including algorithm agility provisions and pre-planned migration paths to post-compromise cryptographic configurations. The QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement addresses algorithm agility requirements, but the residual risk of coordinated large-scale key compromise cannot be eliminated.</p>
+
+        <h3>13.5 Consent State Accuracy Limitations</h3>
+        <p>The enforcement architecture enforces consent as represented in the registry. It does not verify that the consent state in the registry accurately reflects the intentions of the data subjects from whose decisions it was derived. Consent collection failures, misrepresentation at the collection interface, or registry synchronization lag create conditions where enforcement is technically correct but semantically misaligned with actual consent. This residual risk is outside the enforcement boundary as defined in this document and is further documented in the QODIQA — Residual Risk and Assumption Disclosure Annex.</p>
+      </div>
+
+      <!-- SECTION 14 -->
+      <div id="s14" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 14</span>
+        <h2><a class="anchor-link" href="#s14">#</a>Threat Coverage Matrix</h2>
+
+        <p>The following matrix maps threat categories to specific attack scenarios, responsible threat actors, primary mitigation mechanisms, and residual risk under correct implementation.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2 — Threat Coverage Matrix</span>
+          <table class="tbl-coverage">
+            <colgroup>
+              <col style="width:14%">
+              <col style="width:19%">
+              <col style="width:15%">
+              <col style="width:7%">
+              <col style="width:24%">
+              <col style="width:21%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Threat Category</th>
+                <th>Attack Scenario</th>
+                <th>Threat Actor</th>
+                <th>Severity</th>
+                <th>Mitigation Mechanism</th>
+                <th>Residual Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Enforcement Bypass</td>
+                <td>Direct inference endpoint bypass via routing circumvention</td>
+                <td>Model Operator; External Attacker</td>
+                <td class="sev">Critical</td>
+                <td>Deployment topology enforcement; network segmentation</td>
+                <td>Persists under misconfigured deployments</td>
+              </tr>
+              <tr>
+                <td>Token Forgery</td>
+                <td>Forged decision token injection using compromised signing key</td>
+                <td>Compromised Infrastructure Provider</td>
+                <td class="sev">Critical</td>
+                <td>Key isolation in HSM; signature verification at inference endpoint</td>
+                <td>Persists under key compromise scenarios</td>
+              </tr>
+              <tr>
+                <td>Gateway Disablement</td>
+                <td>Enforcement gateway removal or replacement with non-enforcing proxy</td>
+                <td>Model Operator; Compromised Infrastructure Provider</td>
+                <td class="sev">Critical</td>
+                <td>Fail-closed semantics at inference endpoint; availability monitoring</td>
+                <td>Limited to availability degradation under correct fail-closed implementation</td>
+              </tr>
+              <tr>
+                <td>Replay Attack</td>
+                <td>Replay of valid consent artifact for different purpose or time window</td>
+                <td>External Attacker; Malicious Integrator</td>
+                <td class="sev">High</td>
+                <td>Context-bound artifact structure; contextual hash verification</td>
+                <td>Low under correct binding verification implementation</td>
+              </tr>
+              <tr>
+                <td>Identity Spoofing</td>
+                <td>Impersonation of authorized requestor through credential theft</td>
+                <td>External Attacker; Malicious Integrator</td>
+                <td class="sev">High</td>
+                <td>Cryptographic requestor authentication; short-lived credential validity</td>
+                <td>Persists under compromised identity provider scenarios</td>
+              </tr>
+              <tr>
+                <td>Policy Tampering</td>
+                <td>Unauthorized modification of active policy versions</td>
+                <td>Compromised Infrastructure Provider; Insider</td>
+                <td class="sev">High</td>
+                <td>Policy version immutability; policy content signing</td>
+                <td>Low under correct policy management controls</td>
+              </tr>
+              <tr>
+                <td>Audit Log Suppression</td>
+                <td>Suppression or modification of enforcement decision records</td>
+                <td>Compromised Infrastructure Provider; Insider</td>
+                <td class="sev">High</td>
+                <td>Tamper-evident log structure; write-only access enforcement</td>
+                <td>Persists under insider or infrastructure compromise</td>
+              </tr>
+              <tr>
+                <td>Consent State Injection</td>
+                <td>Manipulation of consent registry query responses</td>
+                <td>Compromised Infrastructure Provider</td>
+                <td class="sev">High</td>
+                <td>Authenticated registry interface; response integrity signing</td>
+                <td>Persists under registry infrastructure compromise</td>
+              </tr>
+              <tr>
+                <td>Cryptographic Compromise</td>
+                <td>Signing key compromise enabling forged consent artifacts</td>
+                <td>Compromised Infrastructure Provider; External Attacker</td>
+                <td class="sev">Critical</td>
+                <td>HSM-based key storage; key rotation and revocation protocols</td>
+                <td>Persists; requires key revocation and artifact re-issuance</td>
+              </tr>
+              <tr>
+                <td>Fraudulent Certification</td>
+                <td>Certification claims asserted for non-conformant implementations</td>
+                <td>Governance Abuse Actor</td>
+                <td class="sev">High</td>
+                <td>Governance Charter oversight; certification registry maintenance</td>
+                <td>Persists under governance body capture scenarios</td>
+              </tr>
+              <tr>
+                <td>Supply Chain Attack</td>
+                <td>Compromised enforcement component containing backdoor logic</td>
+                <td>Compromised Infrastructure Provider; Governance Abuse Actor</td>
+                <td class="sev">Critical</td>
+                <td>Component integrity verification; conformance testing of third-party implementations</td>
+                <td>Persists; requires independent supply chain security program</td>
+              </tr>
+              <tr>
+                <td>Insider Abuse</td>
+                <td>Administrator-level configuration modification or signing key access</td>
+                <td>Insider (privileged administrator)</td>
+                <td class="sev">High</td>
+                <td>Separation of duties; administrative audit logging; multi-party authorization</td>
+                <td>Structural residual; requires governance controls outside architecture</td>
+              </tr>
+              <tr>
+                <td>Registry Outage</td>
+                <td>Consent registry unavailability during active enforcement</td>
+                <td>External Attacker (DoS); Operational Failure</td>
+                <td class="sev">Medium</td>
+                <td>Fail-closed enforcement behavior; registry redundancy</td>
+                <td>Service availability impact only under correct fail-closed implementation</td>
+              </tr>
+              <tr>
+                <td>Purpose Misrepresentation</td>
+                <td>Malicious integrator inflating declared purpose scope in request</td>
+                <td>Malicious Integrator</td>
+                <td class="sev">Medium</td>
+                <td>Purpose binding validation against granular consent; audit log review</td>
+                <td>Persists where consent granularity is coarse</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 15 -->
+      <div id="s15" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 15</span>
+        <h2><a class="anchor-link" href="#s15">#</a>Formal Security Posture</h2>
+
+        <p>The security posture of the QODIQA enforcement model is defined by the combination of architectural guarantees it provides, the operational dependencies on which those guarantees rest, and the limits of what the architecture can ensure independently of deployment context and governance infrastructure.</p>
+
+        <h3>15.1 Architectural Guarantees</h3>
+        <p>The QODIQA enforcement architecture provides the following guarantees under the assumptions stated in Section 3: all AI inference execution is preceded by a deterministic enforcement decision; enforcement decisions are cryptographically authenticated and auditably recorded; enforcement decisions are reproducible given the same inputs and policy version; and failure of any required enforcement dependency causes the system to deny rather than to permit inference execution.</p>
+        <p>These guarantees constitute a deterministic enforcement boundary. Within this boundary, the system's behavior is specified precisely and is not subject to probabilistic reasoning, contextual inference, or best-effort interpretation. The boundaries are structural, not statistical.</p>
+
+        <h3>15.2 Operational Dependencies</h3>
+        <p>The enforcement guarantees are contingent on: correct deployment configuration that ensures gateway traversal for all inference requests; correct implementation of cryptographic controls as specified in the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement; operational integrity of the consent registry, identity infrastructure, and audit logging system; and governance practices that maintain the integrity of policy management and certification processes.</p>
+        <p>Violations of these operational dependencies do not indicate architectural defects. They represent conditions under which the architectural guarantees are no longer applicable because the prerequisites for those guarantees are not met. The enforcement boundary assumes that these prerequisites have been met; it does not enforce them.</p>
+
+        <h3>15.3 Limits of Architectural Guarantees</h3>
+        <p>The QODIQA enforcement architecture does not guarantee: the accuracy or completeness of consent state captured by external collection interfaces; the correctness or safety of AI model behavior within authorized execution boundaries; the accuracy of audit logs in the presence of insider attacks targeting logging infrastructure simultaneously with enforcement bypass; or the trustworthiness of certification claims in the absence of independent verification of certification body processes.</p>
+        <p>Residual risk remains where operational dependencies are not met, governance infrastructure is compromised, or threat actors possess capabilities that exceed those characterized in Section 5. These residual risks are documented in Section 13 and are acknowledged as conditions that the architecture is designed to make difficult but cannot eliminate.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Formal Security Posture Statement</div>
+          <p>The QODIQA enforcement architecture provides deterministic, cryptographically grounded, fail-closed enforcement of consent constraints for AI inference execution, within the system boundary defined in Section 2, under the operational assumptions stated in Section 3, subject to the residual risks enumerated in Section 13. It does not provide security guarantees outside the enforcement boundary, does not eliminate insider threat, and does not constitute a substitute for operational security practices, supply chain security programs, or governance oversight of certification processes.</p>
+        </div>
+
+        <p class="section-note">This document presents a formal adversarial threat model and does not constitute legal, regulatory, or operational security advice. Organizations implementing QODIQA-conformant systems are required to conduct deployment-specific threat assessments that extend from the analytical baseline established here, accounting for deployment topology, threat actor capabilities, and operational context specific to their environment.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is part of the QODIQA specification corpus and provides the adversarial threat model and abuse case analysis for deterministic runtime consent enforcement architectures.</p>
+
+          <p>The document analyzes potential adversarial behaviors, attack surfaces, and bypass strategies relevant to consent enforcement at runtime. It defines the threat landscape associated with deterministic enforcement systems and identifies residual risks that remain under the architectural and cryptographic assumptions defined in the QODIQA standard corpus.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-SEC-TM-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Threat Model and Abuse Case Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Security Analysis Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Threat Model and Abuse Case Analysis</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-SEC-TM-2026-001</p>
+      <p>Security Analysis Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a formal adversarial threat model and does not constitute legal, regulatory, or operational security advice. Threat characterizations are intended for conformance evaluation and security planning only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-SEC-TM-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- ScrollSpy: scroll-position based (reliable across all screen sizes) ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s0','s1','s1-1','s1-2','s1-3',
+    's2','s2-1','s2-2','s2-diag','s3','s4',
+    's5','s5-1','s5-2','s5-3','s5-4','s5-5',
+    's6','s6-1','s6-2','s6-3','s6-4','s6-5','s6-6',
+    's7','s8','s8-1','s8-2','s8-3','s8-4',
+    's9','s9-1','s9-2','s9-3','s9-4',
+    's10','s10-1','s10-2','s10-3','s10-4',
+    's11','s11-1','s11-2','s11-3','s11-4',
+    's12','s12-1','s12-2','s12-mit',
+    's13','s14','s15','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const offset = window.innerWidth <= 768 ? 80 : 120;
+    let activeId = sections[0] ? sections[0].id : null;
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top + scrollY - offset <= scrollY) {
+        activeId = sections[i].id;
+      } else {
+        break;
+      }
+    }
+    if (activeId) setActive(activeId);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Public Specification License · v1.0</title>
+<meta name="description" content="QODIQA Public Specification License Version 1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Public Specification License">
+<meta property="og:description" content="Governing access, use, and integrity of the QODIQA specification corpus.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 13px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 32px 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '•';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   CORPUS LIST (Document Status)
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+/* ============================================================
+   CONTACT BLOCK
+   ============================================================ */
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   PROHIBITION / PERMISSION BLOCKS
+   ============================================================ */
+.prohib-block {
+  background: #F8EFEF;
+  border: 1px solid #D2B8B8;
+  border-left: 3px solid #8A2020;
+  margin: 16px 0 20px;
+  overflow: hidden;
+}
+
+.prohib-block-head {
+  background: #8A2020;
+  padding: 9px 15px;
+}
+
+.prohib-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,220,220,0.90);
+}
+
+.prohib-block-body {
+  padding: 16px 20px;
+}
+
+.prohib-block-body p {
+  font-size: 0.905rem;
+  color: #3A1010;
+  margin-bottom: 0.75em;
+  line-height: 1.62;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prohib-block-body p:last-child { margin-bottom: 0; }
+
+.permit-block {
+  background: #EFF5F0;
+  border: 1px solid #B0CCBA;
+  border-left: 3px solid #1A4A2A;
+  margin: 16px 0 20px;
+  overflow: hidden;
+}
+
+.permit-block-head {
+  background: #1A4A2A;
+  padding: 9px 15px;
+}
+
+.permit-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(200,240,215,0.90);
+}
+
+.permit-block-body {
+  padding: 16px 20px;
+}
+
+.permit-block-body p {
+  font-size: 0.905rem;
+  color: #1A3A28;
+  margin-bottom: 0.75em;
+  line-height: 1.62;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.permit-block-body p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   DEFINITION LIST
+   ============================================================ */
+.def-list {
+  margin: 20px 0 28px;
+  border: 1px solid #C4C0BA;
+}
+
+.def-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border-bottom: 1px solid #D4D0CA;
+}
+
+.def-item:last-child { border-bottom: none; }
+
+.def-term {
+  padding: 10px 15px;
+  background: #1C1F25;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.70);
+  letter-spacing: 0.06em;
+  border-right: 1px solid #26282E;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.def-body {
+  padding: 10px 15px;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.58;
+  background: #F6F4F0;
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.def-item:nth-child(even) .def-body { background: #EAE7E2; }
+
+/* ============================================================
+   INST BLOCK
+   ============================================================ */
+.inst-block {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 28px 0;
+}
+
+.inst-block p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  .def-item { grid-template-columns: 1fr; }
+  .def-term { border-right: none; border-bottom: 1px solid #26282E; }
+
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Public Specification<br>License<br><span class="italic-part">Public Usage, Derivative Constraints,<br>and Certification Boundary Framework</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-PSL-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Governing the conditions under which the specification corpus may be accessed, referenced, cited, implemented, and extended.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-preamble">Preamble</a>
+      <a class="nav-item" href="#s1">1. Definitions</a>
+      <a class="nav-item" href="#s2">2. Grant of Public Access</a>
+      <a class="nav-item" href="#s3">3. Permitted Uses</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Commercial Implementation</a>
+      <a class="nav-item" href="#s4">4. Restrictions</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Anti-Confusion Clause</a>
+      <a class="nav-item" href="#s5">5. Derivative Specifications</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Designation Restriction</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Deviation Disclosure</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Compatibility Claims</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Silent Semantic Modification</a>
+      <a class="nav-item" href="#s6">6. Conformance Claims</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Self-Attestation Disclosure</a>
+      <a class="nav-item sub" href="#s6-2">6.2 False Claims</a>
+      <a class="nav-item" href="#s7">7. Certification Boundary Protection</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Protected Instruments</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Certification Engagement</a>
+      <a class="nav-item" href="#s8">8. Trademark and Naming Policy</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Permitted Descriptive Reference</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Prohibited Naming Patterns</a>
+      <a class="nav-item" href="#s9">9. Intellectual Property and Patent Boundary</a>
+      <a class="nav-item sub" href="#s9-1">9.1 No Implied Patent License</a>
+      <a class="nav-item sub" href="#s9-2">9.2 Non-Infringement Disclaimer</a>
+      <a class="nav-item sub" href="#s9-3">9.3 Contributor Neutrality</a>
+      <a class="nav-item" href="#s10">10. No Warranty</a>
+      <a class="nav-item" href="#s11">11. Limitation of Liability</a>
+      <a class="nav-item" href="#s12">12. Governance Authority</a>
+      <a class="nav-item sub" href="#s12-1">12.1 Exclusive Authority</a>
+      <a class="nav-item sub" href="#s12-2">12.2 Interpretive Authority</a>
+      <a class="nav-item" href="#s13">13. Amendment Process</a>
+      <a class="nav-item sub" href="#s13-1">13.1 License Versioning</a>
+      <a class="nav-item sub" href="#s13-2">13.2 Backward Compatibility</a>
+      <a class="nav-item sub" href="#s13-3">13.3 Community Modification</a>
+      <a class="nav-item" href="#s14">14. Severability</a>
+      <a class="nav-item" href="#s15">15. Governing Law and Jurisdiction</a>
+      <a class="nav-item sub" href="#s15-1">15.1 Mandatory Local Law</a>
+      <a class="nav-item sub" href="#s15-2">15.2 Jurisdiction for Disputes</a>
+      <a class="nav-item sub" href="#s15-3">15.3 International Enforceability</a>
+      <a class="nav-item" href="#s16">16. Termination</a>
+      <a class="nav-item sub" href="#s16-1">16.1 Automatic Termination</a>
+      <a class="nav-item sub" href="#s16-2">16.2 Cure Period</a>
+      <a class="nav-item sub" href="#s16-3">16.3 Reinstatement</a>
+      <a class="nav-item sub" href="#s16-4">16.4 Effect on Derivative Works</a>
+      <a class="nav-item" href="#s17">17. Enforcement and Remedies</a>
+      <a class="nav-item sub" href="#s17-1">17.1 Injunctive Relief</a>
+      <a class="nav-item sub" href="#s17-2">17.2 Demand for Cure</a>
+      <a class="nav-item sub" href="#s17-3">17.3 Non-Waiver</a>
+      <a class="nav-item sub" href="#s17-4">17.4 Cumulative Remedies</a>
+      <a class="nav-item sub" href="#s17-5">17.5 Immediate Enforcement</a>
+      <a class="nav-item" href="#s18">18. Institutional Continuity</a>
+      <a class="nav-item sub" href="#s18-1">18.1 Anti-Capture Provision</a>
+      <a class="nav-item sub" href="#s18-2">18.2 Anti-Forking</a>
+      <a class="nav-item sub" href="#s18-3">18.3 Continuity of Terms</a>
+      <a class="nav-item sub" href="#s18-4">18.4 Scope of Clause</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- PREAMBLE -->
+      <div id="s-preamble" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Preamble</span>
+          <p>The QODIQA specification corpus constitutes a body of technical standards governing deterministic runtime consent enforcement for AI systems. The publication of this corpus serves the public interest in establishing a coherent, interoperable, and auditable framework for AI consent infrastructure. Publication is a deliberate act of standardization, not a grant of unrestricted use.</p>
+          <p><strong>Public availability does not imply unrestricted modification rights.</strong> The integrity of a deterministic enforcement standard depends upon the fidelity of its normative content. A standard whose normative requirements may be silently altered, misattributed, or selectively presented cannot function as an infrastructure reference. The present License exists precisely to preserve that integrity.</p>
+          <p>This document, the QODIQA Public Specification License Version 1.0 (hereinafter "this License" or "QPSL v1.0"), governs the conditions under which the QODIQA specification corpus may be accessed, referenced, cited, implemented, and extended. <strong>This License governs the specification corpus only.</strong> Reference implementations, certification toolchains, and conformance testing infrastructure are governed by separate instruments unless expressly incorporated herein. Publication of the Specification Corpus does not constitute a patent licensing framework; no patent rights are granted by or inferred from this License.</p>
+          <p>The Governance Authority actively monitors compliance with this License and will pursue enforcement through all available legal and institutional mechanisms where violations are identified.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Definitions</h2>
+
+        <p>The following terms, when used in this License, carry the meanings assigned below. All definitions are deterministic and shall not be construed expansively or by analogy beyond their stated scope.</p>
+
+        <div class="def-list">
+          <div class="def-item">
+            <div class="def-term">Specification Corpus</div>
+            <div class="def-body">The complete set of documents, schemas, normative text, and associated non-normative materials published by the QODIQA Governance Authority under the QODIQA designation, as identified by official document identifiers of the form <code>QODIQA-*</code>.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Normative Content</div>
+            <div class="def-body">Any provision, requirement, constraint, definition, invariant, or protocol specification within the Specification Corpus that establishes mandatory behavior. Normative Content is identified by the terms "shall," "shall not," "must," "must not," "required," "prohibited," and equivalent unambiguous imperative language.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Non-Normative Content</div>
+            <div class="def-body">Explanatory text, rationale, examples, notes, appendices, and guidance materials that accompany Normative Content but do not independently establish mandatory behavior. Non-Normative Content is identified by designations such as "Note," "Example," "Informative Annex," or equivalent markers.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Derivative Specification</div>
+            <div class="def-body">Any document, standard, schema, or protocol text that (a) reproduces a substantial portion of Normative Content from the Specification Corpus, (b) modifies, extends, restricts, or reinterprets Normative Content, or (c) presents itself as a profile, subset, superset, or adaptation of the Specification Corpus, whether or not it uses the QODIQA designation.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Implementation</div>
+            <div class="def-body">Any software, hardware, system, service, or component that is designed, constructed, or represented as operating in conformance with any portion of the Specification Corpus, regardless of whether a Conformance Claim is made.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Conformance Claim</div>
+            <div class="def-body">Any assertion, statement, label, badge, mark, or representation, whether explicit or implied, that an Implementation satisfies the requirements of any portion of the Specification Corpus.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Certification</div>
+            <div class="def-body">A formal determination, issued by the Governance Authority or an Authorized Certification Body, that an Implementation has been evaluated against the Conformance Test Suite and found to satisfy applicable normative requirements. Certification is distinct from self-attestation and from implementation claims made without third-party evaluation.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Trademark</div>
+            <div class="def-body">The designation "QODIQA," associated logos, certification marks, conformance badges, and any other distinctive identifiers controlled by the Governance Authority, whether or not formally registered in any jurisdiction.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Governance Authority</div>
+            <div class="def-body">The body responsible for the QODIQA Specification Corpus, as constituted under the QODIQA Governance Charter. The Governance Authority holds exclusive authority to amend the Specification Corpus, issue Certifications, authorize Certification Bodies, and interpret this License in cases of dispute.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Authorized Certification Body</div>
+            <div class="def-body">An entity that has been formally authorized by the Governance Authority, under procedures defined in the QODIQA Governance Charter, to conduct Conformance evaluations and issue Certification determinations on behalf of or in coordination with the Governance Authority.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Grant of Public Access</h2>
+
+        <p>Subject to the terms and conditions of this License, the Governance Authority grants to any person or entity ("Recipient") a worldwide, royalty-free, non-exclusive, non-transferable right to access the Specification Corpus for the purposes enumerated in Section 3 (Permitted Uses).</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Scope of Grant</div>
+          <p>The rights granted in this section extend to reading, referencing, citing, and privately implementing the Specification Corpus. They do not extend to modification of Normative Content, publication of Derivative Specifications under the QODIQA designation, issuance of Conformance Claims beyond what is permitted under Section 6, or any use of the Trademark beyond what is permitted under Section 8.</p>
+        </div>
+
+        <p>Publication of the Specification Corpus in accessible form is a deliberate act of the Governance Authority to facilitate adoption, evaluation, and independent implementation. Such publication does not constitute abandonment of governance authority, relaxation of integrity requirements, or waiver of Trademark rights. The grant of public access is conditioned upon compliance with this License in its entirety.</p>
+
+        <p>Access obtained through any channel, including official publication repositories, third-party mirrors, academic archives, or derivative distributions, is governed by this License. Recipients who redistribute copies of the Specification Corpus must ensure that this License accompanies any such redistribution without modification.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Permitted Uses</h2>
+
+        <p>The following uses of the Specification Corpus are expressly permitted under this License without additional authorization from the Governance Authority, provided all other terms of this License are observed.</p>
+
+        <div class="permit-block">
+          <div class="permit-block-head">
+            <span class="permit-label">Permitted — Unrestricted</span>
+          </div>
+          <div class="permit-block-body">
+            <p><strong>Academic citation and scholarly analysis.</strong> Reproduction of limited excerpts of Normative or Non-Normative Content for purposes of academic citation, quotation, and scholarly commentary, in accordance with applicable fair use and fair dealing principles and subject to proper attribution.</p>
+            <p><strong>Research and evaluation.</strong> Analysis, critique, comparison, and evaluation of the Specification Corpus for research purposes, including publication of findings in academic, technical, or regulatory contexts.</p>
+            <p><strong>Internal evaluation.</strong> Reading and analysis of the Specification Corpus for the purpose of assessing its suitability for adoption, procurement, or regulatory compliance, including circulation within an organization for such purposes.</p>
+            <p><strong>Private implementation.</strong> Development of Implementations for internal use, where no Conformance Claim is made to any external party.</p>
+            <p><strong>Independent security review.</strong> Analysis of the Specification Corpus for purposes of identifying security vulnerabilities, adversarial risks, or implementation deficiencies, subject to responsible disclosure practices consistent with the QODIQA Governance Charter.</p>
+            <p><strong>Regulatory mapping.</strong> Preparation of analyses mapping the Specification Corpus to applicable regulatory frameworks, standards, or legal requirements.</p>
+            <p><strong>Commentary and educational use.</strong> Publication of explanatory commentary, tutorials, training materials, and educational content that describes or interprets the Specification Corpus, provided such materials clearly distinguish the author's views from Normative Content and do not misrepresent the content of the Specification Corpus.</p>
+          </div>
+        </div>
+
+        <div id="s3-1" class="doc-section">
+          <h3>3.1 Commercial Implementation</h3>
+          <p>Commercial implementation of the Specification Corpus is permitted subject to the following conditions. An entity that develops, deploys, or distributes an Implementation for commercial purposes may do so without authorization from the Governance Authority, provided that: (a) no Conformance Claim beyond what is permitted under Section 6 is made; (b) no Trademark is used beyond what is permitted under Section 8; (c) the Implementation does not misrepresent the scope, status, or content of the Specification Corpus; and (d) the Implementation does not alter Normative Content and present the altered version as the official or canonical text of the Specification Corpus.</p>
+          <p>Commercial implementors who intend to make Certification-grade Conformance Claims must engage with the Governance Authority or an Authorized Certification Body as provided in Section 7.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Restrictions</h2>
+
+        <p>The following acts are prohibited under this License. Violation of any prohibition constitutes a material breach of this License and triggers the consequences set forth in Section 16 (Termination).</p>
+
+        <div class="prohib-block">
+          <div class="prohib-block-head">
+            <span class="prohib-label">Prohibited — Without Exception</span>
+          </div>
+          <div class="prohib-block-body">
+            <p><strong>Misrepresentation as official release.</strong> Representing any modified, partial, or independently produced document as an official release of the QODIQA Specification Corpus, or presenting any such document as having been issued, approved, or endorsed by the Governance Authority when it has not.</p>
+            <p><strong>Unauthorized certification claims.</strong> Claiming, representing, implying, or facilitating the belief that an Implementation has been Certified under the QODIQA Certification Framework when no Certification has been granted by the Governance Authority or an Authorized Certification Body.</p>
+            <p><strong>Alteration and republication of Normative Content.</strong> Altering any Normative Content and publishing or distributing the altered version under the QODIQA designation, or in a manner that could reasonably be understood to represent the altered version as the canonical text.</p>
+            <p><strong>Confusingly similar designation.</strong> Publishing any specification, standard, protocol, or document under a name, identifier, or designation that is confusingly similar to "QODIQA" or to any document identifier within the Specification Corpus, where such designation could lead a reasonable reader to conclude that the document is part of the official Specification Corpus.</p>
+            <p><strong>Implied endorsement.</strong> Representing or implying that the Governance Authority has endorsed, validated, reviewed, or approved any product, service, Implementation, analysis, or commercial offering, unless such endorsement has been expressly granted in writing by the Governance Authority.</p>
+            <p><strong>Confusingly similar certification marks.</strong> Creating, using, or distributing any mark, badge, label, or visual identifier that is confusingly similar to any official QODIQA certification mark, conformance badge, or Trademark, whether or not the QODIQA designation itself is used.</p>
+          </div>
+        </div>
+
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Anti-Confusion Clause</h3>
+          <p>In all cases of ambiguity as to whether a particular act, designation, or representation falls within the prohibitions of this Section, the governing standard is whether a technically informed reader, exercising reasonable care, could be misled as to: (a) the official or authoritative status of a document or Implementation; (b) the certification status of an Implementation; or (c) the endorsement of any party by the Governance Authority. Where such misleading is reasonably possible, the act, designation, or representation is prohibited.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Derivative Specifications</h2>
+
+        <p>Any party that produces a Derivative Specification, as defined in Section 1, is subject to the requirements of this Section in addition to all other applicable provisions of this License.</p>
+
+        <div id="s5-1" class="doc-section">
+          <h3>5.1 Designation Restriction</h3>
+          <p>A Derivative Specification shall not use the QODIQA designation, including the term "QODIQA," any document identifier of the form <code>QODIQA-*</code>, or any confusingly similar designation, unless the Governance Authority has granted express written authorization for such use. Authorization is granted on a case-by-case basis under procedures defined in the QODIQA Governance Charter and does not arise by implication from publication, citation, or implementation of the Specification Corpus.</p>
+        </div>
+
+        <div id="s5-2" class="doc-section">
+          <h3>5.2 Deviation Disclosure Obligation</h3>
+          <p>Any Derivative Specification that modifies, restricts, or extends Normative Content must include a clearly prominent deviation disclosure statement that: (a) identifies the originating QODIQA specification document by its official identifier; (b) enumerates with specificity each normative requirement that has been added, removed, modified, or reinterpreted; and (c) states that the Derivative Specification is not an official release of the QODIQA Specification Corpus and has not been approved by the Governance Authority.</p>
+        </div>
+
+        <div id="s5-3" class="doc-section">
+          <h3>5.3 Compatibility Claims</h3>
+          <p>No Derivative Specification may represent itself as compatible with, conformant to, or interoperable with any portion of the Specification Corpus unless such compatibility has been validated through official conformance testing procedures administered by the Governance Authority or an Authorized Certification Body. Unvalidated compatibility claims constitute misrepresentation under Section 4.</p>
+        </div>
+
+        <div id="s5-4" class="doc-section">
+          <h3>5.4 Prohibition on Silent Semantic Modification</h3>
+          <p>A Derivative Specification shall not alter the semantic content of any normative requirement, including through substitution of synonymous language, restructuring of logical dependencies, or modification of scope qualifications, without explicit disclosure pursuant to Section 5.2. Semantic modification without disclosure is prohibited regardless of whether the literal text of the Normative Content is reproduced verbatim.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Conformance Claims</h2>
+
+        <p>Conformance Claims are subject to a tiered regime that distinguishes between certified conformance, self-attested alignment, and informal description. The applicable tier governs both the language that may be used and the obligations that attach to the claimant.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 6.A — Conformance Claim Classification</span>
+          <table>
+            <thead>
+              <tr><th>Tier</th><th>Permissible Language</th><th>Conditions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Certified</td>
+                <td>"Certified under QODIQA [document identifier]"</td>
+                <td>Requires Certification issued by Governance Authority or Authorized Certification Body. Subject to Certification mark usage rules in Section 8.</td>
+              </tr>
+              <tr>
+                <td>Self-Attested</td>
+                <td>"Built in alignment with the QODIQA specification" · "Independent implementation of QODIQA standard"</td>
+                <td>Permissible without Governance Authority authorization. Must be accompanied by prominent disclosure that the claim is self-attested and that no Certification has been granted.</td>
+              </tr>
+              <tr>
+                <td>Descriptive</td>
+                <td>"Designed to address requirements similar to those in QODIQA" · "Inspired by the QODIQA framework"</td>
+                <td>Permissible without restriction, provided no implication of formal conformance or Certification arises.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="s6-1" class="doc-section">
+          <h3>6.1 Self-Attestation Disclosure Requirement</h3>
+          <p>Any Conformance Claim made at the Self-Attested tier must be accompanied, in the same document or communication, by a disclosure statement in substantially the following form: <em>"This conformance claim is a self-attestation. It has not been evaluated, verified, or certified by the QODIQA Governance Authority or any Authorized Certification Body. It does not constitute QODIQA Certification."</em> Omission of the required disclosure from a self-attested claim renders the claim a violation of Section 4.</p>
+        </div>
+
+        <div id="s6-2" class="doc-section">
+          <h3>6.2 False Claims</h3>
+          <p>Any Conformance Claim that (a) uses Certified-tier language without a valid Certification, (b) omits the required Self-Attested tier disclosure, or (c) creates a false impression of conformance or Certification through the combination of language, imagery, or context, constitutes a material violation of this License and is subject to termination under Section 16.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Non-Conformant Representation</div>
+          <p>Any language that implies partial or selective compliance, or that exaggerates alignment with the Specification Corpus beyond the actual scope of a Recipient's implementation, is considered misleading and falls within the prohibited conduct defined in Section 4. Recipients shall not represent their implementations as "partially conformant," "substantially aligned," or any similar formulation that overstates verified compliance.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Certification Boundary Protection</h2>
+
+        <p>The QODIQA Certification Framework constitutes a protected institutional instrument. The integrity of Certification as a signal of conformance quality depends upon the exclusivity and control of Certification authority. Unauthorized replication or simulation of Certification processes undermines the informational value of Certification to the public, to regulators, and to the market.</p>
+
+        <div class="inst-statement">
+          <p>Certification requires authorization under Governance Charter procedures. No act, agreement, or representation by any party other than the Governance Authority or its Authorized Certification Bodies creates, transfers, or implies Certification authority. The Governance Authority enforces this boundary as a continuous institutional obligation, not merely as a response to individual violations.</p>
+        </div>
+
+        <div id="s7-1" class="doc-section">
+          <h3>7.1 Protected Instruments</h3>
+          <p>The following are protected instruments of the QODIQA Certification Framework. Their creation, issuance, use, or simulation outside of Governance Authority authorization is prohibited under this License.</p>
+
+          <ul class="prop-list">
+            <li>The QODIQA Certification Framework and all associated procedures and criteria documents</li>
+            <li>Official conformance marks, certification badges, and associated visual identifiers</li>
+            <li>Audit artifacts, evaluation reports, and attestation documents issued pursuant to official Certification procedures</li>
+            <li>Certification determination letters and official conformance statements</li>
+            <li>The QODIQA Conformance Test Suite and all associated test cases, scoring criteria, and evaluation instruments</li>
+          </ul>
+        </div>
+
+        <div id="s7-2" class="doc-section">
+          <h3>7.2 Certification Engagement</h3>
+          <p>Entities seeking Certification must engage with the Governance Authority or an Authorized Certification Body through procedures defined in the QODIQA Governance Charter. Certification engagements are subject to separate agreements that may impose additional obligations. This License does not constitute a Certification agreement and does not guarantee access to Certification processes.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Trademark and Naming Policy</h2>
+
+        <p>"QODIQA" is a protected designation of the Governance Authority. Its use is governed by this Section and, where applicable, by separate trademark licensing instruments issued by the Governance Authority. The provisions of this Section apply to all uses of the Trademark in connection with implementations, products, services, publications, and communications of any kind.</p>
+
+        <div id="s8-1" class="doc-section">
+          <h3>8.1 Permitted Descriptive Reference</h3>
+          <p>The following phrases and usages are expressly permitted under this License without additional authorization, provided they are used accurately and not in a manner that implies Certification, official status, or endorsement.</p>
+
+          <div class="def-list">
+            <div class="def-item">
+              <div class="def-term">Permitted</div>
+              <div class="def-body">"Built in alignment with the QODIQA specification"</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">Permitted</div>
+              <div class="def-body">"Independent implementation of the QODIQA standard"</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">Permitted</div>
+              <div class="def-body">"Designed to address QODIQA-defined consent enforcement requirements"</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">Permitted</div>
+              <div class="def-body">"Evaluated against QODIQA specification requirements [self-attested]"</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">Permitted</div>
+              <div class="def-body">Accurate citation of QODIQA specification documents by their official identifiers in technical or regulatory documents</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s8-2" class="doc-section">
+          <h3>8.2 Prohibited Naming Patterns</h3>
+          <p>The following usages are prohibited without express written authorization from the Governance Authority.</p>
+
+          <div class="prohib-block">
+            <div class="prohib-block-head">
+              <span class="prohib-label">Prohibited Naming Patterns</span>
+            </div>
+            <div class="prohib-block-body">
+              <p><strong>"Official."</strong> Use of the term "official" in combination with "QODIQA" in any context that implies the Governance Authority has authorized or endorsed a product, service, or implementation, unless such authorization has been expressly granted.</p>
+              <p><strong>"Certified" (without Certification).</strong> Use of the term "certified" or "QODIQA-certified" in connection with any Implementation or service that has not received a Certification determination from the Governance Authority or an Authorized Certification Body.</p>
+              <p><strong>Confusingly similar product names.</strong> Naming a product, service, tool, or framework with a designation that incorporates "QODIQA" or is confusingly similar thereto, unless authorized.</p>
+              <p><strong>Domain names and organizational designations.</strong> Registering domain names, organizational names, or trade names that incorporate "QODIQA" in a manner that could imply official affiliation with the Governance Authority, unless authorized.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Intellectual Property and Patent Boundary</h2>
+
+        <p>This Section defines the intellectual property boundary applicable to the Specification Corpus. The provisions of this Section are intended to provide clarity to implementors and to the broader technical community without creating patent obligations of any kind.</p>
+
+        <div id="s9-1" class="doc-section">
+          <h3>9.1 No Implied Patent License</h3>
+          <p>Publication of the Specification Corpus does not grant any patent license. No patent rights of any kind are conveyed by implication, estoppel, exhaustion, or otherwise by virtue of this License, the publication of the Specification Corpus, or any act or omission of the Governance Authority in connection with the Specification Corpus. Any party that implements the Specification Corpus is solely responsible for identifying, evaluating, and securing any patent rights that may be necessary for such implementation.</p>
+        </div>
+
+        <div id="s9-2" class="doc-section">
+          <h3>9.2 Non-Infringement Disclaimer</h3>
+          <p>The Governance Authority makes no representation, warranty, or assurance that implementation of the Specification Corpus will not infringe any patent, design right, or other intellectual property right held by any third party. The absence of a known patent claim against any portion of the Specification Corpus at the time of publication does not constitute a representation that no such claim exists or will arise. Responsibility for intellectual property clearance rests exclusively with each implementor.</p>
+        </div>
+
+        <div id="s9-3" class="doc-section">
+          <h3>9.3 Contributor Neutrality</h3>
+          <p>Contribution of technical content to the Specification Corpus does not, by itself, constitute a grant of any patent license by the contributing party. Patent commitments by contributors, if any, must be made explicitly through a separate documented instrument that has been accepted by the Governance Authority and recorded in the QODIQA Governance Charter or an associated patent policy document. No patent commitment arises by inference from the act of contribution alone.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Patent Boundary Clarification</div>
+            <p>This Section does not create a patent pool, impose FRAND obligations, or require any party to grant patent rights as a condition of implementing or referencing the Specification Corpus. The provisions of this Section are intended solely to delineate the boundary of rights granted under this License and to provide predictability for implementors operating in diverse jurisdictions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>No Warranty</h2>
+
+        <p>The Specification Corpus is published on an "as is" basis. The Governance Authority makes no representations or warranties of any kind, express or implied, with respect to the Specification Corpus or any portion thereof.</p>
+
+        <ul class="prop-list">
+          <li>No warranty of fitness for a particular purpose. The Governance Authority does not warrant that the Specification Corpus is suitable for any specific application, deployment context, or regulatory purpose.</li>
+          <li>No warranty of accuracy or completeness. The Governance Authority does not warrant that the Specification Corpus is free of errors, omissions, or ambiguities.</li>
+          <li>No guarantee of regulatory compliance. Publication of the Specification Corpus does not constitute a representation that implementation of the Specification Corpus will satisfy any regulatory, legal, or contractual obligation in any jurisdiction.</li>
+          <li>No operational guarantee. The Governance Authority does not guarantee that Implementations built according to the Specification Corpus will perform as intended, achieve any security objective, or satisfy any operational requirement.</li>
+          <li>No warranty arising from course of dealing. No warranty arises from the Governance Authority's conduct in publishing, maintaining, or revising the Specification Corpus, or from any prior course of dealing between the Governance Authority and any Recipient.</li>
+        </ul>
+
+        <p>Recipients are solely responsible for evaluating the suitability of the Specification Corpus for their intended purposes and for ensuring that their Implementations satisfy all applicable legal, regulatory, and operational requirements.</p>
+
+        <p>The Specification Corpus has not been designed, validated, or warranted for use in high-risk AI systems, critical infrastructure, safety-critical environments, or autonomous decision-making systems where failure or non-conformance could result in physical harm, regulatory liability, or systemic risk. Recipients deploying Implementations in such contexts bear full and exclusive responsibility for all risk assessment, regulatory compliance, and safety validation applicable to their deployment environment.</p>
+
+        <p>Publication of the Specification Corpus does not constitute a representation that conformant implementations will satisfy the requirements of any safety certification, critical infrastructure standard, or regulatory regime, including without limitation those governing autonomous systems, medical devices, financial infrastructure, or public safety systems. No conformance determination under this corpus substitutes for applicable domain-specific certification obligations.</p>
+
+        <p><strong>The Specification Corpus shall not be relied upon as a sufficient basis for deployment in safety-critical systems, autonomous decision-making environments, or regulated contexts where independent certification, domain-specific validation, or regulatory authorization is required.</strong></p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Limitation of Liability</h2>
+
+        <p>To the maximum extent permitted by applicable law, the Governance Authority shall not be liable for any loss, damage, cost, or expense of any kind arising out of or in connection with: (a) the publication or availability of the Specification Corpus; (b) any Recipient's use of, reliance upon, or inability to use the Specification Corpus; (c) any error, omission, or ambiguity in the Specification Corpus; (d) any change to, withdrawal of, or failure to update the Specification Corpus; or (e) any act or omission of any Authorized Certification Body or other third party in connection with Certification activities.</p>
+
+        <p>This limitation applies to all categories of loss, including direct, indirect, incidental, consequential, special, exemplary, and punitive damages, and applies regardless of the theory of liability, whether in contract, tort, statute, or otherwise, and regardless of whether the Governance Authority has been advised of the possibility of such damages.</p>
+
+        <p>Where applicable law does not permit exclusion or limitation of certain categories of liability, the Governance Authority's liability shall be limited to the minimum extent required by such law.</p>
+
+        <p>Without limiting the generality of the foregoing, the Governance Authority shall not be liable for: (a) regulatory penalties, administrative fines, or compliance costs incurred by a Recipient in connection with any Implementation; (b) system failures, security incidents, data breaches, or operational disruptions arising from or related to any Implementation; (c) indirect, consequential, or downstream harms resulting from a Recipient's reliance on the Specification Corpus in safety-critical or high-risk deployment contexts; or (d) any loss or damage arising from the acts or omissions of Authorized Certification Bodies or third-party assessors. Each implementor bears full and sole responsibility for the security, reliability, and regulatory compliance of its own Implementation.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Governance Authority</h2>
+
+        <p>The QODIQA Governance Charter constitutes the supreme governance instrument of the Specification Corpus. This License is subordinate to the Governance Charter and shall be construed consistently with its provisions. In the event of any conflict between this License and the Governance Charter, the Governance Charter prevails.</p>
+
+        <h3 id="s12-1">12.1 Exclusive Authority</h3>
+        <p>The Governance Authority holds exclusive authority over the following matters, which may not be delegated, transferred, or assumed by any other party except as expressly provided in the Governance Charter.</p>
+
+        <ul class="prop-list">
+          <li>Amendment, revision, and withdrawal of documents within the Specification Corpus</li>
+          <li>Issuance of Certification determinations and authorization of Authorized Certification Bodies</li>
+          <li>Specification evolution, versioning policy, and backward compatibility determinations</li>
+          <li>Interpretation of this License and resolution of disputes arising under it</li>
+          <li>Authorization of Trademark use beyond what is expressly permitted under Section 8</li>
+          <li>Authorization of Derivative Specification naming under the QODIQA designation</li>
+        </ul>
+
+        <h3 id="s12-2">12.2 Interpretive Authority</h3>
+        <p>Within the scope of governance operations, including decisions concerning Certification, Trademark authorization, Derivative Specification approval, and amendment of the Specification Corpus, the Governance Authority's interpretation of this License shall be treated as authoritative and shall be the reference point for the resolution of internal disputes under the procedures defined in the Governance Charter.</p>
+        <p>Nothing in this Section shall be construed to limit, exclude, or override the jurisdiction of any court or competent adjudicative authority under applicable law. Courts retain authority to interpret and apply this License in accordance with applicable law, including the law of the governing jurisdiction identified in Section 15. The Governance Authority does not assert interpretive authority over matters that are properly subject to judicial determination.</p>
+
+        <p>Where ambiguity exists in the interpretation of any provision of this License, or where a dispute arises as to the application of License terms to a specific act or circumstance, the Governance Authority's written interpretive determination shall constitute the authoritative and binding interpretation for all governance proceedings, Certification decisions, and Trademark authorizations conducted under this License, subject to any final judicial ruling on the same matter.</p>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Amendment Process</h2>
+
+        <p>This License may be amended only by the Governance Authority acting through the procedures defined in the QODIQA Governance Charter. No community process, industry body, standards organization, or other entity outside the Governance Authority has authority to amend this License.</p>
+
+        <h3 id="s13-1">13.1 License Versioning</h3>
+        <p>Each version of this License is identified by a version number in the form <code>QPSL v[Major].[Minor]</code>. The current version is <code>QPSL v1.0</code>. Amendments that alter the substantive rights or obligations of Recipients result in a new Major or Minor version. Recipients are bound by the version of this License that was in effect at the time they first accessed the Specification Corpus, unless they elect to be governed by a subsequent version.</p>
+
+        <h3 id="s13-2">13.2 Backward Compatibility</h3>
+        <p>The Governance Authority will use reasonable efforts to ensure that amendments to this License do not impose materially more restrictive conditions on Permitted Uses that were expressly authorized under a prior version of this License, and that adequate notice of amendments is published prior to their effective date. These commitments are hortatory and do not create enforceable obligations upon the Governance Authority.</p>
+
+        <h3 id="s13-3">13.3 Prohibition on Unilateral Community Modification</h3>
+        <p>No community process, pull request, public comment, or other collective action constitutes an amendment to this License. Purported amendments not issued by the Governance Authority are of no legal effect.</p>
+      </div>
+
+      <!-- SECTION 14 -->
+      <div id="s14" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 14</span>
+        <h2><a class="anchor-link" href="#s14">#</a>Severability</h2>
+
+        <p>If any provision of this License is held by a court or other competent authority to be invalid, unenforceable, or contrary to applicable law in any jurisdiction, such provision shall be severed from this License to the minimum extent necessary to render this License valid and enforceable in that jurisdiction. The remaining provisions of this License shall continue in full force and effect.</p>
+
+        <p>Where a severed provision reflects a material element of the bargain between the Governance Authority and Recipients — in particular, provisions relating to Certification Boundary Protection, Trademark and Naming, Derivative Specification restrictions, and Conformance Claim requirements — the Governance Authority reserves the right to treat the severance as grounds for declining to extend the Grant of Public Access under Section 2 in the relevant jurisdiction, pending replacement of the severed provision.</p>
+
+        <p>The unenforceability of any provision in one jurisdiction shall not affect its enforceability in any other jurisdiction.</p>
+      </div>
+
+      <!-- SECTION 15 -->
+      <div id="s15" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 15</span>
+        <h2><a class="anchor-link" href="#s15">#</a>Governing Law and Jurisdiction</h2>
+
+        <p>This License is governed by and construed exclusively in accordance with the laws of the jurisdiction in which the Governance Authority is legally domiciled, as recorded in the QODIQA Governance Charter. Conflict-of-laws principles that would require application of the law of any other jurisdiction do not apply. Any court applying this License shall treat the law of the governing jurisdiction as the sole applicable substantive law.</p>
+
+        <h3 id="s15-1">15.1 Mandatory Local Law</h3>
+        <p>Nothing in this License shall be construed to exclude, restrict, or override any right or obligation arising under mandatory provisions of applicable local law that cannot be waived by contract. Where any provision of this License conflicts with a mandatory provision of applicable local law in a given jurisdiction, the applicable local law provision prevails to the minimum extent necessary to establish compliance, and the remainder of this License continues in force.</p>
+
+        <h3 id="s15-2">15.2 Jurisdiction for Disputes</h3>
+        <p>Any dispute arising under or in connection with this License that cannot be resolved through the Governance Authority's internal procedures under Section 12 shall be subject to the exclusive jurisdiction of the competent courts of the governing jurisdiction identified under this Section. Each party irrevocably submits to the personal jurisdiction of those courts and waives any objection to venue on grounds of inconvenience, improper venue, or lack of jurisdiction. Nothing in this License constitutes a mandatory arbitration clause, and no party is obligated to submit to arbitration without express agreement.</p>
+
+        <h3 id="s15-3">15.3 International Enforceability</h3>
+        <p>The Governance Authority intends this License to be enforceable in all jurisdictions in which the Specification Corpus is accessed or implemented. Where enforcement requires adaptation to local legal requirements, such adaptation shall be made by the competent authorities of the relevant jurisdiction in a manner consistent with the purposes of this License, and shall not be construed as invalidating the License in other jurisdictions.</p>
+      </div>
+
+      <!-- SECTION 16 -->
+      <div id="s16" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 16</span>
+        <h2><a class="anchor-link" href="#s16">#</a>Termination</h2>
+
+        <p>The rights granted to a Recipient under this License terminate automatically upon the Recipient's material breach of any provision of this License. Material breach includes, without limitation, any act falling within the prohibitions of Section 4, any violation of Section 5, any false Conformance Claim under Section 6, any unauthorized Certification activity under Section 7, and any unauthorized Trademark use under Section 8.</p>
+
+        <h3 id="s16-1">16.1 Automatic Termination</h3>
+        <p>Termination is automatic upon material breach and requires no notice, action, or communication from the Governance Authority. Upon termination, the Recipient must immediately cease all uses of the Specification Corpus beyond those that do not require a license, including cessation of any Conformance Claims and removal of any Trademark usage that was predicated upon the License.</p>
+
+        <h3 id="s16-2">16.2 Cure Period for Non-Willful Breach</h3>
+        <p>Notwithstanding Section 16.1, where a breach is non-willful, that is, where the Recipient did not act with knowledge that the conduct in question constituted a violation of this License, the Recipient's rights are not automatically terminated if the Recipient cures the breach fully within thirty (30) calendar days of becoming aware of the breach. Cure must fully remedy all effects of the violation, including cessation of prohibited acts, correction of any published materials, and withdrawal of any unauthorized Conformance Claims or Trademark usage. The Governance Authority retains discretion to deny automatic cure effect in cases of repeated non-willful breach by the same Recipient.</p>
+
+        <p>The cure period established in this Section does not apply to: (a) false Certification claims under Section 6; (b) unauthorized use of official Certification marks or protected Certification instruments under Section 7; (c) fraudulent or intentionally deceptive conduct; or (d) any breach that has caused material harm to the integrity of the Certification Framework. Such breaches remain immediately terminable under Section 16.1.</p>
+
+        <h3 id="s16-3">16.3 Reinstatement</h3>
+        <p>A Recipient whose rights have terminated under this Section may seek reinstatement by: (a) promptly curing the breach to the satisfaction of the Governance Authority; (b) providing written notice to the Governance Authority of the cure; and (c) receiving written confirmation of reinstatement from the Governance Authority. Reinstatement is discretionary and is not guaranteed. Prior termination and reinstatement may be considered by the Governance Authority in evaluating future requests for Certification or Trademark authorization.</p>
+
+        <h3 id="s16-4">16.4 Effect on Derivative Works</h3>
+        <p>Termination of a Recipient's rights under this License extends to all Derivative Specifications and materials produced by that Recipient under the authority of this License. Termination does not affect the rights of third parties who have independently received rights under this License, provided those third parties are not themselves in material breach.</p>
+      </div>
+
+      <!-- SECTION 17 — ENFORCEMENT AND REMEDIES -->
+      <div id="s17" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 17</span>
+        <h2><a class="anchor-link" href="#s17">#</a>Enforcement and Remedies</h2>
+
+        <p>The Governance Authority reserves all rights and remedies available under applicable law and in equity to enforce the terms of this License and to protect the integrity of the Specification Corpus, the Certification Framework, and the Trademark. The provisions of this Section are cumulative and do not limit any other right or remedy available to the Governance Authority.</p>
+
+        <p>Enforcement proceedings may be initiated by issuance of a written notice of violation identifying the specific breach and, where applicable under this License, specifying a reasonable period within which the violating party may cure the breach. If the breach is not fully cured within the specified period, or where no cure period applies under Section 17.5, the Governance Authority may escalate without further notice to legal remedies including injunctive relief, demands for correction, and any other available equitable or legal remedy. The Governance Authority's decision to issue or withhold a notice of violation does not limit its right to pursue immediate enforcement where the severity of the breach warrants it.</p>
+
+        <h3 id="s17-1">17.1 Right to Injunctive Relief</h3>
+        <p>The Governance Authority shall be entitled to seek injunctive or other equitable relief in any court of competent jurisdiction to restrain any actual or threatened violation of this License, without the requirement to demonstrate actual damages, the inadequacy of monetary remedies, or any other condition beyond the existence or reasonable likelihood of a violation. The right to seek injunctive relief is in addition to, and not in substitution for, any other remedy available to the Governance Authority.</p>
+
+        <h3 id="s17-2">17.2 Right to Demand Cure and Correction</h3>
+        <p>Upon identification of a violation of this License, the Governance Authority may require the violating party to: (a) immediately remove or retract any false Conformance Claims, misleading representations, or unauthorized Trademark uses; (b) issue a corrective statement to any audience that received or may have relied upon the violating materials; (c) permanently delete or destroy unauthorized reproductions of protected instruments; and (d) provide written confirmation of compliance with all corrective demands within a specified timeframe. Compliance with a demand for cure and correction does not, by itself, constitute reinstatement of License rights or waiver of any claims arising from the underlying violation.</p>
+
+        <h3 id="s17-3">17.3 Non-Waiver of Enforcement Rights</h3>
+        <p>Failure by the Governance Authority to enforce any provision of this License on any occasion, or delay in initiating enforcement action, shall not constitute a waiver of the Governance Authority's right to enforce that provision or any other provision on any subsequent occasion. No course of dealing, pattern of conduct, or prior forbearance shall be construed as a modification of this License or as a waiver of any enforcement right. Each instance of non-enforcement is independent and does not prejudice any future enforcement action.</p>
+
+        <h3 id="s17-4">17.4 Cumulative Remedies</h3>
+        <p>All rights and remedies provided in this License are cumulative and are not exclusive of any other rights or remedies that the Governance Authority may have at law, in equity, or under any other instrument or agreement. The exercise of any one remedy shall not preclude the exercise of any other remedy. The Governance Authority may pursue multiple remedies simultaneously or in any sequence it deems appropriate.</p>
+
+        <h3 id="s17-5">17.5 Immediate Enforcement for Severe Violations</h3>
+        <p>Notwithstanding any cure period provisions set forth in Section 16, the Governance Authority reserves the right to initiate immediate enforcement proceedings, without prior notice or cure opportunity, in cases involving: (a) false or fraudulent Certification claims; (b) unauthorized use of official Certification marks, conformance badges, or other protected Certification instruments; (c) misrepresentation of Implementation status to a regulatory authority, a certification body, or the public; or (d) any conduct that the Governance Authority determines poses an immediate and material threat to the integrity of the Certification Framework or the informational value of Certification as a conformance signal. In such cases, the absence of a cure period is itself a condition of enforcement, not a procedural oversight.</p>
+      </div>
+
+      <!-- SECTION 18 -->
+      <div id="s18" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 18</span>
+        <h2><a class="anchor-link" href="#s18">#</a>Institutional Continuity Clause</h2>
+
+        <p>The QODIQA Specification Corpus constitutes a continuous institutional standard. Its governance structure, Certification infrastructure, and normative integrity are designed to persist across organizational changes, technological evolution, and external pressures. This Section establishes protections against forms of institutional fragmentation that would undermine the integrity and continuity of the Specification Corpus as a public technical reference.</p>
+
+        <div class="callout">
+          <p><strong>Governance Continuity:</strong> Challenges to the institutional integrity of the Specification Corpus through unauthorized forking, capture, or identity fragmentation do not divest the Governance Authority of its authority or alter the terms of this License.</p>
+        </div>
+
+        <h3 id="s18-1">18.1 Anti-Capture Provision</h3>
+        <p>No party, including any past or present contributor to the Specification Corpus, any Authorized Certification Body, any commercial implementor, or any regulatory body, acquires governance authority over the Specification Corpus by virtue of contribution, adoption, endorsement, or commercial dependency. Governance authority is constituted exclusively under the QODIQA Governance Charter and may only be transferred or restructured through procedures defined therein.</p>
+
+        <h3 id="s18-2">18.2 Anti-Forking Under Identical Identity</h3>
+        <p>The creation of a document corpus, certification program, or governance body that: (a) uses the QODIQA designation or any confusingly similar designation; (b) represents itself as a continuation, successor, or replacement of the official Specification Corpus; and (c) has not been authorized by or does not operate under the authority of the Governance Authority, constitutes a violation of this License and an infringement of the Governance Authority's Trademark rights, regardless of the motivations of the parties involved.</p>
+
+        <h3 id="s18-3">18.3 Continuity of Terms</h3>
+        <p>This License, and the rights and obligations it establishes, runs with the Specification Corpus and binds all Recipients regardless of the channel through which they obtained access. Changes in the organizational structure, ownership, or operational status of the Governance Authority do not alter the terms of this License or extinguish any rights or obligations arising under it. In the event of a governance transition, the Governance Charter's succession provisions govern the identification of the successor authority.</p>
+
+        <h3 id="s18-4">18.4 Scope of Clause</h3>
+        <p>Nothing in this Section shall be construed to prohibit legitimate academic critique, independent technical commentary, or the publication of alternative standards addressing similar technical problems under distinct designations that are not confusingly similar to QODIQA. The protections of this Section are directed at institutional identity integrity, not at the suppression of independent technical work.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document constitutes the normative governance license for the QODIQA specification corpus. It defines the conditions under which the corpus may be accessed, referenced, cited, implemented, and extended, and establishes the boundaries of permitted use, derivative specification rights, conformance claims, and certification authority.</p>
+
+          <p>The QODIQA Public Specification License is a governance instrument, not a permissive open-source license. Publication of the specification corpus is a deliberate act of standardization. The integrity of a deterministic enforcement standard depends upon the fidelity of its normative content, and this License exists to preserve that integrity.</p>
+
+          <p>This document is intended for:</p>
+          <ul class="audience-list">
+            <li>Organizations implementing or evaluating the QODIQA specification corpus</li>
+            <li>Authors of derivative specifications or compatibility profiles</li>
+            <li>Certification bodies and conformance test authors</li>
+            <li>Legal and governance officers reviewing usage rights</li>
+            <li>Regulatory and policy stakeholders engaged with AI governance standards</li>
+          </ul>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-PSL-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Public Specification License</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Public Usage, Derivative Constraints, and Certification Boundary Framework</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Governance — Normative License</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative — Governance License</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Public Specification License — Version 1.0</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-PSL-2026-001</p>
+      <p>Governance — Normative License</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document governs the conditions under which the QODIQA specification corpus may be accessed, referenced, cited, implemented, and extended. All provisions are normative unless otherwise designated.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-PSL-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- IntersectionObserver ScrollSpy (deterministic, observer-only) ---- */
+  var navItems = document.querySelectorAll('.nav-item');
+  var sectionIds = [
+    'cover','s-preamble','s1','s2','s3','s3-1',
+    's4','s4-1','s5','s5-1','s5-2','s5-3','s5-4',
+    's6','s6-1','s6-2','s7','s7-1','s7-2',
+    's8','s8-1','s8-2','s9','s9-1','s9-2','s9-3',
+    's10','s11','s12','s12-1','s12-2',
+    's13','s13-1','s13-2','s13-3',
+    's14','s15','s15-1','s15-2','s15-3',
+    's16','s16-1','s16-2','s16-3','s16-4',
+    's17','s17-1','s17-2','s17-3','s17-4','s17-5',
+    's18','s18-1','s18-2','s18-3','s18-4',
+    's-status'
+  ];
+  var sections = sectionIds.map(function(id) { return document.getElementById(id); }).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(function(item) {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  var sectionIndex = new Map(sections.map(function(s, i) { return [s.id, i]; }));
+  var visible = new Set();
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          visible.add(entry.target.id);
+        } else {
+          visible.delete(entry.target.id);
+        }
+      });
+      if (visible.size > 0) {
+        var topId = null;
+        var topIdx = Infinity;
+        visible.forEach(function(id) {
+          var idx = sectionIndex.get(id);
+          if (idx < topIdx) { topIdx = idx; topId = id; }
+        });
+        if (topId) setActive(topId);
+      }
+    }, {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    });
+    sections.forEach(function(sec) { observer.observe(sec); });
+  } else {
+    /* Scroll fallback for older browsers */
+    function onScroll() {
+      var scrollY = window.scrollY + window.innerHeight * 0.25;
+      var current = sections[0] ? sections[0].id : null;
+      sections.forEach(function(s) {
+        if (s.getBoundingClientRect().top + window.scrollY <= scrollY) {
+          current = s.id;
+        }
+      });
+      if (current) setActive(current);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ---- Smooth nav clicks ---- */
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href.charAt(0) === '#') {
+        e.preventDefault();
+        var target = document.getElementById(href.slice(1));
+        if (target) {
+          var offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  var btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', function() {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- Mobile sidebar toggle ---- */
+  var toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

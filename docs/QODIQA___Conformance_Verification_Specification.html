@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Conformance Verification Specification · v1.0</title>
+<meta name="description" content="QODIQA Conformance Verification Specification - Deterministic Runtime Consent Enforcement. April 2026. Defines how conformance is verified, measured, and proven through deterministic verification mechanisms, evidence requirements, and conformance assertion conditions.">
+<meta property="og:title" content="QODIQA — Conformance Verification Specification">
+<meta property="og:description" content="Deterministic verification model defining how conformance is verified, measured, and proven, including verification layers, evidence requirements, and conformance assertion conditions.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:       #1A1C20;
+  --ink-2:     #2C2F36;
+  --ink-3:     #3A3F48;
+  --accent:    #7A6A50;
+  --muted:     #6B7280;
+  --rule:      #D6D2CC;
+  --border:    #D4D0CA;
+  --bg:        #F6F4F0;
+  --text:      #1A1C20;
+  --text-2:    #3A3F48;
+  --text-3:    #5A6070;
+  --sidebar-w: 252px;
+  --col:       800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.72;
+  --lh-h:  1.22;
+  /* Spacing scale */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-7:  28px;
+  --sp-8:  32px;
+  --sp-9:  40px;
+  --sp-10: 48px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; border-radius: 2px; }
+
+.sidebar-header {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 10px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 5px 20px 5px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.55;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 120px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: var(--sp-8);
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 52px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: var(--sp-6);
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--sp-2);
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: var(--sp-4);
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.30;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-3);
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.05em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  orphans: 3;
+  widows: 3;
+  letter-spacing: 0.008em;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.4em;
+  margin-bottom: 1.0em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  margin-bottom: var(--sp-1);
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  letter-spacing: 0.008em;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 var(--sp-9);
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--sp-3);
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.935rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 0.006em;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--sp-6) 0 var(--sp-8);
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 16px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.860rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.58;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   UNIFIED BLOCK SYSTEM
+   ============================================================ */
+
+/* -- Shared block base -- */
+.key-prop,
+.decision-block,
+.failure-block,
+.verify-block {
+  padding: 15px 22px;
+  margin: 14px 0 18px;
+}
+
+/* -- Key Property -- */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--sp-2);
+  opacity: 0.85;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.925rem;
+  line-height: 1.66;
+  letter-spacing: 0.007em;
+}
+
+/* -- Decision Block -- */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: var(--sp-2);
+}
+
+.decision-block p {
+  font-size: 0.905rem;
+  margin: 0;
+  line-height: 1.62;
+  letter-spacing: 0.007em;
+}
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: var(--sp-2) 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.60;
+}
+
+/* -- Failure Block -- */
+.failure-block {
+  background: #F0EDEA;
+  border: 1px solid #C8C4BE;
+  border-left: 3px solid #8C3A2A;
+  overflow: hidden;
+}
+
+.failure-block-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8C3A2A;
+  display: block;
+  margin-bottom: var(--sp-3);
+  opacity: 0.90;
+}
+
+.failure-block p {
+  font-size: 0.905rem;
+  margin: 0 0 var(--sp-2);
+  line-height: 1.62;
+}
+
+.failure-block p:last-child { margin-bottom: 0; }
+
+/* -- Verify Block -- */
+.verify-block {
+  background: #EDF0ED;
+  border: 1px solid #C4CCBF;
+  border-left: 3px solid #3A6642;
+  overflow: hidden;
+}
+
+.verify-block-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #3A6642;
+  display: block;
+  margin-bottom: var(--sp-3);
+  opacity: 0.90;
+}
+
+/* -- fc-row shared (failure + verify) -- */
+.failure-block .fc-row,
+.verify-block .fc-row {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  column-gap: 16px;
+  align-items: start;
+  margin-bottom: 5px;
+}
+
+.failure-block .fc-row:not(:last-child),
+.verify-block .fc-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.045);
+  padding-bottom: 5px;
+}
+
+.failure-block .fc-key,
+.verify-block .fc-key {
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding-top: 2px;
+}
+
+.failure-block .fc-val,
+.verify-block .fc-val {
+  color: var(--text);
+  font-size: 0.890rem;
+  line-height: 1.60;
+  max-width: 100%;
+  word-break: break-word;
+  letter-spacing: 0.007em;
+}
+
+/* Severity badges */
+.severity-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.sev-critical { background: #3B0F0A; color: #F0A090; border: 1px solid rgba(240,160,144,0.20); }
+.sev-major    { background: #2A1E06; color: #D4A84B; border: 1px solid rgba(212,168,75,0.20); }
+.sev-minor    { background: #111820; color: #7A9AB8; border: 1px solid rgba(122,154,184,0.20); }
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: var(--sp-3);
+  margin-top: var(--sp-8);
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p {
+  text-align: justify;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-3) 0 var(--sp-4);
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.58;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+  letter-spacing: 0.005em;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: var(--sp-8);
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.68;
+  margin: 0 0 3px;
+  text-align: left;
+  hyphens: none;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 100px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 18px 56px; }
+
+  footer { margin-left: 0; padding: 28px 18px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .failure-block .fc-row,
+  .verify-block .fc-row { grid-template-columns: 1fr; }
+  .failure-block .fc-key,
+  .verify-block .fc-key  { text-align: left; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+
+  p, li { text-align: left; hyphens: manual; }
+
+  .key-prop p,
+  .decision-block p,
+  .failure-block p,
+  .verify-block .fc-val,
+  .failure-block .fc-val { text-align: left; }
+
+  .doc-status-block { padding: 20px 18px; }
+  .doc-status-block p { text-align: left; }
+}
+
+@media (max-width: 480px) {
+  #content { padding: 68px 14px 48px; }
+  .cover-title .qodiqa-brand { letter-spacing: 0.04em; }
+  .doc-id-key { font-size: 0.60rem; }
+  .key-prop,
+  .decision-block,
+  .failure-block,
+  .verify-block { padding: 13px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Conformance Verification<br><span class="italic-part">Specification</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Verification Specification &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Defines how conformance is verified, measured, and proven through deterministic verification mechanisms, observable evidence, and reproducible audit procedures.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s0">0. Abstract</a>
+      <a class="nav-item" href="#s1">1. Scope</a>
+      <a class="nav-item" href="#s2">2. Normative Foundations</a>
+      <a class="nav-item" href="#s3">3. Definition of Conformance</a>
+      <a class="nav-item" href="#s4">4. Verification Model</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Deterministic Principle</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Verification Layers</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Verification Boundaries</a>
+      <a class="nav-item" href="#s5">5. Conformance Verification Matrix</a>
+      <a class="nav-item" href="#s6">6. Deterministic Verification Conditions</a>
+      <a class="nav-item" href="#s7">7. Evidence Requirements</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Decision Artifacts</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Audit Log Records</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Decision Traces</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Cryptographic Records</a>
+      <a class="nav-item sub" href="#s7-5">7.5 Integrity Requirements</a>
+      <a class="nav-item" href="#s8">8. Verification Failure Conditions</a>
+      <a class="nav-item" href="#s9">9. Verification Observability</a>
+      <a class="nav-item" href="#s10">10. Verification Execution Model</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Pre-Execution</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Runtime</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Post-Execution</a>
+      <a class="nav-item" href="#s11">11. Certification Integration</a>
+      <a class="nav-item sub" href="#s11-1">11.1 Prerequisite to Certification</a>
+      <a class="nav-item sub" href="#s11-2">11.2 Certification Levels</a>
+      <a class="nav-item sub" href="#s11-3">11.3 Mandatory Requirements</a>
+      <a class="nav-item sub" href="#s11-4">11.4 Failure Impact</a>
+      <a class="nav-item" href="#s12">12. Prohibited Verification Behaviors</a>
+      <a class="nav-item" href="#s13">13. Conformance Assertion</a>
+      <a class="nav-item" href="#s14">14. Residual Verification Limitations</a>
+      <a class="nav-item sub" href="#s14-1">14.1 What Cannot Be Verified</a>
+      <a class="nav-item sub" href="#s14-2">14.2 Required Behavior</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- SECTION 0: ABSTRACT -->
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 0</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Abstract</h2>
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document defines how conformance to the standard is verified, measured, and proven. It establishes the verification model, verification layers, evidence requirements, and conformance assertion conditions applicable to all systems implementing the QODIQA deterministic runtime consent enforcement model. This document governs verification of conformance only - it does not define conformant behavior, which is established by the QODIQA Core Standard and the 68-Point Enforcement Framework. The governing principle of this document is that if compliance cannot be deterministically verified, the system is NON-CONFORMANT. No probabilistic validation is permitted. No implicit trust is permitted. No verification process that cannot produce identical results under identical conditions is sufficient for conformance purposes.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Verification Axiom</strong>
+          <p>Verification defines conformance. A system that cannot produce deterministic, reproducible, and externally verifiable proof of compliance is NON-CONFORMANT.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Scope</h2>
+
+        <p>This document applies to all systems claiming conformance with the standard, all systems undergoing conformance assessment, and all audit processes conducted against QODIQA-certified deployments. The scope of verification coverage is as follows:</p>
+
+        <ul>
+          <li>The enforcement layer and all runtime consent enforcement decision pathways</li>
+          <li>The policy evaluation engine and all policy resolution and application mechanisms</li>
+          <li>Consent resolution processes, including registry queries, state validation, and resolution outputs</li>
+          <li>Audit logging subsystems, including record production, integrity protection, and retention</li>
+          <li>Cryptographic validation procedures, including signing, verification, and key management operations</li>
+        </ul>
+
+        <p>This document governs verification of conformance only. It does not define what constitutes conformant behavior. Conformant behavior is defined in the QODIQA Core Standard, the 68-Point Enforcement Framework, and the related normative corpus documents. This document defines how conformance is established, demonstrated, and validated externally.</p>
+
+        <p>This document is normative. All verification requirements defined herein SHALL be treated as binding constraints on conformance assessment processes and on systems claiming conformance with this standard.</p>
+
+        <div class="decision-block">
+          <strong>Core Principle</strong>
+          <p>If compliance cannot be deterministically verified, the system is NON-CONFORMANT. The absence of demonstrated non-compliance does not constitute demonstrated compliance.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Normative Foundations</h2>
+
+        <p>All verification requirements in this document are derived from invariants and obligations established by the following QODIQA corpus documents. These documents are incorporated by reference and are not redefined herein. Verification procedures in this document constitute proof that the invariants of these documents are satisfied and that no failure modes defined therein are present.</p>
+
+        <ul>
+          <li><strong>QODIQA Core Standard for Deterministic Runtime Consent Enforcement</strong> - establishes the mandatory behavioral invariants against which verification is performed.</li>
+          <li><strong>QODIQA 68-Point Enforcement Framework</strong> - enumerates specific enforcement obligations whose satisfaction must be verified.</li>
+          <li><strong>QODIQA Non-Compliance Conditions and Failure Modes (QODIQA-FCM-2026-001)</strong> - defines the failure modes and non-compliance conditions that verification must confirm are absent.</li>
+          <li><strong>QODIQA Certification Framework for Deterministic Runtime Consent Enforcement</strong> - defines certification levels, evidence requirements, and assessment procedures to which this document supplies verification inputs.</li>
+          <li><strong>QODIQA Conformance Test Suite</strong> - specifies the observable test procedures that operationalize verification requirements defined in this document.</li>
+        </ul>
+
+        <p>Verification, in the context of this document, is the act of producing proof that enforcement invariants are satisfied and that no failure modes defined in QODIQA-FCM-2026-001 are present. Verification is distinct from implementation. A system that correctly implements QODIQA invariants but cannot produce externally verifiable proof of that implementation is NOT conformant.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Definition of Conformance</h2>
+
+        <p>A system is conformant with the standard if and only if all of the following conditions are satisfied simultaneously:</p>
+
+        <ul>
+          <li>All enforcement invariants defined in the Core Standard and 68-Point Enforcement Framework are satisfied.</li>
+          <li>No failure modes defined in QODIQA-FCM-2026-001 are present in any operating condition, including degraded and adversarial conditions.</li>
+          <li>All enforcement decisions are deterministic - identical inputs under identical policy state produce identical outputs, reproducibly and without exception.</li>
+          <li>All enforcement actions are auditable - every decision is accompanied by a tamper-evident audit record that permits external reconstruction and verification of the decision.</li>
+          <li>All results are externally verifiable - an independent auditor can confirm enforcement correctness using only the artifacts produced by the system and the verification procedures defined in this document.</li>
+        </ul>
+
+        <p>Conformance is binary. A system satisfying all conditions is conformant. A system failing any single condition is non-conformant. Partial conformance is not recognized. A system that satisfies 67 of 68 enforcement points is non-conformant.</p>
+
+        <div class="decision-block">
+          <strong>Conformance Boundary</strong>
+          <p>A system is conformant if and only if all invariants are satisfied, no failure modes are present, all decisions are deterministic, all actions are auditable, and all results are externally verifiable. Any deviation from any condition results in non-conformance.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Verification Model</h2>
+
+        <!-- 4.1 -->
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Deterministic Verification Principle</h3>
+          <p>All verification procedures defined in this document are deterministic. A verification process is deterministic if it produces identical results when applied to identical inputs under identical system state. The following constraints apply to all verification processes without exception:</p>
+
+          <ul>
+            <li>Verification MUST produce a binary outcome: PASS or FAIL. No indeterminate outcome is accepted.</li>
+            <li>Verification MUST be reproducible. Applying the same verification procedure to the same artifacts MUST yield the same result on every application.</li>
+            <li>Probabilistic validation is NOT permitted. No verification process that produces a confidence score, probability estimate, or heuristic assessment constitutes acceptable verification of a QODIQA invariant.</li>
+            <li>Verification results MUST NOT depend on timing, execution order, or environmental conditions that are not explicitly specified as input parameters to the verification procedure.</li>
+          </ul>
+
+          <p>A verification process that fails to satisfy these constraints is not a valid verification process for conformance purposes, regardless of the results it produces.</p>
+        </div>
+
+        <!-- 4.2 -->
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Verification Layers</h3>
+          <p>Verification is organized into six layers. Each layer addresses a distinct enforcement surface. All layers MUST be verified for full conformance. Verification of a subset of layers does not constitute verification of conformance.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 1 - Input Validation</div>
+            <p><strong>What is verified:</strong> That all requests submitted to the enforcement layer are validated for structural and semantic correctness before policy evaluation commences. <strong>How it is verified:</strong> Submission of malformed, incomplete, and boundary-condition inputs, with observation that all such inputs are rejected prior to policy evaluation and that rejection is logged. <strong>Observable output:</strong> Rejection artifacts with input fingerprint, timestamp, and rejection reason code, present in the audit log for every rejected input.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 2 - Policy Evaluation Verification</div>
+            <p><strong>What is verified:</strong> That the policy evaluation engine produces deterministic, correct decisions for all inputs under all applicable policy states. <strong>How it is verified:</strong> Replay of recorded request sets against recorded policy versions, with comparison of output decisions against expected decision records. <strong>Observable output:</strong> Decision artifacts, policy version identifiers, input fingerprints, and evaluation timestamps, all present in the audit log and cryptographically signed.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 3 - Consent Resolution Verification</div>
+            <p><strong>What is verified:</strong> That consent state resolved during policy evaluation matches current registry state and that resolution is based on registry-confirmed records only. <strong>How it is verified:</strong> Comparison of consent records cited in decision artifacts against registry state at the time of decision, verified against registry audit trail. <strong>Observable output:</strong> Consent record identifiers, registry timestamps, and resolution method present in each decision artifact.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 4 - Enforcement Decision Verification</div>
+            <p><strong>What is verified:</strong> That enforcement decisions issued by the policy engine are applied without modification, bypass, or delay. <strong>How it is verified:</strong> Comparison of enforcement gateway output records against execution records across all downstream components. No execution record may precede or exist without a corresponding enforcement gateway allow decision. <strong>Observable output:</strong> Enforcement decision artifacts, downstream execution records, and causal linkage tokens present in both gateway and execution logs.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 5 - Audit Verification</div>
+            <p><strong>What is verified:</strong> That all audit records are complete, append-only, tamper-evident, and independently verifiable. <strong>How it is verified:</strong> Cryptographic chain verification of audit log entries; confirmation that no entries are missing, reordered, or modified; external log integrity verification using published cryptographic commitments. <strong>Observable output:</strong> Cryptographic hash chain, log entry signatures, and completeness proof artifacts.</p>
+          </div>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Layer 6 - Cryptographic Verification</div>
+            <p><strong>What is verified:</strong> That all cryptographic operations conform to the requirements of the QODIQA Security and Cryptographic Profile; that all signatures are valid; that all keys are within authorized operational bounds; and that no prohibited cryptographic operations have been performed. <strong>How it is verified:</strong> Signature verification of all decision artifacts; key inventory audit against authorized key registry; algorithm compliance check against approved algorithm list. <strong>Observable output:</strong> Signature validity records, key usage logs, and algorithm compliance attestations.</p>
+          </div>
+        </div>
+
+        <!-- 4.3 -->
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Verification Boundaries</h3>
+          <p>The following conditions govern the scope and trust boundaries of all verification procedures:</p>
+
+          <ul>
+            <li><strong>MUST be verifiable:</strong> Every enforcement decision, consent resolution, audit log entry, and cryptographic operation occurring within the system boundary. Systems MUST produce artifacts sufficient for independent external verification of each of these elements without requiring access to internal system state.</li>
+            <li><strong>MUST NOT be trusted implicitly:</strong> Assertions made by the system about its own conformance. Self-attestation without externally verifiable artifact support does not constitute evidence of conformance. Vendor documentation, configuration files, and code reviews do not substitute for operational verification against live or recorded system artifacts.</li>
+            <li><strong>No hidden states allowed:</strong> The system MUST NOT operate in states that are not reflected in the audit record. Any system state that influences enforcement decisions MUST be externally observable through the audit trail. Systems with hidden operational modes, undocumented configuration paths, or non-logged execution branches are non-conformant with respect to this requirement.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Conformance Verification Matrix</h2>
+
+        <p>The following matrix maps enforcement invariants to their corresponding failure modes, verification methods, observable signals, and Conformance Test Suite identifiers. Every invariant in the QODIQA corpus appears in this matrix. Verification of conformance requires that all entries in this matrix produce a PASS result under the specified verification method.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table CVS-1 - Conformance Verification Matrix</span>
+          <table>
+            <colgroup>
+              <col style="width:11%">
+              <col style="width:14%">
+              <col style="width:22%">
+              <col style="width:25%">
+              <col style="width:28%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Invariant ID</th>
+                <th>Failure Mode</th>
+                <th>Verification Method</th>
+                <th>Observable Signal</th>
+                <th>Test Mapping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INV-ENF-01</td>
+                <td>FM-EF-1 (Enforcement Bypass)</td>
+                <td>Inject request without consent check; confirm system denies execution and logs denial artifact.</td>
+                <td>Denial record with enforcement trace ID in audit log. No execution record present.</td>
+                <td>CTS-EF-01, CTS-EF-01A</td>
+              </tr>
+              <tr>
+                <td>INV-ENF-02</td>
+                <td>FM-EF-2 (Deny Decision Not Enforced)</td>
+                <td>Issue deny decision from policy engine; confirm downstream system halts execution and produces halt record.</td>
+                <td>Policy deny artifact plus downstream halt record with causal token matching policy decision ID.</td>
+                <td>CTS-EF-02</td>
+              </tr>
+              <tr>
+                <td>INV-ENF-03</td>
+                <td>FM-EF-3 (Enforcement Decision Ignored)</td>
+                <td>Issue enforcement decision; verify all downstream components consume and act on decision artifact before proceeding.</td>
+                <td>Decision artifact consumption record in downstream execution log, timestamped after decision issuance.</td>
+                <td>CTS-EF-03</td>
+              </tr>
+              <tr>
+                <td>INV-DEC-01</td>
+                <td>FM-DI-1 (Policy Evaluation Inconsistency)</td>
+                <td>Replay identical request against same policy version across multiple instances; compare decision outputs.</td>
+                <td>Decision artifacts from all replay instances are byte-identical in decision field and policy version field.</td>
+                <td>CTS-DI-01</td>
+              </tr>
+              <tr>
+                <td>INV-DEC-02</td>
+                <td>FM-DI-2 (Non-Deterministic Output)</td>
+                <td>Submit well-formed inputs; confirm every output is either ALLOW or DENY with no intermediate or null values.</td>
+                <td>Decision field in all output artifacts contains only recognized decision tokens. No null, error, or indeterminate values.</td>
+                <td>CTS-DI-02</td>
+              </tr>
+              <tr>
+                <td>INV-DEC-03</td>
+                <td>FM-DI-3 (State Desynchronization)</td>
+                <td>Verify consent record timestamp cited in decision artifact against registry audit trail for same consent ID.</td>
+                <td>Decision artifact consent timestamp matches or postdates most recent registry write for that consent ID.</td>
+                <td>CTS-DI-03</td>
+              </tr>
+              <tr>
+                <td>INV-CON-01</td>
+                <td>FM-DR-1 (Registry Unavailability Bypass)</td>
+                <td>Simulate registry unavailability; confirm system applies deny-all and logs unavailability event.</td>
+                <td>Deny-all enforcement record with registry-unavailable status code in audit log during simulated outage window.</td>
+                <td>CTS-DR-01</td>
+              </tr>
+              <tr>
+                <td>INV-CON-02</td>
+                <td>FM-DR-2 (Stale Consent Cache)</td>
+                <td>Update registry consent record; confirm subsequent decisions reflect updated state within defined maximum staleness window.</td>
+                <td>Decision artifacts post-update cite registry records with timestamps falling within the staleness tolerance window.</td>
+                <td>CTS-DR-02</td>
+              </tr>
+              <tr>
+                <td>INV-AUD-01</td>
+                <td>FM-AF-1 (Audit Log Absent)</td>
+                <td>Execute enforcement decision sequence; confirm audit log contains entry for every decision event within defined latency bound.</td>
+                <td>One-to-one correspondence between enforcement event records and audit log entries, verified by event ID cross-reference.</td>
+                <td>CTS-AF-01</td>
+              </tr>
+              <tr>
+                <td>INV-AUD-02</td>
+                <td>FM-AF-2 (Log Integrity Failure)</td>
+                <td>Verify cryptographic hash chain of audit log; attempt controlled modification; confirm modification detection.</td>
+                <td>Hash chain verification produces PASS on unmodified log; modification attempt produces verifiable chain break detected by integrity check.</td>
+                <td>CTS-AF-02</td>
+              </tr>
+              <tr>
+                <td>INV-AUD-03</td>
+                <td>FM-AF-3 (Incomplete Audit Record)</td>
+                <td>Examine audit record for each decision event; confirm all mandatory fields are present and non-null.</td>
+                <td>All records contain: decision ID, timestamp, policy version, consent record reference, decision outcome, enforcement action, and signing key identifier.</td>
+                <td>CTS-AF-03</td>
+              </tr>
+              <tr>
+                <td>INV-CRYPT-01</td>
+                <td>FM-CF-1 (Invalid Signature)</td>
+                <td>Verify digital signature on each decision artifact using published verification key.</td>
+                <td>Signature verification produces VALID for all decision artifacts produced under normal operation.</td>
+                <td>CTS-CF-01</td>
+              </tr>
+              <tr>
+                <td>INV-CRYPT-02</td>
+                <td>FM-CF-2 (Prohibited Algorithm)</td>
+                <td>Audit all cryptographic operations against approved algorithm list in Security and Cryptographic Profile.</td>
+                <td>Cryptographic operation log contains only algorithm identifiers present in the approved list. No non-listed algorithms present.</td>
+                <td>CTS-CF-02</td>
+              </tr>
+              <tr>
+                <td>INV-BOUND-01</td>
+                <td>FM-BF-1 (Boundary Bypass)</td>
+                <td>Attempt execution through all known and probed boundary pathways without enforcement gateway traversal.</td>
+                <td>No execution record exists without a corresponding prior enforcement gateway allow decision record for the same request ID.</td>
+                <td>CTS-BF-01</td>
+              </tr>
+              <tr>
+                <td>INV-BOUND-02</td>
+                <td>FM-BF-2 (Control Plane Injection)</td>
+                <td>Attempt policy modification through non-authorized control paths; confirm modification is rejected and rejection is logged.</td>
+                <td>Policy version in decision artifacts remains unchanged following unauthorized modification attempt. Rejection event present in audit log.</td>
+                <td>CTS-BF-02</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="section-note">All invariant IDs correspond to the normative invariant registry defined in the QODIQA Core Standard. All failure mode IDs correspond to the classification in QODIQA-FCM-2026-001. All CTS identifiers correspond to the QODIQA Conformance Test Suite. Any invariant appearing in the Core Standard or 68-Point Enforcement Framework but not reflected in this matrix constitutes an error in this document and must be treated as a verification gap requiring immediate remediation.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Deterministic Verification Conditions</h2>
+
+        <p>Each verification rule below defines a complete verification condition. For a system to satisfy a verification rule, all four fields - Condition, Verification Method, Expected Result, and Failure Outcome - must be satisfied exactly as specified. Use of normative language (MUST, SHALL, MUST NOT) in these rules is binding.</p>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-01 - Enforcement Gate Coverage</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">Every execution pathway within the system boundary traverses the enforcement gateway before proceeding.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Execution pathway enumeration against enforcement gateway traversal logs. Every execution event MUST correlate to a prior gateway allow record via request ID.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">One-to-one correspondence between execution records and gateway allow records. No orphan execution records present.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any orphan execution record constitutes enforcement bypass. System is NON-CONFORMANT. INV-ENF-01 violated. FM-EF-1 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-02 - Policy Decision Determinism</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">The policy evaluation engine SHALL produce identical decisions for structurally identical inputs against identical policy state.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Replay of recorded request sets against pinned policy versions. Decision fields in replay output MUST be byte-identical to original decision records.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">All replay decision artifacts are byte-identical in decision token and policy version to original recorded artifacts.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any divergence constitutes non-deterministic evaluation. System is NON-CONFORMANT. INV-DEC-01 violated. FM-DI-1 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-03 - Binary Decision Constraint</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">The policy engine MUST NOT produce any output that is not a definitive ALLOW or DENY decision for any well-formed input.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Inspection of all decision artifacts across full test coverage. Decision field MUST contain only recognized ALLOW or DENY tokens.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">All decision artifacts contain exactly one recognized decision token. No null, error, pending, or undefined values present in any decision field.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any non-binary decision value constitutes an indeterminate enforcement state. System is NON-CONFORMANT. INV-DEC-02 violated. FM-DI-2 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-04 - Consent Registry Currency</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">All consent records cited in enforcement decisions SHALL reflect registry state current within the maximum staleness tolerance defined in the Core Standard.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Cross-reference of consent record timestamps in decision artifacts against registry write timestamps for each cited consent identifier.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">All cited consent records are timestamped within the defined staleness tolerance relative to the registry write timestamp for that consent ID.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any decision citing a consent record outside the staleness tolerance constitutes stale-state enforcement. System is NON-CONFORMANT. INV-DEC-03 violated. FM-DI-3 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-05 - Fail-Closed Under Degraded Conditions</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">The system SHALL apply deny-all enforcement when the consent registry is unavailable or when policy state cannot be confirmed.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Registry unavailability simulation followed by submission of standard request set. All requests MUST be denied. Audit log MUST contain unavailability event and deny-all activation record.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">Zero execution records during simulated unavailability window. Deny-all audit records present with unavailability status code.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any execution during unavailability window constitutes registry-bypass enforcement. System is NON-CONFORMANT. INV-CON-01 violated. FM-DR-1 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-06 - Audit Log Completeness</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">The audit log MUST contain a complete record for every enforcement decision event, with no gaps, silent events, or missing mandatory fields.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Event-to-log reconciliation across full test execution. Each enforcement event MUST have a corresponding audit log entry with all mandatory fields populated.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">Audit log entry count equals enforcement event count. All entries contain all mandatory fields. No silent events present.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any missing entry, silent event, or incomplete record constitutes audit failure. System is NON-CONFORMANT. INV-AUD-01 or INV-AUD-03 violated.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-07 - Audit Log Integrity</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">The audit log SHALL be append-only and tamper-evident. Any modification to a committed log entry MUST be detectable.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Cryptographic hash chain verification of the full audit log. Controlled modification of one entry followed by re-verification; detection of chain break is required.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">Hash chain verification PASS on unmodified log. Chain break detected on modified log at the position of modification.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Undetected modification constitutes log integrity failure. System is NON-CONFORMANT. INV-AUD-02 violated. FM-AF-2 present.</span>
+          </div>
+        </div>
+
+        <div class="verify-block">
+          <span class="verify-block-label">VC-08 - Cryptographic Signature Validity</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">All decision artifacts MUST carry a valid digital signature produced using an authorized key and an approved algorithm.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Verification Method</span>
+            <span class="fc-val">Signature verification of all decision artifacts using the published verification key set. Algorithm field verification against approved algorithm list.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Expected Result</span>
+            <span class="fc-val">All signatures valid. All algorithms present in approved list. No decision artifact with missing, invalid, or non-approved-algorithm signature.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Failure Outcome</span>
+            <span class="fc-val">Any invalid signature or non-approved algorithm constitutes cryptographic failure. System is NON-CONFORMANT. INV-CRYPT-01 or INV-CRYPT-02 violated.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Evidence Requirements</h2>
+
+        <p>Conformance assessment requires the following categories of evidence. Each category defines the artifact type, the integrity requirements for that artifact, and the conditions under which the artifact constitutes valid evidence. Evidence that does not satisfy all stated requirements for its category is not accepted for conformance purposes.</p>
+
+        <div id="s7-1" class="doc-section">
+        <h3>7.1 Enforcement Decision Artifacts</h3>
+        <p>Every enforcement decision MUST produce a signed decision artifact. The artifact MUST contain: decision ID, request fingerprint, policy version identifier, consent record reference, resolution timestamp, decision token (ALLOW or DENY), enforcement action taken, and signing key identifier. The artifact MUST be digitally signed using a key and algorithm compliant with the Security and Cryptographic Profile. Unsigned or partially signed artifacts are not valid evidence.</p>
+        </div>
+
+        <div id="s7-2" class="doc-section">
+        <h3>7.2 Audit Log Records</h3>
+        <p>The audit log constitutes the primary evidence corpus for conformance verification. Audit log records MUST be append-only, cryptographically chained, and independently verifiable without access to internal system state. Logs MUST be retained for the duration specified in the Core Standard. Truncated, modified, or non-chained logs are not valid evidence. Logs that require access to system internals for verification are not valid evidence.</p>
+        </div>
+
+        <div id="s7-3" class="doc-section">
+        <h3>7.3 Decision Traces</h3>
+        <p>For each enforcement decision, a decision trace MUST be producible on demand by the system. The trace MUST reconstruct the full evaluation path, including: input parameters, policy rules applied, consent state consulted, intermediate evaluation states, and final decision. Decision traces MUST be reproducible. A system that cannot produce a decision trace for any prior enforcement decision is non-conformant with respect to auditability requirements.</p>
+        </div>
+
+        <div id="s7-4" class="doc-section">
+        <h3>7.4 Cryptographic Validation Records</h3>
+        <p>The system MUST maintain a cryptographic validation record for each signed artifact. Validation records MUST include: the artifact identifier, the verification key identifier used, the algorithm applied, the verification timestamp, and the verification result. Validation records MUST themselves be signed and included in the audit log chain.</p>
+        </div>
+
+        <div id="s7-5" class="doc-section">
+        <h3>7.5 Evidence Integrity Requirements</h3>
+        <p>All evidence submitted for conformance verification MUST satisfy the following integrity requirements:</p>
+        <ul>
+          <li><strong>Tamper-evident:</strong> Any modification to a submitted evidence artifact must be detectable by the verification process. Evidence that is not tamper-evident is not accepted.</li>
+          <li><strong>Reproducible:</strong> The evidence must have been produced by a deterministic process. Evidence derived from non-deterministic processes is not accepted.</li>
+          <li><strong>Verifiable:</strong> The correctness and completeness of the evidence must be confirmable by an independent party using only the artifacts themselves and the verification procedures in this document. Evidence requiring access to system internals for verification is not accepted.</li>
+        </ul>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Verification Failure Conditions</h2>
+
+        <p>The following conditions constitute verification failures. Each verification failure results in a finding of NON-CONFORMANCE with respect to the corresponding invariant. All findings are linked to specific failure modes defined in QODIQA-FCM-2026-001.</p>
+
+        <div class="failure-block">
+          <span class="failure-block-label">VF-01 - Verification Cannot Be Completed</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">Verification of any mandatory verification layer or verification condition cannot be completed due to missing artifacts, inaccessible logs, or system non-cooperation.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Result</span>
+            <span class="fc-val">System is NON-CONFORMANT. Incomplete verification does not default to a PASS finding. The burden of enabling verification rests with the system operator.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">FCM Reference</span>
+            <span class="fc-val">QODIQA-FCM-2026-001 Section 3.2 (Soft Non-Compliance - inability to demonstrate compliance)</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">VF-02 - Verification Result Not Reproducible</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">Applying the same verification procedure to the same artifacts produces different results on different applications.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Result</span>
+            <span class="fc-val">System is NON-CONFORMANT. Non-reproducible verification indicates non-deterministic enforcement or evidence tampering. Both conditions result in non-conformance.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">FCM Reference</span>
+            <span class="fc-val">QODIQA-FCM-2026-001 Section 4.2 (Decision Integrity Failure - FM-DI-1)</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">VF-03 - Evidence Does Not Satisfy Integrity Requirements</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">Evidence submitted for conformance assessment fails the tamper-evident, reproducible, or verifiable requirements defined in Section 7.5.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Result</span>
+            <span class="fc-val">Evidence is rejected. System is NON-CONFORMANT with respect to auditability requirements. No conformance claim based on non-qualifying evidence is accepted.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">FCM Reference</span>
+            <span class="fc-val">QODIQA-FCM-2026-001 Section 4.5 (Audit Failure - FM-AF-2, FM-AF-3)</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">VF-04 - Verification Produces Non-Binary Result</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">A verification procedure produces an indeterminate, conditional, or probabilistic result rather than a binary PASS or FAIL.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Result</span>
+            <span class="fc-val">Indeterminate verification result is treated as FAIL. System is NON-CONFORMANT for the corresponding invariant until a PASS result is obtained from a valid deterministic verification procedure.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">FCM Reference</span>
+            <span class="fc-val">QODIQA-FCM-2026-001 Section 4.2 (Decision Integrity Failure - FM-DI-2)</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">VF-05 - Audit Log Verification Fails</span>
+          <div class="fc-row">
+            <span class="fc-key">Condition</span>
+            <span class="fc-val">Cryptographic hash chain verification of the audit log produces a failure, or the log contains gaps corresponding to enforcement events.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Result</span>
+            <span class="fc-val">System is NON-CONFORMANT. Audit log failure invalidates all evidence claims dependent on that log. The scope of non-conformance extends to all enforcement events within the affected log window.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">FCM Reference</span>
+            <span class="fc-val">QODIQA-FCM-2026-001 Section 4.5 (Audit Failure - FM-AF-1, FM-AF-2)</span>
+          </div>
+        </div>
+
+        <div class="decision-block">
+          <strong>Verification Failure Resolution</strong>
+          <p>No verification failure may be resolved by resubmitting the same artifacts or by providing additional explanation. Verification failures are resolved only by providing new evidence from a system that has corrected the underlying non-conformance condition. Re-verification is required in full for the affected verification layer.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Verification Observability</h2>
+
+        <p>All verification processes defined in this document are based on externally observable system outputs. The following requirements govern observability of verification:</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement VO-1 - Observable Outputs Required</div>
+          <p>Every verification condition MUST produce an externally observable output. Verification processes that rely on internal system assertions, vendor claims, or code-level inspection do not satisfy this requirement. Observable output means an artifact produced by the system during operation that can be retrieved, inspected, and verified by an independent party without special system access.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement VO-2 - No Silent Validation</div>
+          <p>Systems MUST NOT perform validation processes that do not produce a corresponding audit record. Any validation step that influences enforcement behavior MUST leave an audit trail. Silent validation - validation that occurs but produces no externally observable record - is prohibited. A system that performs silent validation is non-conformant regardless of whether the validation itself would have produced a correct result.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement VO-3 - External Audit Must Be Possible</div>
+          <p>A qualified external auditor MUST be able to verify enforcement correctness using only the artifacts produced by the system during operation. The system MUST NOT require the auditor to have access to source code, internal databases, runtime state, or system internals to perform verification. All artifacts necessary for complete verification MUST be producible on demand by the system without privileged access.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement VO-4 - Verification Output Retention</div>
+          <p>All artifacts produced during verification processes MUST be retained for the period specified in the Core Standard. Expired or deleted verification artifacts that were required for conformance demonstration constitute an evidence gap. Evidence gaps are treated as non-conformance conditions for the period in which the artifacts are unavailable.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Verification Execution Model</h2>
+
+        <p>Verification is executed at three defined points in the system lifecycle. All three verification phases MUST be supported. A system that supports verification at fewer than three phases is non-conformant with respect to lifecycle coverage requirements.</p>
+
+        <div id="s10-1" class="doc-section">
+        <h3>10.1 Pre-Execution Verification</h3>
+        <p>Pre-execution verification is performed before the system enters operational service or before a significant configuration change takes effect. Pre-execution verification MUST confirm:</p>
+        <ul>
+          <li>Policy engine determinism under a comprehensive input test set</li>
+          <li>Enforcement gateway coverage of all defined execution pathways</li>
+          <li>Audit subsystem integrity and write capability</li>
+          <li>Cryptographic subsystem key validity and algorithm compliance</li>
+          <li>Consent registry connectivity and state currency mechanisms</li>
+        </ul>
+        <p>Pre-execution verification MUST produce a signed pre-execution verification report. Entry into operational service is prohibited until pre-execution verification produces an all-PASS result.</p>
+        </div>
+
+        <div id="s10-2" class="doc-section">
+        <h3>10.2 Runtime Verification</h3>
+        <p>Runtime verification is performed continuously during operational service. Runtime verification MUST include:</p>
+        <ul>
+          <li>Continuous audit log integrity monitoring</li>
+          <li>Enforcement decision completeness monitoring - no enforcement event may occur without a corresponding audit record</li>
+          <li>Consent registry state currency monitoring</li>
+          <li>Cryptographic signature validation for all decision artifacts at issuance</li>
+        </ul>
+        <p>Runtime verification MUST produce alerting artifacts for any detected anomaly. Anomaly detection is not sufficient; the anomaly MUST trigger a corresponding audit record and, where defined by the Core Standard, a fail-closed response.</p>
+        </div>
+
+        <div id="s10-3" class="doc-section">
+        <h3>10.3 Post-Execution Verification</h3>
+        <p>Post-execution verification is performed following a defined operational period as part of ongoing compliance assurance, and following any suspected security incident or anomalous event. Post-execution verification MUST include:</p>
+        <ul>
+          <li>Full audit log hash chain verification for the covered period</li>
+          <li>Decision trace reconstruction for a sampled set of enforcement decisions</li>
+          <li>Policy evaluation replay against recorded request sets</li>
+          <li>Cryptographic key usage audit</li>
+        </ul>
+        <p>Post-execution verification MUST produce a signed post-execution verification report. Findings from post-execution verification MUST be resolved before the system is re-certified or before any certification claim is extended.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Certification Integration</h2>
+
+        <p>Verification results produced in accordance with this document are the primary input to the QODIQA Certification Framework assessment process. The relationship between verification and certification is governed by the following requirements.</p>
+
+        <div id="s11-1" class="doc-section">
+        <h3>11.1 Verification as Prerequisite to Certification</h3>
+        <p>No certification claim at any level defined in the Certification Framework may be made without successful completion of all verification conditions defined in this document. Certification assessment begins only after all verification procedures have produced all-PASS results for the certification scope.</p>
+        </div>
+
+        <div id="s11-2" class="doc-section">
+        <h3>11.2 Mapping to Certification Levels</h3>
+        <p>All certification levels defined in the Certification Framework require successful verification of all mandatory verification conditions in this document. There are no certification levels that are exempt from any subset of these verification conditions. The following mapping applies:</p>
+        <ul>
+          <li><strong>All certification levels:</strong> VC-01 through VC-08 (full verification condition set), all six verification layers (Section 4.2), and all evidence categories (Section 7) are mandatory.</li>
+          <li><strong>Higher certification levels</strong> may require additional verification procedures as defined in the Certification Framework, but shall not require fewer procedures than those defined in this document.</li>
+        </ul>
+        </div>
+
+        <div id="s11-3" class="doc-section">
+        <h3>11.3 Mandatory Verification Requirements for Certification</h3>
+        <p>The following are mandatory for any certification claim:</p>
+        <ul>
+          <li>Signed pre-execution verification report with all-PASS result</li>
+          <li>Runtime verification monitoring capability demonstrated and active</li>
+          <li>Post-execution verification report for a representative operational period</li>
+          <li>Complete evidence corpus meeting all Section 7 integrity requirements</li>
+          <li>No open verification failure conditions at time of certification assessment</li>
+        </ul>
+        </div>
+
+        <div id="s11-4" class="doc-section">
+        <h3>11.4 Verification Failure Impact on Certification</h3>
+        <p>Any verification failure condition, if discovered after certification has been issued, MUST be reported to the certification authority as defined in the Certification Framework. Discovery of a verification failure condition during a certified operational period triggers the certification suspension procedures defined in the Certification Framework. Certification is not restored until the verification failure is resolved and post-execution verification produces an all-PASS result for the affected verification layers.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Prohibited Verification Behaviors</h2>
+
+        <p>The following behaviors are prohibited in any verification process presented in support of a conformance claim. Use of any prohibited verification behavior invalidates all findings produced by that verification process.</p>
+
+        <div class="failure-block">
+          <span class="failure-block-label">PVB-01 - Partial Verification</span>
+          <div class="fc-row">
+            <span class="fc-key">Prohibited Behavior</span>
+            <span class="fc-val">Submitting verification results covering a subset of required verification conditions or layers as evidence of full conformance.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Effect</span>
+            <span class="fc-val">All findings from the partial verification are invalid. System MUST NOT claim conformance based on partial verification results.</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">PVB-02 - Cached Validation Without Proof</span>
+          <div class="fc-row">
+            <span class="fc-key">Prohibited Behavior</span>
+            <span class="fc-val">Asserting that a prior verification result remains valid without re-executing verification or providing cryptographic proof of unchanged system state since the prior verification.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Effect</span>
+            <span class="fc-val">Cached results without cryptographic continuity proof are not accepted as evidence. Re-verification is required for all affected conditions.</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">PVB-03 - Implicit Trust</span>
+          <div class="fc-row">
+            <span class="fc-key">Prohibited Behavior</span>
+            <span class="fc-val">Asserting conformance based on trust in vendor claims, design documentation, code reviews, or architectural descriptions without operational artifact-based verification.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Effect</span>
+            <span class="fc-val">No trust-based assertion constitutes evidence of conformance. All conformance claims MUST be supported by operational artifacts produced by the system in execution.</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">PVB-04 - Non-Deterministic Checks</span>
+          <div class="fc-row">
+            <span class="fc-key">Prohibited Behavior</span>
+            <span class="fc-val">Using probabilistic, heuristic, or sampling-based verification methods as the basis for a binary conformance finding.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Effect</span>
+            <span class="fc-val">Non-deterministic checks do not produce valid PASS findings. Probabilistic analysis may be used as supplementary diagnostic information but MUST NOT be used as the basis for a conformance assertion.</span>
+          </div>
+        </div>
+
+        <div class="failure-block">
+          <span class="failure-block-label">PVB-05 - Silent Pass</span>
+          <div class="fc-row">
+            <span class="fc-key">Prohibited Behavior</span>
+            <span class="fc-val">A verification procedure that produces a PASS result without generating a corresponding verification artifact - a signed record containing the procedure ID, input parameters, execution timestamp, and result.</span>
+          </div>
+          <div class="fc-row">
+            <span class="fc-key">Effect</span>
+            <span class="fc-val">Silent PASS results are not accepted as evidence of conformance. Every PASS result MUST be supported by a signed verification artifact that is included in the audit record and available for independent inspection.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Conformance Assertion</h2>
+
+        <p>A system MAY assert conformance with the standard if and only if all of the following conditions are simultaneously satisfied at the time of assertion:</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Assertion Condition CA-1 - All Verification Conditions Satisfied</div>
+          <p>All verification conditions VC-01 through VC-08 have been executed in accordance with this document and have produced PASS results. Each PASS result is supported by a signed verification artifact present in the audit record. No open verification failure conditions exist.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Assertion Condition CA-2 - All Results Are Reproducible</div>
+          <p>All verification results are reproducible. The system operator MUST be able to demonstrate, on demand, that re-execution of any verification procedure against the same artifacts produces the same result. Non-reproducible results invalidate the assertion regardless of the original result value.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Assertion Condition CA-3 - All Evidence Is Available</div>
+          <p>The complete evidence corpus required under Section 7 is available, intact, and satisfies all integrity requirements of Section 7.5. Evidence that has expired, been deleted, or fails integrity verification is not available for assertion purposes. The assertion period is bounded by the temporal coverage of available evidence.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Assertion Condition CA-4 - No Prohibited Behaviors Present</div>
+          <p>None of the prohibited verification behaviors defined in Section 12 have been employed in the production of any verification result or evidence artifact presented in support of the assertion. Verification results produced using prohibited methods do not satisfy CA-1 regardless of the result value.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Assertion Condition CA-5 - No Open Failure Modes</div>
+          <p>No failure modes defined in QODIQA-FCM-2026-001 are present in the system. All failure mode verification conditions in the Conformance Verification Matrix (Section 5) have produced PASS results confirming the absence of each defined failure mode.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Conformance Assertion Constraint</strong>
+          <p>A conformance assertion is valid only for the scope and period covered by the evidence corpus. Changes to system configuration, policy versions, enforcement logic, or infrastructure components that post-date the evidence corpus require re-verification before the assertion may be extended to cover the changed system. The burden of demonstrating conformance rests with the system operator at all times.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 14 -->
+      <div id="s14" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 14</span>
+        <h2><a class="anchor-link" href="#s14">#</a>Residual Verification Limitations</h2>
+
+        <p>This section identifies conditions under which complete verification cannot be achieved. These limitations are derived from the residual risk surfaces documented in the QODIQA Risk and Assumption Disclosure Annex and represent the boundaries of what deterministic verification can confirm. Systems subject to these limitations MUST apply the fail-closed response defined for each condition.</p>
+
+        <div id="s14-1" class="doc-section">
+        <h3>14.1 What Cannot Be Verified</h3>
+        <p>The following conditions cannot be fully addressed by the verification procedures in this document:</p>
+
+        <ul>
+          <li><strong>Undisclosed execution pathways:</strong> Verification can only confirm the absence of enforcement gaps for execution pathways that are known and enumerated. Previously unknown pathways, including pathways introduced by undisclosed system components or supply chain compromise, cannot be verified against.</li>
+          <li><strong>Hardware-level consent bypass:</strong> Verification procedures operate above the hardware abstraction layer. Enforcement bypass achieved at the hardware level, including through firmware modification or physical access, may not produce artifacts detectable by software-layer verification.</li>
+          <li><strong>Cryptographic assumption failure:</strong> Verification of cryptographic integrity depends on the continued strength of the algorithms and key lengths specified in the Security and Cryptographic Profile. Advances that undermine these assumptions may retroactively invalidate verification results without detection by the verification procedures themselves.</li>
+          <li><strong>Registry state at exact decision time:</strong> Verification confirms consent record currency within the defined staleness tolerance. It cannot confirm the exact registry state at the precise moment of a decision to sub-tolerance precision.</li>
+        </ul>
+        </div>
+
+        <div id="s14-2" class="doc-section">
+        <h3>14.2 Required System Behavior Under Residual Limitations</h3>
+        <p>Where verification cannot be completed due to a residual limitation, the system MUST apply fail-closed behavior. Specifically:</p>
+
+        <ul>
+          <li>Any execution pathway that cannot be confirmed as covered by the enforcement gateway MUST be disabled.</li>
+          <li>Any cryptographic operation that cannot be verified against the approved algorithm list MUST be rejected.</li>
+          <li>Any enforcement decision for which a complete audit record cannot be produced MUST be treated as if no decision was made, and deny-all MUST be applied.</li>
+          <li>The existence of a residual limitation in a given area does not excuse reduced verification effort in that area. Systems MUST apply maximum available verification coverage even where residual limitations prevent complete verification.</li>
+        </ul>
+
+        <div class="decision-block">
+          <strong>Residual Limitation Acknowledgment</strong>
+          <p>The identification of residual verification limitations in this section does not constitute acceptance that systems operating under those limitations are conformant. A system operating within a residual limitation surface is conformant only if it applies fail-closed behavior as required by Section 14.2. A system that does not apply fail-closed behavior in a residual limitation area is NON-CONFORMANT, regardless of whether the limitation is acknowledged in this document.</p>
+        </div>
+        </div>
+        </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative component of the QODIQA specification corpus. It defines the verification model, verification procedures, evidence requirements, and conformance assertion conditions applicable to all systems implementing the QODIQA deterministic runtime consent enforcement model.</p>
+
+          <p>This document governs verification of conformance only. It does not define conformant behavior, which is established by the Core Standard and the 68-Point Enforcement Framework. It must be read in conjunction with the normative corpus documents from which its verification requirements are derived and to which its verification outputs feed.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Non-Compliance Conditions and Failure Modes</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-CVS-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Conformance Verification Specification - Deterministic Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Verification Model, Evidence Requirements, and Conformance Assertion Conditions for Conformant Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Conformance Verification Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Conformance Verification Specification</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-CVS-2026-001</p>
+      <p>Conformance Verification Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document defines the verification model for conformance assessment under this standard and does not constitute legal, regulatory, or operational advice. All verification requirements described herein are intended for conformance assessment purposes only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-CVS-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- ScrollSpy: scroll-position-based, most-specific section wins ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+
+  /* Nav href order defines document order — used for tie-breaking */
+  const navOrder = Array.from(navItems).map(a => a.getAttribute('href').slice(1));
+
+  /* Collect only sections that have a matching nav link */
+  const sections = navOrder
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  let activeId = null;
+  let rafPending = false;
+
+  function setActive(id) {
+    if (id === activeId) return;
+    activeId = id;
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  function updateSpy() {
+    rafPending = false;
+    const trigger = Math.max(0, window.innerHeight * 0.25);
+    let best = null;
+    let bestTop = -Infinity;
+
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      /* Section has scrolled to or past the trigger line */
+      if (top <= trigger && top > bestTop) {
+        bestTop = top;
+        best = sec.id;
+      }
+    });
+
+    /* Nothing past trigger yet — highlight first section */
+    if (!best && sections.length) best = sections[0].id;
+
+    if (best) setActive(best);
+  }
+
+  function onScroll() {
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(updateSpy);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  /* Initial call after layout */
+  requestAnimationFrame(updateSpy);
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: 'smooth'
+          });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Overlay dismiss ---- */
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+  });
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', () => {
+      btt.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    btt.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement · v1.0</title>
+<meta name="description" content="QODIQA Security and Cryptographic Profile for Runtime Consent Enforcement Version 1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement">
+<meta property="og:description" content="Cryptographic, Key Management, and Integrity Requirements for Deterministic Runtime Consent Enforcement.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --bg:         #F6F4F0;
+  --bg-raised:  #EFECEA;
+  --bg-sunken:  #E8E5E0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 112px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+h4 {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 24px;
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #333840 #191C21;
+}
+
+pre::-webkit-scrollbar { height: 4px; }
+pre::-webkit-scrollbar-track { background: #191C21; }
+pre::-webkit-scrollbar-thumb { background: #333840; }
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* Logic block */
+.logic-block {
+  background: #191C21;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.logic-bar {
+  background: #0E1012;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logic-bar-title {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: #4a5468;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.logic-bar-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(122,106,80,0.22);
+  padding: 2px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.logic-block pre {
+  border-left: none;
+  margin: 0;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.48);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+.td-must { font-family: var(--mono); font-size: 0.70rem; color: #c4a870; font-weight: 500; }
+.td-should { font-family: var(--mono); font-size: 0.70rem; color: #5a7a6a; font-weight: 500; }
+.td-must-not { font-family: var(--mono); font-size: 0.70rem; color: #9a4a4a; font-weight: 500; }
+.td-forbidden { font-family: var(--mono); font-size: 0.70rem; color: #8a2a2a; font-weight: 500; background: rgba(138,42,42,0.08); padding: 1px 6px; display: inline-block; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   NORMATIVE BLOCKS
+   ============================================================ */
+.normative-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 0;
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.normative-block-head {
+  background: #1C1F25;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.nb-id {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.nb-title {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.68);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.nb-level {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid;
+  flex-shrink: 0;
+}
+
+.nb-level.must { color: #c4a870; border-color: rgba(196,168,112,0.30); background: rgba(196,168,112,0.06); }
+.nb-level.should { color: #5a7a6a; border-color: rgba(90,122,106,0.30); background: rgba(90,122,106,0.06); }
+.nb-level.must-not { color: #9a4a4a; border-color: rgba(154,74,74,0.30); background: rgba(154,74,74,0.06); }
+
+.normative-block-body { background: #F6F4F0; }
+
+.nb-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  border-bottom: 1px solid #D4D0CA;
+  padding: 10px 18px;
+  gap: 16px;
+  align-items: start;
+}
+
+.nb-row:last-child { border-bottom: none; }
+
+.nb-attr {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.nb-val {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.nb-val strong { color: var(--ink); font-weight: 600; }
+.nb-val code { font-size: 0.84em; }
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 13px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  text-align: justify;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   DEF BLOCK
+   ============================================================ */
+.def-block {
+  border: 1px solid #D2CEC8;
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.def-block-head {
+  background: var(--bg-raised);
+  padding: 9px 18px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid #D2CEC8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.def-block-head span { color: var(--accent); }
+
+.def-block-body { padding: 8px 18px; background: var(--bg); }
+
+.def-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #DEDAD5;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.def-item:last-child { border-bottom: none; }
+
+.def-item .def-term {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 3px;
+  letter-spacing: 0.06em;
+}
+
+.def-item .def-text { display: block; text-align: justify; hyphens: auto; }
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '•';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   TIER GRID
+   ============================================================ */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 16px 0 24px;
+  border: 1px solid #C8C4BE;
+  background: #C8C4BE;
+  overflow: hidden;
+}
+
+.tier-card {
+  background: var(--bg);
+  padding: 24px 22px 22px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tier-card:nth-child(1) { background: #F9F7F4; }
+.tier-card:nth-child(2) { background: #F3F0EC; }
+.tier-card:nth-child(3) { background: #EDE9E3; }
+
+.tier-card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.35;
+  margin-bottom: 18px;
+}
+.tier-card:nth-child(2)::before { opacity: 0.60; }
+.tier-card:nth-child(3)::before { opacity: 1.0; }
+
+.tier-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  display: inline-block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.tier-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.tier-desc {
+  font-size: 0.825rem;
+  line-height: 1.64;
+  color: var(--text-2);
+  border-top: 1px solid rgba(0,0,0,0.08);
+  padding-top: 12px;
+  margin-top: auto;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   THREAT GRID
+   ============================================================ */
+.threat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin: 16px 0 24px;
+  border: 1px solid #D2CEC8;
+  background: #D2CEC8;
+}
+
+.threat-card {
+  background: var(--bg);
+  padding: 16px 18px;
+}
+
+.threat-card:nth-child(even) { background: var(--bg-raised); }
+
+.threat-id {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a3030;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.threat-title {
+  font-family: var(--sans);
+  font-size: 0.840rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.threat-desc {
+  font-size: 0.840rem;
+  line-height: 1.62;
+  color: var(--text-3);
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   INST STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 24px 0;
+  margin: 32px 0;
+}
+
+.inst-statement .inst-lead {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+.inst-statement .inst-body {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0 0 14px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.inst-statement .inst-close {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  display: block;
+}
+
+/* ============================================================
+   INFORMATIVE NOTICE
+   ============================================================ */
+.informative-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border: 1px solid #D2CEC8;
+  background: #F8F6F2;
+  margin-bottom: 24px;
+}
+
+.informative-notice .inf-label {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.informative-notice .inf-desc {
+  font-family: var(--sans);
+  font-size: 0.760rem;
+  color: var(--muted);
+}
+
+/* ============================================================
+   ANNEX CONFIRMATION
+   ============================================================ */
+.annex-confirmation {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  background: #F2F0EB;
+}
+
+.annex-confirmation p {
+  font-size: 0.840rem;
+  color: var(--text-2);
+  margin: 0;
+  line-height: 1.75;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.contact-line {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    will-change: transform;
+    z-index: 150;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 64px 20px 48px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+  .tier-grid { grid-template-columns: 1fr; }
+  .threat-grid { grid-template-columns: 1fr; }
+  .nb-row { grid-template-columns: 1fr; gap: 6px; }
+}
+
+/* ============================================================
+   ALIGNMENT OVERRIDES — cascade corrections
+   ============================================================ */
+.callout p,
+.inst-statement .inst-body,
+.key-prop p,
+.prop-list li,
+.audience-list li,
+.nb-val,
+.def-item .def-text,
+.threat-desc,
+.tier-desc,
+.annex-confirmation p { text-align: justify; hyphens: auto; }
+
+@media (max-width: 480px) {
+  #content      { padding: 64px 16px 48px; }
+  footer        { padding: 24px 16px; }
+  .footer-inner { gap: 16px; }
+  pre           { font-size: 0.72rem; padding: 12px 14px; }
+  .doc-status-block  { padding: 20px 18px; }
+  .doc-identity-block { padding: 16px 18px; }
+  .nb-row       { padding: 8px 14px; }
+  .normative-block-head { padding: 8px 14px; }
+  .tier-card    { padding: 18px 16px 16px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Security and <span class="italic-part">Cryptographic Profile</span><br>for Runtime Consent Enforcement</span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-SEC-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Mandatory and recommended cryptographic, integrity, and security mechanisms for high-assurance implementations of the QODIQA enforcement infrastructure.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Security Scope</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Scope of This Profile</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Relationship to Core Standard</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Relationship to Conformance Test Suite</a>
+      <a class="nav-item sub" href="#s1-4">1.4 System Under Protection</a>
+      <a class="nav-item" href="#s2">2. Threat Model Definition</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Security Invariants</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Attack Surface Mapping</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Failure Mode Enumeration</a>
+      <a class="nav-item" href="#s3">3. Cryptographic Algorithm Requirements</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Approved Signature Algorithms</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Hashing Algorithms</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Forbidden Algorithms</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Cryptographic Agility</a>
+      <a class="nav-item" href="#s4">4. Consent Token Structure Security</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Deterministic Verification Sequence</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Distributed Replay Protection</a>
+      <a class="nav-item" href="#s5">5. Trust Anchor and Key Management</a>
+      <a class="nav-item sub" href="#s5-5">5.5 High-Assurance Key Management Model</a>
+      <a class="nav-item" href="#s6">6. Revocation Registry Security</a>
+      <a class="nav-item" href="#s7">7. Artifact Hashing and Integrity</a>
+      <a class="nav-item" href="#s8">8. Audit Ledger Integrity</a>
+      <a class="nav-item" href="#s9">9. Time and Clock Security</a>
+      <a class="nav-item" href="#s10">10. Network and Transport Security</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Performance and Latency Constraints</a>
+      <a class="nav-item" href="#s11">11. Side-Channel Mitigation</a>
+      <a class="nav-item" href="#s12">12. Secure Deployment Profiles</a>
+      <a class="nav-item" href="#s13">13. Compromise and Incident Response</a>
+      <a class="nav-item" href="#s14">14. Non-Coverage Disclosure</a>
+      <a class="nav-item" href="#s-conclusion">Closing Statement</a>
+      <a class="nav-item" href="#annex-x">X. Cryptographic Trust Model</a>
+      <a class="nav-item" href="#annex-a">A. NIST and FIPS Reference Mapping</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document defines the <strong>mandatory and recommended cryptographic, integrity, and security mechanisms</strong> required for high-assurance implementations of QODIQA Core v1.0, the 68-Point Enforcement Framework v3.0, and the associated Conformance Test Suite.</p>
+          <p>This profile is not general security guidance. It is not a cybersecurity best-practices document. It is not a compliance advisory. It is a <strong>deterministic security hard profile</strong> for runtime consent enforcement infrastructure — specifying precisely which algorithms are permitted, which are forbidden, how consent tokens are signed, how trust anchors are managed, how revocation registries are protected, and how audit integrity is preserved across the full enforcement lifecycle.</p>
+          <p>All requirements expressed herein use normative language. Implementations claiming conformance with QODIQA Core v1.0 at Hardened Enterprise Profile or above SHALL satisfy all MUST requirements in this document.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Security Scope</h2>
+
+        <p>QODIQA Core v1.0 defines a deterministic consent enforcement layer for AI runtime systems. This Security and Cryptographic Profile extends that standard by specifying the cryptographic substrate required to make QODIQA's deterministic properties tamper-resistant, verifiable, and auditable under adversarial conditions.</p>
+
+        <h3 id="s1-1">1.1 Scope of This Profile</h3>
+        <p>This profile governs the security requirements applicable to the QODIQA enforcement layer — specifically the runtime components responsible for consent token issuance, artifact production, policy evaluation, registry consultation, and audit ledger maintenance. It applies to all software, hardware, and operational components that implement or host QODIQA enforcement functions.</p>
+
+        <div class="callout">
+          <p><strong>Boundary Delimitation.</strong> This profile governs enforcement layer security. It does not govern the security of AI model weights, training pipelines, inference parameters, or any component internal to the model under enforcement. The System Under Protection (SUP) is the enforcement layer itself.</p>
+        </div>
+
+        <h3 id="s1-2">1.2 Relationship to Core Standard</h3>
+        <p>QODIQA Core v1.0 defines the logical architecture of enforcement: consent gates, frozen evaluation contexts, decision artifacts, replay verification, and fail-closed semantics. This profile defines the cryptographic mechanisms that make those logical properties provably enforceable. Where Core defines <em>what</em> must be enforced, this profile defines <em>how</em> that enforcement must be anchored.</p>
+
+        <h3 id="s1-3">1.3 Relationship to Conformance Test Suite</h3>
+        <p>The Conformance Test Suite references this profile for cryptographic verification test cases. Implementations that pass all Core conformance tests but fail cryptographic profile requirements SHALL be classified as non-conformant at any profile level above Baseline Security.</p>
+
+        <h3 id="s1-4">1.4 System Under Protection</h3>
+        <div class="def-block">
+          <div class="def-block-head">Defined Boundary — <span>System Under Protection (SUP)</span></div>
+          <div class="def-block-body">
+            <div class="def-item">
+              <span class="def-term">SUP.CONSENT-GATE</span>
+              <span class="def-text">The runtime enforcement gate evaluating consent before AI invocation. Boundary includes token ingestion, policy lookup, and decision production.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">SUP.ARTIFACT-STORE</span>
+              <span class="def-text">The immutable store of Decision Artifacts produced by the enforcement gate. Boundary includes write path, hash chain, and replay verification interface.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">SUP.REGISTRY</span>
+              <span class="def-text">The revocation and policy version registry consulted during enforcement evaluation. Boundary includes read path, integrity verification, and TTL management.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">SUP.AUDIT-LEDGER</span>
+              <span class="def-text">The append-only audit log recording all enforcement decisions. Boundary includes write-before-execute path, hash chain, and archival interface.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">SUP.KEY-STORE</span>
+              <span class="def-text">The secure store of signing keys, trust anchors, and root certificates. Boundary includes HSM or secure enclave where applicable.</span>
+            </div>
+          </div>
+        </div>
+
+        <p>Components external to the above SUP definitions — including model weights, inference engines, application-layer logic, and data stores — are out of scope for this profile's cryptographic requirements.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Threat Model Definition</h2>
+
+        <p>The following threat categories represent realistic, high-impact adversarial scenarios against the QODIQA enforcement layer. All are grounded in known attack classes against cryptographic infrastructure, distributed systems, and audit mechanisms. Speculative or theoretical threats are excluded.</p>
+
+        <div class="threat-grid">
+          <div class="threat-card">
+            <span class="threat-id">THR-01</span>
+            <div class="threat-title">Consent Token Forgery</div>
+            <p class="threat-desc">An adversary constructs a syntactically valid consent token without possessing the issuing authority's private key. Mitigated by mandatory signature verification at every enforcement gate.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-02</span>
+            <div class="threat-title">Key Compromise</div>
+            <p class="threat-desc">An adversary obtains a private signing key, enabling forgery of valid consent tokens. Mitigated by HSM key storage, rotation intervals, revocation propagation, and key compromise response procedures.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-03</span>
+            <div class="threat-title">Registry Tampering</div>
+            <p class="threat-desc">An adversary modifies the revocation registry to remove revocation records or insert false active-key entries. Mitigated by signed snapshots, hash chain integrity, and anti-downgrade sequence number enforcement.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-04</span>
+            <div class="threat-title">Replay Manipulation</div>
+            <p class="threat-desc">An adversary replays a previously valid consent token against a different context or after revocation. Mitigated by nonce binding, timestamp validation, registry consultation, and artifact hash verification.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-05</span>
+            <div class="threat-title">Audit Log Deletion and Modification</div>
+            <p class="threat-desc">An adversary removes or alters audit entries to conceal enforcement decisions. Mitigated by append-only storage, hash chain integrity, and write-before-execute sequencing.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-06</span>
+            <div class="threat-title">Clock Manipulation</div>
+            <p class="threat-desc">An adversary skews system time to extend token lifetime, suppress TTL expiry, or produce false temporal audit records. Mitigated by NTP synchronization requirements, monotonic clock enforcement, and clock drift bounds.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-07</span>
+            <div class="threat-title">Policy Version Substitution</div>
+            <p class="threat-desc">An adversary substitutes an outdated or permissive policy version during evaluation. Mitigated by inclusion of policy version in artifact hash and mandatory registry version verification.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-08</span>
+            <div class="threat-title">Artifact Collision Attempt</div>
+            <p class="threat-desc">An adversary engineers a second execution context that produces the same artifact hash as a legitimately authorized context. Mitigated by SHA-256 minimum, full canonical context inclusion, and collision-resistance requirements.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-09</span>
+            <div class="threat-title">Network Partition Abuse</div>
+            <p class="threat-desc">An adversary induces a network partition to prevent registry consultation, forcing a fallback to a permissive state. Mitigated by fail-closed semantics: enforcement MUST deny when registry is unreachable.</p>
+          </div>
+          <div class="threat-card">
+            <span class="threat-id">THR-10</span>
+            <div class="threat-title">Insider Tampering</div>
+            <p class="threat-desc">A privileged internal actor modifies keys, artifacts, or audit records. Mitigated by HSM-based key storage, dual-control key management procedures, append-only audit architecture, and independent log archival.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2.1 -->
+      <div id="s2-1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2.1</span>
+        <h2><a class="anchor-link" href="#s2-1">#</a>Security Invariants</h2>
+
+        <p>The following invariants are formal properties that MUST hold at all times across all conformant implementations of the QODIQA enforcement layer. An invariant violation is not a configuration error — it is an integrity failure. Any condition that causes an invariant to be false MUST trigger an integrity violation event, a fail-closed enforcement state, and an audit ledger entry recording the breach.</p>
+
+        <p>These invariants are not derived from policy preferences. They are derived from the structural requirements of deterministic, verifiable, tamper-resistant consent enforcement. They hold regardless of deployment profile tier.</p>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Formal Security Invariants</span>
+            <span class="logic-bar-badge">SEC-INV · v1.0</span>
+          </div>
+          <pre><span class="cm">// INV-01: Artifact Signature Invariant</span>
+<span class="kw">∀</span> artifact ∈ ARTIFACT_STORE:
+  artifact.<span class="nm">signature</span> IS VALID
+  <span class="op">∧</span> artifact.<span class="nm">signing_key</span> ∈ TRUST_REGISTRY
+  <span class="op">∧</span> artifact.<span class="nm">signing_key</span>.status = ACTIVE
+  → <span class="ty">INVARIANT: No unsigned or unverifiable artifact SHALL exist</span>
+
+<span class="cm">// INV-02: Write-Before-Execute Invariant</span>
+<span class="kw">∀</span> decision ∈ {PERMIT, DENY}:
+  LEDGER.<span class="nm">contains</span>(decision.ledger_entry) = TRUE
+  <span class="op">∧</span> LEDGER.<span class="nm">committed</span>(decision.ledger_entry) = TRUE
+  <span class="op">∧</span> decision.ledger_entry.<span class="nm">timestamp</span> ≤ decision.<span class="nm">response_timestamp</span>
+  → <span class="ty">INVARIANT: No PERMIT response SHALL be returned before its ledger entry is committed</span>
+
+<span class="cm">// INV-03: Registry Validation Invariant</span>
+<span class="kw">∀</span> token ∈ PRESENTED_TOKENS:
+  REGISTRY.<span class="nm">consulted</span>(token.<span class="nm">kid</span>) = TRUE
+  <span class="op">∧</span> REGISTRY.<span class="nm">snapshot_age</span> ≤ CONFIGURED_TTL
+  → <span class="ty">INVARIANT: No valid token SHALL bypass live registry validation</span>
+
+<span class="cm">// INV-04: Revocation Invariant</span>
+<span class="kw">∀</span> key ∈ REVOKED_KEYS:
+  <span class="kw">¬∃</span> token: VERIFY(token.<span class="nm">sig</span>, key) = ACCEPTED
+  → <span class="ty">INVARIANT: No revoked key SHALL produce an accepted signature</span>
+
+<span class="cm">// INV-05: Clock Certainty Invariant</span>
+<span class="kw">∀</span> enforcement_decision:
+  CLOCK.<span class="nm">sync_error</span> ≤ PROFILE.<span class="nm">drift_tolerance</span>
+  <span class="op">∧</span> CLOCK.<span class="nm">source</span> = AUTHENTICATED_NTP | GPS | PTP
+  → <span class="ty">INVARIANT: No enforcement decision SHALL execute under clock uncertainty exceeding tolerance</span>
+
+<span class="cm">// INV-06: Deterministic Evaluation Invariant</span>
+<span class="kw">∀</span> evaluation_invocation:
+  evaluation.<span class="nm">external_callouts</span> = ∅
+  <span class="op">∧</span> evaluation.<span class="nm">random_in_path</span> = FALSE
+  <span class="op">∧</span> evaluation.<span class="nm">context</span> = FROZEN
+  → <span class="ty">INVARIANT: No enforcement decision SHALL execute without a deterministic evaluation path</span>
+
+<span class="cm">// INV-07: Artifact Chain Invariant</span>
+<span class="kw">∀</span> artifact_n ∈ ARTIFACT_STORE:
+  artifact_n.<span class="nm">prev_artifact_id</span> = SHA256(artifact_{n-1})
+  <span class="op">∨</span> (n = 0 <span class="op">∧</span> artifact_n.<span class="nm">prev_artifact_id</span> = <span class="nm">ZERO_BYTES_32</span>)
+  → <span class="ty">INVARIANT: The artifact hash chain MUST be unbroken from genesis</span></pre>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-INV-01</span>
+            <span class="nb-title">Invariant Violation Response</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">Any runtime condition that causes one or more of the above invariants to evaluate as false MUST trigger: (1) an immediate fail-closed DENY-ALL enforcement state; (2) a signed integrity violation entry written to the audit ledger; (3) an alert to the designated security operations contact. Invariant violations MUST NOT be silently absorbed, corrected without logging, or treated as recoverable operational events without explicit documented escalation.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Verification</span>
+              <span class="nb-val">Conformance Test Suite cases SHALL include invariant violation injection tests. An implementation that does not enter fail-closed state upon induced invariant violation fails High-Assurance and Hardened profile conformance.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2.2 -->
+      <div id="s2-2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2.2</span>
+        <h2><a class="anchor-link" href="#s2-2">#</a>Attack Surface Mapping</h2>
+
+        <p>Each SUP component defined in Section 1.4 presents a discrete attack surface. The following table maps each component to its primary attack vectors, associated threat class, normative mitigation control, and the enforcement point at which the control is applied. This mapping is structural: it does not add requirements beyond those stated in the corresponding normative sections. It exists to provide a deterministic traceability reference between threat classes and controls.</p>
+
+        <div class="table-caption">Table 2.2-A — Enforcement Layer Attack Surface Mapping</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Component</th><th>Attack Surface</th><th>Threat Class</th><th>Mitigation Control</th><th>Enforcement Point</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SUP.CONSENT-GATE</td>
+                <td>Token ingestion interface; policy evaluation path; decision output channel</td>
+                <td>Token forgery (THR-01); replay manipulation (THR-04); non-deterministic evaluation (INV-06)</td>
+                <td>Signature verification (SEC-ALG-01); deterministic verification sequence (SEC-TOK-VER); anti-replay JTI cache (SEC-TOK-REPLAY-CLUSTER)</td>
+                <td>Runtime enforcement gate on every invocation</td>
+              </tr>
+              <tr>
+                <td>SUP.REGISTRY</td>
+                <td>Snapshot read interface; sequence number state; cached state window</td>
+                <td>Registry tampering (THR-03); downgrade substitution; stale-state exploitation</td>
+                <td>Signed snapshots (SEC-REG-01); fail-closed on unreachability (SEC-REG-02); anti-downgrade sequence enforcement (Section 6.1)</td>
+                <td>Registry consultation at each enforcement gate invocation</td>
+              </tr>
+              <tr>
+                <td>SUP.AUDIT-LEDGER</td>
+                <td>Ledger write path; hash chain continuity; archival interface</td>
+                <td>Audit log deletion and modification (THR-05); hash chain break; write-before-execute violation (INV-02)</td>
+                <td>Write-before-execute requirement (SEC-AUDIT-01); append-only storage (Section 8.2); tamper detection (Section 8.3)</td>
+                <td>Ledger write before PERMIT response is issued</td>
+              </tr>
+              <tr>
+                <td>SUP.ARTIFACT-STORE</td>
+                <td>Artifact write interface; hash chain linkage; artifact read interface for replay verification</td>
+                <td>Artifact collision (THR-08); artifact tampering; hash chain break (INV-07)</td>
+                <td>Artifact immutability (SEC-ART-01); model binary integrity binding (SEC-ART-02); canonical hash construction (Section 7.1)</td>
+                <td>Artifact production at enforcement decision time; replay verification on demand</td>
+              </tr>
+              <tr>
+                <td>SUP.KEY-STORE</td>
+                <td>Private key material; key export interface; key activation and rotation path</td>
+                <td>Key compromise (THR-02); insider tampering (THR-10)</td>
+                <td>HSM storage requirement (SEC-KEY-01); prohibited storage patterns (SEC-KEY-02); hardware key protection and dual-control (SEC-KEY-03)</td>
+                <td>Key generation, storage, rotation, and activation procedures</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2.3 -->
+      <div id="s2-3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2.3</span>
+        <h2><a class="anchor-link" href="#s2-3">#</a>Failure Mode Enumeration and Deterministic Response</h2>
+
+        <p>Failure modes are conditions under which one or more security invariants defined in Section 2.1 cannot be satisfied. For each failure mode, the system response MUST be deterministic and fail-closed. No failure mode permits a PERMIT decision to be issued when the condition rendering the enforcement environment unverifiable remains unresolved. The following table enumerates the primary failure conditions, their detection mechanisms, required system responses, enforcement outcomes, and audit obligations.</p>
+
+        <div class="table-caption">Table 2.3-A — Failure Mode and Deterministic Response Matrix</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Failure Condition</th><th>Detection Mechanism</th><th>Required System Response</th><th>Enforcement Outcome</th><th>Audit Requirement</th><th>Severity</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Registry unavailable</td>
+                <td>Registry connection timeout or network error on consultation attempt</td>
+                <td>Enforcement gate MUST enter fail-closed state. No cached state may be used if TTL has expired. Operations MUST be suspended until registry is reachable and a valid signed snapshot is confirmed.</td>
+                <td>DENY-ALL until registry restored</td>
+                <td>MUST write registry unavailability event to audit ledger with timestamp and gate identifier</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#c4a870;">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>Registry stale snapshot</td>
+                <td>Snapshot age exceeds configured TTL for the applicable profile (Baseline: 300 s; Hardened: 60 s; High-Assurance: 15 s)</td>
+                <td>Cached state MUST NOT be used beyond TTL expiry. Enforcement gate MUST deny all requests until a fresh snapshot is obtained and verified.</td>
+                <td>DENY until fresh signed snapshot obtained</td>
+                <td>MUST write stale-snapshot event to audit ledger</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#8a5a2a;">HIGH</span></td>
+              </tr>
+              <tr>
+                <td>Key identifier not resolvable</td>
+                <td>Registry lookup of token <code>kid</code> returns null or status REVOKED</td>
+                <td>Enforcement gate MUST immediately produce a DENY decision. No exception path or fallback key resolution is permitted.</td>
+                <td>DENY — immediate</td>
+                <td>MUST write key resolution failure event including presented <code>kid</code> and resolution outcome</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#c4a870;">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>Signature verification failure</td>
+                <td>VERIFY(token.sig, canonical_payload, public_key) returns FALSE</td>
+                <td>Enforcement gate MUST produce a DENY decision. The token MUST be treated as potentially forged. No retry or alternative verification path is permitted.</td>
+                <td>DENY — immediate</td>
+                <td>MUST write signature failure event to audit ledger</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#c4a870;">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>Clock drift violation</td>
+                <td>Measured clock synchronization error exceeds the configured drift tolerance for the applicable profile</td>
+                <td>Enforcement gate MUST enter fail-closed state for all decisions requiring temporal validation. Gate MUST remain in fail-closed state until clock synchronization is restored and verified within tolerance.</td>
+                <td>DENY-ALL temporal decisions until clock restored</td>
+                <td>MUST write clock drift violation event with measured error and tolerance threshold</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#c4a870;">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>Audit ledger write failure</td>
+                <td>Ledger write returns error or acknowledgment timeout before PERMIT response is issued</td>
+                <td>Enforcement gate MUST return DENY. The write-before-execute invariant (INV-02) MUST NOT be relaxed under any operational condition, including high load or storage failure.</td>
+                <td>DENY — ledger write failed</td>
+                <td>MUST attempt to write failure event to secondary log sink; if unavailable, alert security operations</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#c4a870;">CRITICAL</span></td>
+              </tr>
+              <tr>
+                <td>Partial artifact persistence</td>
+                <td>Artifact hash chain verification detects a gap — i.e., a missing or unlinked artifact in the sequence</td>
+                <td>Enforcement gate MUST enter fail-closed state. The artifact store MUST be quarantined pending forensic review. No new artifacts may be written until the chain is validated or restored from a verified backup.</td>
+                <td>DENY-ALL until artifact chain integrity confirmed</td>
+                <td>MUST write integrity violation event recording the last valid artifact identifier and the gap location</td>
+                <td><span style="font-family:var(--mono);font-size:0.70rem;font-weight:600;color:#8a5a2a;">HIGH</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-caption">Table 2.3-B — Control Traceability Index</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Section Reference</th><th>Threat Coverage</th><th>Component Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SEC-ALG-01</td><td>Section 3.1</td><td>THR-01 (Token Forgery); algorithm substitution</td><td>SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-ALG-AGILITY-01</td><td>Section 3.4</td><td>Algorithm obsolescence; PQC transition risk</td><td>SUP.CONSENT-GATE; SUP.KEY-STORE</td></tr>
+              <tr><td>SEC-INV-01</td><td>Section 2.1</td><td>All invariant violations (INV-01 through INV-07)</td><td>All SUP components</td></tr>
+              <tr><td>SEC-TOK-01</td><td>Section 4.1</td><td>THR-01 (Token Forgery); signature malleability</td><td>SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-TOK-REPLAY-CLUSTER</td><td>Section 4.5</td><td>THR-04 (Replay Manipulation); distributed replay</td><td>SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-KEY-01</td><td>Section 5.1</td><td>THR-02 (Key Compromise); unresolvable trust chain</td><td>SUP.KEY-STORE; SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-KEY-02</td><td>Section 5.4</td><td>THR-02 (Key Compromise); THR-10 (Insider Tampering)</td><td>SUP.KEY-STORE</td></tr>
+              <tr><td>SEC-KEY-03</td><td>Section 5.4</td><td>THR-02 (Key Compromise); THR-10 (Insider Tampering)</td><td>SUP.KEY-STORE</td></tr>
+              <tr><td>SEC-REG-01</td><td>Section 6</td><td>THR-03 (Registry Tampering); hash chain break</td><td>SUP.REGISTRY</td></tr>
+              <tr><td>SEC-REG-02</td><td>Section 6</td><td>THR-09 (Network Partition Abuse); stale state exploitation</td><td>SUP.REGISTRY; SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-ART-01</td><td>Section 7.1</td><td>THR-08 (Artifact Collision); artifact tampering (INV-07)</td><td>SUP.ARTIFACT-STORE</td></tr>
+              <tr><td>SEC-ART-02</td><td>Section 7.1</td><td>THR-07 (Policy Version Substitution); silent model substitution</td><td>SUP.ARTIFACT-STORE; SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-AUDIT-01</td><td>Section 8.1</td><td>THR-05 (Audit Log Modification); write-before-execute violation (INV-02)</td><td>SUP.AUDIT-LEDGER</td></tr>
+              <tr><td>SEC-CLK-01</td><td>Section 9</td><td>THR-06 (Clock Manipulation); clock drift violation (INV-05)</td><td>SUP.CONSENT-GATE; SUP.AUDIT-LEDGER</td></tr>
+              <tr><td>SEC-NET-01</td><td>Section 10</td><td>Network interception; plaintext transport exposure</td><td>All SUP components (network interfaces)</td></tr>
+              <tr><td>SEC-NET-PFS</td><td>Section 10</td><td>Retrospective decryption; non-PFS cipher suite exploitation</td><td>All SUP components (TLS connections)</td></tr>
+              <tr><td>SEC-DET-01</td><td>Section 11</td><td>Non-deterministic evaluation (INV-06); evaluation path contamination</td><td>SUP.CONSENT-GATE</td></tr>
+              <tr><td>SEC-SCOPE-01</td><td>Section 14</td><td>Misrepresentation of security boundary; SUP boundary violations</td><td>All SUP components (documentation and claims)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Cryptographic Algorithm Requirements</h2>
+
+        <h3 id="s3-1">3.1 Approved Signature Algorithms</h3>
+        <p>Implementations SHALL use only the following signature algorithms for consent token signing, registry snapshot signing, and audit chain anchoring. Algorithm selection MUST be recorded in the implementation's cryptographic configuration manifest.</p>
+
+        <div class="table-caption">Table 3.1 — Approved Signature Algorithms</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>Standard</th><th>Requirement</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ed25519</td><td>RFC 8032</td><td><span class="td-must">MUST</span></td><td>Primary recommended algorithm. Deterministic signature generation. 128-bit security level.</td></tr>
+              <tr><td>ECDSA P-256</td><td>NIST FIPS 186-4</td><td><span class="td-should">SHOULD</span></td><td>Optional interoperability profile. MUST use deterministic nonce per RFC 6979. SHA-256 digest required.</td></tr>
+              <tr><td>ECDSA P-384</td><td>NIST FIPS 186-4</td><td><span class="td-should">SHOULD</span></td><td>High-Assurance profile only. SHA-384 digest required. Justified by extended security margin requirement.</td></tr>
+              <tr><td>RSA-PSS ≥ 3072-bit</td><td>RFC 8017</td><td><span class="td-should">SHOULD</span></td><td>Legacy integration only. SHA-256 or SHA-384 digest required. SHALL NOT be used for new implementations.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-ALG-01</span>
+            <span class="nb-title">Primary Signature Algorithm Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">All conformant implementations SHALL support Ed25519 as the primary signing algorithm. Non-NIST-approved algorithms, including those not listed in Table 3.1, SHALL NOT be used under any circumstance, including experimental or prototype deployments.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Rationale</span>
+              <span class="nb-val">Ed25519 provides deterministic signature generation, eliminating the nonce reuse vulnerability class inherent to non-deterministic ECDSA. Its compactness and performance characteristics are appropriate for inline enforcement gate use.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s3-2">3.2 Hashing Algorithms</h3>
+        <div class="table-caption">Table 3.2 — Approved Hashing Algorithms</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>Standard</th><th>Requirement</th><th>Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SHA-256</td><td>NIST FIPS 180-4</td><td><span class="td-must">MUST</span></td><td>Artifact hashing, audit chain, token payload digest. Minimum acceptable.</td></tr>
+              <tr><td>SHA-384</td><td>NIST FIPS 180-4</td><td><span class="td-should">SHOULD</span></td><td>High-Assurance profile artifact hashing. Required when ECDSA P-384 is the signing algorithm.</td></tr>
+              <tr><td>SHA-512</td><td>NIST FIPS 180-4</td><td><span class="td-should">SHOULD</span></td><td>Merkle tree leaf hashing in optional audit ledger variant. Acceptable at all profiles.</td></tr>
+              <tr><td>BLAKE3</td><td>IETF Draft</td><td><span class="td-should">SHOULD</span></td><td>Internal high-throughput hashing only. MUST NOT be used as the sole artifact hash without SHA-256 co-digest.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-3">3.3 Forbidden Algorithms</h3>
+        <p>The following algorithms are <strong>unconditionally forbidden</strong> in all QODIQA implementations regardless of deployment context, legacy compatibility claims, or performance justifications. No conformance exception is available for these prohibitions.</p>
+
+        <div class="table-caption">Table 3.3 — Forbidden Algorithms</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>Status</th><th>Reason</th><th>Prohibition Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>MD5</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Cryptographically broken. Collision attacks demonstrated.</td><td>MUST NOT be used for any purpose.</td></tr>
+              <tr><td>SHA-1</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Collision resistance compromised. SHAttered attack demonstrated in 2017.</td><td>MUST NOT be used for any purpose.</td></tr>
+              <tr><td>RSA &lt; 2048-bit</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Insufficient key length. Factorization attacks feasible.</td><td>MUST NOT be used in any context.</td></tr>
+              <tr><td>ECDSA non-deterministic nonce</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Nonce reuse yields private key recovery. Pre-RFC 6979 implementations affected.</td><td>MUST NOT be deployed.</td></tr>
+              <tr><td>DES / 3DES</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Block cipher with insufficient security margin.</td><td>MUST NOT be used for any symmetric operation.</td></tr>
+              <tr><td>RC4</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Stream cipher with known statistical biases.</td><td>MUST NOT be used in any context.</td></tr>
+              <tr><td>MD4, MD2, RIPEMD-128</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Broken hash functions. No collision resistance.</td><td>MUST NOT be used for any purpose.</td></tr>
+              <tr><td>Non-standard / proprietary hash functions</td><td><span class="td-forbidden">FORBIDDEN</span></td><td>Unaudited algorithms without public cryptanalysis history.</td><td>MUST NOT be used.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-4">3.4 Cryptographic Agility and Deprecation Model</h3>
+        <p>Cryptographic algorithms are subject to continuous cryptanalytic pressure. A static algorithm selection, however conservative at time of adoption, requires a structured lifecycle to remain valid over time. This section defines the mandatory review, deprecation, and migration framework for all algorithms approved under Section 3.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-ALG-AGILITY-01</span>
+            <span class="nb-title">Mandatory Cryptographic Review Interval</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">All conformant implementations MUST conduct a formal cryptographic algorithm review at an interval not exceeding 12 months. The review SHALL assess each approved algorithm against current NIST guidance, published cryptanalytic literature, and the NIST Post-Quantum Cryptography (PQC) migration roadmap. Review results MUST be documented and retained as part of the implementation's security configuration record.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">PQC Readiness</span>
+              <span class="nb-val">All implementations targeting active deployment beyond 2030 MUST include a documented PQC migration readiness plan, identifying candidate post-quantum signature algorithms (CRYSTALS-Dilithium, FALCON, SPHINCS+ per NIST FIPS 204/205/206) and a transition timeline. Migration readiness SHALL be verified as part of High-Assurance profile recertification cycles.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4>Algorithm Deprecation Lifecycle</h4>
+
+        <div class="table-caption">Table 3.4.1 — Algorithm Deprecation Lifecycle Stages</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Stage</th><th>Designation</th><th>Operational Effect</th><th>Duration Limit</th><th>Migration Action Required</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Stage 1</td><td><span class="td-must">WARNING</span></td><td>Algorithm remains approved. Advisory notice issued. New deployments SHOULD prefer alternatives.</td><td>≤ 12 months</td><td>Migration plan MUST be documented.</td></tr>
+              <tr><td>Stage 2</td><td><span class="td-should" style="color:#8a5a2a;">RESTRICTED USE</span></td><td>Algorithm permitted for existing deployments only. MUST NOT be used in new implementations or new key generations.</td><td>≤ 18 months</td><td>Active migration to replacement MUST begin. Dual-signature required (Section 3.4.2).</td></tr>
+              <tr><td>Stage 3</td><td><span class="td-forbidden">PROHIBITED</span></td><td>Algorithm added to Forbidden Algorithms list (Section 3.3). All uses unconditionally cease.</td><td>Permanent</td><td>Migration MUST be complete before Stage 3 entry. No exceptions.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>3.4.1 Emergency Algorithm Withdrawal</h4>
+        <p>In the event of a critical cryptographic break — defined as a publicly demonstrated attack reducing effective security below 80-bit equivalent — the affected algorithm SHALL be withdrawn immediately, bypassing the staged deprecation lifecycle. Emergency withdrawal SHALL: (1) add the algorithm to the forbidden list within 48 hours of NIST or equivalent advisory publication; (2) trigger the Key Compromise Response procedure (Section 13.1) for all keys using the affected algorithm; (3) require immediate dual-signature transition for any artifacts produced under the withdrawn algorithm.</p>
+
+        <h4>3.4.2 Dual-Signature Transition Model</h4>
+        <p>During algorithm migration from a Stage 2 (Restricted) algorithm to an approved replacement, implementations MUST employ a dual-signature transition period. During this period, consent tokens, registry snapshots, and audit ledger anchors SHALL carry signatures from both the outgoing algorithm and the replacement algorithm. A verifying enforcement gate MUST accept a token as valid only if BOTH signatures verify correctly against their respective keys. This period SHALL terminate when all enforcement gates in the deployment have confirmed support for the replacement algorithm exclusively.</p>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Dual-Signature Migration Flow</span>
+            <span class="logic-bar-badge">SEC-ALG-MIGRATION</span>
+          </div>
+          <pre><span class="cm">// Phase 0: Detection — algorithm enters Stage 1 (WARNING)</span>
+ADVISORY_ISSUED(algorithm_id)
+→ document_migration_plan()
+→ identify_replacement_algorithm()  <span class="cm">// MUST be from approved list Section 3.1</span>
+
+<span class="cm">// Phase 1: Preparation — algorithm enters Stage 2 (RESTRICTED)</span>
+generate_replacement_keypair()      <span class="cm">// in HSM</span>
+publish_replacement_key_to_registry()
+configure_dual_sig_mode()
+
+<span class="cm">// Phase 2: Dual-Signature Active</span>
+<span class="kw">for each</span> token | snapshot | anchor:
+  sig_legacy    = SIGN(payload, outgoing_key)
+  sig_new       = SIGN(payload, replacement_key)
+  token.<span class="nm">signatures</span> = [sig_legacy, sig_new]
+
+<span class="cm">// Phase 2 verification requirement</span>
+<span class="kw">assert</span> VERIFY(sig_legacy, payload, outgoing_pubkey) = TRUE
+<span class="kw">assert</span> VERIFY(sig_new,    payload, replacement_pubkey) = TRUE
+<span class="kw">if</span> either fails → <span class="kw">DENY</span>
+
+<span class="cm">// Phase 3: Cutover — all gates confirm replacement support</span>
+<span class="kw">when</span> ALL_GATES.<span class="nm">replacement_verified</span>() = TRUE:
+  disable_legacy_sig_generation()
+  outgoing_key → REVOKE
+  algorithm_id → <span class="st">PROHIBITED</span> (Stage 3)
+
+<span class="cm">// Phase 4: Post-migration validation</span>
+<span class="kw">assert</span> ARTIFACT_STORE.<span class="nm">no_active_outgoing_sigs</span>() = TRUE
+run_full_conformance_suite()</pre>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Consent Token Structure Security</h2>
+
+        <p>Consent tokens are the primary credential presented to the QODIQA enforcement gate. Their cryptographic integrity is the first line of defense against consent forgery and replay manipulation. The following requirements define the minimum structural and cryptographic properties for all conformant consent tokens.</p>
+
+        <h3>4.1 Canonical Serialization</h3>
+        <p>Token payloads MUST be canonically serialized prior to signing. Canonical serialization eliminates signature malleability arising from equivalent representations of the same semantic content. Implementations SHALL use JSON Canonicalization Scheme (JCS, RFC 8785) or a formally specified binary serialization format documented in the implementation's cryptographic configuration manifest.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-TOK-01</span>
+            <span class="nb-title">Token Canonical Serialization</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">Token payloads MUST be canonically serialized (RFC 8785 or equivalent formal specification) before signing. The enforcement gate MUST re-canonicalize the received token before signature verification. Signatures over non-canonical representations SHALL NOT be accepted.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Verification Step</span>
+              <span class="nb-val"><code>canonical_payload = JCS(token_claims)</code> → <code>verify(signature, canonical_payload, public_key)</code> → <code>accept | deny</code></span>
+            </div>
+          </div>
+        </div>
+
+        <h3>4.2 Required Token Claims</h3>
+        <div class="def-block">
+          <div class="def-block-head">Mandatory Token Claims — <span>Normative</span></div>
+          <div class="def-block-body">
+            <div class="def-item">
+              <span class="def-term">iss</span>
+              <span class="def-text">Issuer identifier. MUST be a stable, verifiable URI or DID resolvable to a public key set. MUST be cryptographically bound to the signing key via the key registry.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">sub</span>
+              <span class="def-text">Subject of consent. MUST uniquely identify the data subject or principal. MUST NOT be inferred or defaulted by the enforcement gate.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">scope</span>
+              <span class="def-text">Enumerated consent scope. MUST be an explicit list of permitted operations. Wildcards MUST NOT be accepted unless the enforcement gate's policy explicitly permits wildcard scope resolution.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">iat</span>
+              <span class="def-text">Issued-at time (Unix epoch, integer). MUST be present. MUST be verified against current time within configured clock drift tolerance.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">exp</span>
+              <span class="def-text">Expiration time (Unix epoch, integer). MUST be present. Maximum lifetime: 86400 seconds (24 hours) for Baseline; 3600 seconds (1 hour) for Hardened; 900 seconds (15 minutes) for High-Assurance.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">kid</span>
+              <span class="def-text">Key identifier referencing the signing key in the trust anchor registry. MUST be present. MUST be resolved against the live registry before signature verification.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">jti</span>
+              <span class="def-text">Unique token identifier (UUID v4 or cryptographic random, 128-bit minimum). MUST be present for Hardened and High-Assurance profiles. Used for anti-replay enforcement.</span>
+            </div>
+            <div class="def-item">
+              <span class="def-term">ctx_hash</span>
+              <span class="def-text">SHA-256 hash of the canonical execution context at the time of consent grant. MUST be verified against the frozen evaluation context presented at enforcement time.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s4-3">4.3 Deterministic Verification Sequence</h3>
+        <p>The enforcement gate MUST execute token verification in the following deterministic sequence. Deviation from this sequence SHALL be treated as a verification failure, producing a DENY decision.</p>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Token Verification Sequence</span>
+            <span class="logic-bar-badge">SEC-TOK-VER</span>
+          </div>
+          <pre><span class="cm">// Step 1: Structural validation</span>
+<span class="kw">assert</span> token.<span class="nm">iss</span> IS PRESENT AND RESOLVES
+<span class="kw">assert</span> token.<span class="nm">sub</span> IS PRESENT
+<span class="kw">assert</span> token.<span class="nm">scope</span> IS PRESENT AND NON-EMPTY
+<span class="kw">assert</span> token.<span class="nm">iat</span>, token.<span class="nm">exp</span>, token.<span class="nm">kid</span>, token.<span class="nm">jti</span> ARE PRESENT
+
+<span class="cm">// Step 2: Key resolution</span>
+<span class="ty">public_key</span> = REGISTRY.<span class="nm">resolve_key</span>(token.<span class="nm">kid</span>)
+<span class="kw">if</span> public_key IS NULL OR REVOKED → <span class="kw">DENY</span>
+
+<span class="cm">// Step 3: Signature verification</span>
+<span class="ty">canonical</span> = JCS(token.<span class="nm">claims</span>)
+<span class="kw">if not</span> VERIFY(token.<span class="nm">sig</span>, canonical, public_key) → <span class="kw">DENY</span>
+
+<span class="cm">// Step 4: Temporal validation</span>
+<span class="ty">now</span> = MONOTONIC_CLOCK.<span class="nm">now</span>()
+<span class="kw">if</span> now &lt; token.<span class="nm">iat</span> - DRIFT_TOLERANCE → <span class="kw">DENY</span>
+<span class="kw">if</span> now &gt; token.<span class="nm">exp</span> → <span class="kw">DENY</span>
+
+<span class="cm">// Step 5: Anti-replay (Hardened + High-Assurance)</span>
+<span class="kw">if</span> JTI_CACHE.<span class="nm">contains</span>(token.<span class="nm">jti</span>) → <span class="kw">DENY</span>
+JTI_CACHE.<span class="nm">add</span>(token.<span class="nm">jti</span>, ttl=token.<span class="nm">exp</span>)
+
+<span class="cm">// Step 6: Context hash verification</span>
+<span class="ty">expected_ctx</span> = SHA256(FROZEN_CONTEXT.<span class="nm">canonical</span>())
+<span class="kw">if</span> token.<span class="nm">ctx_hash</span> != expected_ctx → <span class="kw">DENY</span>
+
+<span class="cm">// Step 7: Scope authorization</span>
+<span class="kw">if not</span> POLICY.<span class="nm">permits</span>(token.<span class="nm">scope</span>, REQUEST.<span class="nm">operation</span>) → <span class="kw">DENY</span>
+
+<span class="cm">// All checks passed</span>
+→ <span class="st">PERMIT</span></pre>
+        </div>
+
+        <h3>4.4 Maximum Token Lifetime by Profile</h3>
+        <div class="table-caption">Table 4.4 — Token Lifetime Limits</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Profile</th><th>Maximum exp − iat</th><th>jti Required</th><th>ctx_hash Required</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Baseline Security</td><td>86400 s (24 h)</td><td>SHOULD</td><td>SHOULD</td></tr>
+              <tr><td>Hardened Enterprise</td><td>3600 s (1 h)</td><td>MUST</td><td>MUST</td></tr>
+              <tr><td>High-Assurance</td><td>900 s (15 min)</td><td>MUST</td><td>MUST</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-5">4.5 Distributed Replay Protection Model</h3>
+        <p>In deployments where multiple enforcement gate nodes operate concurrently — whether in active-active clusters, federated deployments, or geographically distributed configurations — single-node JTI cache semantics are insufficient. A token accepted by one node and rejected by another creates an inconsistent enforcement posture exploitable for replay. The following requirements define cluster-wide replay protection semantics.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-TOK-REPLAY-CLUSTER</span>
+            <span class="nb-title">Cluster-Wide Replay Protection</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Cluster Semantics</span>
+              <span class="nb-val">In any deployment with two or more enforcement gate nodes, the JTI cache MUST be shared across all nodes through a distributed cache with strong consistency guarantees. Eventually consistent caches do not satisfy this requirement. Enforcement nodes MUST NOT make independent PERMIT decisions without confirming JTI uniqueness at the cluster level.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Replay Window</span>
+              <span class="nb-val">The maximum permitted replay window — the interval during which a presented JTI MUST be detectable as previously used — SHALL equal the lesser of: the token's <code>exp</code> minus <code>iat</code> value, or 2× the configured registry TTL for the applicable profile. Replay windows exceeding the profile's registry TTL create an exploitable gap between registry state and replay detection.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Consistency Requirement</span>
+              <span class="nb-val">JTI cache writes MUST achieve linearizable consistency before the PERMIT decision is returned to the caller. Under no circumstance SHALL a PERMIT be returned while the JTI cache write is pending acknowledgment. The JTI write and the ledger write (Section 8.1 SEC-AUDIT-01) MUST both be durably committed before the PERMIT response is issued.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Partition Behavior</span>
+              <span class="nb-val">When the distributed JTI cache is unreachable from an enforcement gate node — due to network partition, cache node failure, or connectivity loss — the affected enforcement gate MUST enter fail-closed DENY-ALL state. No PERMIT decision SHALL be issued by any gate that cannot confirm JTI uniqueness at the cluster level. Cache partition events MUST be recorded in the audit ledger.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Replication Bound</span>
+              <span class="nb-val">JTI replication lag between enforcement nodes MUST be bounded to a value no greater than the configured registry TTL for the applicable profile (Baseline: ≤ 300 s; Hardened: ≤ 60 s; High-Assurance: ≤ 15 s). Any detected replication lag exceeding this bound MUST generate an integrity alert and SHOULD trigger enforcement gate isolation pending replication restoration.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Distributed Replay Check — Cluster Flow</span>
+            <span class="logic-bar-badge">SEC-TOK-REPLAY-CLUSTER</span>
+          </div>
+          <pre><span class="cm">// Single-node flow (Baseline only)</span>
+<span class="kw">if</span> CLUSTER_SIZE = 1:
+  <span class="kw">if</span> LOCAL_JTI_CACHE.<span class="nm">contains</span>(token.<span class="nm">jti</span>) → <span class="kw">DENY</span>
+  LOCAL_JTI_CACHE.<span class="nm">add</span>(token.<span class="nm">jti</span>, ttl=token.<span class="nm">exp</span>)
+
+<span class="cm">// Cluster flow (Hardened and High-Assurance — MUST)</span>
+<span class="kw">if</span> CLUSTER_SIZE &gt; 1:
+
+  <span class="cm">// Step 1: Verify cache reachability</span>
+  <span class="kw">if not</span> CLUSTER_JTI_CACHE.<span class="nm">reachable</span>() → <span class="kw">DENY</span> + ALERT
+
+  <span class="cm">// Step 2: Atomic check-and-set with linearizable consistency</span>
+  <span class="ty">result</span> = CLUSTER_JTI_CACHE.<span class="nm">set_if_absent</span>(
+    key   = token.<span class="nm">jti</span>,
+    value = { gate_id, timestamp: NOW() },
+    ttl   = min(token.<span class="nm">exp</span> - token.<span class="nm">iat</span>, 2 * PROFILE.<span class="nm">registry_ttl</span>),
+    consistency = LINEARIZABLE
+  )
+  <span class="kw">if</span> result = ALREADY_EXISTS → <span class="kw">DENY</span>   <span class="cm">// replay detected</span>
+  <span class="kw">if</span> result = WRITE_FAILED  → <span class="kw">DENY</span>   <span class="cm">// fail-closed on uncertainty</span>
+
+  <span class="cm">// Step 3: Verify replication lag is within bound</span>
+  <span class="kw">if</span> CLUSTER_JTI_CACHE.<span class="nm">replication_lag</span>() &gt; PROFILE.<span class="nm">registry_ttl</span>:
+    ALERT(severity=HIGH, event="JTI_REPLICATION_LAG_EXCEEDED")
+    → <span class="kw">DENY</span>   <span class="cm">// SHOULD for Hardened; MUST for High-Assurance</span>
+
+  <span class="cm">// Step 4: Commit ledger entry (linearizable, before PERMIT)</span>
+  LEDGER.<span class="nm">write_commit</span>(decision_entry)   <span class="cm">// fail-closed if write fails</span>
+
+→ <span class="st">PERMIT</span>   <span class="cm">// only after both JTI cache and ledger are committed</span></pre>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Trust Anchor and Key Management Model</h2>
+
+        <h3>5.1 Root Trust Anchor Model</h3>
+        <p>The QODIQA trust model is anchored in a verifiable public key registry. Each signing key used to issue consent tokens MUST be traceable to a root trust anchor through a verifiable chain. Self-signed tokens with no trust chain are unconditionally rejected.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-KEY-01</span>
+            <span class="nb-title">Trust Chain Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">Every signing key presented for token verification MUST be resolvable through a documented trust chain to a root trust anchor registered in the implementation's key registry. Unresolvable keys SHALL produce an immediate DENY decision. Trust chain validation MUST occur at every enforcement gate invocation, not only at session establishment.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Key Storage</span>
+              <span class="nb-val">Private signing keys MUST NOT be stored in plaintext on disk, in environment variables, in source code, or in configuration files. Hardened and High-Assurance profiles MUST use HSM or OS-provided secure enclave for private key storage.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>5.2 Key Rotation Requirements</h3>
+        <div class="table-caption">Table 5.2 — Mandatory Key Rotation Intervals</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Profile</th><th>Signing Key Rotation</th><th>Root Anchor Rotation</th><th>Emergency Rotation SLA</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Baseline Security</td><td>≤ 365 days</td><td>≤ 730 days</td><td>≤ 72 hours</td></tr>
+              <tr><td>Hardened Enterprise</td><td>≤ 90 days</td><td>≤ 365 days</td><td>≤ 24 hours</td></tr>
+              <tr><td>High-Assurance</td><td>≤ 30 days</td><td>≤ 180 days</td><td>≤ 4 hours</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.3 Key Compromise Response</h3>
+        <p>In the event of confirmed or suspected private key compromise, the following actions MUST be executed in order. No deviation from this sequence is permitted.</p>
+        <div class="table-caption">Table 5.3 — Key Compromise Response Sequence</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th style="width:5%">#</th><th style="width:22%">Action</th><th>Requirement</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">1</td><td>Immediate Revocation</td><td>The compromised key SHALL be added to the revocation registry within the Emergency Rotation SLA for the applicable profile.</td></tr>
+              <tr><td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">2</td><td>Registry Propagation</td><td>Revocation SHALL be propagated to all enforcement gates before any new token issuance with a replacement key.</td></tr>
+              <tr><td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">3</td><td>Artifact Invalidation</td><td>All Decision Artifacts signed with the compromised key SHALL be flagged as potentially invalid and subject to manual review.</td></tr>
+              <tr><td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">4</td><td>Replacement Key Generation</td><td>A replacement key MUST be generated in an HSM or secure enclave. The previous key's metadata MUST NOT be reused for the replacement key entry.</td></tr>
+              <tr><td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">5</td><td>Certification Notification</td><td>If applicable, the QODIQA certification authority MUST be notified within 24 hours of confirmed compromise.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.4 Public Key Discovery</h3>
+        <p>Public keys MUST be discoverable through a signed key manifest served over TLS 1.3. The key manifest MUST include each key's <code>kid</code>, algorithm identifier, active status, rotation schedule, and validity period. Key manifests MUST themselves be signed by the root trust anchor.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-KEY-02</span>
+            <span class="nb-title">Prohibited Key Storage Patterns</span>
+            <span class="nb-level must-not">MUST NOT</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Forbidden</span>
+              <span class="nb-val">Implementations MUST NOT store private keys in: plaintext files, environment variables, version control systems, application configuration files, database fields without HSM-backed encryption, or memory regions accessible to untrusted processes.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Rationale</span>
+              <span class="nb-val">Any private key accessible outside a hardware security boundary is effectively a compromised key. The enforcement layer's integrity guarantee is void if signing keys are recoverable through software-layer attacks.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-KEY-03</span>
+            <span class="nb-title">High-Assurance Hardware Key Protection</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Certification Requirement</span>
+              <span class="nb-val">For implementations targeting the High-Assurance deployment profile (Section 12), all signing keys used in consent token issuance, registry snapshot signing, and audit ledger anchoring MUST be generated and stored within an HSM achieving FIPS 140-2 Level 3 certification or equivalent (e.g., Common Criteria EAL 4+). Software-only key storage does not satisfy this requirement under any interpretation.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Non-Exportability</span>
+              <span class="nb-val">Private signing keys in High-Assurance deployments MUST be configured as non-exportable within the HSM. Any HSM configuration that permits plaintext key export — including administrative export modes, backup-in-plaintext features, or wrapped export without separate authorization controls — MUST be explicitly disabled and the disabled state MUST be verified as part of deployment validation. This requirement applies permanently for the lifetime of the key.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Key Usage Audit Logging</span>
+              <span class="nb-val">The HSM MUST be configured to produce a tamper-evident audit log of all key usage events. Logged events MUST include: key identifier, requesting process identity, timestamp (synchronized with the implementation's authenticated time source), operation type (sign / verify / wrap / unwrap), and outcome. HSM audit logs MUST be archived externally to the HSM within the retention window specified by Section 8.4 (minimum 7 years) and MUST be protected against deletion and modification using the same hash-chain integrity model specified in Section 8.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Dual-Control Key Activation</span>
+              <span class="nb-val">Root trust anchor keys and key-encryption keys in High-Assurance deployments MUST require dual-control activation — the two-person rule. No single operator SHALL be capable of activating, rotating, or destroying a root or key-encryption key unilaterally. The dual-control mechanism MUST be enforced at the HSM hardware level, not solely by organizational policy or software access controls. Dual-control key activation events MUST be recorded in both the HSM audit log and the implementation's audit ledger.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Tamper-Evident HSM Logging</span>
+              <span class="nb-val">The HSM's internal audit log MUST be tamper-evident through cryptographic means. If the HSM does not natively support tamper-evident log output, the implementation MUST immediately forward HSM events to an external, append-only log sink. The latency between HSM event occurrence and external log commit MUST not exceed 5 seconds in High-Assurance deployments. Any gap in HSM log continuity MUST be treated as a potential tampering event and MUST trigger the incident response procedure defined in Section 13.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Applicability</span>
+              <span class="nb-val">SEC-KEY-03 applies exclusively to the High-Assurance deployment profile. Hardened Enterprise profile implementations SHOULD meet the FIPS 140-2 Level 3 and non-exportability requirements; key usage audit logging MUST be met at the Hardened tier. Dual-control activation MUST at the Hardened tier only when root key operations are performed. Baseline profile implementations are exempt from SEC-KEY-03.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5.5 -->
+      <div id="s5-5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5.5</span>
+        <h2><a class="anchor-link" href="#s5-5">#</a>High-Assurance Key Management Model</h2>
+
+        <p>At the High-Assurance deployment profile, key management is not a configuration decision — it is a structural requirement. The following subsection defines the mandatory key hierarchy, offline root anchor requirement, quorum activation model, key ceremony obligation, and blast radius containment model that collectively constitute the High-Assurance key management architecture. These requirements extend and make concrete the normative controls established in SEC-KEY-01 through SEC-KEY-03.</p>
+
+        <h3>5.5.1 Key Hierarchy: Root, Intermediate, and Issuer Separation</h3>
+        <p>The QODIQA High-Assurance key hierarchy MUST be structured as a three-tier chain. The Root Trust Anchor is the ultimate trust source and MUST NOT be used for day-to-day signing operations. The Intermediate Signing Authority is an HSM-resident key used to authorize issuer keys and to sign key manifests. The Consent Token Issuer is the operational signing key whose public key is published in the trust registry and whose private counterpart signs consent tokens at runtime. This tier separation ensures that compromise of any operational key does not transitively compromise the root, and that blast radius is bounded to the scope of the compromised tier.</p>
+
+        <h3>5.5.2 Offline Root Key Requirement</h3>
+        <p>The Root Trust Anchor private key MUST be stored offline. An offline root key is one that is not connected to any network, is not accessible from any running system, and is only activated through a formal key ceremony procedure under dual-control conditions. The offline root key MUST be used only to: sign the intermediate key at initial deployment, rotate the intermediate key on its scheduled rotation interval, and respond to confirmed intermediate key compromise. All other signing operations MUST use the intermediate or issuer tier keys.</p>
+
+        <h3>5.5.3 Dual Control and Quorum Requirement</h3>
+        <p>All root key operations — including generation, activation, signing, rotation, and destruction — MUST require a minimum quorum of two authorized personnel, each presenting independent authentication credentials. The quorum MUST be enforced at the HSM hardware level. No software-layer access control satisfies this requirement in substitution for hardware-enforced quorum. The quorum size MUST be documented in the implementation's key management policy and verified as part of conformance assessment.</p>
+
+        <h3>5.5.4 Key Ceremony Requirement</h3>
+        <p>Initial generation of the Root Trust Anchor key and each new intermediate key MUST be performed as a formal key ceremony. A key ceremony is a documented, witnessed procedure in which: the HSM is in a known-clean state verified before the ceremony begins; all ceremony participants are authenticated and their identities are recorded; the generation procedure is executed according to a pre-approved script; the generated key is verified to be non-exportable; and a signed ceremony record is produced and retained as part of the implementation's security configuration record. The ceremony record MUST be retained for the lifetime of the key plus 7 years.</p>
+
+        <h3>5.5.5 Blast Radius Containment</h3>
+        <p>The three-tier key hierarchy is designed to contain the operational impact of key compromise. Compromise of an issuer key requires immediate revocation of that key and rotation to a new issuer key, but does not invalidate the intermediate or root tier. Compromise of the intermediate key requires rotation of all issuer keys authorized under it, but does not require root key replacement provided the root key remains uncompromised and offline. Compromise of the root key constitutes a full trust anchor failure requiring a complete key hierarchy rebuild under new ceremonies. Implementations MUST document the blast radius for each tier in their security configuration record.</p>
+
+        <div class="table-caption">Table 5.5-A — Key Hierarchy and Control Requirements</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Key Type</th><th>Storage Requirement</th><th>Access Control Model</th><th>Rotation Requirement</th><th>Compromise Impact Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Root Trust Anchor</td>
+                <td>Offline HSM; air-gapped; activated only during key ceremony</td>
+                <td>Dual-control quorum (minimum 2 authorized personnel); hardware-enforced; ceremony procedure required</td>
+                <td>≤ 180 days (High-Assurance); rotation via key ceremony only</td>
+                <td>Full trust hierarchy failure; all issuer and intermediate keys invalidated; complete rebuild required</td>
+              </tr>
+              <tr>
+                <td>Intermediate Signing Authority</td>
+                <td>Online HSM; FIPS 140-2 Level 3 minimum; non-exportable; not directly accessible from application layer</td>
+                <td>Dual-control for root operations; single authorized operator for scheduled manifest signing under audit</td>
+                <td>≤ 365 days (High-Assurance); triggered by root rotation or confirmed compromise</td>
+                <td>All issuer keys authorized under this intermediate MUST be rotated; root unaffected if offline root is uncompromised</td>
+              </tr>
+              <tr>
+                <td>Consent Token Issuer</td>
+                <td>Online HSM; FIPS 140-2 Level 3 minimum; non-exportable; accessible to enforcement infrastructure under audit</td>
+                <td>Single authorized operator with HSM authentication; key usage audit logging MUST be active</td>
+                <td>≤ 30 days (High-Assurance); emergency rotation ≤ 4 hours on confirmed compromise</td>
+                <td>All tokens signed under compromised key MUST be flagged; revocation propagated before replacement key is active</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Revocation Registry Security</h2>
+
+        <p>The revocation registry is a critical component of the QODIQA enforcement layer. Its integrity directly determines whether revoked consents can be re-presented fraudulently. The following requirements govern its protection.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-REG-01</span>
+            <span class="nb-title">Signed Registry Snapshots</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">The revocation registry MUST produce cryptographically signed snapshots at each update. Each snapshot MUST include a monotonically increasing sequence number, a timestamp, the SHA-256 hash of the previous snapshot (forming a hash chain), and a digital signature from the registry's root signing key.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Snapshot Format</span>
+              <span class="nb-val"><code>snapshot_hash = SHA-256(prev_hash || seq_num || timestamp || registry_body)</code><br>Signed with registry root key (Ed25519 or ECDSA P-256).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-REG-02</span>
+            <span class="nb-title">Fail-Closed on Registry Unreachability</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">When the revocation registry is unreachable, the enforcement gate MUST deny the request. No cached registry state SHALL be used as a substitute for a live registry response beyond the configured TTL. Fail-open behavior under registry unavailability is a conformance violation at all profile levels.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Cached State TTL</span>
+              <span class="nb-val">Baseline: ≤ 300 s. Hardened: ≤ 60 s. High-Assurance: ≤ 15 s. After TTL expiry, the cached registry state MUST NOT be used and the gate MUST deny.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>6.1 Anti-Downgrade Protection</h3>
+        <p>The enforcement gate MUST verify that the registry snapshot sequence number presented is equal to or greater than the highest sequence number previously observed. A snapshot with a lower sequence number than the locally stored high-water mark SHALL be rejected as a potential downgrade attack.</p>
+
+        <h3>6.2 Registry Authenticity Verification</h3>
+        <p>On each registry read, the enforcement gate MUST: (1) verify the snapshot signature against the registry root public key; (2) verify hash chain continuity from the previous accepted snapshot; (3) verify sequence number monotonicity; (4) verify timestamp recency within configured TTL bounds. Failure of any verification step MUST produce a registry consultation failure, triggering fail-closed behavior.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Artifact Hashing and Integrity Model</h2>
+
+        <p>Decision Artifacts are the cryptographically bound records of enforcement decisions produced by the QODIQA consent gate. Their integrity guarantees the verifiability of the Replay Invariant defined in QODIQA Core v1.0. The following specifies the canonical artifact hash model.</p>
+
+        <h3>7.1 Formal Artifact Hash Model</h3>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Canonical Artifact Hash Formula</span>
+            <span class="logic-bar-badge">SEC-ART-HASH · v1.0</span>
+          </div>
+          <pre><span class="cm">// Canonical artifact hash construction</span>
+<span class="ty">artifact_id</span> = SHA-256(
+    canonical_context  <span class="cm">// JCS-serialized frozen evaluation context</span>
+  || decision          <span class="cm">// "PERMIT" | "DENY" (UTF-8 encoded)</span>
+  || policy_version    <span class="cm">// policy document hash at evaluation time</span>
+  || consent_ref       <span class="cm">// token jti or stable consent identifier</span>
+  || timestamp         <span class="cm">// enforcement timestamp (monotonic, Unix epoch, 8 bytes)</span>
+  || prev_artifact_id  <span class="cm">// SHA-256 of preceding artifact (hash chain)</span>
+  || model_binary_hash <span class="cm">// SHA-256 of model binary at enforcement time</span>
+                       <span class="cm">// MUST: High-Assurance | SHOULD: Hardened | OPTIONAL: Baseline</span>
+                       <span class="cm">// When absent in Baseline/Hardened: substitute ZERO_BYTES_32</span>
+)
+
+<span class="cm">// Policy version component</span>
+<span class="ty">policy_version</span> = SHA-256(policy_document_canonical)
+
+<span class="cm">// Canonical context component</span>
+<span class="ty">canonical_context</span> = SHA-256(JCS({
+  model_id, model_version, operation_id,
+  subject_id, scope, data_classification,
+  enforcement_gate_id, environment_fingerprint
+}))
+
+<span class="cm">// Model binary hash component</span>
+<span class="ty">model_binary_hash</span> = SHA-256(model_binary_content)
+<span class="cm">// model_binary_content = the exact byte sequence of the model file(s)</span>
+<span class="cm">// at the time enforcement is invoked. Multi-file models: SHA-256(SHA-256(file_1)</span>
+<span class="cm">// || SHA-256(file_2) || ... || SHA-256(file_n)) in deterministic sort order.</span>
+<span class="cm">// Implementations MUST pre-compute and cache this value at model load time.</span>
+<span class="cm">// model_binary_hash MUST be recomputed upon any model reload or version change.</span></pre>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-ART-01</span>
+            <span class="nb-title">Artifact Immutability Guarantee</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">Once written to the artifact store, a Decision Artifact MUST NOT be modified, deleted, or overwritten under any operational circumstance. The artifact store MUST enforce write-once semantics at the storage layer. Any attempt to modify an artifact MUST produce an integrity violation event in the audit ledger.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Hash Chain</span>
+              <span class="nb-val">Each artifact MUST include the SHA-256 hash of the immediately preceding artifact. The initial artifact in a chain uses a zero-value predecessor hash (32 zero bytes). Any break in the hash chain constitutes a tamper event.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Collision Resistance</span>
+              <span class="nb-val">The artifact hash construction MUST include all listed components without exception. Omission of any component reduces the collision resistance of the hash space against adversarial context engineering (THR-08).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-ART-02</span>
+            <span class="nb-title">Model Binary Integrity Binding</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Profile Applicability</span>
+              <span class="nb-val">The <code>model_binary_hash</code> component of the canonical artifact hash formula MUST be included in High-Assurance profile deployments. It SHOULD be included in Hardened Enterprise profile deployments. It is OPTIONAL in Baseline profile deployments. In profiles where <code>model_binary_hash</code> is not included, the artifact hash construction MUST substitute ZERO_BYTES_32 in the position of <code>model_binary_hash</code> to maintain a fixed-structure hash input and prevent hash construction ambiguity.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Hash Computation</span>
+              <span class="nb-val">The <code>model_binary_hash</code> SHALL be computed as SHA-256 of the model binary content. For models represented as multiple files, the hash SHALL be computed as SHA-256 of the concatenated SHA-256 hashes of each file, taken in a deterministic sort order (e.g., lexicographic by file path relative to the model root). Implementations MUST pre-compute and cache the <code>model_binary_hash</code> at model load time. The cached value MUST be invalidated and recomputed upon any model reload, model version change, or detected modification of model binary content.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Integrity Guarantee</span>
+              <span class="nb-val">The inclusion of <code>model_binary_hash</code> in the artifact hash ensures that enforcement decisions are cryptographically bound to a specific, verifiable model binary state. A Decision Artifact produced under model binary state M is computationally infeasible to reinterpret as having been produced under any model binary state M' where M' ≠ M. This binding prevents silent model substitution (THR-07) from producing artifacts that are indistinguishable from legitimately authorized artifacts.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Model State Change Response</span>
+              <span class="nb-val">When a model binary change is detected at runtime — including modifications to model weights, model configuration files, tokenizer files, or any other file included in the model binary hash computation — the enforcement gate MUST: (1) suspend enforcement operations; (2) recompute the <code>model_binary_hash</code> from the updated binary content; (3) write a model state change event to the audit ledger; (4) resume enforcement only after the new <code>model_binary_hash</code> has been verified against an expected reference value or authorized via an explicit change approval record. Unannounced model binary changes MUST be treated as potential integrity violations.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Non-Coverage Reminder</span>
+              <span class="nb-val"><code>model_binary_hash</code> binds enforcement decisions to model binary state. It does not constitute a guarantee that the model weights are safe, unbiased, or compliant with any behavioral standard. Verification that the bound binary state is the intended and authorized model version remains the responsibility of the operating organization. See Section 14 (Non-Coverage Disclosure).</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>7.2 Replay Verification via Artifact Hash</h3>
+        <p>To verify that a historical enforcement decision is reproducible under the same conditions, a verifier SHALL: (1) reconstruct the canonical context from available records; (2) recompute the artifact hash using the same formula; (3) compare against the stored artifact ID. A mismatch indicates either context drift, context manipulation, or artifact tampering — all of which constitute enforcement integrity violations.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Audit Ledger Integrity Requirements</h2>
+
+        <h3>8.1 Hash Chain Format</h3>
+        <p>The audit ledger MUST be maintained as a hash chain. Each ledger entry MUST include the SHA-256 hash of the preceding entry, forming an unbroken sequence from ledger initialization. The ledger chain provides tamper evidence: any modification to a historical entry invalidates all subsequent entry hashes.</p>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">Audit Ledger Entry Structure</span>
+            <span class="logic-bar-badge">SEC-AUDIT-CHAIN</span>
+          </div>
+          <pre><span class="ty">ledger_entry</span> = {
+  seq_num:        <span class="nm">uint64</span>,          <span class="cm">// monotonically increasing</span>
+  timestamp:      <span class="nm">unix_epoch_ns</span>,   <span class="cm">// nanosecond precision, monotonic clock</span>
+  event_type:     <span class="st">"PERMIT" | "DENY" | "REVOCATION" | "KEY_ROTATION" | "INTEGRITY_VIOLATION"</span>,
+  artifact_id:    <span class="nm">bytes32</span>,         <span class="cm">// SHA-256 of Decision Artifact</span>
+  gate_id:        <span class="nm">string</span>,          <span class="cm">// enforcement gate identifier</span>
+  subject_hash:   <span class="nm">bytes32</span>,         <span class="cm">// SHA-256 of subject_id (privacy-preserving)</span>
+  prev_entry_hash:<span class="nm">bytes32</span>,         <span class="cm">// SHA-256 of preceding ledger entry</span>
+  entry_sig:      <span class="nm">bytes</span>            <span class="cm">// Ed25519 signature over canonical entry</span>
+}
+
+<span class="ty">entry_hash</span> = SHA-256(canonical(ledger_entry_without_entry_sig))</pre>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-AUDIT-01</span>
+            <span class="nb-title">Write-Before-Execute Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">The audit ledger entry for an enforcement decision MUST be durably committed before the enforcement gate returns any response to the calling system. A PERMIT decision that is returned before its ledger entry is committed violates the write-before-execute invariant. On ledger write failure, the enforcement gate MUST return DENY.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Durability</span>
+              <span class="nb-val">Durable commitment requires fsync or equivalent at the storage layer, or acknowledgment from a distributed consensus system. In-memory buffering without persistence does not satisfy this requirement.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>8.2 Append-Only Storage</h3>
+        <p>The audit ledger storage backend MUST enforce append-only semantics. The storage system MUST prevent modification or deletion of any existing ledger entry through all available interfaces. At the Hardened and High-Assurance profiles, the ledger MUST be replicated to a minimum of two geographically or logically separated storage backends.</p>
+
+        <h3>8.3 Tamper Detection</h3>
+        <p>A tamper detection procedure MUST be executable on demand and MUST run automatically at a frequency no less than the Ledger Integrity Verification interval for the applicable profile (Baseline: 24h; Hardened: 1h; High-Assurance: 15min). The procedure SHALL verify: hash chain continuity, signature validity for each entry, sequence number monotonicity, and timestamp monotonicity.</p>
+
+        <h3>8.4 Archival Requirements</h3>
+        <p>Audit ledger entries MUST be retained for a minimum of 7 years. Archived entries MUST retain their hash chain continuity with active entries. Archival storage MUST maintain integrity verification capability equivalent to active storage.</p>
+
+        <div class="callout">
+          <p><strong>Informative — Merkle Tree Variant.</strong> Implementations MAY construct a Merkle tree over ledger entry batches to enable efficient range-proof verification of large audit archives. The Merkle root MUST be anchored to a signed, timestamped manifest. This variant does not reduce the hash chain requirement; it supplements it.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Time and Clock Security</h2>
+
+        <p>Temporal integrity is a foundational property of the QODIQA enforcement layer. Token expiry, artifact timestamps, audit ledger ordering, and TTL enforcement all depend on reliable, manipulation-resistant time. The following requirements govern clock security at all profile levels.</p>
+
+        <div class="table-caption">Table 9.1 — Clock Security Requirements by Profile</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Requirement</th><th>Baseline</th><th>Hardened</th><th>High-Assurance</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>NTP Synchronization</td><td>MUST</td><td>MUST (authenticated NTP / NTPsec)</td><td>MUST (authenticated NTP + GPS/PTP secondary)</td></tr>
+              <tr><td>Maximum Clock Drift Tolerance</td><td>±30 s</td><td>±5 s</td><td>±1 s</td></tr>
+              <tr><td>Monotonic Clock for Artifacts</td><td>MUST</td><td>MUST</td><td>MUST</td></tr>
+              <tr><td>Anti-Rollback Protection</td><td>SHOULD</td><td>MUST</td><td>MUST</td></tr>
+              <tr><td>Fail-Closed on Clock Uncertainty</td><td>MUST</td><td>MUST</td><td>MUST</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-CLK-01</span>
+            <span class="nb-title">Monotonic Clock Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">All timestamps recorded in Decision Artifacts and audit ledger entries MUST be sourced from a monotonic clock. Wall-clock adjustments (NTP step corrections, DST transitions, leap seconds) MUST NOT retroactively modify artifact or ledger timestamps. If a monotonic clock source is unavailable, the enforcement gate MUST enter a DENY-ALL fail-closed state until a valid monotonic source is restored.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Anti-Rollback</span>
+              <span class="nb-val">The enforcement gate MUST store the highest previously observed monotonic timestamp. Any new timestamp that is less than this high-water mark MUST be treated as a clock rollback event and SHALL trigger a fail-closed state and an integrity violation audit entry.</span>
+            </div>
+          </div>
+        </div>
+
+        <p>When clock synchronization error exceeds the configured drift tolerance for the applicable profile, the enforcement gate MUST enter fail-closed state for all decisions requiring temporal validation. The gate MUST remain in fail-closed state until synchronization is restored and verified.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Network and Transport Security Requirements</h2>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-NET-01</span>
+            <span class="nb-title">Minimum Transport Layer Security</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Minimum Version</span>
+              <span class="nb-val">TLS 1.2. TLS 1.0 and TLS 1.1 MUST NOT be used. Plaintext HTTP transport for any QODIQA enforcement component is unconditionally forbidden at all profile levels.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Preferred Version</span>
+              <span class="nb-val">TLS 1.3. All Hardened and High-Assurance implementations MUST use TLS 1.3 exclusively. TLS 1.2 support may be retained for legacy registry compatibility at Baseline only.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Cipher Suites</span>
+              <span class="nb-val">TLS 1.3: TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256. TLS 1.2 (Baseline only): TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384. All RC4, 3DES, and export cipher suites MUST NOT be negotiated.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>10.1 Certificate Validation</h3>
+        <p>All TLS connections to registry, audit log, and key management endpoints MUST perform full certificate chain validation including revocation checking (OCSP or CRL). Certificate pinning SHOULD be implemented for registry and key management endpoints at Hardened and High-Assurance profiles. Self-signed certificates MUST NOT be trusted in production enforcement environments.</p>
+
+        <h3>10.2 Mutual TLS</h3>
+        <p>Mutual TLS (mTLS) authentication SHOULD be implemented for all inter-component communications within the QODIQA enforcement layer at Hardened profile, and MUST be implemented at High-Assurance profile. Client certificate validation MUST follow the same chain validation and revocation checking requirements as server certificate validation.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-NET-02</span>
+            <span class="nb-title">Plaintext Transport Prohibition</span>
+            <span class="nb-level must-not">MUST NOT</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Prohibition</span>
+              <span class="nb-val">No QODIQA enforcement component SHALL transmit consent tokens, decision artifacts, revocation data, key material, or audit records over plaintext (unencrypted) transport. This prohibition applies to all network interfaces including loopback, container-internal, and service-mesh communications at Hardened and High-Assurance profiles.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-NET-PFS</span>
+            <span class="nb-title">Perfect Forward Secrecy Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">PFS Mandate</span>
+              <span class="nb-val">All TLS connections used by QODIQA enforcement components MUST provide Perfect Forward Secrecy (PFS). PFS ensures that compromise of long-term server private keys does not enable retrospective decryption of captured session traffic. This requirement applies to all profiles, including Baseline.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">TLS 1.2 Key Exchange Restriction</span>
+              <span class="nb-val">Where TLS 1.2 is permitted (Baseline profile only, per SEC-NET-01), ONLY ephemeral Elliptic Curve Diffie-Hellman (ECDHE) key exchange cipher suites SHALL be used. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 and TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 are approved. Static RSA key exchange (cipher suites of the form TLS_RSA_WITH_*) MUST NOT be negotiated under any circumstances. DHE with finite-field groups SHOULD NOT be used; if used, the minimum Diffie-Hellman group size MUST be 2048-bit.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Static RSA Prohibition</span>
+              <span class="nb-val">Static RSA key exchange cipher suites MUST NOT be configured, negotiated, or accepted on any QODIQA enforcement component in any profile. This prohibition is unconditional. The use of RSA certificates for server authentication is permitted; only the use of RSA for key encipherment (as in TLS_RSA_WITH_* suites) is prohibited. TLS server configurations MUST explicitly remove all TLS_RSA_WITH_* cipher suite entries from the server's cipher suite list.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Non-PFS Cipher Suite Prohibition</span>
+              <span class="nb-val">The following cipher suite categories MUST NOT be configured or negotiated: (1) Static RSA key exchange (TLS_RSA_WITH_*); (2) Anonymous key exchange (TLS_DH_anon_*, TLS_ECDH_anon_*); (3) NULL encryption or NULL authentication suites; (4) Export-grade cipher suites (EXP_*); (5) Fixed Diffie-Hellman with server key reuse (TLS_DH_DSS_*, TLS_DH_RSA_*). Cipher suites MUST be configured using an explicit allowlist — default cipher suite sets provided by TLS libraries SHALL NOT be accepted without review against this prohibition list.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">TLS 1.3 Inherent PFS</span>
+              <span class="nb-val">TLS 1.3 provides PFS for all cipher suites defined in its specification. Implementations using TLS 1.3 exclusively (Hardened and High-Assurance profiles) satisfy the key exchange requirements of this normative block inherently. However, the cipher suite allowlist and non-PFS prohibition requirements MUST still be enforced to prevent downgrade negotiation on connections that may accept TLS 1.2 as a fallback.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Verification</span>
+              <span class="nb-val">Deployment validation MUST include a TLS cipher suite scan of all enforcement component endpoints. Any discovered endpoint negotiating a non-PFS cipher suite under any TLS version SHALL be treated as a configuration violation requiring immediate remediation. Cipher suite scans MUST be repeated after any TLS library upgrade or TLS configuration change.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 10.3 -->
+      <div id="s10-3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10.3</span>
+        <h2><a class="anchor-link" href="#s10-3">#</a>Performance and Latency Constraints</h2>
+
+        <p>The enforcement operations defined in this profile introduce measurable latency at each stage of the consent evaluation path. This section enumerates the primary latency contributors at each SUP component. It does not provide optimization guidance and does not authorize any weakening of normative requirements on the basis of performance considerations. Performance constraints are enumerated here to ensure that implementations plan for and account for the operational cost of enforcement, not to create grounds for bypassing enforcement controls.</p>
+
+        <p>Every operation listed in the table below is a normative requirement of this profile or of QODIQA Core v1.0. The latency it introduces is an inherent property of verifiable enforcement. No conformant implementation may eliminate any listed operation in the name of performance without simultaneously creating a conformance failure.</p>
+
+        <div class="table-caption">Table 10.3-A — Enforcement Latency Contributors</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Component</th><th>Operation</th><th>Latency Sensitivity</th><th>Scaling Consideration</th><th>Fail-Closed Impact</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SUP.CONSENT-GATE</td>
+                <td>Ed25519 signature verification of consent token (SEC-ALG-01)</td>
+                <td>Low absolute latency (sub-millisecond on modern hardware); high sensitivity to HSM round-trip if verification is HSM-delegated</td>
+                <td>Verification is stateless and parallelizable per gate instance; not a horizontal scaling bottleneck under normal load</td>
+                <td>Verification failure produces immediate DENY; no retry path; failure adds zero marginal latency to the enforcement decision</td>
+              </tr>
+              <tr>
+                <td>SUP.REGISTRY</td>
+                <td>Registry snapshot consultation and signature verification (SEC-REG-01, SEC-REG-02)</td>
+                <td>High sensitivity; network round-trip to registry on each invocation when TTL is expired; TTL cache reduces frequency at cost of staleness risk</td>
+                <td>Registry response latency is bounded by the configured TTL; lower TTL increases consultation frequency and latency exposure; TTL MUST NOT be increased beyond profile limits to reduce latency</td>
+                <td>Registry unreachability MUST trigger fail-closed DENY-ALL; enforcement gate blocked until registry restored; no fallback to stale cache beyond TTL</td>
+              </tr>
+              <tr>
+                <td>SUP.AUDIT-LEDGER</td>
+                <td>Durably committed audit ledger write before PERMIT response (SEC-AUDIT-01)</td>
+                <td>Highest latency contributor; blocking write to persistent storage with fsync or distributed consensus acknowledgment is on the critical path of every PERMIT decision</td>
+                <td>Ledger write throughput bounds enforcement gate PERMIT throughput; distributed consensus adds latency proportional to quorum round-trip; replication required at Hardened and High-Assurance profiles</td>
+                <td>Ledger write failure MUST produce DENY; enforcement gate cannot issue PERMIT until write is confirmed; storage degradation directly degrades enforcement throughput</td>
+              </tr>
+              <tr>
+                <td>SUP.ARTIFACT-STORE</td>
+                <td>Artifact hash chain computation and write at enforcement decision time (SEC-ART-01)</td>
+                <td>Moderate latency; SHA-256 computation is fast; serialization of artifact and storage write add bounded overhead; hash chain linkage requires reading the previous artifact hash before writing</td>
+                <td>Sequential artifact write with hash chain linkage serializes artifact production per gate; parallel gate deployments require coordination to maintain chain integrity across nodes</td>
+                <td>Artifact write failure MUST trigger fail-closed state; enforcement gate cannot proceed until artifact chain integrity is confirmed</td>
+              </tr>
+              <tr>
+                <td>SUP.KEY-STORE</td>
+                <td>HSM-delegated signing operation for issuer key operations (SEC-KEY-03)</td>
+                <td>Moderate-to-high latency when signing is HSM-delegated; HSM round-trip adds 1–50 ms depending on HSM model and interface; applies to token issuance, not to per-invocation verification</td>
+                <td>Token issuance latency is not on the per-request critical path; verification uses public key and does not require HSM; HSM latency affects token issuance throughput, not enforcement gate throughput</td>
+                <td>HSM unavailability blocks new token issuance; does not directly block enforcement gate verification of existing tokens within their validity period</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This profile defines deterministic enforcement constraints that SHALL NOT be bypassed, relaxed, or conditionally disabled for performance optimization under any deployment scenario.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Side-Channel and Non-Deterministic Risk Mitigation</h2>
+
+        <p>The QODIQA enforcement gate is a deterministic decision function. Its determinism is a specification requirement, not an implementation preference. The following requirements protect this property from erosion through side-channels, non-deterministic dependencies, and evaluation contamination.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-DET-01</span>
+            <span class="nb-title">Prohibition of Randomness in Decision Path</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">The enforcement gate's decision function MUST be fully deterministic. No random number generation, probabilistic sampling, stochastic policy resolution, or AI-model inference SHALL occur within the evaluation path. Randomness is permissible only in key generation, nonce generation for anti-replay, and JTI generation — all outside the decision path.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-attr">Secure Random</span>
+              <span class="nb-val">Where random bytes are required (key generation, nonce generation), implementations MUST use a cryptographically secure pseudorandom number generator (CSPRNG) seeded from the operating system entropy source (e.g., <code>/dev/urandom</code>, <code>getrandom()</code>, or platform HSM). Userspace PRNGs without OS entropy seeding MUST NOT be used.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>11.1 Evaluation Function Isolation</h3>
+        <p>The enforcement gate's policy evaluation function MUST be isolated from external network callouts, file system reads, database queries, and inter-process communication during the evaluation window. Any external dependency required for evaluation (policy document, registry state) MUST be resolved before the evaluation window opens and frozen in the evaluation context.</p>
+
+        <h3>11.2 Dependency Isolation Rules</h3>
+        <ul class="prop-list">
+          <li>No outbound network calls during the enforcement evaluation window.</li>
+          <li>No reads from mutable file system paths during the evaluation window.</li>
+          <li>No shared mutable state between concurrent evaluation invocations.</li>
+          <li>No JIT compilation or dynamic code loading within the evaluation function.</li>
+          <li>No access to environment variables within the evaluation function.</li>
+          <li>Evaluation function dependencies MUST be resolved, validated, and immutably bound before evaluation begins.</li>
+        </ul>
+
+        <h3>11.3 Constant-Time Comparison</h3>
+        <p>All cryptographic comparisons within the enforcement gate — including signature verification results, hash comparisons, and token claim validation — MUST use constant-time comparison functions where the compared values could reveal information through timing side-channels. Variable-time string comparison functions (e.g., <code>strcmp</code>, operator <code>==</code> on byte arrays) MUST NOT be used for security-sensitive comparisons.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Secure Deployment Profiles</h2>
+
+        <p>Three tiered security deployment profiles are defined. Each tier inherits all requirements of the preceding tier and adds incremental cryptographic and operational constraints. Profile selection MUST be documented in the implementation's security configuration manifest and verified by conformance testing.</p>
+
+        <div class="tier-grid">
+          <div class="tier-card">
+            <span class="tier-badge">Profile I</span>
+            <div class="tier-name">Baseline Security</div>
+            <div class="tier-desc">Minimum conformant deployment for internal or low-risk AI systems. Satisfies all MUST requirements in this profile. TLS 1.2+, SHA-256, Ed25519 or ECDSA P-256, software key storage acceptable, 24h token lifetime, 5-minute registry TTL.</div>
+          </div>
+          <div class="tier-card">
+            <span class="tier-badge">Profile II</span>
+            <div class="tier-name">Hardened Enterprise</div>
+            <div class="tier-desc">Required for externally exposed or regulated deployments. TLS 1.3 mandatory, HSM key storage required, mTLS SHOULD, 1-hour token lifetime, 60s registry TTL, authenticated NTP, anti-replay JTI cache required, 1-hour ledger integrity scan.</div>
+          </div>
+          <div class="tier-card">
+            <span class="tier-badge">Profile III</span>
+            <div class="tier-name">High-Assurance</div>
+            <div class="tier-desc">Required for safety-critical, high-sensitivity, or regulatory-classified AI deployments. TLS 1.3 exclusive, HSM mandatory, mTLS MUST, 15-minute token lifetime, 15s registry TTL, GPS/PTP time source, geographically replicated audit ledger, 15-minute integrity scan, formal key management procedures.</div>
+          </div>
+        </div>
+
+        <div class="table-caption">Table 12.1 — Security Profile Comparison Matrix</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Control</th><th>Baseline</th><th>Hardened</th><th>High-Assurance</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Signing Algorithm</td><td style="white-space:nowrap">Ed25519 or ECDSA P-256</td><td style="white-space:nowrap">Ed25519 — MUST</td><td style="white-space:nowrap">Ed25519 — MUST</td></tr>
+              <tr><td>Hash Algorithm</td><td style="white-space:nowrap">SHA-256</td><td style="white-space:nowrap">SHA-256 or SHA-384</td><td style="white-space:nowrap">SHA-384 — MUST</td></tr>
+              <tr><td>TLS Version</td><td style="white-space:nowrap">≥ 1.2</td><td style="white-space:nowrap">1.3 exclusive</td><td style="white-space:nowrap">1.3 exclusive</td></tr>
+              <tr><td>Key Storage</td><td style="white-space:nowrap">Software acceptable</td><td style="white-space:nowrap">HSM required</td><td style="white-space:nowrap">HSM + dual-control</td></tr>
+              <tr><td>mTLS</td><td style="white-space:nowrap">OPTIONAL</td><td style="white-space:nowrap">SHOULD</td><td style="white-space:nowrap">MUST</td></tr>
+              <tr><td>Token Lifetime Max</td><td style="white-space:nowrap">24 hours</td><td style="white-space:nowrap">1 hour</td><td style="white-space:nowrap">15 minutes</td></tr>
+              <tr><td>JTI Anti-Replay</td><td style="white-space:nowrap">SHOULD</td><td style="white-space:nowrap">MUST</td><td style="white-space:nowrap">MUST</td></tr>
+              <tr><td>Registry TTL</td><td style="white-space:nowrap">300 s</td><td style="white-space:nowrap">60 s</td><td style="white-space:nowrap">15 s</td></tr>
+              <tr><td>Ledger Replication</td><td style="white-space:nowrap">Single</td><td style="white-space:nowrap">Dual</td><td style="white-space:nowrap">Dual + geographic</td></tr>
+              <tr><td>Key Rotation</td><td style="white-space:nowrap">≤ 365 days</td><td style="white-space:nowrap">≤ 90 days</td><td style="white-space:nowrap">≤ 30 days</td></tr>
+              <tr><td>Integrity Scan Interval</td><td style="white-space:nowrap">24 hours</td><td style="white-space:nowrap">1 hour</td><td style="white-space:nowrap">15 minutes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Compromise and Incident Response Model</h2>
+
+        <p>The following response procedures are mandatory for the categories of security events most likely to affect QODIQA enforcement layer integrity. These procedures are procedural requirements, not legal guidance.</p>
+
+        <h3>13.1 Key Compromise Response</h3>
+        <ul class="prop-list">
+          <li>Immediately revoke the compromised key in the registry within the Emergency Rotation SLA for the applicable profile.</li>
+          <li>Propagate revocation to all enforcement gates before issuing replacement key. Verify propagation through active monitoring.</li>
+          <li>Flag all Decision Artifacts produced under the compromised key as requiring manual integrity review.</li>
+          <li>Generate replacement key in HSM or secure enclave. Assign a new, distinct key identifier. Do not reuse any attribute of the compromised key entry.</li>
+          <li>Notify QODIQA certification authority within 24 hours if the implementation holds a QODIQA certification.</li>
+          <li>Produce a Post-Incident Report (PIR) within 72 hours identifying root cause, timeline, and remediation actions.</li>
+        </ul>
+
+        <h3>13.2 Registry Compromise Response</h3>
+        <ul class="prop-list">
+          <li>Immediately suspend enforcement gate operations. Enter fail-closed DENY-ALL state.</li>
+          <li>Restore registry from the most recent verified signed snapshot. Validate hash chain continuity from restoration point.</li>
+          <li>Verify snapshot signature authenticity before restoration. Do not restore from an unsigned or unverifiable snapshot.</li>
+          <li>Audit all enforcement decisions made between the last verified snapshot and the compromise detection point. Flag as requiring manual review.</li>
+          <li>Rotate registry signing keys as per the Key Compromise Response procedure above.</li>
+        </ul>
+
+        <h3>13.3 Artifact Mismatch Detection Response</h3>
+        <p>When replay verification produces a hash mismatch — i.e., the recomputed artifact hash does not match the stored artifact ID — the following response SHALL be initiated: (1) the mismatched artifact is quarantined and flagged for investigation; (2) an integrity violation event is written to the audit ledger; (3) any active enforcement session associated with the artifact is terminated; (4) the incident is escalated for forensic review. Mismatches SHALL NOT be silently discarded or treated as benign data drift.</p>
+
+        <h3>13.4 Audit Chain Corruption Procedure</h3>
+        <p>If tamper detection identifies a broken audit chain (hash discontinuity), the following procedure applies: (1) isolate the enforcement gate to prevent further audit writes; (2) preserve a forensic copy of the current ledger state; (3) identify the last valid hash chain segment; (4) restore from the last verified archive checkpoint; (5) recover entries between the checkpoint and compromise point from secondary replicas if available; (6) document the corrupted segment in the restoration metadata. Under no circumstances SHALL a repaired audit chain suppress evidence of the tampering event itself.</p>
+      </div>
+
+      <!-- SECTION 14 -->
+      <div id="s14" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 14</span>
+        <h2><a class="anchor-link" href="#s14">#</a>Non-Coverage Disclosure</h2>
+
+        <p>This profile explicitly delimits its scope. The following classes of security concern are outside the boundary of this document. Transparency on these exclusions is essential to prevent misrepresentation of QODIQA's security posture.</p>
+
+        <div class="callout">
+          <p><strong>This profile does NOT:</strong> secure AI model weights or training data; prevent model bias, adversarial prompt injection, or inference-time manipulation; replace an organization's enterprise security architecture or information security management system; eliminate insider risk beyond the enforcement layer boundary defined in Section 1.4; provide guidance on data encryption at rest beyond the enforcement layer; govern application-layer authentication or authorization of end users; secure the network infrastructure underlying the enforcement layer beyond TLS transport requirements; guarantee the correctness of consent records entered by human operators; or provide legal compliance certification of any kind.</p>
+        </div>
+
+        <p>Organizations deploying QODIQA enforcement infrastructure MUST treat this profile as one component of a broader security architecture. The enforcement layer's cryptographic guarantees apply only within the System Under Protection boundary defined in Section 1.4. Security properties outside that boundary require independent architectural controls.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">SEC-SCOPE-01</span>
+            <span class="nb-title">Boundary Acknowledgment Requirement</span>
+            <span class="nb-level must">MUST</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-attr">Requirement</span>
+              <span class="nb-val">Implementations claiming conformance with this Security Profile MUST include a documented acknowledgment that the profile's guarantees are bounded to the SUP definitions in Section 1.4. Marketing materials, certification claims, or technical documentation MUST NOT represent QODIQA security profile conformance as providing guarantees outside the defined SUP boundary.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider" style="margin-top:32px;"></div>
+        <h3>14.1 Additional AI-Specific Exclusions</h3>
+
+        <p>The following classes of concern are explicitly outside the scope of this Security and Cryptographic Profile. They are enumerated separately because they arise specifically in the context of AI systems and may be incorrectly attributed to this profile's scope in architectural or compliance contexts. No requirement in this document addresses, mitigates, or characterizes any of the following.</p>
+
+        <div class="table-caption">Explicit Out-of-Scope — AI System Behavior</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th style="width:28%">Exclusion Category</th><th>Scope Statement</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Model hallucination behavior.</strong></td>
+                <td>This profile does not govern, detect, or mitigate outputs produced by an AI model that are factually incorrect, fabricated, or internally inconsistent. The enforcement layer operates on consent and authorization, not on output semantic correctness.</td>
+              </tr>
+              <tr>
+                <td><strong>Prompt injection attacks.</strong></td>
+                <td>This profile does not govern adversarial inputs designed to override model behavior, hijack instruction following, or exfiltrate context through model output. Prompt injection operates within the model's inference path, which is outside the SUP boundary defined in Section 1.4.</td>
+              </tr>
+              <tr>
+                <td><strong>Training data governance.</strong></td>
+                <td>This profile does not govern the composition, provenance, licensing, or safety properties of training data used to produce AI model weights. Training data governance is upstream of the enforcement layer boundary.</td>
+              </tr>
+              <tr>
+                <td><strong>Model alignment and safety tuning.</strong></td>
+                <td>This profile does not govern whether a model has been trained to follow safety guidelines, refuse harmful requests, or exhibit aligned behavior. RLHF, constitutional AI approaches, or other alignment methods are not within the scope of runtime consent enforcement.</td>
+              </tr>
+              <tr>
+                <td><strong>Output semantic correctness.</strong></td>
+                <td>This profile does not guarantee, verify, or audit whether AI model outputs are accurate, appropriate, safe, or compliant with any content policy. The enforcement layer determines whether an invocation was authorized under a valid consent token — not whether the resulting output is correct or acceptable.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="section-note">These exclusions are permanent and apply at all deployment profile tiers. Conformance with this profile does not imply any guarantee regarding the above properties.</p>
+      </div>
+      <div id="s-conclusion" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Closing Statement</span>
+        <h2><a class="anchor-link" href="#s-conclusion">#</a>Institutional Closing Statement</h2>
+
+        <p>Deterministic consent enforcement is not a statement of policy. It is a runtime guarantee. A guarantee is only as strong as the cryptographic substrate that anchors it. Without signature binding, hash-chained audit integrity, revocation registry protection, and clock security, the QODIQA enforcement model remains logically sound but operationally falsifiable.</p>
+
+        <p>This profile does not introduce new enforcement semantics. It specifies the minimum cryptographic conditions under which QODIQA Core v1.0's enforcement semantics — determinism, fail-closed behavior, replay verifiability, audit immutability — hold in adversarial conditions. An implementation that satisfies QODIQA Core's logical requirements but omits the cryptographic requirements herein provides a weaker guarantee than its certification level implies.</p>
+
+        <p>The threat categories in Section 2 are not hypothetical. They are operational attack classes observed against deployed runtime enforcement infrastructure. Each maps to a specific cryptographic control defined in this profile. Omission of any required control creates a specific exploitable gap, not a theoretical weakness.</p>
+
+        <div class="inst-statement">
+          <span class="inst-lead">Where enforcement must be more than intent —</span>
+          <p class="inst-body"><strong>determinism must be cryptographically anchored</strong>, fail-closed behavior requires integrity guarantees, and runtime consent enforcement without strong cryptography is structurally incomplete.</p>
+          <span class="inst-close">QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0 &nbsp;·&nbsp; QODIQA-SEC-2026-001 &nbsp;·&nbsp; High-Assurance Security Specification</span>
+        </div>
+
+        <p>The algorithms defined as approved in this profile reflect current NIST guidance and cryptographic best practice as of the document date. Implementations MUST maintain an active cryptographic configuration review process and update algorithm selections as NIST guidance evolves. This profile will be versioned in parallel with QODIQA Core Standard revisions.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="†">All normative requirements in this document use RFC 2119 / RFC 8174 language: MUST, SHALL, SHOULD, MAY, MUST NOT, SHALL NOT, SHOULD NOT. Lowercase usage denotes non-normative text.</div>
+          <div class="footnote" data-num="‡">This profile is classified as a companion specification within the QODIQA standard corpus. It does not supersede the Core Standard but supplements its security requirements.</div>
+          <div class="footnote" data-num="*">Algorithm approval status is current as of March 2026. Organizations MUST monitor NIST Post-Quantum Cryptography (PQC) standardization developments and prepare migration plans for quantum-resistant signature algorithms for deployments extending beyond 2030.</div>
+        </div>
+      </div>
+
+      <!-- ANNEX X -->
+      <div id="annex-x" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Annex X — Normative Reference</span>
+        <h2><a class="anchor-link" href="#annex-x">#</a>Cryptographic Trust Model</h2>
+
+        <p>This annex specifies the hierarchical trust structure that underpins all cryptographic operations in a conformant QODIQA enforcement deployment. The trust model is not a policy construct — it is a structural requirement. Every cryptographic verification operation performed at a QODIQA enforcement gate traces to this chain. The chain MUST be complete, verifiable, and non-circular at every point during enforcement operation.</p>
+
+        <h3>X.1 Hierarchical Trust Chain</h3>
+        <p>The QODIQA trust hierarchy follows a three-tier model in which each tier signs the public key material of the tier below it. A verification at any tier is valid only if the complete chain from that tier to the Root Trust Anchor can be constructed and each link in the chain passes signature verification against the tier above it. There are no lateral trust relationships in this model. Trust flows strictly downward from root to enforcement gate.</p>
+
+        <div class="logic-block">
+          <div class="logic-bar">
+            <span class="logic-bar-title">QODIQA Cryptographic Trust Chain</span>
+            <span class="logic-bar-badge">TRUST-CHAIN · v1.0</span>
+          </div>
+          <pre>
+  ROOT TRUST ANCHOR
+  (offline HSM; dual-control; air-gapped)
+  │
+  │  Signs: Intermediate Signing Authority public key
+  │  Verified by: enforcement gate on manifest load
+  ↓
+  INTERMEDIATE SIGNING AUTHORITY
+  (online HSM; FIPS 140-2 Level 3; non-exportable)
+  │
+  │  Signs: Consent Token Issuer public key; key manifest
+  │  Verified by: enforcement gate on key manifest fetch
+  ↓
+  CONSENT TOKEN ISSUER
+  (online HSM; operational signing key; rotated per Section 5.2)
+  │
+  │  Signs: consent tokens presented to enforcement gate
+  │  Verified by: enforcement gate on every token verification
+  ↓
+  ENFORCEMENT GATE VERIFICATION
+  (runtime; stateless per token; deterministic; fail-closed)
+  │
+  │  Produces: Decision Artifact (PERMIT | DENY)
+  │  Writes: audit ledger entry before response
+  ↓
+  DECISION ARTIFACT + AUDIT LEDGER ENTRY
+  (immutable; hash-chained; cryptographically anchored)</pre>
+        </div>
+
+        <h3>X.2 Deterministic Validation Chain</h3>
+        <p>At runtime, the enforcement gate executes the following trust chain validation sequence for every presented consent token. This sequence MUST be completed in the order specified. No step may be skipped or reordered. Failure at any step produces an immediate DENY decision and an audit ledger entry recording the step at which validation failed.</p>
+
+        <div class="table-caption">Table X.2-A — Deterministic Validation Chain Steps</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th style="width:6%">Step</th><th style="width:28%">Validation Operation</th><th>Requirement</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">1</td>
+                <td><strong>Root manifest verification.</strong></td>
+                <td>The enforcement gate verifies that the loaded key manifest is signed by the Root Trust Anchor public key held in the gate's trust store. This step is performed at manifest load time and on each manifest refresh.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">2</td>
+                <td><strong>Intermediate key binding verification.</strong></td>
+                <td>The enforcement gate verifies that the Intermediate Signing Authority key listed in the manifest is signed by the Root Trust Anchor. A manifest that does not carry a valid root signature for the intermediate key MUST NOT be trusted.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">3</td>
+                <td><strong>Issuer key binding verification.</strong></td>
+                <td>The enforcement gate verifies that the Consent Token Issuer key referenced by the token's <code>kid</code> claim is signed by the Intermediate Signing Authority. An issuer key not bound through a valid intermediate signature MUST NOT be used for token verification.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">4</td>
+                <td><strong>Token signature verification.</strong></td>
+                <td>The enforcement gate verifies the consent token signature against the resolved Consent Token Issuer public key using the algorithm specified by the key manifest. The canonical payload is reconstructed before verification per SEC-TOK-01.</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;font-family:var(--mono);color:var(--accent);font-weight:700;">5</td>
+                <td><strong>Revocation status verification.</strong></td>
+                <td>The enforcement gate confirms that the issuer key is not listed in the revocation registry. This step occurs after signature verification to avoid unnecessary registry calls on structurally invalid tokens.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>This five-step chain constitutes the complete trust validation path. An enforcement gate that short-circuits any step — including by caching intermediate verification results across invocations without re-verifying the chain on manifest refresh — is non-conformant. The deterministic validation chain is not optional at any deployment profile tier.</p>
+      </div>
+
+      <!-- ANNEX A -->
+      <div id="annex-a" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Annex A — Non-Normative</span>
+        <h2><a class="anchor-link" href="#annex-a">#</a>Informative Cryptographic Reference Mapping</h2>
+
+        <div class="informative-notice">
+          <span class="inf-label">Informative — Non-Normative</span>
+          <span class="inf-desc">This annex does not introduce compliance claims. It provides reference mapping between QODIQA cryptographic requirements and corresponding NIST and FIPS standards. No additional requirements are created herein.</span>
+        </div>
+
+        <p>The normative requirements in Sections 3–12 of this document are derived from, and consistent with, a body of published cryptographic standards. This annex provides an informative mapping to those standards for implementers, auditors, and reviewers who wish to cross-reference QODIQA requirements against established standards bodies. Mapping to a standard does not constitute a claim of certification or compliance under that standard's audit regime.</p>
+
+        <h3>A.1 FIPS 180-4 — Secure Hash Standard</h3>
+        <p><strong>FIPS 180-4</strong> (Secure Hash Standard, SHS) — published by NIST — specifies the SHA family of hash functions including SHA-256, SHA-384, and SHA-512. All hash algorithm requirements in Section 3.2 and Section 7 of this document are consistent with FIPS 180-4 approved algorithms. SHA-256 is the minimum approved hash for artifact construction in Section 7. SHA-384 is required at the High-Assurance profile in certain contexts. SHA-512 is approved for use. MD5 and SHA-1 prohibitions in Section 3.3 align with NIST's withdrawal of these algorithms from approved use.</p>
+
+        <div class="table-caption">Table A.1 — FIPS 180-4 Algorithm Mapping</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>QODIQA Section</th><th>Requirement</th><th>FIPS 180-4 Basis</th><th>Status in Standard</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Section 3.2</td><td>SHA-256 minimum for hashing</td><td>FIPS 180-4 Section 6.2</td><td>Approved</td></tr>
+              <tr><td>Section 3.2</td><td>SHA-384 for High-Assurance</td><td>FIPS 180-4 Section 6.3</td><td>Approved</td></tr>
+              <tr><td>Section 3.2</td><td>SHA-512 approved</td><td>FIPS 180-4 Section 6.4</td><td>Approved</td></tr>
+              <tr><td>Section 3.3</td><td>MD5 prohibited</td><td>Not in FIPS 180-4</td><td>Withdrawn / Not Approved</td></tr>
+              <tr><td>Section 3.3</td><td>SHA-1 prohibited</td><td>FIPS 180-4 (deprecated)</td><td>Deprecated per NIST SP 800-131A Rev.2</td></tr>
+              <tr><td>Section 7</td><td>Artifact hash: SHA-256</td><td>FIPS 180-4 Section 6.2</td><td>Approved</td></tr>
+              <tr><td>Section 7</td><td>model_binary_hash: SHA-256</td><td>FIPS 180-4 Section 6.2</td><td>Approved</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>A.2 FIPS 186-4 / FIPS 186-5 — Digital Signature Standard</h3>
+        <p><strong>FIPS 186-4</strong> (Digital Signature Standard) and the updated <strong>FIPS 186-5</strong> specify the approved digital signature algorithms for federal use. ECDSA P-256 and ECDSA P-384 approved in Section 3.1 are directly specified in FIPS 186-4 Section 6.1 (curves P-256 and P-384). The RSA-PSS algorithm approved in Section 3.1 is specified in FIPS 186-4 Section 5.5. The prohibition on RSA &lt; 2048-bit keys in Section 3.3 aligns with FIPS 186-4 Section 5.1 minimum key size guidance. The deterministic nonce requirement for ECDSA (RFC 6979) supplements FIPS 186-4 Section 6.3, which does not require deterministic nonce generation but permits it. Ed25519 is specified in FIPS 186-5 Section 5.1 as an approved signature algorithm.</p>
+
+        <div class="table-caption">Table A.2 — FIPS 186-4/186-5 Algorithm Mapping</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>QODIQA Section</th><th>Algorithm</th><th>FIPS Reference</th><th>Approval Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Section 3.1 (MUST)</td><td>Ed25519</td><td>FIPS 186-5 Section 5.1</td><td>Approved</td></tr>
+              <tr><td>Section 3.1 (SHOULD)</td><td>ECDSA P-256</td><td>FIPS 186-4 Section 6.1 / FIPS 186-5 Section 6.1</td><td>Approved</td></tr>
+              <tr><td>Section 3.1 (SHOULD)</td><td>ECDSA P-384</td><td>FIPS 186-4 Section 6.1 / FIPS 186-5 Section 6.1</td><td>Approved</td></tr>
+              <tr><td>Section 3.3</td><td>RSA &lt; 2048-bit (prohibited)</td><td>FIPS 186-4 Section 5.1</td><td>Non-compliant (key size)</td></tr>
+              <tr><td>Section 3.3</td><td>Non-deterministic ECDSA (prohibited)</td><td>RFC 6979 / FIPS 186-5 Section 6.3</td><td>Not recommended</td></tr>
+              <tr><td>Section 10 SEC-NET-PFS</td><td>ECDHE only for TLS 1.2</td><td>FIPS 186-4 Section 6.1</td><td>Approved key agreement</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>A.3 NIST SP 800-57 — Key Management</h3>
+        <p><strong>NIST SP 800-57</strong> (Recommendation for Key Management, Parts 1–3) provides comprehensive guidance on cryptographic key management including key generation, distribution, storage, use, and destruction. The QODIQA key management requirements in Section 5 — including key rotation intervals, HSM storage requirements, key compromise response, and prohibited storage patterns — are consistent with and informed by NIST SP 800-57 Part 1 (General) and Part 2 (Best Practices for Key Management Organizations). The dual-control key activation requirement in SEC-KEY-03 corresponds to NIST SP 800-57 Part 2 guidance on separation of duties for sensitive key operations. Key rotation intervals in Section 5.2 are consistent with NIST SP 800-57 Part 1 Section 5.6 recommendations for cryptoperiods.</p>
+
+        <div class="table-caption">Table A.3 — NIST SP 800-57 Key Management Mapping</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>QODIQA Section</th><th>Requirement</th><th>SP 800-57 Reference</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Section 5.1 SEC-KEY-01</td><td>HSM storage for Hardened / High-Assurance</td><td>Part 1 Section 8.2.1, Part 2 Section 3.3</td></tr>
+              <tr><td>Section 5.1 SEC-KEY-02</td><td>Prohibited key storage patterns</td><td>Part 1 Section 8.2.3</td></tr>
+              <tr><td>Section 5.1 SEC-KEY-03</td><td>FIPS 140-2 Level 3, dual-control</td><td>Part 2 Section 2.3 (Separation of Duties)</td></tr>
+              <tr><td>Section 5.2</td><td>Key rotation intervals (365d / 90d / 30d)</td><td>Part 1 Section 5.6 (Cryptoperiods)</td></tr>
+              <tr><td>Section 13.1</td><td>Key compromise response</td><td>Part 1 Section 8.3 (Key Compromise)</td></tr>
+              <tr><td>Section 3.4 SEC-ALG-AGILITY-01</td><td>12-month algorithm review</td><td>Part 1 Section 5.2 (Transition)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>A.4 NIST SP 800-63 — Identity and Authentication</h3>
+        <p><strong>NIST SP 800-63</strong> (Digital Identity Guidelines) provides the federal standard for digital identity assurance, authentication, and federation. QODIQA's consent enforcement layer operates at the boundary between identity verification and authorization. While QODIQA does not implement identity proofing or authentication (those are upstream of the SUP boundary), the consent token structure defined in Section 4 draws from principles consistent with SP 800-63B (Authentication and Lifecycle Management) regarding token lifetime limits, session management, and revocation requirements. The registry consultation requirement (Section 6) is structurally consistent with SP 800-63C guidance on federation assertion validity and revocation. Implementers integrating QODIQA within a broader digital identity infrastructure SHOULD refer to SP 800-63 for identity and authentication controls upstream of the SUP enforcement boundary.</p>
+
+        <h3>A.5 NIST Post-Quantum Cryptography Standardization</h3>
+        <p>The NIST Post-Quantum Cryptography (PQC) standardization process has yielded initial standards in 2024. The primary PQC signature algorithms now standardized are:</p>
+
+        <div class="table-caption">Table A.5 — NIST PQC Standardized Signature Algorithms</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>NIST Standard</th><th>Basis</th><th>Signature Size</th><th>Relevance to QODIQA Section 3.4</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>CRYSTALS-Dilithium (ML-DSA)</td><td>FIPS 204</td><td>Module lattice</td><td>2.4 KB – 4.6 KB</td><td>Primary PQC candidate for Ed25519 migration path</td></tr>
+              <tr><td>FALCON (FN-DSA)</td><td>FIPS 206</td><td>NTRU lattice</td><td>0.6 KB – 1.3 KB</td><td>Compact signatures; constrained environments</td></tr>
+              <tr><td>SPHINCS+ (SLH-DSA)</td><td>FIPS 205</td><td>Hash-based stateless</td><td>7.8 KB – 49.8 KB</td><td>Hash-based; no algebraic assumptions</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>The cryptographic agility requirements in Section 3.4 (SEC-ALG-AGILITY-01) directly address the PQC transition. Implementations targeting active deployment beyond 2030 MUST include a documented PQC migration readiness plan, as required by SEC-ALG-AGILITY-01. The NIST PQC migration guidance documents (NIST IR 8413, NIST SP 800-131A Rev.2, and NIST PQC Migration FAQ) provide additional implementation guidance beyond the scope of this document.</p>
+
+        <p>The dual-signature transition model defined in Section 3.4.2 is directly applicable to the PQC migration scenario: an implementation may produce artifacts signed under both Ed25519 and ML-DSA (Dilithium) during the transition period, satisfying both classical and post-quantum verifiers simultaneously until the deployment is fully migrated.</p>
+
+        <h3>A.6 FIPS 140-2 / FIPS 140-3 — Security Requirements for Cryptographic Modules</h3>
+        <p><strong>FIPS 140-2</strong> (Security Requirements for Cryptographic Modules) and its successor <strong>FIPS 140-3</strong> (aligned with ISO/IEC 19790:2012) define four levels of cryptographic module security. QODIQA SEC-KEY-03 requires FIPS 140-2 Level 3 or equivalent for High-Assurance profile HSMs. The levels are summarized for reference:</p>
+
+        <div class="table-caption">Table A.6 — FIPS 140-2 Security Level Summary (Informative)</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Level</th><th>Physical Security</th><th>Key Export</th><th>Authentication</th><th>QODIQA Applicability</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Level 1</td><td>No physical requirements</td><td>Not controlled</td><td>Not required</td><td>Not sufficient for any QODIQA profile requiring HSM</td></tr>
+              <tr><td>Level 2</td><td>Tamper-evident coatings</td><td>Controlled</td><td>Role-based</td><td>Minimum for Hardened profile HSM use</td></tr>
+              <tr><td><strong>Level 3</strong></td><td>Tamper-detection/response; zeroization on tamper</td><td>Encrypted only; private key non-exportable</td><td>Identity-based; multi-factor</td><td><strong>Required for High-Assurance profile (SEC-KEY-03)</strong></td></tr>
+              <tr><td>Level 4</td><td>Complete physical protection envelope; environmental failure protection</td><td>Encrypted only; private key non-exportable</td><td>Identity-based; multi-factor</td><td>Exceeds minimum; acceptable for High-Assurance</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>FIPS 140-3 replaces FIPS 140-2 for new certifications initiated after September 22, 2021. FIPS 140-2 certificates remain valid until their expiration. Implementations procuring new HSM hardware SHOULD prefer FIPS 140-3 certified modules at the equivalent security level. FIPS 140-3 Level 3 satisfies the FIPS 140-2 Level 3 requirement in SEC-KEY-03.</p>
+
+        <div class="annex-confirmation">
+          <p><strong>Annex A Non-Normative Confirmation.</strong> Nothing in this annex supersedes, modifies, weakens, or extends the normative requirements of Sections 1–14 of this document. The mappings provided are informative and for cross-reference purposes only. Conformance to this Security and Cryptographic Profile is defined exclusively by the normative blocks in Sections 1–14. Reference to a NIST or FIPS standard in this annex does not constitute a claim that an implementation of this document achieves certification, validation, or compliance status under any external audit regime without separate independent evaluation.</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document defines the mandatory cryptographic, key management, and integrity requirements for high-assurance implementations of QODIQA — a runtime consent enforcement framework for artificial intelligence systems. The Security and Cryptographic Profile is not presented as a general security advisory, but as a deterministic, implementable security hard profile specifying precisely which algorithms are permitted, how consent tokens are secured, how trust anchors are managed, and how audit integrity is preserved across the full enforcement lifecycle.</p>
+
+          <p>The material contained herein is intended for:</p>
+          <ul class="audience-list">
+            <li>Systems architects and cryptographic infrastructure engineers</li>
+            <li>Enterprise AI platform designers</li>
+            <li>Security and governance officers</li>
+            <li>Regulatory and compliance stakeholders</li>
+            <li>Organizations building or operating high-assurance AI enforcement systems</li>
+          </ul>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+            <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-SEC-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Security and Cryptographic Profile for Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Cryptographic, Key Management, and Integrity Requirements for Deterministic Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">High-Assurance Security Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative — High-Assurance Security Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-SEC-2026-001</p>
+      <p>High-Assurance Security Specification</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents cryptographic and security requirements for QODIQA enforcement infrastructure. It does not constitute legal advice. All requirements described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-SEC-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================
+     SCROLLSPY — IntersectionObserver only, deterministic
+     rootMargin: "-30% 0px -60% 0px"  threshold: 0.15
+     Tie-break: topmost section by document order
+     Fallback: if nothing intersects, activate closest above viewport
+  ================================================================ */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract',
+    's1','s1-1','s1-2','s1-3','s1-4',
+    's2','s2-1','s2-2','s2-3',
+    's3','s3-1','s3-2','s3-3','s3-4',
+    's4','s4-3','s4-5',
+    's5','s5-5',
+    's6','s7','s8','s9','s10','s10-3',
+    's11','s12','s13','s14',
+    's-conclusion','annex-x','annex-a','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const sectionOrder = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  function activateTopmost() {
+    if (visible.size === 0) {
+      /* Fallback: activate the last section that has scrolled past the top */
+      let bestId = null, bestIdx = -1;
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.35) {
+          const idx = sectionOrder.get(sec.id);
+          if (idx > bestIdx) { bestIdx = idx; bestId = sec.id; }
+        }
+      });
+      if (bestId) setActive(bestId);
+      return;
+    }
+    let topId = null, topIdx = Infinity;
+    visible.forEach(id => {
+      const idx = sectionOrder.get(id);
+      if (idx < topIdx) { topIdx = idx; topId = id; }
+    });
+    if (topId) setActive(topId);
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    activateTopmost();
+  }, {
+    root: null,
+    rootMargin: '-30% 0px -60% 0px',
+    threshold: 0.15
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* Initial activation on load */
+  activateTopmost();
+
+  /* ================================================================
+     SMOOTH SCROLL ON NAV CLICK
+  ================================================================ */
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: 'smooth'
+          });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ================================================================
+     BACK TO TOP
+  ================================================================ */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ================================================================
+     MOBILE SIDEBAR TOGGLE
+  ================================================================ */
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

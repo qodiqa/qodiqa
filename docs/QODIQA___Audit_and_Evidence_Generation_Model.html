@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Audit and Evidence Generation Model · v1.0</title>
+<meta name="description" content="QODIQA Audit and Evidence Generation Model v1.0 — Deterministic Audit Principles, Evidence Structure, and Cryptographic Integrity for Runtime Consent Enforcement. April 2026.">
+<meta property="og:title" content="QODIQA — Audit and Evidence Generation Model">
+<meta property="og:description" content="A complete specification for deterministic audit and evidence generation within the QODIQA runtime consent enforcement architecture.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 64px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block--spaced { margin-top: 20px; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 24px 0 24px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   INVARIANT BLOCK
+   ============================================================ */
+.invariant-block {
+  background: #EDEAE5;
+  border: 1px solid #C8C4BC;
+  border-left: 3px solid var(--ink);
+  padding: 0;
+  margin: 12px 0 16px;
+}
+
+.invariant-block-header {
+  background: #1C1F25;
+  padding: 9px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invariant-block-header-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+
+.invariant-block-header-id {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(122,106,80,0.85);
+  margin-left: auto;
+}
+
+.invariant-row {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 10px 18px;
+  gap: 16px;
+}
+
+.invariant-row:last-child { border-bottom: none; }
+
+.invariant-id {
+  flex: 0 0 60px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.invariant-name {
+  flex: 0 0 200px;
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: -0.01em;
+}
+
+.invariant-statement {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 0.890rem;
+  color: var(--text);
+  line-height: 1.58;
+}
+
+/* ============================================================
+   BOUNDARY DIAGRAM
+   ============================================================ */
+.boundary-block {
+  margin: 20px 0 24px;
+  border: 1px solid #C8C4BC;
+  overflow: hidden;
+}
+
+.boundary-block-header {
+  background: #191C21;
+  padding: 9px 16px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  display: flex;
+  justify-content: space-between;
+}
+
+.boundary-zones {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  background: #F2EFEA;
+}
+
+.boundary-zone {
+  padding: 20px 18px;
+}
+
+.boundary-zone-inside { background: #EDEAE5; border-right: 2px dashed #B8B4AC; }
+.boundary-zone-outside { background: #F6F4F0; border-left: 2px dashed #B8B4AC; }
+.boundary-zone-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  gap: 6px;
+  background: #EDEAE5;
+}
+
+.boundary-zone-label {
+  font-family: var(--mono);
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.boundary-item {
+  font-family: var(--mono);
+  font-size: 0.700rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.boundary-item::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.boundary-rule {
+  font-family: var(--mono);
+  font-size: 0.660rem;
+  color: var(--ink-3);
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 18px;
+  background: #E8E5DF;
+  border-top: 1px solid #C8C4BC;
+  letter-spacing: 0.02em;
+}
+
+.flow-row {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+  margin: 0;
+}
+
+.flow-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flow-col-offset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 48px;
+}
+
+.flow-arrow-dark {
+  width: 1px;
+  height: 22px;
+  background: #B8B4AC;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flow-arrow-dark::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #B8B4AC;
+}
+
+.flow-arrow-accent {
+  width: 1px;
+  height: 22px;
+  background: rgba(122,106,80,0.35);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flow-arrow-accent::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid rgba(122,106,80,0.50);
+}
+
+.flow-node-sm {
+  width: 210px;
+  font-size: 0.68rem;
+}
+
+.flow-node-audit-sm {
+  width: 200px;
+}
+
+.boundary-block-ref {
+  color: rgba(122,106,80,0.65);
+}
+
+/* ============================================================
+   AUDIT FLOW DIAGRAM
+   ============================================================ */
+.audit-flow-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 8px 0;
+}
+
+.flow-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  padding: 8px 16px;
+  background: #EDEAE5;
+  border: 1px solid #C4C0BA;
+  font-family: var(--mono);
+  font-size: 0.700rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  text-align: center;
+  position: relative;
+}
+
+.flow-node.gateway {
+  background: #1C1F25;
+  border-color: rgba(122,106,80,0.50);
+  color: rgba(255,255,255,0.85);
+  width: 260px;
+}
+
+.flow-node.audit-node {
+  background: #2A2518;
+  border-color: rgba(122,106,80,0.55);
+  color: rgba(255,255,255,0.80);
+  width: 240px;
+}
+
+.flow-node.log-node {
+  background: #1A1C20;
+  border-color: rgba(122,106,80,0.35);
+  color: rgba(255,255,255,0.60);
+  width: 220px;
+  font-size: 0.66rem;
+}
+
+.flow-arrow {
+  width: 1px;
+  height: 22px;
+  background: #B8B4AC;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flow-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #B8B4AC;
+}
+
+.flow-arrow-label {
+  font-family: var(--mono);
+  font-size: 0.57rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: absolute;
+  left: calc(50% + 10px);
+  white-space: nowrap;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.75;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 48px 96px; }
+  footer   { padding: 36px 48px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 36px 80px; }
+  footer   { padding: 32px 36px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+  #cover { padding: 72px 24px; }
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+  .invariant-name { flex: 0 0 160px; }
+  .boundary-zones { grid-template-columns: 1fr; }
+  .boundary-zone-center { display: none; }
+  .boundary-zone-inside { border-right: none; border-bottom: 2px dashed #B8B4AC; }
+  .boundary-zone-outside { border-left: none; }
+}
+
+@media (max-width: 480px) {
+  #content { padding: 64px 16px 40px; }
+  footer   { padding: 24px 16px; }
+  .invariant-row { flex-direction: column; gap: 4px; }
+  .invariant-id { flex: none; }
+  .invariant-name { flex: none; }
+  .boundary-zones { grid-template-columns: 1fr; }
+  .boundary-zone-center { display: none; }
+  .boundary-zone-inside { border-right: none; border-bottom: 2px dashed #B8B4AC; }
+  .boundary-zone-outside { border-left: none; border-top: 1px solid #D4D0CA; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Audit and Evidence Generation Model<br><span class="italic-part">for Runtime Consent Enforcement</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Technical Specification · QODIQA Standard Corpus</p>
+      <p class="cover-info-date">April 2026 &nbsp;·&nbsp; Version 1.0</p>
+      <span class="cover-info-badge">QODIQA-AUDIT-2026-001 &nbsp;·&nbsp; Normative</span>
+      <p class="cover-info-tagline">Deterministic audit principles, evidence generation architecture, and cryptographic integrity guarantees for verifiable AI consent enforcement.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <svg width="12" height="18" viewBox="0 0 12 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="0.5" width="11" height="17" rx="5.5" stroke="currentColor" stroke-opacity="0.4"/>
+      <circle cx="6" cy="5" r="1.5" fill="currentColor" fill-opacity="0.5"/>
+    </svg>
+    Scroll
+  </div>
+</section>
+
+<!-- MOBILE HEADER -->
+<div class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+      <path d="M0 1h16M0 6h16M0 11h16" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">QODIQA — Audit &amp; Evidence Model</span>
+</div>
+
+<div id="overlay" class="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">QODIQA — Audit &amp; Evidence</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. System Role of Audit</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Architectural Position</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Enforcement Gateway</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Trust Boundaries</a>
+      <a class="nav-item sub" href="#s1-4">1.4 System Boundary</a>
+      <a class="nav-item" href="#s2">2. Deterministic Audit Principles</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Immutability</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Verifiability</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Non-Repudiation</a>
+      <a class="nav-item sub" href="#s2-4">2.4 Completeness</a>
+      <a class="nav-item sub" href="#s2-5">2.5 Time Consistency</a>
+      <a class="nav-item" href="#s2-inv">2a. Deterministic Invariants</a>
+      <a class="nav-item" href="#s3">3. Evidence Generation Model</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Definition of Evidence</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Evidence Types</a>
+      <a class="nav-item" href="#s4">4. Audit Event Taxonomy</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Inference Request Received</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Policy Evaluation</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Consent Lookup</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Enforcement Decision</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Block / Allow Outcome</a>
+      <a class="nav-item" href="#s5">5. Evidence Structure Specification</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Canonical Schema</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Field Definitions</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Deterministic Serialization</a>
+      <a class="nav-item" href="#s6">6. Cryptographic Integrity Model</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Hash Chaining</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Tamper Evidence</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Signing Requirements</a>
+      <a class="nav-item sub" href="#s6-4">6.4 External Anchoring</a>
+      <a class="nav-item" href="#s7">7. Append-Only Log Architecture</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Append-Only Behavior</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Ordering Guarantees</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Replay Consistency</a>
+      <a class="nav-item" href="#s8">8. Evidence Retrieval &amp; Verification</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Access Model</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Verification Flows</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Third-Party Validation</a>
+      <a class="nav-item" href="#s9">9. Failure Modes &amp; Audit Gaps</a>
+      <a class="nav-item" href="#s10">10. Privacy &amp; Data Minimization</a>
+      <a class="nav-item" href="#s11">11. Integration with Certification</a>
+      <a class="nav-item" href="#s12">12. Implementation Constraints</a>
+      <a class="nav-item" href="#s13">13. Residual Risk &amp; Non-Coverage</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>Deterministic runtime consent enforcement depends, in equal measure, on the integrity of its execution path and on the completeness of the record that execution path produces. This document specifies the Audit and Evidence Generation Model for QODIQA: the architectural principles, event taxonomy, evidence structure, cryptographic integrity mechanisms, and operational constraints that together constitute a verifiable, tamper-evident record of every consent enforcement decision made by the system. The model defines what constitutes evidence within the QODIQA framework, how evidence is generated and serialized in a deterministic and replay-consistent manner, and how it is preserved in an append-only log architecture that supports independent verification. The document further addresses failure modes, privacy constraints, data minimization obligations, and the relationship between audit artifacts and the QODIQA certification framework. The audit and evidence model is a normative component of the QODIQA standard corpus and is required for any implementation claiming conformance.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>System Role of Audit and Evidence</h2>
+
+        <p>Audit within the QODIQA architecture is not an ancillary reporting function. It is a first-class system responsibility that operates in parallel with enforcement. Every enforcement decision produces a corresponding evidence record. The two are inseparable: an enforcement decision without a corresponding evidence record is incomplete and does not satisfy the QODIQA determinism guarantee.</p>
+
+        <p>The audit subsystem transforms the internal state of each enforcement event into a durable, verifiable, and externally inspectable artifact. It converts ephemeral computation into permanent record. This transformation is the mechanism by which QODIQA transcends run-time enforcement and enters the domain of institutional accountability.</p>
+
+        <div id="s1-1" class="doc-section">
+          <h3>1.1 Architectural Position</h3>
+          <p>The audit subsystem occupies a co-terminal position within the QODIQA enforcement pipeline. It does not precede enforcement and does not follow enforcement as a downstream side effect. It operates as a co-process that captures the full computational context of each enforcement event before that context is released. This co-terminal positioning ensures that the evidence record and the enforcement decision share an identical view of system state at the moment of evaluation.</p>
+          <p>The audit subsystem reads from the same frozen context that the Enforcement Gateway uses to evaluate policy. It does not derive evidence from the enforcement output alone, which would produce an incomplete record. It captures the full input contract, the resolved consent state, the applicable policy version, the evaluation result, and the enforcement outcome as a single composite artifact.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Architectural Invariant</div>
+            <p>Evidence generation is not optional and cannot be deferred. An enforcement decision that cannot be simultaneously recorded as a complete evidence artifact must be treated as a system failure. The fail-closed semantics of the Enforcement Gateway extend to the audit subsystem without exception.</p>
+          </div>
+        </div>
+
+        <div id="s1-2" class="doc-section">
+          <h3>1.2 Relationship with the Enforcement Gateway</h3>
+          <p>The Enforcement Gateway is the component within QODIQA that applies policy rules to a frozen evaluation context and produces a deterministic enforcement decision. The audit subsystem is its mandatory partner. The Gateway produces the decision; the audit subsystem produces the proof that the decision was made correctly, from a specific set of inputs, under a specific policy version, at a specific time.</p>
+          <p>The relationship is not hierarchical. The audit subsystem does not validate the Gateway's decision. It records it. Validation of the decision is the responsibility of downstream verification processes, which operate against the evidence record. The audit subsystem is the source of truth for those verification processes. Its integrity is therefore a prerequisite for any external audit or compliance claim.</p>
+
+          <div class="diagram-wrap">
+            <div class="audit-flow-diagram">
+
+              <div class="flow-node">AI System</div>
+              <div class="flow-arrow"><span class="flow-arrow-label">Intent Declaration</span></div>
+
+              <div class="flow-node gateway">Enforcement Gateway</div>
+
+              <div class="flow-row">
+                <div class="flow-col">
+                  <div class="flow-arrow-dark"></div>
+                  <div class="flow-node flow-node-sm">Policy Evaluation</div>
+                  <div class="flow-arrow-dark"></div>
+                  <div class="flow-node flow-node-sm">Consent Lookup</div>
+                  <div class="flow-arrow-dark"></div>
+                  <div class="flow-node gateway flow-node-sm">Enforcement Decision</div>
+                </div>
+                <div class="flow-col-offset">
+                  <div class="flow-arrow-accent"></div>
+                  <div class="flow-node audit-node flow-node-audit-sm">Audit Subsystem</div>
+                  <div class="flow-arrow-accent"></div>
+                  <div class="flow-node audit-node flow-node-audit-sm">Evidence Generation</div>
+                  <div class="flow-arrow-accent"></div>
+                  <div class="flow-node log-node flow-node-audit-sm">Append-Only Log</div>
+                  <div class="flow-arrow-accent"></div>
+                  <div class="flow-node log-node flow-node-audit-sm">Verification / Auditor</div>
+                </div>
+              </div>
+
+            </div>
+            <p class="diagram-caption">Figure 1.1 — QODIQA Audit Flow Architecture. The Enforcement Gateway and the Audit Subsystem execute co-terminally: they share an identical frozen context and produce their respective outputs within the same atomic operational unit. Evidence generation is not a downstream side effect; it is a parallel, co-equal process. The append-only log is the durable substrate that enables independent verification without operational access to the live system.</p>
+          </div>
+        </div>
+
+        <div id="s1-3" class="doc-section">
+          <h3>1.3 Trust Boundary Implications</h3>
+          <p>The audit subsystem operates within the QODIQA trust boundary. Its outputs, once committed to the append-only log, are considered authoritative records of enforcement history. External systems, auditors, regulatory bodies, and certification authorities that interact with QODIQA evidence records must treat those records as the canonical representation of system behavior.</p>
+          <p>The trust boundary requires that the audit subsystem be isolated from the components it observes. The subsystem must not be reachable from the AI inference path in a way that would permit the inference path to alter, suppress, or selectively produce evidence records. Isolation is a structural requirement, not a configuration option.</p>
+        </div>
+
+        <div id="s1-4" class="doc-section">
+          <h3>1.4 System Boundary and Trust Isolation</h3>
+          <p>The QODIQA trust boundary defines the set of components whose operation is governed by and accountable to the QODIQA specification. Components inside the boundary are subject to the full set of determinism, immutability, and integrity requirements defined in this corpus. Components outside the boundary are treated as external principals that interact with QODIQA through defined interfaces and whose behavior QODIQA does not assume or control.</p>
+          <p>The boundary is not a network perimeter; it is an accountability perimeter. Components inside the boundary must be operated, monitored, and auditable by the deploying organization. Any component that can influence an enforcement decision or an evidence record must be inside the boundary or its influence must be mediated through a defined, auditable interface.</p>
+          <p>The fundamental isolation rule is absolute: an AI system must not be able to influence the generation of the evidence record that corresponds to its own enforcement event. This prohibition extends to indirect influence through shared resources, side channels, timing manipulation, or administrative access to the audit subsystem.</p>
+
+          <div class="boundary-block">
+            <div class="boundary-block-header">
+              <span>QODIQA System Boundary &amp; Trust Model</span>
+              <span class="boundary-block-ref">QODIQA-AUDIT-2026-001 · §1.4</span>
+            </div>
+            <div class="boundary-zones">
+              <div class="boundary-zone boundary-zone-inside">
+                <span class="boundary-zone-label">Inside Trust Boundary</span>
+                <div class="boundary-item">Enforcement Gateway</div>
+                <div class="boundary-item">Audit Subsystem</div>
+                <div class="boundary-item">Signing Key Infrastructure (HSM)</div>
+                <div class="boundary-item">Log Storage &amp; Ingestion Interface</div>
+                <div class="boundary-item">Monotonic Time Source</div>
+                <div class="boundary-item">Policy &amp; Consent Version Store</div>
+                <div class="boundary-item">Integrity Monitoring Function</div>
+              </div>
+              <div class="boundary-zone boundary-zone-center">
+                <svg width="18" height="40" viewBox="0 0 18 40" fill="none"><path d="M9 0v40M0 20h18" stroke="#B8B4AC" stroke-width="1.2"/></svg>
+              </div>
+              <div class="boundary-zone boundary-zone-outside">
+                <span class="boundary-zone-label">Outside Trust Boundary</span>
+                <div class="boundary-item">AI Systems (Requestors)</div>
+                <div class="boundary-item">Downstream Execution Components</div>
+                <div class="boundary-item">External Consent Registries</div>
+                <div class="boundary-item">Verification Actors / Auditors</div>
+                <div class="boundary-item">Regulatory &amp; Certification Bodies</div>
+                <div class="boundary-item">External Anchor Services</div>
+                <div class="boundary-item">Organizational Administration</div>
+              </div>
+            </div>
+            <div class="boundary-rule">Isolation Rule: No component outside the trust boundary may alter, suppress, or selectively trigger evidence generation for any enforcement event. Any system that violates this condition is non-conformant.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Deterministic Audit Principles</h2>
+
+        <p>The QODIQA audit model is governed by five foundational principles. These principles are not implementation preferences; they are normative requirements that every conforming implementation must satisfy. Deviation from any principle constitutes a non-conformance that invalidates the auditability guarantee.</p>
+
+        <div id="s2-1" class="doc-section">
+          <h3>2.1 Immutability</h3>
+          <p>Evidence records, once committed to the audit log, must not be altered, updated, or deleted under any operational condition. Immutability is absolute. It applies to the record content, the record metadata, and the record's position within the log sequence. Systems that expose mutation interfaces to the audit log, even for the purpose of error correction, do not conform to this specification.</p>
+          <div class="key-prop">
+            <div class="key-prop-title">Principle 1 — Immutability</div>
+            <p>A committed evidence record is permanent. No post-commit mutation is permitted under any condition, including administrative action, error correction, or legal obligation. Corrections are achieved through supplementary records, not modification of existing ones.</p>
+          </div>
+        </div>
+
+        <div id="s2-2" class="doc-section">
+          <h3>2.2 Verifiability</h3>
+          <p>Every evidence record must be independently verifiable. Verifiability means that a party in possession of the record, its associated cryptographic proof, and the applicable policy and consent state versions can confirm that the record accurately represents the enforcement decision that occurred. Verifiability does not require access to the live QODIQA system. It requires only the record itself and the referenced immutable artifacts.</p>
+          <div class="key-prop">
+            <div class="key-prop-title">Principle 2 — Verifiability</div>
+            <p>Each evidence record must contain or reference all inputs necessary for an independent party to reproduce the enforcement decision and confirm it matches the recorded outcome. Verification must be achievable without operational access to the producing system.</p>
+          </div>
+        </div>
+
+        <div id="s2-3" class="doc-section">
+          <h3>2.3 Non-Repudiation</h3>
+          <p>Evidence records must be cryptographically signed such that the producing system cannot later deny having made the recorded decision. Non-repudiation requires that the signing key be controlled by the QODIQA enforcement subsystem and that the signature be verifiable against a published public key or certificate chain. Key management practices that permit retroactive alteration of signing authority are incompatible with this principle.</p>
+          <div class="key-prop">
+            <div class="key-prop-title">Principle 3 — Non-Repudiation</div>
+            <p>A cryptographic signature over each evidence record, produced by a key held within the QODIQA trust boundary, provides non-repudiation. The signing authority cannot deny the decision, and the decision cannot be attributed to any other system or time.</p>
+          </div>
+        </div>
+
+        <div id="s2-4" class="doc-section">
+          <h3>2.4 Completeness</h3>
+          <p>The audit log must contain a complete record of every enforcement event processed by the system. Gaps are not acceptable. A missing record is not an absence of evidence; it is evidence of a gap in audit coverage, which is itself an audit finding. Implementations must detect and report gaps automatically. Manual gap identification is insufficient.</p>
+          <div class="key-prop">
+            <div class="key-prop-title">Principle 4 — Completeness</div>
+            <p>Every enforcement event produces exactly one evidence record. No event is excluded, suppressed, or deferred. Completeness is a structural guarantee, enforced by the co-terminal architecture of the audit subsystem, not a statistical property achievable through sampling.</p>
+          </div>
+        </div>
+
+        <div id="s2-5" class="doc-section">
+          <h3>2.5 Time Consistency</h3>
+          <p>Evidence records must include timestamps derived from a monotonic, tamper-evident time source. Time consistency means that the ordering of records in the audit log is consistent with the actual temporal ordering of enforcement events. Systems that rely on client-supplied timestamps, mutable system clocks, or network time sources subject to manipulation do not satisfy this principle.</p>
+          <div class="key-prop">
+            <div class="key-prop-title">Principle 5 — Time Consistency</div>
+            <p>Timestamps in evidence records are derived from a monotonic time source controlled within the QODIQA trust boundary. The temporal ordering of records in the audit log is authoritative and must match the actual sequence of enforcement decisions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2a — DETERMINISTIC AUDIT INVARIANTS -->
+      <div id="s2-inv" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Invariants</span>
+        <h2><a class="anchor-link" href="#s2-inv">#</a>Deterministic Audit Invariants</h2>
+
+        <p>The following invariants are derived from the five deterministic audit principles and constitute the hard operational law of the QODIQA audit subsystem. They are not guidelines, targets, or best practices. They are non-negotiable system properties. Any implementation that cannot demonstrate adherence to every invariant fails to conform to this specification. No business, operational, or regulatory justification overrides these invariants.</p>
+
+        <div class="invariant-block">
+          <div class="invariant-block-header">
+            <span class="invariant-block-header-label">Deterministic Audit Invariants</span>
+            <span class="invariant-block-header-id">QODIQA-AUDIT-2026-001 · §2a</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-001</span>
+            <span class="invariant-name">No Enforcement Without Evidence</span>
+            <span class="invariant-statement">The Enforcement Gateway must not return an enforcement decision to any calling system unless the corresponding evidence record has been successfully committed to the append-only log. A decision that is returned without a committed evidence record does not constitute a valid QODIQA enforcement decision and must be treated as a system failure.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-002</span>
+            <span class="invariant-name">Exactly-One Record per Event</span>
+            <span class="invariant-statement">Each enforcement event produces exactly one evidence record of each applicable event class. Duplicate records, partial records, and missing records for events that reached the Enforcement Gateway are prohibited. Exactly-one semantics are enforced at the ingestion interface and at the audit completeness monitoring layer.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-003</span>
+            <span class="invariant-name">Immutable Record Guarantee</span>
+            <span class="invariant-statement">No committed evidence record may be altered, updated, overwritten, or deleted under any operational condition, by any system actor, through any interface, including administrative, emergency, or maintenance interfaces. The immutability guarantee applies to all fields of the record including its position within the log sequence.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-004</span>
+            <span class="invariant-name">Hash Chain Continuity</span>
+            <span class="invariant-statement">Every evidence record within a log partition, at position i greater than zero, must carry in its <code>prev_event_hash</code> field the SHA-256 digest of the canonical serialization of the record at position i minus one. A gap in the hash chain is a chain integrity failure and invalidates all records from the point of failure forward for verification purposes.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-005</span>
+            <span class="invariant-name">Signature Validity Requirement</span>
+            <span class="invariant-statement">Every evidence record must carry a valid ECDSA-P256 signature produced by the Enforcement Gateway's signing key at the time of record production. The signature must be verifiable using the published public key associated with the producer identity at the record's timestamp. A record with an absent, invalid, or unverifiable signature is not valid evidence.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-006</span>
+            <span class="invariant-name">Monotonic Ordering Requirement</span>
+            <span class="invariant-statement">Log sequence numbers within a partition must be strictly monotonically increasing. Timestamps within a partition must be non-decreasing. The ingestion interface must reject any record whose log sequence number is not exactly one greater than the preceding record's sequence number. Out-of-order or duplicate sequence numbers are fatal ingestion errors.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-007</span>
+            <span class="invariant-name">Audit Availability = Enforcement Availability</span>
+            <span class="invariant-statement">The availability of the audit subsystem is equivalent to the availability of the enforcement system itself. When the audit subsystem is unable to accept and commit evidence records, the Enforcement Gateway must enter fail-closed state and deny all pending enforcement requests. No enforcement decision may be issued during a period of audit unavailability, regardless of its urgency or operational impact.</span>
+          </div>
+          <div class="invariant-row">
+            <span class="invariant-id">INV-008</span>
+            <span class="invariant-name">No Post-Commit Mutation</span>
+            <span class="invariant-statement">Post-commit mutation of any evidence record is prohibited under any condition without exception. This prohibition extends to redaction, anonymization, field nullification, compression that alters content, format migration that changes field values, and any other operation that produces a different byte sequence for the record content. Corrections are achieved exclusively through supplementary integrity events appended to the log.</span>
+          </div>
+        </div>
+
+        <div class="decision-block decision-block--spaced">
+          <strong>Normative Status</strong>
+          <p>These invariants are co-normative with the five deterministic audit principles of Section 2. A conforming implementation must satisfy all eight invariants without exception. Any implementation that violates any invariant is non-conformant with this specification, regardless of its compliance with other QODIQA corpus documents. Certification cannot be granted to an implementation with a known invariant violation.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Evidence Generation Model</h2>
+
+        <p>Evidence, within the QODIQA framework, is a precisely defined construct. It is not a log entry in the colloquial sense, nor is it a debug trace or an operational metric. Evidence is a structured, cryptographically bound record that captures the complete deterministic state of an enforcement event in a form suitable for independent verification and legal-grade accountability.</p>
+
+        <div id="s3-1" class="doc-section">
+          <h3>3.1 Definition of Evidence</h3>
+          <p>An evidence record within QODIQA is a composite artifact that contains: the identity of the enforcement event that produced it; the complete input contract presented to the Enforcement Gateway; the resolved consent state at the moment of evaluation; the version-pinned policy that was applied; the intermediate evaluation trace; the final enforcement decision; and the cryptographic linkage that binds this record to the preceding record in the append-only log.</p>
+          <p>Evidence is generated at enforcement time, not retrospectively. It captures the state as it existed during evaluation. Post-hoc reconstruction of evidence is not permitted and would not constitute evidence under this specification. The evidence record is produced within the same atomic operational unit as the enforcement decision itself.</p>
+        </div>
+
+        <div id="s3-2" class="doc-section">
+          <h3>3.2 Evidence Types</h3>
+          <p>The QODIQA evidence model recognizes four canonical evidence types. Each type addresses a distinct dimension of the enforcement event and together they constitute the complete evidentiary record of a QODIQA enforcement lifecycle.</p>
+
+          <div class="decision-block">
+            <strong>Evidence Type 1 — Decision Evidence</strong>
+            <p>The primary evidence artifact produced by each enforcement event. Decision evidence records the final deterministic outcome: allow, deny, or allow-with-restriction. It includes the complete input contract, the resolved consent state reference, the policy version applied, and the resulting decision with its rationale expressed in terms of the applicable policy clauses.</p>
+          </div>
+
+          <div class="decision-block">
+            <strong>Evidence Type 2 — Policy Evaluation Trace</strong>
+            <p>A structured record of the policy evaluation process for a given enforcement event. The trace records each policy clause that was evaluated, the intermediate truth value assigned to each clause, the logical structure of the evaluation, and the clause or clauses that were determinative in the final decision. Policy evaluation traces enable independent verification of the evaluation logic and support detection of policy misconfiguration.</p>
+          </div>
+
+          <div class="decision-block">
+            <strong>Evidence Type 3 — Consent Verification Proof</strong>
+            <p>A cryptographically verifiable record demonstrating that consent was resolved against a specific, version-pinned consent state at a specific time. The consent verification proof includes the consent record identifier, the version hash of the consent state, the consent scope, purpose bindings, temporal validity window, and the resolved consent value. This type enables independent parties to verify that consent was valid at the moment of enforcement without requiring access to the live consent registry.</p>
+          </div>
+
+          <div class="decision-block">
+            <strong>Evidence Type 4 — Rejection and Allow Logs</strong>
+            <p>Structured outcome records that provide a compact, searchable representation of enforcement results across high-volume operational contexts. Rejection logs capture the complete identity of denied requests, the specific policy clause or consent condition responsible for the denial, and the enforcement timestamp. Allow logs capture authorized requests, including any restrictions applied as conditions of authorization. These records support operational monitoring, anomaly detection, and aggregate compliance reporting.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Audit Event Taxonomy</h2>
+
+        <p>The QODIQA audit subsystem recognizes a standardized set of event classes that collectively describe the lifecycle of a single enforcement transaction. Each event class has a canonical identifier, a required field set, and a deterministic structure. Implementations must emit events conforming to this taxonomy. Non-standard event formats are not recognized as audit evidence under this specification.</p>
+
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Event Class: Inference Request Received</h3>
+          <p>This event is emitted when a conforming AI system presents an intent declaration to the QODIQA Enforcement Gateway. It represents the initiation of an enforcement transaction and marks the beginning of the audit record chain for that transaction.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">EVT-001 — Inference Request Received: Required Fields</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>event_id</td><td>UUID v4</td><td>Globally unique identifier for this event instance</td><td>Mandatory</td></tr>
+                <tr><td>event_class</td><td>string</td><td>Canonical value: <code>EVT-001-INFERENCE-REQUEST-RECEIVED</code></td><td>Mandatory</td></tr>
+                <tr><td>transaction_id</td><td>UUID v4</td><td>Shared identifier binding all events within one enforcement transaction</td><td>Mandatory</td></tr>
+                <tr><td>timestamp_utc</td><td>ISO 8601</td><td>Monotonic UTC timestamp of event generation</td><td>Mandatory</td></tr>
+                <tr><td>requestor_id</td><td>string</td><td>Stable identifier of the AI system or agent submitting the request</td><td>Mandatory</td></tr>
+                <tr><td>declared_intent</td><td>object</td><td>Complete intent declaration as submitted, without modification</td><td>Mandatory</td></tr>
+                <tr><td>declared_purpose</td><td>string</td><td>Machine-readable purpose code from the approved purpose taxonomy</td><td>Mandatory</td></tr>
+                <tr><td>declared_scope</td><td>object</td><td>Scope declaration: data categories, subject identifiers, processing context</td><td>Mandatory</td></tr>
+                <tr><td>declared_duration</td><td>interval</td><td>Requested processing duration or expiry, expressed as ISO 8601 interval</td><td>Mandatory</td></tr>
+                <tr><td>prev_event_hash</td><td>SHA-256</td><td>Hash of the preceding event in the log chain; null for chain genesis</td><td>Mandatory</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Event Class: Policy Evaluation</h3>
+          <p>This event is emitted upon completion of the policy evaluation phase. It records the policy version applied, the evaluation trace, and the intermediate result prior to the final enforcement decision. Policy evaluation events provide the traceability necessary to verify that the correct policy was applied to the correct input.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">EVT-002 — Policy Evaluation: Required Fields</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>event_id</td><td>UUID v4</td><td>Globally unique identifier for this event instance</td><td>Mandatory</td></tr>
+                <tr><td>event_class</td><td>string</td><td>Canonical value: <code>EVT-002-POLICY-EVALUATION</code></td><td>Mandatory</td></tr>
+                <tr><td>transaction_id</td><td>UUID v4</td><td>Binding identifier shared with the originating EVT-001 event</td><td>Mandatory</td></tr>
+                <tr><td>timestamp_utc</td><td>ISO 8601</td><td>Monotonic UTC timestamp of evaluation completion</td><td>Mandatory</td></tr>
+                <tr><td>policy_id</td><td>string</td><td>Stable identifier of the policy document applied</td><td>Mandatory</td></tr>
+                <tr><td>policy_version_hash</td><td>SHA-256</td><td>Content-hash of the exact policy version used in evaluation</td><td>Mandatory</td></tr>
+                <tr><td>evaluation_trace</td><td>array</td><td>Ordered list of clause evaluations, each with clause_id, input_values, and truth_value</td><td>Mandatory</td></tr>
+                <tr><td>determinative_clauses</td><td>array</td><td>Identifiers of the clause(s) responsible for the evaluation outcome</td><td>Mandatory</td></tr>
+                <tr><td>intermediate_result</td><td>enum</td><td>Pre-decision evaluation result: <code>PERMIT</code>, <code>DENY</code>, <code>RESTRICT</code>, <code>INDETERMINATE</code></td><td>Mandatory</td></tr>
+                <tr><td>prev_event_hash</td><td>SHA-256</td><td>Hash of the preceding event in the log chain</td><td>Mandatory</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Event Class: Consent Lookup</h3>
+          <p>This event is emitted when the Enforcement Gateway queries the consent registry. It records the exact consent state retrieved, its version, its temporal validity, and the resolution result. Consent lookup events are the evidentiary basis for consent verification proofs and are required for any claim that a consent condition was satisfied at the time of enforcement.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">EVT-003 — Consent Lookup: Required Fields</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>event_id</td><td>UUID v4</td><td>Globally unique identifier for this event instance</td><td>Mandatory</td></tr>
+                <tr><td>event_class</td><td>string</td><td>Canonical value: <code>EVT-003-CONSENT-LOOKUP</code></td><td>Mandatory</td></tr>
+                <tr><td>transaction_id</td><td>UUID v4</td><td>Binding identifier shared with the originating EVT-001 event</td><td>Mandatory</td></tr>
+                <tr><td>timestamp_utc</td><td>ISO 8601</td><td>Monotonic UTC timestamp of consent registry query</td><td>Mandatory</td></tr>
+                <tr><td>consent_subject_ref</td><td>string</td><td>Opaque, non-PII reference to the consent subject</td><td>Mandatory</td></tr>
+                <tr><td>consent_record_id</td><td>string</td><td>Identifier of the consent record retrieved from the registry</td><td>Mandatory</td></tr>
+                <tr><td>consent_version_hash</td><td>SHA-256</td><td>Content-hash of the retrieved consent record version</td><td>Mandatory</td></tr>
+                <tr><td>consent_scope_match</td><td>boolean</td><td>Whether the retrieved consent scope covers the declared request scope</td><td>Mandatory</td></tr>
+                <tr><td>consent_purpose_match</td><td>boolean</td><td>Whether the retrieved consent purpose covers the declared purpose</td><td>Mandatory</td></tr>
+                <tr><td>consent_temporal_valid</td><td>boolean</td><td>Whether the consent record was temporally valid at the lookup timestamp</td><td>Mandatory</td></tr>
+                <tr><td>consent_resolution</td><td>enum</td><td>Resolution result: <code>VALID</code>, <code>REVOKED</code>, <code>EXPIRED</code>, <code>NOT_FOUND</code>, <code>SCOPE_MISMATCH</code></td><td>Mandatory</td></tr>
+                <tr><td>prev_event_hash</td><td>SHA-256</td><td>Hash of the preceding event in the log chain</td><td>Mandatory</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="s4-4" class="doc-section">
+          <h3>4.4 Event Class: Enforcement Decision</h3>
+          <p>This event records the final deterministic enforcement decision produced by the Enforcement Gateway. It is the primary audit artifact and constitutes the authoritative record of system authorization behavior. Every enforcement transaction that reaches a terminal state must produce exactly one Enforcement Decision event.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">EVT-004 — Enforcement Decision: Required Fields</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>event_id</td><td>UUID v4</td><td>Globally unique identifier for this event instance</td><td>Mandatory</td></tr>
+                <tr><td>event_class</td><td>string</td><td>Canonical value: <code>EVT-004-ENFORCEMENT-DECISION</code></td><td>Mandatory</td></tr>
+                <tr><td>transaction_id</td><td>UUID v4</td><td>Binding identifier shared with all events in this enforcement transaction</td><td>Mandatory</td></tr>
+                <tr><td>timestamp_utc</td><td>ISO 8601</td><td>Monotonic UTC timestamp of decision finalization</td><td>Mandatory</td></tr>
+                <tr><td>decision</td><td>enum</td><td>Final enforcement decision: <code>ALLOW</code>, <code>DENY</code>, <code>ALLOW_WITH_RESTRICTION</code></td><td>Mandatory</td></tr>
+                <tr><td>decision_basis</td><td>object</td><td>Structured rationale referencing policy clauses and consent conditions that produced the decision</td><td>Mandatory</td></tr>
+                <tr><td>restrictions</td><td>array</td><td>If decision is ALLOW_WITH_RESTRICTION: ordered list of applicable restrictions, each with restriction_id and description</td><td>Conditional</td></tr>
+                <tr><td>input_contract_hash</td><td>SHA-256</td><td>Content-hash of the complete input contract evaluated</td><td>Mandatory</td></tr>
+                <tr><td>policy_version_hash</td><td>SHA-256</td><td>Content-hash of the policy version applied, as referenced in EVT-002</td><td>Mandatory</td></tr>
+                <tr><td>consent_version_hash</td><td>SHA-256</td><td>Content-hash of the consent state resolved, as referenced in EVT-003</td><td>Mandatory</td></tr>
+                <tr><td>gateway_signature</td><td>bytes</td><td>ECDSA-P256 signature over the canonical serialization of this record, produced by the Gateway signing key</td><td>Mandatory</td></tr>
+                <tr><td>prev_event_hash</td><td>SHA-256</td><td>Hash of the preceding event in the log chain</td><td>Mandatory</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="s4-5" class="doc-section">
+          <h3>4.5 Event Class: Block / Allow Outcome</h3>
+          <p>This event is emitted by the system component that enforces the Enforcement Gateway's decision at the execution layer. It confirms that the decision was communicated to, and acted upon by, the downstream system. Block/Allow Outcome events close the enforcement transaction record and provide evidence that the decision was not merely recorded but actually applied.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">EVT-005 — Block / Allow Outcome: Required Fields</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Required</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>event_id</td><td>UUID v4</td><td>Globally unique identifier for this event instance</td><td>Mandatory</td></tr>
+                <tr><td>event_class</td><td>string</td><td>Canonical value: <code>EVT-005-BLOCK-ALLOW-OUTCOME</code></td><td>Mandatory</td></tr>
+                <tr><td>transaction_id</td><td>UUID v4</td><td>Binding identifier shared with all events in this enforcement transaction</td><td>Mandatory</td></tr>
+                <tr><td>timestamp_utc</td><td>ISO 8601</td><td>Monotonic UTC timestamp of outcome application</td><td>Mandatory</td></tr>
+                <tr><td>outcome</td><td>enum</td><td>Applied outcome: <code>BLOCKED</code>, <code>ALLOWED</code>, <code>ALLOWED_WITH_RESTRICTION</code></td><td>Mandatory</td></tr>
+                <tr><td>enforcing_component_id</td><td>string</td><td>Identifier of the system component that applied the decision</td><td>Mandatory</td></tr>
+                <tr><td>enforcement_decision_ref</td><td>UUID v4</td><td>event_id of the corresponding EVT-004 Enforcement Decision event</td><td>Mandatory</td></tr>
+                <tr><td>prev_event_hash</td><td>SHA-256</td><td>Hash of the preceding event in the log chain</td><td>Mandatory</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Evidence Structure Specification</h2>
+
+        <p>The evidence structure specification defines the canonical form in which QODIQA evidence records are serialized, stored, and transmitted. Canonical form is not a recommendation; it is a normative requirement. Evidence records that deviate from canonical serialization are not recognized as conforming QODIQA evidence and cannot be used to satisfy verification or compliance obligations.</p>
+
+        <div id="s5-1" class="doc-section">
+          <h3>5.1 Canonical Schema</h3>
+          <p>Each evidence record is represented as a JSON object conforming to the QODIQA Evidence Schema v1.0. The schema is published as part of the QODIQA standard corpus and is referenced by SHA-256 content hash in each evidence record's metadata block. This self-referential schema pinning ensures that the schema version used to produce a record is unambiguously identifiable, regardless of subsequent schema revisions.</p>
+          <p>The canonical schema defines a two-part structure: a mandatory metadata envelope and a mandatory payload body. The metadata envelope contains fields common to all event classes. The payload body is event-class-specific and contains the fields defined in the Audit Event Taxonomy.</p>
+
+          <span class="code-label">Canonical Evidence Record Structure</span>
+          <pre><code>{
+  "qodiqa_schema_version": "1.0",
+  "qodiqa_schema_hash":    "&lt;SHA-256 hash of QODIQA-EVIDENCE-SCHEMA-v1.0&gt;",
+  "metadata": {
+    "event_id":           "&lt;UUID v4&gt;",
+    "event_class":        "&lt;canonical event class identifier&gt;",
+    "transaction_id":     "&lt;UUID v4&gt;",
+    "timestamp_utc":      "&lt;ISO 8601 UTC timestamp, nanosecond precision&gt;",
+    "log_sequence_num":   &lt;monotonic integer, unique within log partition&gt;,
+    "prev_event_hash":    "&lt;SHA-256 of canonical serialization of preceding record&gt;",
+    "producer_id":        "&lt;stable identifier of the QODIQA subsystem instance&gt;",
+    "producer_signature": "&lt;ECDSA-P256 signature over this record's canonical form&gt;"
+  },
+  "payload": {
+    // event-class-specific fields as defined in Section 4
+  }
+}</code></pre>
+        </div>
+
+        <div id="s5-2" class="doc-section">
+          <h3>5.2 Field-Level Definitions</h3>
+          <p>All timestamp fields use ISO 8601 extended format in the UTC timezone with nanosecond precision. The format is: <code>YYYY-MM-DDTHH:MM:SS.nnnnnnnnnZ</code>. Timestamps that do not conform to nanosecond precision are not accepted by the QODIQA audit log ingestion interface.</p>
+          <p>All hash fields contain the hexadecimal encoding of a SHA-256 digest, lowercase, without prefix, exactly 64 characters in length. Hash fields that contain uppercase characters, prefix notation such as <code>sha256:</code>, or incorrect length are rejected.</p>
+          <p>All signature fields contain the Base64url encoding of an ECDSA-P256 signature over the canonical serialization of the record, as defined in Section 5.3. Signatures are computed after all other fields in the record have been finalized. The producer_signature field is excluded from the data over which the signature is computed; it contains the result of that computation.</p>
+          <p>All UUID fields conform to RFC 4122 version 4 format. UUIDs are represented as lowercase hyphenated strings. UUIDs generated by the QODIQA system must exhibit cryptographically adequate randomness and must not be predictable or sequential in a way that would permit pre-commitment attacks.</p>
+        </div>
+
+        <div id="s5-3" class="doc-section">
+          <h3>5.3 Deterministic Serialization</h3>
+          <p>The canonical serialization of a QODIQA evidence record is a deterministic JSON encoding produced according to the following rules, in order: all object keys are sorted lexicographically in ascending byte order; all string values are encoded as UTF-8; no insignificant whitespace is included; all floating-point values are expressed in their shortest representation that round-trips; boolean values are lowercase <code>true</code> or <code>false</code>; null values are expressed as <code>null</code>; array element order is preserved as specified in the schema.</p>
+          <p>Deterministic serialization is the prerequisite for reproducible hash computation and signature verification. Any deviation from these rules produces a different serialization, a different hash, and an invalid signature. Implementations must validate that their serialization produces byte-identical output for a given record structure before being considered conforming.</p>
+          <p>The canonical serialization specification is not subject to interpretation. It is a precise algorithmic procedure. Implementations must reference the QODIQA Canonical Serialization Test Vector Suite, distributed with the standard corpus, to validate their serialization behavior before deployment.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Cryptographic Integrity Model</h2>
+
+        <p>The cryptographic integrity model specifies the mechanisms by which QODIQA evidence records are bound together into a tamper-evident chain and individually signed to provide non-repudiation. Cryptographic integrity is not an optional hardening measure. It is a structural property of the audit subsystem and a prerequisite for any verification or certification claim.</p>
+
+        <div id="s6-1" class="doc-section">
+          <h3>6.1 Hash Chaining</h3>
+          <p>Each evidence record includes the SHA-256 hash of the immediately preceding record in the audit log partition as the value of the <code>prev_event_hash</code> field. This hash chain binds the sequence of records such that any modification, insertion, or deletion of a record invalidates the hashes of all subsequent records. The chain is broken at the log partition boundary; the genesis record of each partition contains <code>null</code> in the <code>prev_event_hash</code> field.</p>
+          <p>Hash chaining provides tamper detection at the log level. It does not, by itself, prevent tampering; it ensures that tampering is detectable. The detection capability depends on the verifier having access to at least one authentic hash value, which is provided by the external anchoring mechanism described in Section 6.4.</p>
+
+          <span class="code-label">Hash Chain Verification Procedure</span>
+          <pre><code>for each record R[i] in partition where i > 0:
+  expected_prev_hash = SHA-256(canonical_serialize(R[i-1]))
+  assert R[i].metadata.prev_event_hash == expected_prev_hash,
+    "Chain integrity failure at position i: expected hash does not match"</code></pre>
+        </div>
+
+        <div id="s6-2" class="doc-section">
+          <h3>6.2 Tamper-Evidence Guarantees</h3>
+          <p>The hash chain provides a strong tamper-evidence guarantee: any modification to any record in a partition makes the chain verifiably inconsistent from the point of modification forward. This guarantee holds under the assumption that the attacker cannot recompute valid SHA-256 hashes faster than the system appends new records.</p>
+          <p>The tamper-evidence guarantee does not extend to: truncation of the log from the end; suppression of records prior to their commitment; or replacement of the entire partition with a freshly constructed chain. These attack vectors are addressed by external anchoring and integrity monitoring, described below.</p>
+        </div>
+
+        <div id="s6-3" class="doc-section">
+          <h3>6.3 Signing Requirements</h3>
+          <p>Each evidence record is individually signed by the QODIQA Enforcement Gateway's signing key using ECDSA with the P-256 curve and SHA-256 as the hash function. The signature is computed over the canonical serialization of the complete record, excluding the <code>producer_signature</code> field itself.</p>
+          <p>The signing key must be an asymmetric key held within a hardware security module or equivalent trusted execution environment. Software-only key storage does not satisfy this requirement for production deployments. The corresponding public key must be published through the QODIQA Certification Registry under the deploying organization's certified entry. Key rotation must follow the key management procedures specified in the QODIQA Security and Cryptographic Profile.</p>
+          <p>Signatures must be verified before any evidence record is accepted by the audit log ingestion interface. Records that fail signature verification are rejected and the rejection is itself recorded as a system integrity event.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Architectural Constraint — Signing Key Isolation</div>
+            <p>The ECDSA-P256 signing key used to produce evidence record signatures must be held within a hardware security module or equivalent trusted execution environment that is physically and logically isolated from the AI inference path. Any implementation that stores the signing key in software-accessible memory reachable from the AI inference path is non-conformant. Key exfiltration from this environment must be architecturally impossible, not merely operationally prevented.</p>
+          </div>
+        </div>
+
+        <div id="s6-4" class="doc-section">
+          <h3>6.4 Optional External Anchoring</h3>
+          <p>Implementations may optionally anchor the audit log to an external tamper-evident structure, such as a Merkle tree whose root is periodically published to an immutable external record, a transparency log service, or a distributed ledger. External anchoring provides tamper-evidence guarantees that extend beyond the organizational boundary and are verifiable by parties who do not have access to the QODIQA system itself.</p>
+          <p>When external anchoring is employed, the anchor reference must be included in the log partition metadata and associated with the range of records covered by the anchor. Anchoring does not replace the hash chain or individual record signatures; it supplements them with an additional, externally verifiable integrity proof.</p>
+          <p>The use of external anchoring is strongly recommended for deployments subject to regulatory audit, cross-organizational enforcement, or third-party certification. Anchoring frequency should be calibrated to the acceptable window of undetected tampering for the deployment context.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Append-Only Audit Log Architecture</h2>
+
+        <p>The audit log is the durable storage substrate for QODIQA evidence records. Its architectural properties are as important as the records it contains. An audit log that permits modification, reordering, or deletion of records provides no stronger guarantees than a mutable database, regardless of the cryptographic protections applied to individual records.</p>
+
+        <div id="s7-1" class="doc-section">
+          <h3>7.1 Strict Append-Only Behavior</h3>
+          <p>The audit log must expose only append operations to the components that write evidence records. Read and append operations may be available to authorized consumers. Update, delete, and truncate operations must not be exposed through any interface, including administrative interfaces, backup and restore procedures, and emergency access paths.</p>
+          <p>Implementations must document how append-only behavior is enforced at the storage layer and must demonstrate that no code path within the QODIQA system or its dependencies can produce a mutation of committed records. This documentation is required as part of the QODIQA Certification Framework conformance evidence package.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Architectural Constraint</div>
+            <p>The audit log storage implementation must enforce append-only semantics at the hardware or operating-system level, or through a trusted intermediary service that provides equivalent guarantees. Application-level enforcement of append-only behavior is insufficient and does not satisfy this requirement.</p>
+          </div>
+        </div>
+
+        <div id="s7-2" class="doc-section">
+          <h3>7.2 Ordering Guarantees</h3>
+          <p>Records within a log partition must be ordered by their monotonic timestamp and log sequence number. The log sequence number is a monotonically increasing integer, unique within a partition, assigned at the time of record commitment. The combination of partition identifier and log sequence number provides a globally unique, stable position reference for each record.</p>
+          <p>The ordering guarantee requires that the audit log ingestion interface reject records with timestamps or sequence numbers that violate monotonicity. Out-of-order submissions, whether due to clock skew, network reordering, or operational errors, must be rejected and the rejection recorded as a system integrity event. Any implementation that accepts out-of-order records without rejection is non-conformant.</p>
+        </div>
+
+        <div id="s7-3" class="doc-section">
+          <h3>7.3 Replay Consistency</h3>
+          <p>The audit log must support deterministic replay: given the same sequence of evidence records, any compliant QODIQA verifier must produce the same verification result. Replay consistency requires that all state referenced by evidence records, including policy versions and consent state versions, remain available and immutable for as long as the records that reference them are retained.</p>
+          <p>Implementations must maintain version-pinned copies of all policy and consent state artifacts referenced by audit records. These copies must be stored in an immutable object store and must not be subject to garbage collection, compaction, or expiration policies that would render historical records unverifiable.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Evidence Retrieval and Verification</h2>
+
+        <p>The QODIQA audit subsystem must provide a retrieval interface that enables authorized parties to access evidence records and perform verification operations. The retrieval interface is read-only. It must not expose any operation that could modify, reorder, or delete records.</p>
+
+        <div id="s8-1" class="doc-section">
+          <h3>8.1 Evidence Access Model</h3>
+          <p>Access to evidence records is governed by a role-based authorization model that is separate from, and independent of, the QODIQA Enforcement Gateway's authorization model. The audit subsystem must not process its own access requests through the Enforcement Gateway; doing so would create a circular dependency that could compromise audit completeness.</p>
+          <p>Three access roles are defined. The Audit Reader role provides read access to individual records by event_id or transaction_id. The Partition Verifier role provides read access to complete partitions and the metadata necessary for hash chain verification. The Certification Auditor role provides read access to all evidence and referenced artifacts necessary to perform a complete conformance audit.</p>
+          <p>Access to evidence records containing consent subject references must be controlled such that only parties with a legitimate audit purpose can retrieve records associated with a specific subject. General-purpose search and retrieval interfaces must not permit enumeration of consent subject references.</p>
+        </div>
+
+        <div id="s8-2" class="doc-section">
+          <h3>8.2 Verification Flows</h3>
+          <p>Evidence verification consists of two distinct operations that may be performed independently or in combination. Record verification confirms that a specific evidence record is authentic, unmodified, and was produced by the QODIQA system. Chain verification confirms that a sequence of evidence records forms an unbroken, tamper-evident chain.</p>
+          <p>Record verification proceeds as follows: retrieve the evidence record by event_id; retrieve the signing public key associated with the producer_id at the record's timestamp; compute the canonical serialization of the record excluding the producer_signature field; verify the ECDSA-P256 signature against the serialization using the retrieved public key; confirm that the timestamp falls within the validity period of the signing key certificate.</p>
+          <p>Chain verification proceeds as follows: retrieve all records in the partition ordered by log_sequence_num; for each record at position i greater than zero, compute SHA-256 of the canonical serialization of the record at position i minus one; confirm that the computed hash matches the prev_event_hash field of the record at position i; report any mismatch as a chain integrity failure with the position and the two records involved.</p>
+        </div>
+
+        <div id="s8-3" class="doc-section">
+          <h3>8.3 Third-Party Validation Capability</h3>
+          <p>A conforming QODIQA implementation must support third-party validation without requiring the validator to have operational access to the QODIQA system. Third-party validation is enabled by the combination of: the complete evidence record, including all referenced artifact hashes; the published signing public keys of the QODIQA deployment; the immutable copies of all policy and consent state versions referenced by the record; and, if external anchoring is employed, the anchor proof for the relevant partition range.</p>
+          <p>Third-party validators must be able to perform both record verification and chain verification using only these artifacts. A QODIQA deployment that requires validator access to live system APIs to complete verification does not satisfy the third-party validation requirement.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Failure Modes and Audit Gaps</h2>
+
+        <p>The QODIQA audit subsystem must be designed for failure. System components fail. Networks partition. Storage substrates become temporarily unavailable. The design question is not whether failures will occur but what the system's behavior must be when they do. This section specifies the required failure behavior for the audit subsystem and defines how gaps in audit coverage must be detected, recorded, and reported.</p>
+
+        <div class="doc-section">
+          <h3>Missing Logs</h3>
+          <p>A missing log is defined as the absence of one or more expected evidence records for enforcement events that are known to have occurred. Missing logs may result from audit subsystem failures, storage failures, record ingestion rejections, or software defects. In all cases, the absence of an expected record is itself an audit-significant event that must be recorded and reported.</p>
+          <p>The QODIQA audit subsystem must implement continuous completeness monitoring that detects gaps in the log sequence number series within each partition. Detected gaps trigger an automatic integrity alert and, where the gap is attributable to a known failure, a gap record is appended to the log documenting the nature and extent of the missing coverage.</p>
+
+          <div class="decision-block">
+            <strong>Required Behavior — Missing Log Response</strong>
+            <ul>
+              <li>Detect gaps in log sequence numbers within 60 seconds of commitment of the first record following the gap.</li>
+              <li>Emit a Gap Notification event documenting the partition identifier, the sequence number range of the gap, the timestamp of detection, and the best available explanation for the gap.</li>
+              <li>Escalate unresolved gaps to the designated integrity monitoring function within the implementation's defined escalation window.</li>
+              <li>Mark all enforcement decisions within the gap range as having unverifiable audit coverage in all subsequent audit and certification reports.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="doc-section">
+          <h3>Corruption Scenarios</h3>
+          <p>Corruption of an evidence record is detected through hash chain verification and individual record signature verification. When corruption is detected, the corrupted record and all subsequent records in the partition must be flagged. The original, pre-corruption content of records cannot be recovered from the audit log itself; recovery requires resort to external backup or anchor proofs.</p>
+          <p>Implementations must maintain isolated, cryptographically protected backup copies of evidence records that are not reachable through the same administrative paths as the primary audit log. Backup copies must be verified on a scheduled basis to ensure they remain uncorrupted and complete.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Partial Evidence</h3>
+          <p>Partial evidence occurs when an enforcement transaction produces some but not all of its expected events. For example, an EVT-001 record may exist without a corresponding EVT-004 or EVT-005 record, indicating that the transaction did not reach a terminal state. Partial evidence records are retained in the audit log and flagged as incomplete transactions.</p>
+          <p>Incomplete transactions are ambiguous from an audit perspective: they demonstrate that an enforcement attempt was made but do not establish the outcome. Implementations must report incomplete transactions in audit summaries and must not treat them as authorization evidence for either direction.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Required Fail-Closed Behavior</h3>
+          <p>When the audit subsystem is unavailable or unable to commit a new evidence record, the Enforcement Gateway must deny all pending enforcement requests. The Gateway must not issue authorization decisions that cannot be simultaneously recorded as evidence. This fail-closed behavior is absolute and cannot be overridden by operational policy, service level agreements, or administrative instruction.</p>
+          <p>The fail-closed requirement means that audit subsystem availability is on the critical path for AI system operation. Implementations must design the audit subsystem for high availability commensurate with the availability requirements of the AI systems it serves. Single-point-of-failure architectures in the audit path are incompatible with the QODIQA reliability standard.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Privacy and Data Minimization</h2>
+
+        <p>The QODIQA audit subsystem operates at the intersection of accountability and privacy. Comprehensive audit records are necessary for verifiable enforcement; comprehensive records of data processing activities can themselves constitute privacy risks if they contain personal information. The privacy and data minimization requirements in this section resolve this tension through a set of structural constraints on what the audit subsystem records and how those records are handled.</p>
+
+        <div class="doc-section">
+          <h3>What Is Logged</h3>
+          <p>Evidence records must contain sufficient information to enable independent verification of the enforcement decision. This includes: the intent declaration structure, expressed in terms of purpose, scope, and duration categories, without raw data content; the consent subject reference, expressed as an opaque, non-reversible identifier that does not encode personal information; the consent resolution result and the attributes that determined it, without including the raw consent record content; and the enforcement decision and its basis, without including the content of the AI inference request or response.</p>
+          <p>The audit record documents the authorization event, not the data processing that the authorization event permits or denies. The content of the AI inference, the personal data processed, and the model outputs are outside the scope of the audit log and must not be included in evidence records.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>What Is Not Logged</h3>
+          <p>The following categories of information must never appear in QODIQA evidence records under any circumstances: raw personal data of any kind; AI model inputs and outputs; consent subject identifiers that can be linked to natural persons without access to a separately held mapping; data category labels that, in combination, constitute a re-identification risk; and system credentials, API keys, or internal network addresses.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Redaction Constraints</h3>
+          <p>Redaction of evidence records after commitment is prohibited by the immutability principle. Implementations must ensure that records are produced in compliant form at the time of generation. There is no post-commitment redaction mechanism, and no post-commitment redaction mechanism may be implemented.</p>
+          <p>If an evidence record is inadvertently produced containing non-compliant content, the appropriate response is to flag the record as containing a data quality defect, record the nature of the defect in a supplementary integrity event, and investigate the root cause to prevent recurrence. The record itself must not be modified, deleted, or withheld from authorized audit access.</p>
+        </div>
+
+        <div class="section-note">Note: Data minimization requirements in this specification apply to the QODIQA audit subsystem specifically. Broader data protection obligations applicable to the deploying organization and the AI systems operating under QODIQA governance are outside the scope of this document and must be addressed through applicable regulatory frameworks.</div>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Integration with the Certification Framework</h2>
+
+        <p>The QODIQA Certification Framework defines the conditions under which a QODIQA deployment may be certified as conformant with the standard corpus. The audit and evidence model is directly integrated with the certification framework: evidence records are the primary compliance artifacts, and the ability of a deployment to produce, preserve, and make verifiable its evidence records is a prerequisite for certification.</p>
+
+        <div class="doc-section">
+          <h3>Audit as Compliance Artifact</h3>
+          <p>Certification assessors evaluating a QODIQA deployment for conformance will rely on the audit log as the authoritative record of system behavior during the assessment period. The assessor must be able to independently verify a representative sample of enforcement decisions by performing record verification and chain verification as defined in Section 8. A deployment that cannot support this verification process cannot be certified.</p>
+          <p>The completeness of the audit log is itself a conformance criterion. Deployments that exhibit unexplained gaps in their enforcement record, incomplete transactions without corresponding explanatory integrity events, or chain integrity failures that cannot be accounted for by documented system events will receive a qualified or conditional certification status.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Evidence Retention Requirements</h3>
+          <p>Evidence records must be retained for a minimum retention period defined by the QODIQA Certification Framework and, where applicable, by the regulatory requirements of the jurisdiction in which the deployment operates. The minimum QODIQA retention period is seven years from the date of record commitment. Retention does not permit archival in a form that would degrade verification capability; all referenced artifacts must remain available for the full retention period.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Audit-Driven Conformance Reporting</h3>
+          <p>Deploying organizations may generate automated conformance reports from the audit log that summarize enforcement activity, consent resolution rates, policy application patterns, and gap metrics over a specified period. These reports, when accompanied by the underlying evidence records and verification proofs, constitute the primary documentary basis for certification renewal and regulatory reporting.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Implementation Constraints</h2>
+
+        <p>The audit and evidence model imposes real constraints on the systems that implement it. These constraints are not theoretical; they have direct implications for system latency, storage capacity, and operational throughput. This section provides implementation guidance intended to help deploying organizations plan conformant implementations without introducing unacceptable operational overhead.</p>
+
+        <div class="doc-section">
+          <h3>Latency Impact</h3>
+          <p>Evidence generation occurs on the critical path of the enforcement decision. The audit subsystem must produce, sign, and commit a complete evidence record before the Enforcement Gateway returns its decision to the calling system. The latency budget for evidence generation is therefore bounded by the latency requirements of the overall enforcement transaction.</p>
+          <p>QODIQA specifies a maximum evidence generation latency target of 5 milliseconds at the 99th percentile under sustained production load. This target assumes a co-located audit subsystem with local HSM access. Deployments that require network-remote audit log infrastructure must account for network latency in their latency budget and may need to design the audit path accordingly, for example through batched signing with individual pre-commitment record locking.</p>
+          <p>Implementations must monitor evidence generation latency continuously and alert when the 99th percentile exceeds 5 milliseconds. Sustained latency exceedance is a performance non-conformance that must be addressed through architectural remediation, not latency budget adjustment.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Storage Constraints</h3>
+          <p>Evidence records are structured JSON objects. A typical enforcement transaction produces five event records with a combined uncompressed size in the range of 4 to 12 kilobytes, depending on policy complexity and evaluation trace depth. At high enforcement volumes, storage accumulation can be substantial.</p>
+          <p>Storage planning must account for the seven-year minimum retention requirement. At an enforcement rate of 10,000 transactions per second, the uncompressed evidence record volume is approximately 360 gigabytes per day, or approximately 920 terabytes over seven years before compression. Compression ratios of 4:1 to 8:1 are achievable on structured JSON evidence records, reducing the practical storage requirement to approximately 115 to 230 terabytes for this throughput profile. Storage estimates must be revised for each deployment based on actual enforcement rates and policy complexity.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Throughput Considerations</h3>
+          <p>The audit log ingestion interface must sustain throughput commensurate with the peak enforcement rate of the deployment, with sufficient headroom to absorb burst traffic without evidence loss. Log ingestion throughput must be tested under peak load conditions as part of the pre-production conformance validation process.</p>
+          <p>Hash chain computation and signature verification at high throughput are computationally intensive operations. Implementations must benchmark their cryptographic processing capacity against their expected enforcement rates and provision sufficient compute resources to avoid cryptographic operations becoming the throughput bottleneck. Parallel verification pipelines are permitted for read operations, but write operations must maintain strict sequential ordering within each partition to preserve hash chain integrity.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Residual Risk and Non-Coverage</h2>
+
+        <p>This specification defines a rigorous audit and evidence model that provides strong verifiability guarantees within its defined scope. It does not provide, and does not claim to provide, universal guarantees against all possible audit failures or all possible modes of system compromise. This section explicitly characterizes the residual risks and the limitations of the QODIQA audit model.</p>
+
+        <div class="doc-section">
+          <h3>What Audit Does Not Guarantee</h3>
+          <p>The QODIQA audit model guarantees that enforcement decisions, once made and recorded, are preserved with verifiable integrity and cannot be silently altered or suppressed. It does not guarantee the correctness of the enforcement decisions themselves. If the policy or consent state inputs to the Enforcement Gateway are corrupted, incomplete, or fraudulently constructed, the audit record will faithfully document an incorrect decision without being able to detect the incorrectness of the inputs.</p>
+          <p>The audit model does not provide coverage for enforcement events that are entirely suppressed before reaching the audit subsystem. A compromised Enforcement Gateway that issues authorization decisions without triggering the audit path would produce no evidence records and would therefore produce no detectable audit gap until the absence of records was noticed through external means. Mitigating this risk requires architectural controls at the integration boundary, not audit system controls.</p>
+          <p>The audit model does not provide coverage for the behavior of AI systems operating downstream of an authorization decision. Once the Enforcement Gateway issues an ALLOW decision, the audit subsystem's jurisdiction ends. If the authorized AI system acts outside the scope of the authorization, that deviation occurs in a space that is not monitored by the QODIQA audit subsystem.</p>
+        </div>
+
+        <div class="doc-section">
+          <h3>Explicit Limitations</h3>
+          <p>The cryptographic integrity model provides tamper-evidence guarantees that depend on the security of the ECDSA-P256 signature scheme and SHA-256 hash function. Both are considered secure against current and near-term classical computing adversaries. The model does not provide quantum-resistant security guarantees. Organizations operating in threat environments where quantum adversaries are a credible concern should consult the QODIQA Security and Cryptographic Profile for guidance on migration to post-quantum cryptographic primitives.</p>
+          <p>The audit model provides a record of what the system decided; it does not provide a record of why human operators made the policy and consent configuration choices that led to those decisions. The institutional accountability for those choices rests with the humans and organizations that govern the QODIQA deployment, not with the audit subsystem.</p>
+          <p>Finally, the usefulness of the audit record is contingent on the operational practices of the deploying organization. An audit log that is never examined, whose integrity is never verified, and whose evidence is never presented to accountable parties provides no practical accountability benefit, regardless of its technical conformance. The QODIQA audit model provides the infrastructure for accountability; whether that infrastructure is used effectively is an organizational governance question outside the scope of this specification.</p>
+        </div>
+
+        <div class="section-note">This document specifies the QODIQA Audit and Evidence Generation Model as a normative component of the QODIQA standard corpus. It defines required behaviors, structural properties, and implementation constraints. It does not constitute legal advice, regulatory guidance, or a guarantee of compliance with any specific legal framework. Deploying organizations remain responsible for ensuring that their implementations satisfy applicable legal and regulatory obligations in their respective jurisdictions.</div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a core normative specification of the QODIQA standard corpus. It specifies the Audit and Evidence Generation Model for deterministic runtime consent enforcement: the principles, event taxonomy, evidence structure, cryptographic integrity mechanisms, log architecture, retrieval and verification procedures, failure behavior, privacy constraints, certification integration, implementation constraints, and residual risk characterization that together define the QODIQA audit subsystem.</p>
+
+          <p>This document is co-normative with the QODIQA Core Standard and the QODIQA Reference Architecture. An implementation that does not conform to this document does not conform to the QODIQA standard, regardless of its conformance to other corpus documents.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-AUDIT-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Audit and Evidence Generation Model for Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Audit Principles, Evidence Structure, and Cryptographic Integrity for QODIQA</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Technical Specification — Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Audit and Evidence Generation Model</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-AUDIT-2026-001</p>
+      <p>Technical Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a conceptual and technical framework and does not constitute legal, regulatory, or operational advice. All architectural principles described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-AUDIT-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- IntersectionObserver ScrollSpy ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract',
+    's1','s1-1','s1-2','s1-3','s1-4',
+    's2','s2-1','s2-2','s2-3','s2-4','s2-5','s2-inv',
+    's3','s3-1','s3-2',
+    's4','s4-1','s4-2','s4-3','s4-4','s4-5',
+    's5','s5-1','s5-2','s5-3',
+    's6','s6-1','s6-2','s6-3','s6-4',
+    's7','s7-1','s7-2','s7-3',
+    's8','s8-1','s8-2','s8-3',
+    's9','s10','s11','s12','s13','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    if (visible.size > 0) {
+      let topId = null;
+      let topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  /* ---- Fallback scroll spy ---- */
+  function fallbackScrollSpy() {
+    let closest = null;
+    let minDistance = Infinity;
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5) {
+        const distance = Math.abs(rect.top);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = sec.id;
+        }
+      }
+    });
+    if (closest) setActive(closest);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    window.addEventListener('scroll', fallbackScrollSpy, { passive: true });
+    fallbackScrollSpy();
+  }
+
+})();
+</script>
+</body>
+</html>

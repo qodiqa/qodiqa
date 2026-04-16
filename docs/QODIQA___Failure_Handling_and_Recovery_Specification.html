@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Formal Enforcement Model — Deterministic Execution Semantics · v1.0</title>
+<meta name="description" content="QODIQA Formal Enforcement Model: Deterministic Execution Semantics v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Formal Enforcement Model — Deterministic Execution Semantics">
+<meta property="og:description" content="Formal specification defining deterministic execution semantics and enforcement invariants for the QODIQA runtime consent enforcement layer.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:       #1A1C20;
+  --ink-2:     #2C2F36;
+  --ink-3:     #3A3F48;
+  --accent:    #7A6A50;
+  --muted:     #6B7280;
+  --rule:      #D6D2CC;
+  --border:    #D4D0CA;
+  --bg:        #F6F4F0;
+  --text:      #1A1C20;
+  --text-2:    #3A3F48;
+  --text-3:    #5A6070;
+  --sidebar-w: 252px;
+  --col:       800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+  --sp-block-v: 14px;
+  --sp-block-h: 20px;
+  --sp-block-m: 12px 0 16px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+.table-ies td:first-child { white-space: nowrap; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   BLOCK SYSTEM — UNIFIED BASE
+   ============================================================ */
+.block-base {
+  padding: var(--sp-block-v) var(--sp-block-h);
+  margin: var(--sp-block-m);
+  border: 1px solid #D2CEC8;
+}
+
+/* KEY PROPERTY */
+.key-prop {
+  background: #F2F0EB;
+  border-left: 3px solid var(--accent);
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* DECISION BLOCK */
+.decision-block {
+  background: #EEEBE6;
+  border-left: 3px solid var(--ink-3);
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* INVARIANT BLOCK */
+.invariant-block {
+  background: #F0EDE8;
+  border: 1px solid #CCC8C2;
+  border-left: 3px solid var(--ink);
+}
+
+.invariant-id {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.invariant-block p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+  color: var(--ink);
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 24px 0;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a { color: var(--accent); text-decoration: none; }
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer   { margin-left: 0; }
+  #content { padding: 36px 48px; }
+  pre      { white-space: pre-wrap; }
+  body     { font-size: 11pt; }
+  h2       { font-size: 16pt; }
+  #cover   { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+
+  .block-base,
+  .key-prop,
+  .decision-block,
+  .invariant-block { padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Formal Enforcement Model<br><span class="italic-part">Deterministic Execution Semantics</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Formal Specification &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Formal definition of execution semantics, state machine constraints, decision invariants, and non-compliance conditions for the runtime enforcement layer.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Scope</a>
+      <a class="nav-item" href="#s2">2. Relationship to Corpus</a>
+      <a class="nav-item" href="#s3">3. Deterministic Execution Model</a>
+      <a class="nav-item" href="#s4">4. Canonical State Machine</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Defined States</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Allowed Transitions</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Prohibited Transitions</a>
+      <a class="nav-item" href="#s5">5. Decision Function</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Formal Definition</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Input Constraints</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Output Constraints</a>
+      <a class="nav-item" href="#s6">6. Execution Flow Constraints</a>
+      <a class="nav-item" href="#s7">7. Enforcement Invariants</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Consent Invariants</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Audit Invariants</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Sequencing Invariants</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Decision Invariants</a>
+      <a class="nav-item" href="#s8">8. Invalid Execution States</a>
+      <a class="nav-item" href="#s9">9. Non-Compliance Conditions</a>
+      <a class="nav-item" href="#s10">10. Cross-Document Traceability</a>
+      <a class="nav-item" href="#s11">11. Enforcement Implications</a>
+      <a class="nav-item" href="#s12">12. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document formalizes a deterministic execution model for runtime consent enforcement, defining a closed state machine, a total decision function, and invariant-based compliance constraints.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Scope</h2>
+
+        <p>This document defines formal execution semantics for the runtime consent enforcement layer. Its purpose is to eliminate ambiguity in the execution model by specifying all permitted states, transitions, decision logic, and enforcement invariants in a binary, testable, and auditable form.</p>
+
+        <p>This document does not modify, override, or reinterpret any existing QODIQA specification. It provides formalization, constraint definition, and deterministic execution semantics only.</p>
+
+        <p>The scope of this document is strictly limited to the execution semantics layer. This document SHALL NOT be construed to alter the behavioral requirements, architectural definitions, governance structure, or certification criteria established in other QODIQA corpus documents. All normative content herein is additive and subordinate to the QODIQA Core Standard.</p>
+
+        <div class="block-base decision-block">
+          <strong>Scope Boundary</strong>
+          <p>This document defines: execution states, state transitions, decision function constraints, enforcement invariants, and non-compliance classification. This document does not define: consent capture mechanisms, policy authoring, cryptographic protocols, certification criteria, or governance procedures.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>Non-Goals</strong>
+          <p>This document does not define consent acquisition mechanisms, user interfaces, policy authoring systems, or cryptographic primitives. Its scope is strictly limited to execution semantics.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Relationship to QODIQA Corpus</h2>
+
+        <p>This document is a normative extension to the QODIQA corpus. It formalizes the execution semantics of enforcement logic that is defined in substantive terms across the following corpus documents. All definitions and constraints herein are derived from and consistent with those documents.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1 — Corpus Document Relationships</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Document</th>
+                <th>Identifier</th>
+                <th>Relationship to This Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Core Standard</td>
+                <td>QODIQA-CORE-2026-001</td>
+                <td>Primary normative authority. This document formalizes its enforcement logic.</td>
+              </tr>
+              <tr>
+                <td>Reference Architecture</td>
+                <td>QODIQA-RA-2026-001</td>
+                <td>Defines the architectural components whose execution semantics are specified herein.</td>
+              </tr>
+              <tr>
+                <td>Implementation Playbook</td>
+                <td>QODIQA-IMPL-2026-001</td>
+                <td>Provides implementation guidance consistent with the execution model defined herein.</td>
+              </tr>
+              <tr>
+                <td>68-Point Enforcement Framework</td>
+                <td>QODIQA-SPEC-68P-V3-2026</td>
+                <td>Enumerates enforcement points that SHALL conform to the execution semantics herein.</td>
+              </tr>
+              <tr>
+                <td>Conformance Test Suite</td>
+                <td>QODIQA-CTSS-2026-001</td>
+                <td>Test criteria SHALL be derived from the invariants and constraints defined herein.</td>
+              </tr>
+              <tr>
+                <td>Security and Cryptographic Profile</td>
+                <td>QODIQA-SCP-2026-001</td>
+                <td>Defines integrity requirements for state and audit artifacts referenced herein.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>In the event of apparent conflict between this document and any other QODIQA corpus document, the QODIQA Core Standard SHALL take precedence. All conflicts SHALL be reported to the QODIQA Governance Authority for resolution.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Deterministic Execution Model</h2>
+
+        <p>The enforcement layer SHALL operate as a deterministic finite-state machine. Every execution path through the enforcement layer SHALL be fully defined, fully traceable, and free of implicit or undefined behavior.</p>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Determinism Requirement</div>
+          <p>For any given input triple (Request, ConsentState, PolicySet), the enforcement layer SHALL produce exactly one output. No execution path SHALL exist that produces more than one output, no output, or a probabilistic output for identical inputs.</p>
+        </div>
+
+        <p>The enforcement layer SHALL NOT contain ambiguous execution paths. An ambiguous execution path is defined as any path whose outcome depends on factors not present in the explicit input triple (Request, ConsentState, PolicySet) at the moment of evaluation.</p>
+
+        <p>Implicit behavior is defined as any system behavior that is not explicitly specified by a defined state, a defined transition, or a defined constraint. Implicit behavior is prohibited. Every behavior of the enforcement layer SHALL be the direct result of an explicitly defined execution step.</p>
+
+        <p>The enforcement layer SHALL NOT defer evaluation to external components during the active decision path. All inputs required for evaluation SHALL be fully resolved prior to the initiation of the <code>PolicyEvaluation</code> state. Any failure to resolve required inputs SHALL result in an immediate transition to the <code>Deny</code> decision state.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Canonical State Machine</h2>
+
+        <p>The enforcement layer SHALL implement precisely the state machine defined in this section. No implementation SHALL add states, remove states, merge states, or reorder states relative to the canonical definition below.</p>
+
+        <span class="code-label">State Machine — Formal Definition</span>
+        <pre><code>StateMachine = (S, T, s0, F)
+
+where:
+  S  := {S1, S2, S3, S4a, S4b, S5}
+  T  := set of allowed transitions defined in Table 3
+  s0 := S1 (initial state)
+  F  := {S5} (terminal state)</code></pre>
+
+        <!-- Section 4.1 -->
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Defined States</h3>
+
+          <p>The canonical state machine consists of exactly five (5) states. All five states are mandatory. No state is optional.</p>
+
+          <div class="table-wrapper">
+            <span class="table-caption">Table 2 — Canonical Execution States</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>State ID</th>
+                  <th>State Name</th>
+                  <th>Classification</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>S1</td>
+                  <td>RequestReceived</td>
+                  <td>Entry State</td>
+                  <td>The enforcement layer has received a complete, well-formed execution request. No evaluation has commenced.</td>
+                </tr>
+                <tr>
+                  <td>S2</td>
+                  <td>ConsentLookup</td>
+                  <td>Intermediate State</td>
+                  <td>The enforcement layer is resolving the current consent state for the declared subject, purpose, and scope. No policy evaluation has commenced.</td>
+                </tr>
+                <tr>
+                  <td>S3</td>
+                  <td>PolicyEvaluation</td>
+                  <td>Intermediate State</td>
+                  <td>The enforcement layer is evaluating the applicable policy set against the resolved consent state and the declared request parameters.</td>
+                </tr>
+                <tr>
+                  <td>S4a</td>
+                  <td>Decision: Allow</td>
+                  <td>Terminal Decision State</td>
+                  <td>The enforcement layer has determined that the request satisfies all consent and policy requirements. Execution MAY proceed.</td>
+                </tr>
+                <tr>
+                  <td>S4b</td>
+                  <td>Decision: Deny</td>
+                  <td>Terminal Decision State</td>
+                  <td>The enforcement layer has determined that the request does not satisfy one or more consent or policy requirements. Execution MUST NOT proceed.</td>
+                </tr>
+                <tr>
+                  <td>S5</td>
+                  <td>AuditCommit</td>
+                  <td>Terminal Audit State</td>
+                  <td>The enforcement layer has committed an immutable, tamper-evident audit record of the decision, its inputs, and its evaluation context.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 4.2 -->
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Allowed Transitions</h3>
+
+          <p>The following transitions are the complete and exclusive set of permitted state transitions. No transition not listed in this section is permitted.</p>
+
+          <div class="diagram-wrap">
+            <svg viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;min-width:420px;">
+              <defs>
+                <marker id="arrowA" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#7A6A50"/>
+                </marker>
+                <marker id="arrowD" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#B8B0A8"/>
+                </marker>
+              </defs>
+              <rect x="240" y="20" width="200" height="38" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="340" y="44" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S1 · RequestReceived</text>
+              <line x1="340" y1="58" x2="340" y2="82" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <rect x="240" y="82" width="200" height="38" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="340" y="106" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S2 · ConsentLookup</text>
+              <line x1="340" y1="120" x2="340" y2="144" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <text x="356" y="135" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A6A50">ConsentState = Valid</text>
+              <line x1="240" y1="101" x2="120" y2="101" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arrowD)"/>
+              <line x1="120" y1="101" x2="120" y2="240" stroke="#B8B0A8" stroke-width="1.2"/>
+              <line x1="120" y1="240" x2="200" y2="240" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arrowD)"/>
+              <text x="50" y="175" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">Consent</text>
+              <text x="50" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">Absent /</text>
+              <text x="50" y="197" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">Invalid</text>
+              <rect x="240" y="144" width="200" height="38" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="340" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S3 · PolicyEvaluation</text>
+              <line x1="340" y1="182" x2="280" y2="220" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <text x="263" y="208" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A6A50">Allow</text>
+              <line x1="340" y1="182" x2="400" y2="220" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arrowD)"/>
+              <text x="384" y="208" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">Deny</text>
+              <rect x="160" y="220" width="160" height="38" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="240" y="244" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S4a · Allow</text>
+              <rect x="360" y="220" width="160" height="38" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+              <text x="440" y="244" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S4b · Deny</text>
+              <line x1="240" y1="258" x2="300" y2="300" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <line x1="440" y1="258" x2="380" y2="300" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arrowD)"/>
+              <rect x="240" y="300" width="200" height="38" rx="2" fill="none" stroke="#3A3F48" stroke-width="1.5"/>
+              <text x="340" y="324" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#22252B">S5 · AuditCommit</text>
+              <text x="340" y="372" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" font-style="italic" fill="#7A8090">All paths terminate at S5. No terminal state is exempt from AuditCommit.</text>
+            </svg>
+            <div class="diagram-caption">Figure 1. Canonical QODIQA enforcement state machine. All permitted transitions are shown. Any transition not depicted is prohibited.</div>
+          </div>
+
+          <div class="table-wrapper">
+            <span class="table-caption">Table 3 — Permitted State Transitions</span>
+            <table>
+              <thead>
+                <tr>
+                  <th>From State</th>
+                  <th>To State</th>
+                  <th>Condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>S1 · RequestReceived</td>
+                  <td>S2 · ConsentLookup</td>
+                  <td>Request is well-formed and complete.</td>
+                </tr>
+                <tr>
+                  <td>S2 · ConsentLookup</td>
+                  <td>S3 · PolicyEvaluation</td>
+                  <td>ConsentState resolves to Valid.</td>
+                </tr>
+                <tr>
+                  <td>S2 · ConsentLookup</td>
+                  <td>S4b · Deny</td>
+                  <td>ConsentState resolves to Absent, Expired, Revoked, or Invalid.</td>
+                </tr>
+                <tr>
+                  <td>S3 · PolicyEvaluation</td>
+                  <td>S4a · Allow</td>
+                  <td>All applicable policy rules evaluate to satisfied.</td>
+                </tr>
+                <tr>
+                  <td>S3 · PolicyEvaluation</td>
+                  <td>S4b · Deny</td>
+                  <td>One or more applicable policy rules evaluate to unsatisfied.</td>
+                </tr>
+                <tr>
+                  <td>S4a · Allow</td>
+                  <td>S5 · AuditCommit</td>
+                  <td>Unconditional. No exception is permitted.</td>
+                </tr>
+                <tr>
+                  <td>S4b · Deny</td>
+                  <td>S5 · AuditCommit</td>
+                  <td>Unconditional. No exception is permitted.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 4.3 -->
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Prohibited Transitions</h3>
+
+          <p>The following transition categories are explicitly and unconditionally prohibited. Any system that implements one or more of these transitions is non-compliant with this specification.</p>
+
+          <ul>
+            <li>Any transition that bypasses <code>ConsentLookup</code> on the path from <code>RequestReceived</code> to <code>PolicyEvaluation</code>.</li>
+            <li>Any transition from <code>RequestReceived</code> directly to <code>PolicyEvaluation</code>, <code>Allow</code>, <code>Deny</code>, or <code>AuditCommit</code>.</li>
+            <li>Any transition from <code>ConsentLookup</code> directly to <code>Allow</code> or <code>AuditCommit</code>.</li>
+            <li>Any transition from <code>PolicyEvaluation</code> directly to <code>AuditCommit</code> without passing through a terminal <code>Decision</code> state.</li>
+            <li>Any transition from <code>Allow</code> or <code>Deny</code> to any state other than <code>AuditCommit</code>.</li>
+            <li>Any cyclic transition that returns a state to a prior position in the sequence.</li>
+            <li>Any parallel transition that places the machine in two states simultaneously.</li>
+            <li>Any transition to an undefined state not listed in Section 4.1.</li>
+          </ul>
+
+          <div class="block-base key-prop">
+            <div class="key-prop-title">Termination Guarantee</div>
+            <p>All execution paths SHALL terminate in a finite number of steps at the AuditCommit state. Infinite execution paths or non-terminating evaluations are strictly prohibited.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Deterministic Decision Function</h2>
+
+        <!-- Section 5.1 -->
+        <div id="s5-1" class="doc-section">
+          <h3>5.1 Formal Definition</h3>
+
+          <p>The enforcement decision function is formally defined as follows:</p>
+
+          <span class="code-label">Decision Function — Formal Definition</span>
+          <pre><code>Decision = f(Request, ConsentState, PolicySet)
+
+where:
+  Request      := { Subject, Purpose, Scope, DataCategory, Timestamp }
+  ConsentState := { Valid | Absent | Expired | Revoked | Invalid }
+  PolicySet    := { P₁, P₂, ..., Pₙ } (immutable snapshot at evaluation time)
+  Decision     := { Allow | Deny }</code></pre>
+
+          <p>The function <code>f</code> is a total function. For every valid combination of (Request, ConsentState, PolicySet), <code>f</code> SHALL produce exactly one element of the set {Allow, Deny}. The function SHALL NOT be partial, probabilistic, or undefined for any input within its specified domain.</p>
+        </div>
+
+        <!-- Section 5.2 -->
+        <div id="s5-2" class="doc-section">
+          <h3>5.2 Input Constraints</h3>
+
+          <p>The following constraints apply to all inputs to the decision function. A request that violates any input constraint SHALL result in an immediate <code>Deny</code> decision without entering <code>PolicyEvaluation</code>.</p>
+
+          <ul>
+            <li>The <code>Request</code> SHALL be complete. A request is complete if and only if all five fields (Subject, Purpose, Scope, DataCategory, Timestamp) are present and non-null.</li>
+            <li>The <code>ConsentState</code> SHALL be resolved prior to the initiation of <code>PolicyEvaluation</code>. An unresolved <code>ConsentState</code> SHALL be treated as <code>Invalid</code>.</li>
+            <li>The <code>PolicySet</code> SHALL be an immutable snapshot captured at the moment <code>PolicyEvaluation</code> commences. The <code>PolicySet</code> SHALL NOT change during evaluation.</li>
+            <li>The <code>PolicySet</code> SHALL NOT be empty. A request evaluated against an empty <code>PolicySet</code> SHALL result in a <code>Deny</code> decision.</li>
+            <li>All inputs SHALL be evaluated from explicit, machine-readable state. No input SHALL be inferred, assumed, or inherited from prior execution contexts.</li>
+          </ul>
+        </div>
+
+        <!-- Section 5.3 -->
+        <div id="s5-3" class="doc-section">
+          <h3>5.3 Output Constraints</h3>
+
+          <p>The decision function output SHALL satisfy the following constraints unconditionally.</p>
+
+          <ul>
+            <li>The output SHALL be exactly one of: <code>Allow</code> or <code>Deny</code>. No other output value is permitted.</li>
+            <li>For identical inputs (Request, ConsentState, PolicySet), the function SHALL produce identical output on every invocation. Non-deterministic output for identical inputs constitutes a non-compliance condition.</li>
+            <li>The output SHALL NOT depend on execution time, invocation count, system load, external network state, or any factor not present in the explicit input triple.</li>
+            <li>The output SHALL NOT be null, undefined, pending, or deferred.</li>
+            <li>The output SHALL be produced in strict sequence following completion of <code>PolicyEvaluation</code>. No asynchronous decision emission is permitted.</li>
+          </ul>
+
+          <div class="block-base decision-block">
+            <strong>Determinism Guarantee</strong>
+            <p>The decision function is strictly deterministic. No entropy source, probabilistic mechanism, or external state dependency SHALL influence the output for identical inputs under any condition.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Execution Flow Constraints</h2>
+
+        <p>The following constraints govern the execution flow of the enforcement layer. Each constraint is absolute and admits no exception.</p>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Strict Sequential Evaluation</div>
+          <p>States SHALL be entered and exited in the sequence defined in Section 4. No state SHALL be entered before its predecessor state has been fully completed and exited.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Stage Skipping</div>
+          <p>No implementation SHALL skip, abbreviate, or combine any defined state. The <code>ConsentLookup</code> state SHALL NOT be skipped under any condition, including prior consent validation, cached consent state, or operator override.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Partial Evaluation</div>
+          <p>Each state SHALL be fully completed before the transition to the subsequent state is initiated. Partial completion of a state is classified as an invalid execution state.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Asynchronous Bypass</div>
+          <p>No asynchronous mechanism SHALL be used to initiate a transition before the current state has completed its defined processing. Asynchronous callbacks, deferred evaluations, and event-driven state bypasses are prohibited within the enforcement execution path.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Fallback Logic</div>
+          <p>No fallback, default-allow, best-effort, or degraded evaluation mode is permitted. When a required input is unavailable, the enforcement layer SHALL immediately produce a <code>Deny</code> decision and proceed to <code>AuditCommit</code>.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No External Dependencies During Evaluation</div>
+          <p>The active decision path from <code>ConsentLookup</code> through <code>AuditCommit</code> SHALL NOT initiate synchronous calls to external systems. All required state SHALL be resolved prior to entering <code>ConsentLookup</code>.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Silent Continuation</div>
+          <p>Any execution error, state resolution failure, or evaluation exception that occurs during the enforcement path SHALL terminate evaluation immediately and produce a <code>Deny</code> decision. Errors SHALL NOT be silently suppressed or deferred.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Failure Semantics</div>
+          <p>Any failure in input resolution, state transition, or evaluation SHALL result in immediate termination of execution and emission of a Deny decision. No retry, fallback, or degraded execution mode is permitted.</p>
+        </div>
+
+        <p class="section-note">This section defines execution constraints in a strictly formal manner. Implementation strategies may vary, provided that all constraints, invariants, and state transition rules remain fully preserved without deviation.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Formal Enforcement Invariants</h2>
+
+        <p>The following invariants are absolute. Each invariant SHALL hold under all conditions, for all requests, across all deployment configurations. No invariant admits an exception, a grace period, or a configuration-dependent override.</p>
+
+        <!-- Section 7.1 -->
+        <div id="s7-1" class="doc-section">
+          <h3>7.1 Consent Invariants</h3>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-01</span>
+            <p>IF ConsentState ≠ Valid THEN Decision = Deny</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-02</span>
+            <p>NO execution path SHALL exist where Decision = Allow AND ConsentState = Absent</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-03</span>
+            <p>NO execution path SHALL exist where Decision = Allow AND ConsentState = Expired</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-04</span>
+            <p>NO execution path SHALL exist where Decision = Allow AND ConsentState = Revoked</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-05</span>
+            <p>NO execution path SHALL exist where Decision = Allow AND ConsentState = Invalid</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-C-06</span>
+            <p>ConsentState SHALL be resolved as an explicit, machine-readable value. ConsentState SHALL NOT be inferred, assumed, or inherited.</p>
+          </div>
+        </div>
+
+        <!-- Section 7.2 -->
+        <div id="s7-2" class="doc-section">
+          <h3>7.2 Audit Invariants</h3>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-01</span>
+            <p>AuditCommit SHALL occur for every Decision, regardless of Decision value.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-02</span>
+            <p>NO execution path SHALL terminate at Decision (Allow or Deny) without subsequent AuditCommit.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-03</span>
+            <p>The AuditCommit record SHALL include: Decision value, ConsentState value, PolicySet snapshot identifier, Request parameters, and evaluation Timestamp.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-04</span>
+            <p>The AuditCommit record SHALL be immutable after commit. Post-commit modification of any audit field is prohibited.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-05</span>
+            <p>AuditCommit SHALL occur synchronously within the same execution context as the Decision. Deferred or asynchronous audit commit is prohibited.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-06</span>
+            <p>Decision SHALL precede AuditCommit in strict execution order.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-A-07</span>
+            <p>Decision and AuditCommit SHALL occur within the same execution context and MUST be atomic.</p>
+          </div>
+
+          <div class="block-base decision-block">
+            <strong>Audit Traceability</strong>
+            <p>Every audit record MUST be uniquely attributable to a single execution instance and MUST allow full reconstruction of the decision context without reliance on external or implicit state.</p>
+          </div>
+        </div>
+
+        <!-- Section 7.3 -->
+        <div id="s7-3" class="doc-section">
+          <h3>7.3 Sequencing Invariants</h3>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-S-01</span>
+            <p>PolicyEvaluation SHALL NOT execute without prior completed ConsentLookup.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-S-02</span>
+            <p>ConsentLookup SHALL NOT execute without prior completed RequestReceived.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-S-03</span>
+            <p>Decision SHALL NOT be emitted without prior completed PolicyEvaluation, except where ConsentState ≠ Valid, in which case Decision = Deny SHALL be emitted immediately upon ConsentLookup completion.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-S-04</span>
+            <p>AuditCommit SHALL NOT execute before Decision has been produced.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-S-05</span>
+            <p>No state in the sequence SHALL execute more than once per request.</p>
+          </div>
+        </div>
+
+        <!-- Section 7.4 -->
+        <div id="s7-4" class="doc-section">
+          <h3>7.4 Decision Invariants</h3>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-01</span>
+            <p>f(Request, ConsentState, PolicySet) = f(Request, ConsentState, PolicySet) for all invocations with identical inputs.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-02</span>
+            <p>Decision SHALL be exactly one of {Allow, Deny}. No other value is a valid decision output.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-03</span>
+            <p>Decision SHALL NOT be null, deferred, or pending.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-04</span>
+            <p>PolicySet SHALL be immutable during PolicyEvaluation. Any modification to PolicySet after the commencement of PolicyEvaluation SHALL constitute a non-compliance condition.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-05</span>
+            <p>An empty PolicySet SHALL produce Decision = Deny.</p>
+          </div>
+
+          <div class="block-base invariant-block">
+            <span class="invariant-id">INV-D-06</span>
+            <p>A malformed or incomplete Request SHALL produce Decision = Deny without entering ConsentLookup.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Invalid Execution States</h2>
+
+        <p>The following execution conditions are classified as non-compliant. Any system that enters or permits any of the following states is non-compliant with this specification. Non-compliant systems SHALL NOT be certified under the QODIQA Certification Framework.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 4 — Invalid Execution State Classification</span>
+          <table class="table-ies">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Invalid State</th>
+                <th>Classification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>IES-01</td>
+                <td>Undefined state transition: any transition not listed in Table 3.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-02</td>
+                <td>Missing evaluation step: any execution that reaches Decision without having completed all prior mandatory states.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-03</td>
+                <td>Partial execution path: any execution that enters a state but does not fully complete it before transitioning.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-04</td>
+                <td>Inconsistent state combination: simultaneous occupancy of two or more states.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-05</td>
+                <td>Decision without AuditCommit: any execution path that terminates at a Decision state without subsequent AuditCommit.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-06</td>
+                <td>ConsentLookup skipped: any execution that transitions from RequestReceived to PolicyEvaluation without completing ConsentLookup.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-07</td>
+                <td>PolicyEvaluation against mutable PolicySet: any evaluation where the PolicySet changes during PolicyEvaluation.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-08</td>
+                <td>Silent fallback: any execution that silently substitutes a default or degraded decision in place of a Deny upon input resolution failure.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-09</td>
+                <td>Asynchronous Decision emission: any Decision produced via asynchronous callback, deferred evaluation, or event-driven bypass of the sequential execution path.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+              <tr>
+                <td>IES-10</td>
+                <td>Re-entry into a completed state: any execution that re-enters a state that has already been completed within the same request lifecycle.</td>
+                <td>NON-COMPLIANT</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 5 — Failure Severity Classification</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Severity Level</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CRITICAL</td>
+                <td>Violations that compromise determinism, audit integrity, or decision correctness. Immediate non-compliance.</td>
+              </tr>
+              <tr>
+                <td>HIGH</td>
+                <td>Violations that affect execution ordering, state transitions, or enforcement guarantees.</td>
+              </tr>
+              <tr>
+                <td>NON-COMPLIANT</td>
+                <td>Any violation of defined invariants or execution constraints.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Non-Compliance Conditions</h2>
+
+        <p>The following conditions constitute explicit non-compliance with this specification. The enumeration below is exhaustive within the scope defined in Section 1. Each condition is independent; satisfaction of all conditions except one does not constitute partial compliance.</p>
+
+        <div class="block-base decision-block">
+          <strong>NC-01 — Absence of Consent Validation</strong>
+          <p>A system is non-compliant if it initiates PolicyEvaluation without having completed a ConsentLookup that resolves ConsentState to an explicit value.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-02 — Non-Deterministic Decision Logic</strong>
+          <p>A system is non-compliant if its decision function produces differing outputs for identical inputs (Request, ConsentState, PolicySet) across any two invocations.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-03 — Skipped Audit Commit</strong>
+          <p>A system is non-compliant if any Decision — Allow or Deny — is produced without a subsequent, complete, and immutable AuditCommit within the same execution context.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-04 — Parallel Inconsistent Execution</strong>
+          <p>A system is non-compliant if it executes two or more concurrent enforcement paths for the same request such that conflicting decisions could be produced or state consistency cannot be guaranteed.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-05 — State Machine Violation</strong>
+          <p>A system is non-compliant if it implements any state transition not listed in Table 3, or if it fails to implement any state listed in Table 2.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-06 — Allow Decision with Invalid ConsentState</strong>
+          <p>A system is non-compliant if it produces Decision = Allow when ConsentState is Absent, Expired, Revoked, or Invalid, under any condition or configuration.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-07 — Mutable PolicySet During Evaluation</strong>
+          <p>A system is non-compliant if the PolicySet is modified, updated, or replaced during the execution of PolicyEvaluation for any active request.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-08 — Implicit or Inferred ConsentState</strong>
+          <p>A system is non-compliant if ConsentState is not resolved from an explicit, machine-readable consent record but is instead inferred from role membership, prior authorization, or assumed context.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-09 — Degraded Evaluation Mode</strong>
+          <p>A system is non-compliant if it operates in any mode that reduces, approximates, or bypasses the full execution sequence defined in Section 4, regardless of the operational justification offered for such a mode.</p>
+        </div>
+
+        <div class="block-base decision-block">
+          <strong>NC-10 — Missing or Incomplete AuditCommit Record</strong>
+          <p>A system is non-compliant if the AuditCommit record for any Decision does not include all fields enumerated in INV-A-03.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Cross-Document Traceability</h2>
+
+        <p>Each major rule and invariant defined in this document is traceable to one or more normative sources within the QODIQA corpus. The following table establishes the primary traceability mappings. Implementors and auditors SHALL use these mappings to verify consistency between this document and the broader corpus.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 6 — Cross-Document Traceability Matrix</span>
+          <table>
+            <thead>
+              <tr>
+                <th>This Document</th>
+                <th>Core Standard</th>
+                <th>Reference Architecture</th>
+                <th>68-Point Framework</th>
+                <th>Conformance Test Suite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>State Machine (4)</td>
+                <td>3 — Enforcement Model</td>
+                <td>4 — Enforcement Layer</td>
+                <td>Points 1–12</td>
+                <td>TC-SM-001 – TC-SM-012</td>
+              </tr>
+              <tr>
+                <td>Decision Function (5)</td>
+                <td>4 — Decision Logic</td>
+                <td>5 — Decision Engine</td>
+                <td>Points 13–24</td>
+                <td>TC-DF-001 – TC-DF-012</td>
+              </tr>
+              <tr>
+                <td>Execution Flow Constraints (6)</td>
+                <td>5 — Execution Requirements</td>
+                <td>6 — Execution Path</td>
+                <td>Points 25–36</td>
+                <td>TC-EF-001 – TC-EF-012</td>
+              </tr>
+              <tr>
+                <td>Consent Invariants (7.1)</td>
+                <td>2 — Consent Requirements</td>
+                <td>3 — Consent Resolution</td>
+                <td>Points 1–6, 37–42</td>
+                <td>TC-CI-001 – TC-CI-006</td>
+              </tr>
+              <tr>
+                <td>Audit Invariants (7.2)</td>
+                <td>6 — Audit Requirements</td>
+                <td>7 — Audit Subsystem</td>
+                <td>Points 43–52</td>
+                <td>TC-AI-001 – TC-AI-005</td>
+              </tr>
+              <tr>
+                <td>Non-Compliance Conditions (9)</td>
+                <td>7 — Compliance Criteria</td>
+                <td>8 — Failure Semantics</td>
+                <td>Points 53–68</td>
+                <td>TC-NC-001 – TC-NC-010</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Where a corpus document has been amended subsequent to the publication date of this specification, the traceability mappings in Table 6 SHALL be reviewed against the amended version. In the event of traceability gaps introduced by amendment, the QODIQA Governance Authority SHALL be notified in accordance with the Change Log and Version Control Protocol (QODIQA-CL-2026-001).</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Enforcement Implications</h2>
+
+        <p>The following enforcement implications are derived directly from the constraints and invariants defined in this document. Each implication is stated as a binding requirement.</p>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Fail-Closed Behavior</div>
+          <p>The enforcement layer SHALL fail closed. A fail-closed system is defined as a system that produces Decision = Deny upon any failure to resolve required inputs, complete any mandatory state, or satisfy any defined invariant. Fail-open behavior — producing Decision = Allow upon failure — is prohibited.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Immediate Termination on Invalid State</div>
+          <p>Upon detection of any invalid execution state enumerated in Section 8, the enforcement layer SHALL immediately terminate evaluation and produce Decision = Deny. Continued evaluation after detection of an invalid state is prohibited.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Degraded Execution</div>
+          <p>No degraded execution mode is permitted. A degraded execution mode is defined as any mode in which one or more mandatory states are abbreviated, skipped, or combined, or in which one or more defined invariants are suspended. Systems SHALL operate in full compliance or SHALL NOT operate.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Silent Fallback</div>
+          <p>Silent fallback is defined as any mechanism that substitutes a default decision for a properly evaluated decision without producing an explicit error, a non-compliance record, and an audit entry. Silent fallback is prohibited in all configurations and deployment modes.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">Mandatory AuditCommit on All Paths</div>
+          <p>AuditCommit is mandatory on all execution paths, including paths that terminate at Decision = Deny due to input failure, state resolution failure, or invariant violation. No execution outcome is exempt from the audit requirement.</p>
+        </div>
+
+        <div class="block-base key-prop">
+          <div class="key-prop-title">No Operator Override of Invariants</div>
+          <p>No configuration, operator instruction, runtime parameter, or deployment-time override SHALL suspend, modify, or disable any invariant defined in Section 7. Invariants are not configurable. They are structural properties of the enforcement layer.</p>
+        </div>
+
+        <p class="section-note">This section does not introduce new architectural components. Its purpose is to state the operational consequences of the invariants and constraints defined in preceding sections. These implications are derived, not additive.</p>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Conclusion</h2>
+
+        <p>This document has specified the canonical state machine, deterministic decision function, execution flow constraints, enforcement invariants, invalid execution states, non-compliance conditions, cross-document traceability, and enforcement implications of the runtime consent enforcement layer.</p>
+
+        <p>This document does not modify, override, or reinterpret any existing QODIQA specification. It provides formalization, constraint definition, and deterministic execution semantics only.</p>
+
+        <p>All implementations claiming conformance with the QODIQA Core Standard SHALL satisfy the constraints and invariants defined herein. Conformance verification SHALL be performed in accordance with the QODIQA Conformance Test Suite (QODIQA-CTSS-2026-001).</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Identity</h2>
+
+        <div class="doc-status-block">
+          <h3 style="margin-top:0;margin-bottom:14px;">Document Status</h3>
+
+          <div class="table-wrapper" style="margin-top:0;">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Document Type</td>
+                  <td>Formal Specification</td>
+                </tr>
+                <tr>
+                  <td>Version</td>
+                  <td>1.0</td>
+                </tr>
+                <tr>
+                  <td>Status</td>
+                  <td>Normative Extension</td>
+                </tr>
+                <tr>
+                  <td>Scope</td>
+                  <td>Deterministic Execution Semantics Layer</td>
+                </tr>
+                <tr>
+                  <td>Publication Date</td>
+                  <td>April 2026</td>
+                </tr>
+                <tr>
+                  <td>Supersedes</td>
+                  <td>None. Initial release.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>This document is a normative extension to the QODIQA corpus. It does not supersede, replace, or modify any existing corpus document. The corpus documents to which this specification provides formal execution semantics are listed in Section 2.</p>
+
+          <p>This specification is authored and maintained by the QODIQA principal architect. Inquiries regarding this document SHALL be directed to the QODIQA Governance Authority.</p>
+
+          <div class="contact-block">
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail">Principal Architect, QODIQA</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+
+          <p style="margin-top:14px; font-size:0.8rem; color:#5A6070;">
+This document represents a formal deterministic specification intended for high-assurance environments, including enterprise deployment, regulatory alignment, and independent audit evaluation.
+          </p>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">QODIQA Formal Enforcement Model — Deterministic Execution Semantics</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-FEM-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Classification</span>
+            <span class="doc-id-val">Extension Layer — Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Authority</span>
+            <span class="doc-id-val">QODIQA Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Relationship</span>
+            <span class="doc-id-val">Formalization of Runtime Enforcement Logic</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Primary Reference</span>
+            <span class="doc-id-val">QODIQA Core Standard — QODIQA-CORE-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governance Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter — QODIQA-GC-2026-002</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Formal Enforcement Model: Deterministic Execution Semantics</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-FEM-2026-001</p>
+      <p>Formal Specification</p>
+      <p>Status: Normative Extension</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document provides formal execution semantics for the runtime consent enforcement layer. It does not modify any existing QODIQA specification and does not constitute legal, regulatory, or operational advice.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-FEM-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative Extension &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- ScrollSpy ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s2','s3',
+    's4','s4-1','s4-2','s4-3',
+    's5','s5-1','s5-2','s5-3',
+    's6',
+    's7','s7-1','s7-2','s7-3','s7-4',
+    's8','s9','s10','s11','s12','s-status'
+  ];
+
+  const sections = sectionIds
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  /* Map each section id → its nav anchor href */
+  const idToHref = id => '#' + id;
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === idToHref(id));
+    });
+  }
+
+  /* Scroll-position based spy — most reliable across all screen sizes */
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const windowH = window.innerHeight;
+    /* Find the last section whose top is above 30% of the viewport */
+    const threshold = scrollY + windowH * 0.22;
+    let active = sections[0];
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top + scrollY <= threshold) {
+        active = sections[i];
+      } else {
+        break;
+      }
+    }
+    if (active) setActive(active.id);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  /* Run once on load to set initial state */
+  onScroll();
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: 'smooth'
+          });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

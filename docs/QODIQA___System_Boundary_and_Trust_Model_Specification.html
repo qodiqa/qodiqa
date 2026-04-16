@@ -1,0 +1,2986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — System Boundary and Trust Model Specification · v1.0</title>
+<meta name="description" content="QODIQA System Boundary and Trust Model Specification v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — System Boundary and Trust Model Specification">
+<meta property="og:description" content="Formal definition of system boundaries, trust zones, enforcement location, cross-boundary flows, and trust invariants for deterministic runtime consent enforcement architecture.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS — CANONICAL
+   ============================================================ */
+:root {
+  /* Color system */
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+
+  /* Layout */
+  --sidebar-w:  252px;
+  --col:        800px;
+
+  /* Typography */
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+
+  /* ── SPACING SYSTEM ────────────────────────────────────────
+     Mathematical 4-point grid. All margins/paddings use ONLY
+     these tokens. No arbitrary pixel values in layout rules.
+     xs   =  4px  — micro gap (label → content)
+     sm   =  8px  — tight gap (heading → label, inline items)
+     md   = 16px  — standard gap (h2 → body, list → block)
+     lg   = 24px  — section gap (divider bottom, block stacking)
+     xl   = 32px  — major gap (section → section nested)
+     xxl  = 48px  — major section break (doc-section:has divider)
+     ─────────────────────────────────────────────────────── */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-xxl: 48px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: var(--space-xl);   /* 32px — nested section gap */
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+/* Top-level section with a divider gets the full major break */
+.doc-section:has(.section-divider) { margin-top: var(--space-xxl); } /* 48px */
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: var(--space-lg); /* 24px */
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS — STRICT HIERARCHY
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+/* Section label sits above H2 */
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--space-sm);  /* 8px */
+  opacity: 0.80;
+}
+
+/* H2 — dominant section title */
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: var(--space-md); /* 16px — h2 → body paragraph */
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+/* H3 — clearly subordinate */
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: var(--space-lg);    /* 24px above */
+  margin-bottom: var(--space-md); /* 16px below — matches h2 rhythm */
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;           /* ~16.4px at 0.965rem — natural prose rhythm */
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;          /* ~14px — slightly tighter than paragraph */
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: var(--space-xs); /* 4px */
+  color: var(--text);
+  text-align: left;
+  hyphens: none;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 var(--space-lg);  /* 28/0/24 */
+  margin: 0 0 var(--space-xxl);     /* 48px below — opens the document */
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--space-md);   /* 16px */
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CALLOUT BLOCKS — UNIFIED SPACING SYSTEM
+   All three block types share identical outer margin rhythm:
+     margin-top:    10px  (--space-xs × 2.5 — after preceding body)
+     margin-bottom: 14px  (--space-sm + --space-xs × 1.5)
+   Padding is consistent: 13px vertical / 20px horizontal.
+   Label margin-bottom: 7px (between xs and sm — deliberate micro-gap).
+   ============================================================ */
+
+/* Rule block — normative statement */
+.rule-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 13px 20px;
+  margin: 10px 0 14px;
+}
+
+.rule-block .rb-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 7px;
+  opacity: 0.85;
+}
+
+.rule-block p,
+.rule-block ul       { margin: 0; font-size: 0.920rem; line-height: 1.62; }
+.rule-block ul       { padding-left: 1.2em; margin-top: 6px; }
+.rule-block ul li    { font-size: 0.910rem; line-height: 1.58; margin-bottom: 3px; text-align: left; hyphens: none; }
+
+/* Constraint block — hard operational boundary */
+.constraint-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 13px 20px;
+  margin: 10px 0 14px;
+}
+
+.constraint-block .cb-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.constraint-block p,
+.constraint-block ul    { margin: 0; font-size: 0.920rem; line-height: 1.62; }
+.constraint-block ul    { padding-left: 1.2em; margin-top: 6px; }
+.constraint-block ul li { font-size: 0.910rem; line-height: 1.58; margin-bottom: 3px; text-align: left; hyphens: none; }
+
+/* Consequence block — violation outcome */
+.consequence-block {
+  background: #1C1A18;
+  border: 1px solid #2E2B27;
+  border-left: 3px solid #A0503A;
+  padding: 13px 20px;
+  margin: 10px 0 14px;
+}
+
+.consequence-block .cq-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C06448;
+  display: block;
+  margin-bottom: 7px;
+}
+
+.consequence-block p,
+.consequence-block ul    { margin: 0; font-size: 0.900rem; line-height: 1.60; color: #BEB9B0; }
+.consequence-block ul    { padding-left: 1.2em; margin-top: 6px; }
+.consequence-block ul li { font-size: 0.895rem; line-height: 1.56; margin-bottom: 3px; color: #B0AB9E; text-align: left; hyphens: none; }
+
+/* Containment failure: larger label for scenario headings */
+.containment-block .cq-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-weight: 700;
+  color: #C87A6A;
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   INVARIANT BLOCK — slightly larger, darker weight
+   ============================================================ */
+.invariant-block {
+  background: #191C21;
+  border: 1px solid #2A2D34;
+  border-left: 3px solid #7A6A50;
+  padding: var(--space-md) 22px;   /* 16px / 22px */
+  margin: 14px 0 18px;
+}
+
+.invariant-block .inv-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.75);
+  display: block;
+  margin-bottom: var(--space-sm); /* 8px */
+}
+
+.invariant-block p {
+  margin: 0;
+  font-size: 0.895rem;
+  line-height: 1.62;
+  color: #BEB9B0;
+  font-family: var(--mono);
+  text-align: left;
+  hyphens: none;
+}
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: var(--space-md) 0 var(--space-md); /* 16/0/16 — symmetric */
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   ZONE BLOCK
+   ============================================================ */
+.zone-block {
+  border: 1px solid #D2CEC8;
+  margin: var(--space-md) 0 var(--space-lg); /* 16px / 24px */
+  overflow: hidden;
+}
+
+.zone-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  background: #1C1F25;
+  padding: 10px 18px;
+  border-bottom: 1px solid #2A2D34;
+}
+
+.zone-id {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  flex-shrink: 0;
+}
+
+.zone-name {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.78);
+  letter-spacing: 0.04em;
+}
+
+.zone-trust {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.zone-trust.untrusted    { color: #C87A6A; border-color: rgba(200,122,106,0.30); background: rgba(200,122,106,0.06); }
+.zone-trust.cond-trusted { color: #B8A468; border-color: rgba(184,164,104,0.30); background: rgba(184,164,104,0.06); }
+.zone-trust.trusted      { color: #6AB890; border-color: rgba(106,184,144,0.30); background: rgba(106,184,144,0.06); }
+
+.zone-body {
+  background: #F2F0EB;
+  padding: 14px 18px;
+}
+
+.zone-body dl {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  gap: 7px 16px;
+  margin: 0;
+}
+
+.zone-body dt {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-top: 2px;
+}
+
+.zone-body dd {
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  margin: 0;
+  padding: 0;
+  hyphens: none;
+  text-align: left;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--space-lg) 0 var(--space-xl); /* 24px / 32px */
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; white-space: nowrap; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: var(--space-md);  /* 16px */
+  margin-top: var(--space-xl);   /* 32px */
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: var(--space-md) 0;    /* 16px top/bottom */
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: var(--space-lg);   /* 24px */
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-xs) !important; /* 4px */
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: var(--space-xl);   /* 32px */
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   ARCHITECTURAL DIAGRAM
+   ============================================================ */
+.arch-diagram {
+  margin: var(--space-xxl) 0 var(--space-xl); /* 48px / 32px */
+  padding: 36px 28px var(--space-xl);
+  background: #EDEAE5;
+  border: 1px solid #C8C4BE;
+  border-top: 2px solid var(--accent);
+  overflow-x: auto;
+}
+
+.arch-diagram-title {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 28px;
+  opacity: 0.80;
+}
+
+.arch-legend {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 26px;
+}
+
+.arch-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.arch-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.arch-legend-dot.core    { background: #1C1F25; border: 1.5px solid #7A6A50; }
+.arch-legend-dot.inside  { background: #DDD9D2; border: 1px solid #B4B0AA; }
+.arch-legend-dot.outside { background: #F0EDE8; border: 1px solid #C8C4BE; }
+
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 210px 1fr;
+  gap: 0;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.arch-col-left,
+.arch-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.arch-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  position: relative;
+}
+
+.arch-inside-wrap {
+  border: 1.5px dashed rgba(106,184,144,0.35);
+  background: rgba(106,184,144,0.025);
+  padding: 10px 8px 12px;
+  position: relative;
+  margin: 0;
+}
+
+.arch-inside-wrap-label {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #EDEAE5;
+  padding: 0 8px;
+  font-family: var(--mono);
+  font-size: 0.50rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6AB890;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.az {
+  border: 1px solid #C4C0BA;
+  background: #F0EDE8;
+  padding: 8px 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.az.inside {
+  background: #DDD9D2;
+  border-color: #B0ACA6;
+}
+
+.az.core {
+  background: #13161C;
+  border: 2px solid #7A6A50;
+  padding: 13px 14px;
+  box-shadow: 0 0 0 3px rgba(122,106,80,0.10), 0 2px 12px rgba(0,0,0,0.22);
+}
+
+.az-id {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.az:not(.core) .az-id { color: var(--accent); opacity: 0.70; }
+.az.core .az-id { color: rgba(122,106,80,0.65); letter-spacing: 0.20em; }
+
+.az-name {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: block;
+  line-height: 1.25;
+}
+
+.az:not(.core) .az-name { color: var(--ink-2); }
+.az.core .az-name {
+  color: rgba(255,255,255,0.90);
+  font-size: 0.80rem;
+  letter-spacing: -0.01em;
+}
+
+.arch-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.arch-arrow::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.30;
+}
+
+.arch-arrow-icon {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  opacity: 0.65;
+  position: relative;
+  z-index: 1;
+  background: #EDEAE5;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+.arch-side-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.arch-side-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.arch-side-row.left  { justify-content: flex-end; }
+.arch-side-row.right { justify-content: flex-start; }
+
+.arch-spacer { flex-shrink: 0; height: 12px; }
+
+.arch-horiz-track {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 10px;
+  height: 18px;
+  position: relative;
+}
+
+.arch-horiz-track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.28;
+}
+
+.arch-horiz-arrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  opacity: 0.60;
+  flex-shrink: 0;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  background: #EDEAE5;
+  padding: 0 1px;
+}
+
+.arch-outside-label {
+  font-family: var(--mono);
+  font-size: 0.50rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  opacity: 0.55;
+}
+
+.arch-diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.720rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: var(--space-lg);   /* 24px */
+  font-style: italic;
+  line-height: 1.58;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER — FULL INSTITUTIONAL ALIGNMENT
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;            /* matches whitepaper exactly */
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: var(--space-xs) 0;     /* 4px */
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE — PRECISE SCALING
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open    { transform: translateX(0); }
+  .overlay.active  { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer             { margin-left: 0; padding: 28px 20px; }
+  .footer-inner      { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom     { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper     { margin: var(--space-md) 0; width: 100%; }
+  h2 .anchor-link    { display: none; }
+
+  .doc-identity-row  { flex-direction: column; gap: 2px; }
+  .doc-id-key        { flex: none; }
+
+  .zone-body dl      { grid-template-columns: 110px 1fr; }
+
+  .arch-grid         { grid-template-columns: 1fr 170px 1fr; }
+  .arch-legend       { gap: 16px; flex-wrap: wrap; }
+
+  /* Scale spacing tokens for mobile */
+  .doc-section:has(.section-divider) { margin-top: var(--space-xl); } /* 32px on mobile */
+}
+
+@media (max-width: 640px) {
+  .az-name           { font-size: 0.65rem; }
+  .az.core .az-name  { font-size: 0.72rem; }
+}
+
+@media (max-width: 420px) {
+  .arch-grid         { grid-template-columns: 90px 130px 90px; }
+  .arch-diagram      { padding: 24px 12px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">System Boundary and<br><span class="italic-part">Trust Model Specification</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Specification &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Formal definition of system boundaries, trust zones, enforcement location, and trust invariants for deterministic runtime consent enforcement architecture.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Executive Definition</a>
+      <a class="nav-item" href="#s2">2. System Boundary</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Formal Definition</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Inclusion Criteria</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Exclusion Criteria</a>
+      <a class="nav-item sub" href="#s2-4">2.4 Immutability Constraint</a>
+      <a class="nav-item" href="#s3">3. Canonical Trust Zones</a>
+      <a class="nav-item sub" href="#s3-tz1">TZ-1 User-Controlled Zone</a>
+      <a class="nav-item sub" href="#s3-tz2">TZ-2 Input Zone</a>
+      <a class="nav-item sub" href="#s3-tz3">TZ-3 Application Layer</a>
+      <a class="nav-item sub" href="#s3-tz4">TZ-4 Enforcement Gateway</a>
+      <a class="nav-item sub" href="#s3-tz5">TZ-5 Consent Registry</a>
+      <a class="nav-item sub" href="#s3-tz6">TZ-6 Policy Engine</a>
+      <a class="nav-item sub" href="#s3-tz7">TZ-7 Model Provider</a>
+      <a class="nav-item sub" href="#s3-tz8">TZ-8 External Services</a>
+      <a class="nav-item sub" href="#s3-tz9">TZ-9 Audit &amp; Logging Layer</a>
+      <a class="nav-item sub" href="#s3-diagram">Architecture Diagram</a>
+      <a class="nav-item" href="#s4">4. Trust Model Definition</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Trust Minimization</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Explicit Trust Contracts</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Revocation Requirement</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Verifiability Requirement</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Non-Transitive Trust Rule</a>
+      <a class="nav-item" href="#s5">5. Enforcement Boundary</a>
+      <a class="nav-item" href="#s6">6. Cross-Boundary Interaction</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Data Flows</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Control Flows</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Trust Downgrade Rules</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Validation Requirements</a>
+      <a class="nav-item" href="#s7">7. Untrusted Containment</a>
+      <a class="nav-item" href="#s8">8. Trust Violation Scenarios</a>
+      <a class="nav-item" href="#s9">9. Trust Reduction Strategy</a>
+      <a class="nav-item" href="#s10">10. System Invariants</a>
+      <a class="nav-item" href="#s11">11. Non-Compliance Conditions</a>
+      <a class="nav-item" href="#s12">12. Conformance Requirements</a>
+      <a class="nav-item" href="#s13">13. Final Deterministic Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>Deterministic runtime consent enforcement requires an unambiguous, closed definition of where the system begins, where it ends, which components carry trust, and how that trust is governed. Without explicit boundary definitions, enforcement guarantees cannot be stated, tested, or audited. This document defines the complete system boundary and trust model for the QODIQA architecture. Nine canonical trust zones are established, each with a precisely bounded trust level, enumerated capabilities, prohibited assumptions, and a characterized attack surface. The Enforcement Gateway is defined as the single, non-relocatable, non-delegable enforcement boundary. Rules governing cross-boundary data flows, trust downgrade requirements, containment of untrusted components, and mandatory fail-closed responses are specified without qualification. System invariants are enumerated and referenced throughout the specification. Every statement in this document is normative. Every statement is enforceable, testable, and auditable. Any ambiguity in any boundary or trust definition constitutes a non-compliance condition and invalidates all enforcement guarantees for the affected deployment.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Executive Definition</h2>
+
+        <p>Three foundational definitions govern this specification. All subsequent boundary and trust requirements are derived from and constrained by these definitions. Deviation from any definition in an implementation constitutes an immediate non-compliance condition.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Definition 1 — System Boundary</div>
+          <p>The system boundary is the complete, explicit demarcation separating components subject to QODIQA enforcement governance from components that are not. The boundary is defined structurally. A component is inside the boundary if and only if it satisfies every inclusion criterion in Section 2.2. All other components are outside the boundary. No component occupies an intermediate or ambiguous position. Intermediate positions are INVALID.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Definition 2 — Trust Model</div>
+          <p>The trust model is the complete set of explicit trust assignments, trust contracts, trust constraints, and trust revocation rules governing all interactions among all components within and across the system boundary. Trust is NEVER inferred, assumed, or inherited. Every trust relationship MUST be explicitly defined, minimally scoped, cryptographically verifiable where required, and revocable on demand. The default trust assignment for any component not explicitly granted trust is zero.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Definition 3 — Enforcement Boundary</div>
+          <p>The enforcement boundary is the single, uniquely defined structural location at which all consent enforcement decisions are made. The enforcement boundary is coincident with the Enforcement Gateway (TZ-4). No enforcement decision may be made outside this location. No inference request may proceed to model execution without traversing this boundary. The enforcement boundary MUST NOT be relocated, duplicated, or bypassed by any conformant implementation.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-00 — Definition Immutability</span>
+          <p>Definitions 1, 2, and 3 are immutable at runtime. No operational condition, integration requirement, or performance optimization modifies the scope of any definition. An implementation that narrows, broadens, or reinterprets any definition is NON-COMPLIANT.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>System Boundary Definition</h2>
+
+        <p>The system boundary is fully specified by the four subsections below. Each subsection is normative. Implementations MUST satisfy all four without exception or qualification.</p>
+
+        <div id="s2-1" class="doc-section">
+          <h3>2.1 Formal Boundary Definition</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Inside the Boundary — Enumeration</span>
+            <ul>
+              <li>The Enforcement Gateway (TZ-4) in its entirety, including all enforcement decision logic, request validation routines, and blocking mechanisms.</li>
+              <li>The Consent Registry (TZ-5), including all consent state storage, resolution interfaces, and validity verification mechanisms.</li>
+              <li>The Policy Engine (TZ-6), including all policy definition storage, version management, and evaluation logic.</li>
+              <li>The Audit and Logging Layer (TZ-9), including all decision record generation, tamper-evidence mechanisms, and log integrity verification.</li>
+              <li>All cryptographic key management infrastructure used to sign or verify enforcement artifacts, consent tokens, and decision records.</li>
+              <li>All inter-component communication channels between the above components, including transport security layers dedicated exclusively to enforcement operations.</li>
+            </ul>
+          </div>
+
+          <div class="rule-block">
+            <span class="rb-label">Outside the Boundary — Enumeration</span>
+            <ul>
+              <li>All AI model inference engines, regardless of deployment location or ownership.</li>
+              <li>All application layers that submit inference requests to the enforcement gateway.</li>
+              <li>All user-controlled interfaces, including consent declaration surfaces, revocation interfaces, and subject-facing portals.</li>
+              <li>All external APIs, third-party services, and downstream data consumers that receive outputs of permitted inference operations.</li>
+              <li>All infrastructure not enumerated in the inside-boundary list above, including general-purpose compute, storage, and network layers not dedicated exclusively to enforcement operations.</li>
+            </ul>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Violation Consequence</span>
+            <p>Any component that participates in enforcement-related operations but is not assigned to the inside-boundary enumeration above is operating outside the enforcement boundary. Actions taken by such a component MUST NOT be treated as enforcement decisions. Enforcement claims based on such actions are INVALID.</p>
+          </div>
+        </div>
+
+        <div id="s2-2" class="doc-section">
+          <h3>2.2 Inclusion Criteria</h3>
+
+          <p>A component is included within the system boundary if and only if ALL of the following conditions are satisfied simultaneously. Satisfaction of a subset is insufficient.</p>
+
+          <div class="rule-block">
+            <span class="rb-label">Inclusion Criteria — Full Set</span>
+            <ul>
+              <li>The component participates directly in the enforcement decision path, the consent resolution path, the policy evaluation path, or the audit record generation path.</li>
+              <li>The component is subject to the access controls, integrity requirements, and cryptographic verification requirements specified in the QODIQA Security and Cryptographic Profile.</li>
+              <li>The component's behavior is fully deterministic with respect to its inputs. Probabilistic or adaptive behavior disqualifies a component from inclusion.</li>
+              <li>The component can be independently audited, and its outputs can be verified against declared inputs.</li>
+              <li>The component is operated under a governance configuration satisfying the QODIQA Certification Framework requirements for its functional class.</li>
+            </ul>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — Partial Criteria Satisfaction</span>
+            <p>A component that satisfies some but not all inclusion criteria MUST NOT be assigned to the inside-boundary component set. Partial satisfaction is equivalent to non-satisfaction for boundary assignment purposes.</p>
+          </div>
+        </div>
+
+        <div id="s2-3" class="doc-section">
+          <h3>2.3 Exclusion Criteria</h3>
+
+          <p>A component is excluded from the system boundary if any one of the following conditions is true. The exclusion criteria are disjunctive; a single positive condition mandates exclusion.</p>
+
+          <div class="rule-block">
+            <span class="rb-label">Exclusion Criteria — Any One Sufficient</span>
+            <ul>
+              <li>The component produces probabilistic, stochastic, or adaptive outputs, including but not limited to neural language models, retrieval-augmented generation systems, and reinforcement learning agents.</li>
+              <li>The component is controlled, operated, or configurable by an entity that has not obtained QODIQA certification for that component class.</li>
+              <li>The component's behavior cannot be fully reproduced from a defined set of inputs without external state dependencies outside the enforcement boundary.</li>
+              <li>The component is a user-facing interface through which consent declarations or revocations are submitted.</li>
+              <li>The component serves functions unrelated to enforcement, consent resolution, policy evaluation, or audit, even if physically co-located with inside-boundary components.</li>
+            </ul>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Violation Consequence</span>
+            <p>Any component meeting one or more exclusion criteria that has been placed inside the enforcement boundary introduces an unverified component into the trusted execution environment. All enforcement decisions produced while this condition exists are INVALID. The deployment MUST be suspended pending boundary remediation.</p>
+          </div>
+        </div>
+
+        <div id="s2-4" class="doc-section">
+          <h3>2.4 Boundary Immutability Constraint</h3>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — Runtime Immutability</span>
+            <ul>
+              <li>No component may be added to the inside-boundary set without a formal revision of this specification under the QODIQA Governance Charter.</li>
+              <li>No runtime condition, operational shortcut, or integration requirement may cause the boundary to expand beyond its defined extent.</li>
+              <li>No trust granted to an inside-boundary component may be interpreted as extending to outside-boundary components, regardless of operational proximity or shared infrastructure.</li>
+              <li>Implementers MUST document the complete inside-boundary component inventory and maintain it as a controlled artifact under the QODIQA Change Log and Version Control Protocol.</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant I-08 — Boundary Immutability at Runtime</span>
+            <p>The composition of the inside-boundary component set MUST NOT change at runtime. Any change requires a governed revision of this specification and re-certification of the affected deployment. An undocumented runtime boundary change is a critical security incident.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Violation Consequence</span>
+            <p>Any implementation in which the effective enforcement boundary differs from the boundary defined in this document — through expansion, contraction, or ambiguity — is NON-COMPLIANT. Non-compliance invalidates all enforcement guarantees for the affected deployment with immediate effect.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Canonical Trust Zones</h2>
+
+        <p>The QODIQA architecture defines exactly nine canonical trust zones. No trust zone other than those defined in this section may be recognized by a conformant implementation. Any component not assignable to one of the nine canonical zones MUST be treated as External Services (TZ-8) with zero trust. Each zone definition is structured as: trust level, capabilities, prohibited assumptions, and attack surface. This structure is uniform across all zones.</p>
+
+        <div class="constraint-block">
+          <span class="cb-label">Constraint — Zone Assignment Completeness</span>
+          <p>Every component interacting with the QODIQA enforcement infrastructure MUST be assigned to exactly one canonical trust zone before any interaction is processed. Unassigned components are PROHIBITED from interacting with any inside-boundary component. A component with ambiguous zone assignment MUST be treated as TZ-8.</p>
+        </div>
+
+        <!-- TZ-1 -->
+        <div id="s3-tz1" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-1</span>
+              <span class="zone-name">User-Controlled Zone</span>
+              <span class="zone-trust untrusted">Untrusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Zero. All inputs from this zone are treated as adversarial until validated at the enforcement boundary. No elevated trust is granted regardless of claimed user identity or prior session history.</dd>
+                <dt>Capabilities</dt>
+                <dd>Submission of consent declarations and revocations to the Consent Registry (TZ-5) through authenticated channels exclusively. No direct access to TZ-4, TZ-6, TZ-9, or cryptographic key infrastructure.</dd>
+                <dt>Prohibited</dt>
+                <dd>Direct access to the enforcement gateway, policy engine, audit log, or signing key material. Assumption that submitted consent is active without registry confirmation. Inference of prior consent validity.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Consent injection through forged declarations. Replay of previously valid consent after revocation. Scope inflation in consent declaration parameters. Social engineering of consent submission workflows to manufacture broader authorization.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-2 -->
+        <div id="s3-tz2" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-2</span>
+              <span class="zone-name">Input Zone</span>
+              <span class="zone-trust untrusted">Untrusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Zero. All data and control signals entering from this zone are subjected to full structural and cryptographic validation before any enforcement processing. No exceptions are permitted.</dd>
+                <dt>Capabilities</dt>
+                <dd>Submission of inference requests to the enforcement gateway through the published request interface only. Provision of intent declarations, subject identifiers, and purpose specifications as part of structured request payloads.</dd>
+                <dt>Prohibited</dt>
+                <dd>Assertion of enforcement outcomes. Pre-declaration of consent validity. Provision of policy directives or evaluation instructions. Any attempt to influence enforcement logic through input channel manipulation.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Malformed intent declarations designed to trigger evaluation edge cases or evaluation-logic errors. Purpose field manipulation to obtain permits for non-consented actions. Request flooding to degrade enforcement availability. Injection of structured data mimicking internal enforcement signals to cause misclassification.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-3 -->
+        <div id="s3-tz3" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-3</span>
+              <span class="zone-name">Application Layer</span>
+              <span class="zone-trust untrusted">Untrusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Zero. The application layer is outside the enforcement boundary. Its correct operation is not assumed. Its claimed identity MUST be verified at the enforcement gateway on every request without exception.</dd>
+                <dt>Capabilities</dt>
+                <dd>Construction and submission of enforcement requests. Receipt of enforcement decisions. Routing of permitted inference requests to model providers upon receipt of a valid, gateway-issued permit token for that specific request.</dd>
+                <dt>Prohibited</dt>
+                <dd>Routing of inference requests to model providers without a valid gateway-issued permit token for that specific request. Caching of permit tokens across requests. Modification of declared intent between gateway submission and permit receipt. Self-assertion of enforcement authority.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Permit token replay across distinct requests. Gateway bypass through direct model provider routing. Permit token fabrication or parameter modification after issuance. Scope extension of permitted actions beyond what the permit specifies. Misrepresentation of requestor identity to obtain permits.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-4 -->
+        <div id="s3-tz4" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-4</span>
+              <span class="zone-name">Enforcement Gateway</span>
+              <span class="zone-trust trusted">Trusted Core</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Trusted. Trust is contingent on continuous satisfaction of the certification requirements in the QODIQA Certification Framework. Certification lapse immediately reverts TZ-4 to untrusted status.</dd>
+                <dt>Capabilities</dt>
+                <dd>Receipt and full structural validation of inference requests from TZ-2 and TZ-3. Invocation of consent resolution against TZ-5. Invocation of policy evaluation against TZ-6. Issuance of cryptographically signed permit or deny decisions. Generation of decision records to TZ-9. Blocking of all requests for which a valid permit cannot be issued.</dd>
+                <dt>Prohibited</dt>
+                <dd>Delegation of enforcement decisions to any other component. Issuance of conditional or provisional permits. Granting of trust to TZ-7 or TZ-8 components. Processing of requests outside defined input channels. Modification of audit records after generation. Permit issuance when any pre-condition in Section 5 is unconfirmed.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Process integrity compromise enabling silent decision manipulation. Injection of forged consent responses from a compromised TZ-5 component. Policy recommendation tampering from a compromised TZ-6 component. Denial-of-service degradation targeting fail-open behavior. Timing side-channel analysis of decision latency to infer enforcement logic.</dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant I-01 — No Inference Without Enforcement</span>
+            <p>No inference request may produce a model output unless a valid, gateway-issued permit token for that specific request exists and has been verified by the forwarding component. This invariant holds without exception under all operational conditions.</p>
+          </div>
+        </div>
+
+        <!-- TZ-5 -->
+        <div id="s3-tz5" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-5</span>
+              <span class="zone-name">Consent Registry</span>
+              <span class="zone-trust cond-trusted">Conditionally Trusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Conditional. Trusted only for consent state resolution responses that are cryptographically signed and correspond to a registered, non-revoked consent record within its validity window. Unsigned, expired, or unverifiable responses are INVALID and MUST NOT be acted upon.</dd>
+                <dt>Capabilities</dt>
+                <dd>Storage and retrieval of consent records. Verification of consent validity for a specified subject-purpose-scope combination at a specified point in time. Issuance of signed consent validity responses to TZ-4. Receipt of consent revocations from TZ-1 through authenticated interfaces exclusively.</dd>
+                <dt>Prohibited</dt>
+                <dd>Issuance of validity affirmations for revoked consent. Derivation of consent from the absence of explicit revocation. Extension of consent scope beyond declared parameters. Provision of consent validity responses without cryptographic signature.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Tampering with stored consent records to manufacture false consent state. Suppression of revocation records to extend validity of withdrawn consent. Replay of previously valid signed responses after consent expiration. Signing key compromise enabling forged validity affirmations indistinguishable from legitimate ones.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-6 -->
+        <div id="s3-tz6" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-6</span>
+              <span class="zone-name">Policy Engine</span>
+              <span class="zone-trust trusted">Deterministic Trusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Trusted, contingent on verified policy version integrity. The policy engine is trusted only when operating on a policy version whose integrity has been verified against the canonical policy hash registered in the enforcement governance record. An unverified policy version immediately reverts TZ-6 to untrusted status.</dd>
+                <dt>Capabilities</dt>
+                <dd>Evaluation of declared intent and resolved consent state against the active, verified policy version. Production of a binary permit or deny recommendation for TZ-4. Provision of policy evaluation audit metadata including the specific policy version identifier and rule identifiers applied.</dd>
+                <dt>Prohibited</dt>
+                <dd>Production of probabilistic, conditional, or ambiguous recommendations. Evaluation against an unverified or unsigned policy version. Incorporation of runtime state or external signals beyond declared intent and consent resolution inputs. Override of recommendations by any external signal.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Policy content modification to relax enforcement conditions. Policy version substitution to apply outdated or attacker-controlled logic. Evaluation context manipulation to bias decision outcomes. Corruption of the policy hash verification mechanism to suppress detection of tampered policy content.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-7 -->
+        <div id="s3-tz7" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-7</span>
+              <span class="zone-name">Model Provider</span>
+              <span class="zone-trust untrusted">Untrusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Zero. Model providers are explicitly outside the enforcement boundary. Their outputs carry no enforcement authority. Their internal behavior cannot be verified. Their operation does not constitute enforcement under any characterization.</dd>
+                <dt>Capabilities</dt>
+                <dd>Receipt of inference requests forwarded by TZ-3 upon presentation of a valid, gateway-issued permit token. Generation of inference outputs. No direct interaction with any inside-boundary component is permitted.</dd>
+                <dt>Prohibited</dt>
+                <dd>Receipt of inference requests not accompanied by a valid permit token. Direct communication with TZ-4, TZ-5, TZ-6, or TZ-9. Self-determination of enforcement status. Modification of permit token parameters. Propagation of enforcement claims.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Bypass of gateway enforcement through direct routing by a compromised TZ-3 application layer. Output manipulation to circumvent purpose restrictions applied at policy evaluation. Exfiltration of permit token parameters enabling replay attacks against the enforcement infrastructure. Prompt injection attacks designed to cause the model to generate outputs that impersonate enforcement signals.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-8 -->
+        <div id="s3-tz8" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-8</span>
+              <span class="zone-name">External Services</span>
+              <span class="zone-trust untrusted">Untrusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Zero. All external services, APIs, downstream data consumers, and third-party integrations are untrusted. Any component not explicitly assigned to a defined canonical zone is assigned to this zone by default.</dd>
+                <dt>Capabilities</dt>
+                <dd>Receipt of outputs from permitted inference operations forwarded by TZ-3. No direct access to any inside-boundary component. No capability to initiate interactions with TZ-4, TZ-5, TZ-6, or TZ-9.</dd>
+                <dt>Prohibited</dt>
+                <dd>Direct communication with any inside-boundary component. Provision of signals, configurations, or data that influence enforcement decision logic. Assertion of enforcement status on behalf of the system.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Provision of malicious data to TZ-3 that is subsequently submitted as declared intent to TZ-4. Exfiltration of inference outputs beyond the scope of permitted purposes. Supply chain compromise through external dependencies loaded by inside-boundary components. Data poisoning attacks targeting consent records submitted through TZ-1.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <!-- TZ-9 -->
+        <div id="s3-tz9" class="doc-section">
+          <div class="zone-block">
+            <div class="zone-header">
+              <span class="zone-id">TZ-9</span>
+              <span class="zone-name">Audit and Logging Layer</span>
+              <span class="zone-trust trusted">Verifiable Trusted</span>
+            </div>
+            <div class="zone-body">
+              <dl>
+                <dt>Trust Level</dt>
+                <dd>Trusted for record generation and integrity verification. Trust is contingent on the tamper-evidence of log storage and the cryptographic integrity of all records. A compromised audit layer does not invalidate enforcement decisions but immediately and completely invalidates all post hoc auditability claims for the period of compromise.</dd>
+                <dt>Capabilities</dt>
+                <dd>Receipt and storage of cryptographically signed enforcement decision records generated by TZ-4. Provision of decision records to authorized auditors upon authenticated request. Verification of record integrity against stored hash values. Detection and flagging of tampering events.</dd>
+                <dt>Prohibited</dt>
+                <dd>Modification of any stored enforcement decision record after generation. Deletion of records within the mandatory retention period. Provision of unsigned or unverified records as valid enforcement evidence. Suppression of decision records under any operational condition including partial failure.</dd>
+                <dt>Attack Surface</dt>
+                <dd>Retroactive record modification to suppress evidence of enforcement bypass. Log truncation or rotation attacks removing records of specific decisions. Injection of false records to manufacture compliance evidence. Audit record exfiltration exposing enforcement patterns that enable targeted bypass.</dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant I-06 — No Enforcement Decision Without Audit Record</span>
+            <p>Every enforcement decision — permit or deny — MUST generate a corresponding audit record in TZ-9 before the decision is communicated to the requesting component. A decision that cannot be audited MUST NOT be issued.</p>
+          </div>
+        </div>
+
+        <!-- ARCHITECTURAL DIAGRAM -->
+        <div id="s3-diagram" class="doc-section">
+          <div class="section-divider"></div>
+          <span class="section-label">Architecture Reference</span>
+          <h2><a class="anchor-link" href="#s3-diagram">#</a>System Boundary and Trust Architecture</h2>
+
+          <div class="arch-diagram">
+            <span class="arch-diagram-title">Figure 1 &mdash; Trust Zone Layout and Enforcement Flow</span>
+
+            <div class="arch-legend">
+              <div class="arch-legend-item">
+                <div class="arch-legend-dot core"></div>
+                <span>Enforcement Core</span>
+              </div>
+              <div class="arch-legend-item">
+                <div class="arch-legend-dot inside"></div>
+                <span>Inside Boundary</span>
+              </div>
+              <div class="arch-legend-item">
+                <div class="arch-legend-dot outside"></div>
+                <span>Outside Boundary</span>
+              </div>
+            </div>
+
+            <div class="arch-grid">
+
+              <!-- LEFT: input path (outside boundary) -->
+              <div class="arch-col-left">
+                <div class="arch-side-block">
+
+                  <div class="arch-side-row left">
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-1</span>
+                      <span class="az-name">User-Controlled Zone</span>
+                    </div>
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                  </div>
+
+                  <div class="arch-spacer"></div>
+
+                  <div class="arch-side-row left">
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-2</span>
+                      <span class="az-name">Input Zone</span>
+                    </div>
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                  </div>
+
+                  <div class="arch-spacer"></div>
+
+                  <div class="arch-side-row left">
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-3</span>
+                      <span class="az-name">Application Layer</span>
+                    </div>
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                  </div>
+
+                  <span class="arch-outside-label">&#9632; Outside Boundary</span>
+                </div>
+              </div>
+
+              <!-- CENTER: enforcement core (inside boundary) -->
+              <div class="arch-col-center">
+                <div class="arch-inside-wrap">
+                  <span class="arch-inside-wrap-label">Inside Boundary</span>
+
+                  <div class="az inside">
+                    <span class="az-id">TZ-5</span>
+                    <span class="az-name">Consent Registry</span>
+                  </div>
+
+                  <div class="arch-arrow">
+                    <span class="arch-arrow-icon">&#8597;</span>
+                  </div>
+
+                  <div class="az core">
+                    <span class="az-id">TZ-4</span>
+                    <span class="az-name">Enforcement Gateway</span>
+                  </div>
+
+                  <div class="arch-arrow">
+                    <span class="arch-arrow-icon">&#8597;</span>
+                  </div>
+
+                  <div class="az inside">
+                    <span class="az-id">TZ-6</span>
+                    <span class="az-name">Policy Engine</span>
+                  </div>
+
+                  <div class="arch-arrow">
+                    <span class="arch-arrow-icon">&#8595;</span>
+                  </div>
+
+                  <div class="az inside">
+                    <span class="az-id">TZ-9</span>
+                    <span class="az-name">Audit &amp; Logging</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: output path (outside boundary) -->
+              <div class="arch-col-right">
+                <div class="arch-side-block">
+
+                  <div class="arch-side-row right">
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-3</span>
+                      <span class="az-name">Application Layer</span>
+                    </div>
+                  </div>
+
+                  <div class="arch-spacer"></div>
+
+                  <div class="arch-side-row right">
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-7</span>
+                      <span class="az-name">Model Provider</span>
+                    </div>
+                  </div>
+
+                  <div class="arch-spacer"></div>
+
+                  <div class="arch-side-row right">
+                    <div class="arch-horiz-track">
+                      <span class="arch-horiz-arrow">&#8594;</span>
+                    </div>
+                    <div class="az" style="max-width:142px;">
+                      <span class="az-id">TZ-8</span>
+                      <span class="az-name">External Services</span>
+                    </div>
+                  </div>
+
+                  <span class="arch-outside-label">&#9632; Outside Boundary</span>
+                </div>
+              </div>
+
+            </div><!-- /.arch-grid -->
+
+            <p class="arch-diagram-caption">TZ-4 (Enforcement Gateway) is the sole enforcement boundary. All inference requests traverse TZ-4. TZ-5, TZ-6, and TZ-9 are inside-boundary supporting components. All other zones are outside the enforcement boundary.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Trust Model Definition</h2>
+
+        <p>The QODIQA trust model is governed by five principles. Each principle is expressed as a rule, a constraint, and a consequence. Compliance with the trust model requires demonstrable adherence to all five principles simultaneously.</p>
+
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Trust Minimization</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule</span>
+            <p>Every trust grant MUST be the minimum required for the grantee component to fulfill its defined function. Trust scope MUST NOT exceed the specific capability category for which trust has been granted. Each trust grant MUST be enumerated, scoped, and documented in the implementation's trust inventory.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint</span>
+            <p>Trust granted for consent resolution MUST NOT extend to policy evaluation. Trust granted for audit record generation MUST NOT extend to enforcement decision-making. Broad or categorical trust grants are PROHIBITED. Any trust grant that bundles more than one capability category is INVALID.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Consequence of Violation</span>
+            <p>A component operating with over-broad trust has access to capabilities it has not been authorized to exercise. Any enforcement decision influenced by actions outside the grantee's authorized capability scope is INVALID. The trust inventory MUST be remediated before further enforcement decisions are issued.</p>
+          </div>
+        </div>
+
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Explicit Trust Contracts</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule</span>
+            <p>Every trust relationship between components MUST be defined as an explicit trust contract. A trust contract MUST specify: the granting component, the receiving component, the capability scope, the conditions under which trust is active, and the revocation mechanism. Trust contracts MUST exist in written form as part of the implementation's governance documentation.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint</span>
+            <p>No trust relationship may exist without a corresponding trust contract. Implicit trust arising from operational proximity, shared infrastructure, or organizational relationships is PROHIBITED. Trust contracts MUST be available for inspection by authorized auditors at any time.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Consequence of Violation</span>
+            <p>A trust relationship without an explicit contract is an undocumented trust dependency. All enforcement decisions produced under undocumented trust dependencies are INVALID. The affected deployment is NON-COMPLIANT until all trust relationships are backed by explicit contracts.</p>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant — No Undocumented Trust Dependency</span>
+            <p>Every trust relationship active in any enforcement-relevant operation MUST have a corresponding, written trust contract in the governance documentation. An undocumented trust relationship is INVALID regardless of operational duration or organizational familiarity.</p>
+          </div>
+        </div>
+
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Revocation Requirement</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule</span>
+            <p>Every trust grant MUST be revocable. Revocation MUST be executable within the time bound defined in the applicable trust contract. Revocation MUST take effect without requiring the consent or cooperation of the component whose trust is being revoked. Implementations MUST define and test the revocation path for every trust contract in their trust inventory.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint</span>
+            <p>Trust grants with no defined revocation mechanism are INVALID and MUST NOT be issued. An untestable revocation mechanism is equivalent to no revocation mechanism for compliance purposes.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Consequence of Violation</span>
+            <p>A non-revocable trust grant cannot be neutralized in response to a security incident. Any deployment containing a non-revocable trust grant is NON-COMPLIANT and cannot assert QODIQA conformance regardless of other properties.</p>
+          </div>
+        </div>
+
+        <div id="s4-4" class="doc-section">
+          <h3>4.4 Verifiability Requirement</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule</span>
+            <p>Trust MUST be verifiable at the time of each interaction that depends on it. The trusting component MUST confirm, through cryptographic means or a deterministic verification protocol, that the trusted component's current state satisfies the conditions of the trust contract at the moment of interaction.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint</span>
+            <p>Trust verified at initialization but not re-verified at interaction time does NOT satisfy this requirement. Session-level trust establishment without per-interaction verification is permitted only where the trust contract explicitly defines the session scope and the session integrity protection mechanism. Unverifiable trust is PROHIBITED.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Consequence of Violation</span>
+            <p>A trust relationship that cannot be verified at interaction time may be exploited through component compromise between initialization and interaction. Enforcement decisions produced under unverified trust conditions are INVALID. The deployment MUST suspend enforcement operations until verifiability is restored.</p>
+          </div>
+        </div>
+
+        <div id="s4-5" class="doc-section">
+          <h3>4.5 Non-Transitive Trust Rule</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule</span>
+            <p>Trust MUST NOT propagate across components. A trust grant from component A to component B does not confer any trust from A to any component C, regardless of the relationship between B and C. Every trust relationship MUST be established independently.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint</span>
+            <p>The enforcement gateway's trust in TZ-5 MUST NOT be interpreted as trust in any data source that has written to TZ-5. The enforcement gateway's trust in TZ-6 MUST NOT be interpreted as trust in any entity that has contributed to policy authorship. Trust derived by transitivity from any other trust relationship is INVALID.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Consequence of Violation</span>
+            <p>Transitive trust creates uncontrolled trust chains that allow untrusted entities to influence enforcement outcomes through trusted intermediaries. An implementation relying on transitive trust is structurally incapable of bounding its trust surface and is NON-COMPLIANT.</p>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant I-07 — No Trust Propagation</span>
+            <p>Trust granted to any component is scoped exclusively to that component and the capabilities enumerated in its trust contract. Trust MUST NOT propagate to any third component through any mechanism, including shared state, shared infrastructure, or API intermediation.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Enforcement Boundary</h2>
+
+        <p>The enforcement boundary is the most security-critical structural element in the QODIQA architecture. Its definition is exact, closed, and non-negotiable.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Normative Definition — Enforcement Boundary</div>
+          <p>The Deterministic Enforcement Boundary is the Enforcement Gateway (TZ-4). No other component, location, or logical construct constitutes an enforcement boundary in a QODIQA-conformant system. This definition admits no exceptions and no qualifications.</p>
+        </div>
+
+        <h3>Location</h3>
+        <div class="rule-block">
+          <span class="rb-label">Rule — Enforcement Location</span>
+          <p>Enforcement occurs exclusively within TZ-4. TZ-4 is the singular, non-delegable decision authority for all consent enforcement outcomes. All inference requests MUST traverse TZ-4 before any interaction with a model provider. No exception to this requirement is permitted under any operational condition.</p>
+        </div>
+
+        <h3>Why Only There</h3>
+        <div class="rule-block">
+          <span class="rb-label">Rule — Structural Uniqueness</span>
+          <p>TZ-4 is the only component simultaneously holding: (1) verified access to consent state via TZ-5, (2) verified access to policy logic via TZ-6, (3) the cryptographic authority to issue binding permit tokens, and (4) the structural position to block requests before model interaction. No other component possesses all four properties. Enforcement attempted at any other location lacks at least one property and is structurally unverifiable.</p>
+        </div>
+
+        <h3>Impossible Enforcement Locations</h3>
+        <div class="constraint-block">
+          <span class="cb-label">Constraint — Prohibited Enforcement Locations</span>
+          <ul>
+            <li><strong>TZ-3 (Application Layer):</strong> Untrusted zone. Enforcement logic placed here cannot be audited and is subject to bypass or replacement by the application operator. PROHIBITED.</li>
+            <li><strong>TZ-5 (Consent Registry):</strong> Consent resolution is a supporting function, not a decision authority. Conflating resolution with enforcement authority creates trust boundary ambiguity. PROHIBITED.</li>
+            <li><strong>TZ-6 (Policy Engine):</strong> Policy evaluation produces recommendations. Recommendations are not enforcement decisions. Granting decision authority to TZ-6 removes auditability from TZ-4. PROHIBITED.</li>
+            <li><strong>TZ-7 (Model Provider):</strong> Outside the system boundary and subject to no governance constraint. Self-enforcement by a model provider is PROHIBITED and cannot be recognized as QODIQA-conformant enforcement under any condition.</li>
+            <li><strong>TZ-8 (External Services):</strong> Zero trust. No enforcement authority can be delegated to a zero-trust zone. PROHIBITED.</li>
+            <li><strong>Distributed / Multi-gateway architectures:</strong> Multiple enforcement gateways produce no single auditable enforcement record and admit denial of authority in any specific component. PROHIBITED unless each gateway independently satisfies all TZ-4 requirements and each gateway's decisions are independently audited. Shared permit token issuance across gateways is PROHIBITED.</li>
+          </ul>
+        </div>
+
+        <h3>Invalid Architectures</h3>
+        <div class="consequence-block">
+          <span class="cq-label">Invalid Architecture Patterns</span>
+          <ul>
+            <li>Any architecture in which TZ-3 can route inference requests to TZ-7 without a TZ-4-issued permit token.</li>
+            <li>Any architecture in which TZ-7 accepts inference requests without verifying a valid TZ-4-issued permit token.</li>
+            <li>Any architecture in which enforcement decisions are cached and reused across distinct requests.</li>
+            <li>Any architecture in which the enforcement gateway can be bypassed by changing network routing configuration without governance approval.</li>
+            <li>Any architecture in which the enforcement gateway issues permit tokens without consulting TZ-5 and TZ-6 for each decision.</li>
+          </ul>
+        </div>
+
+        <h3>Pre-Condition Validation</h3>
+        <div class="rule-block">
+          <span class="rb-label">Rule — Pre-Conditions for Permit Issuance</span>
+          <p>Before issuing any permit decision, TZ-4 MUST verify all of the following. If any cannot be confirmed, TZ-4 MUST issue a deny decision immediately:</p>
+          <ul>
+            <li>The request is structurally valid and all required fields are present and well-formed.</li>
+            <li>The requestor identity is cryptographically authenticated.</li>
+            <li>The declared intent is within the processing scope of the enforcement gateway's policy configuration.</li>
+            <li>TZ-5 is available and its consent validity response is cryptographically signed and temporally current.</li>
+            <li>TZ-6 is available and its recommendation is based on a verified policy version.</li>
+          </ul>
+        </div>
+
+        <h3>Blocking Guarantees</h3>
+        <div class="rule-block">
+          <span class="rb-label">Rule — Default Blocked State</span>
+          <p>The enforcement gateway MUST implement permit-absence as the default state. A request proceeds only if a permit token has been affirmatively issued for that specific request. Denial is the default. Permitting is the exception that requires positive confirmation of all pre-conditions.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-05 — No Permit Without Consent and Policy Confirmation</span>
+          <p>A permit token MUST NOT be issued unless both a signed consent validity affirmation from TZ-5 and a policy permit recommendation from TZ-6 have been received and verified for the specific request being evaluated. Absence of either input MUST result in deny.</p>
+        </div>
+
+        <div class="consequence-block">
+          <span class="cq-label">Non-Bypassability Consequence</span>
+          <p>Any architectural configuration in which an inference request can reach TZ-7 without traversing TZ-4 is an enforcement bypass condition. An enforcement bypass condition: (1) invalidates all QODIQA conformance claims for the affected deployment with immediate effect; (2) requires immediate system shutdown pending remediation; (3) constitutes a critical security incident requiring governance notification within the timeframe defined in the applicable governance configuration.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Cross-Boundary Interaction Model</h2>
+
+        <p>All interactions between components in different trust zones are cross-boundary interactions. Every cross-boundary interaction MUST conform to the rules in this section. Any interaction not explicitly authorized by these rules is PROHIBITED.</p>
+
+        <div id="s6-1" class="doc-section">
+          <h3>6.1 Data Flows</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule — Authorized Data Flows</span>
+            <ul>
+              <li>Data flowing from outside the enforcement boundary into TZ-4 MUST be treated as untrusted and validated in full before processing.</li>
+              <li>Data flowing from TZ-5 or TZ-6 to TZ-4 MUST be cryptographically signed by the originating component and verified by TZ-4 before use.</li>
+              <li>Data flowing from TZ-4 to outside-boundary components MUST consist only of permit tokens, deny signals, or explicitly authorized audit outputs.</li>
+              <li>Data MUST NOT flow directly between TZ-7 or TZ-8 and any inside-boundary component.</li>
+              <li>All data crossing the enforcement boundary MUST be logged to TZ-9 as part of the enforcement decision record.</li>
+            </ul>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — Rejection Conditions for Data Flows</span>
+            <ul>
+              <li>Data arriving at TZ-4 from an unauthenticated source MUST be rejected immediately without processing.</li>
+              <li>Data arriving from TZ-5 or TZ-6 without a valid cryptographic signature MUST be rejected. The pending enforcement decision MUST be converted to deny.</li>
+              <li>Data containing fields not defined in the published request schema MUST be rejected. The request MUST NOT proceed.</li>
+              <li>Data from TZ-7 or TZ-8 arriving at any inside-boundary component through any channel constitutes an unauthorized data flow and MUST be blocked.</li>
+            </ul>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Malformed Interaction Consequence</span>
+            <p>A malformed data flow that is processed rather than rejected introduces unvalidated content into the enforcement trust domain. Any enforcement decision influenced by unvalidated content is INVALID. The malformed interaction MUST be logged as a security event in TZ-9.</p>
+          </div>
+        </div>
+
+        <div id="s6-2" class="doc-section">
+          <h3>6.2 Control Flows</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule — Authorized Control Flows</span>
+            <ul>
+              <li>Control authority flows inward toward TZ-4. No outside-boundary component may issue control instructions to any inside-boundary component.</li>
+              <li>TZ-4 may issue control signals to TZ-5 and TZ-6 solely to invoke consent resolution and policy evaluation for a specific enforcement decision.</li>
+              <li>TZ-4 MUST NOT delegate control authority to any outside-boundary component under any operational condition.</li>
+              <li>Control flow from TZ-1 to TZ-5 for consent registration and revocation is permitted through the authenticated consent submission interface only.</li>
+            </ul>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — Prohibited Control Flows</span>
+            <ul>
+              <li>TZ-3 MUST NOT issue control instructions to TZ-4, TZ-5, TZ-6, or TZ-9.</li>
+              <li>TZ-7 and TZ-8 MUST NOT issue any control signals to any component in the architecture.</li>
+              <li>TZ-5 and TZ-6 MUST NOT initiate unsolicited interactions with TZ-4.</li>
+              <li>Any control signal originating from an outside-boundary component that reaches an inside-boundary component through an unauthorized channel MUST be rejected and logged as a critical security event.</li>
+            </ul>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Unauthorized Control Flow Consequence</span>
+            <p>An unauthorized control flow reaching an inside-boundary component constitutes a boundary breach. The affected component MUST reject the signal and generate a critical audit record. If the breach cannot be immediately isolated, the deployment MUST be suspended.</p>
+          </div>
+        </div>
+
+        <div id="s6-3" class="doc-section">
+          <h3>6.3 Trust Downgrade Rules</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule — Trust Downgrade on Cross-Boundary Transfer</span>
+            <p>When data crosses from a lower-trust zone to a higher-trust zone, the data MUST be downgraded to the trust level of the originating zone and treated accordingly, regardless of its claimed origin. Trust downgrades are irreversible within a single enforcement transaction. No trust elevation may result from cross-boundary data passage.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — No Trust Elevation</span>
+            <p>A component MUST NOT treat data from TZ-2 as trusted because it was routed through TZ-3. A component MUST NOT treat data from TZ-8 as trusted because it was reformatted by TZ-3. Trust is assigned based on the original source zone, not the most recent forwarding zone. Any implementation that elevates trust based on forwarding path is INVALID.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Trust Elevation Consequence</span>
+            <p>Trust elevation through forwarding is a structural exploit path that allows untrusted data to be laundered into the enforcement trust domain through a trusted intermediary. Any enforcement decision influenced by laundered trust is INVALID. The affected interaction path MUST be remediated immediately.</p>
+          </div>
+        </div>
+
+        <div id="s6-4" class="doc-section">
+          <h3>6.4 Validation Requirements</h3>
+
+          <div class="rule-block">
+            <span class="rb-label">Rule — Full Validation at Every Boundary Crossing</span>
+            <p>Every cross-boundary interaction MUST be validated at the receiving boundary before the data or control signal is processed. Validation MUST confirm: structural integrity, cryptographic authenticity where applicable, zone-appropriate trust level, and conformance with the declared interaction protocol.</p>
+          </div>
+
+          <div class="constraint-block">
+            <span class="cb-label">Constraint — No Partial Validation</span>
+            <p>Partial validation is PROHIBITED. A cross-boundary interaction is either fully valid or fully invalid. There is no intermediate acceptance state. A validation failure on any single criterion MUST result in immediate rejection of the entire interaction.</p>
+          </div>
+
+          <div class="invariant-block">
+            <span class="inv-label">Invariant I-03 — No Cross-Boundary Execution Without Full Validation</span>
+            <p>No data or control signal crossing a trust zone boundary may be acted upon until it has been fully validated in conformance with this section. Partial validation is INVALID. A cross-boundary interaction validated on three of four criteria is NOT validated.</p>
+          </div>
+
+          <div class="consequence-block">
+            <span class="cq-label">Validation Failure Consequence</span>
+            <p>A validation failure MUST generate an audit record in TZ-9 identifying the rejection reason, the source zone, and the interaction type. The failed interaction MUST NOT be retried without resolving the validation failure. Repeated validation failures from the same source zone MUST be treated as a potential attack pattern and escalated to the governance authority.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Untrusted Component Containment</h2>
+
+        <p>Untrusted components MUST be contained. Containment means that a component cannot affect enforcement outcomes through any channel other than the formally defined, validated interaction interfaces specified in Section 6. Each class of untrusted component has specific containment requirements, failure scenarios, and escalation paths.</p>
+
+        <h3>Model Providers (TZ-7)</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Containment Requirements</span>
+          <ul>
+            <li>No network path may exist between TZ-7 components and TZ-4, TZ-5, TZ-6, or TZ-9 components.</li>
+            <li>Inference requests MUST reach TZ-7 through TZ-3 only, and only when accompanied by a valid permit token.</li>
+            <li>Outputs from TZ-7 MUST NOT be returned to any inside-boundary component.</li>
+            <li>TZ-4 MUST NOT inspect or process model outputs. Enforcement authority ends with permit issuance.</li>
+          </ul>
+        </div>
+
+        <div class="consequence-block containment-block">
+          <span class="cq-label">Containment Failure Scenarios — TZ-7</span>
+          <ul>
+            <li><strong>Direct routing bypass:</strong> TZ-3 routes to TZ-7 without a valid permit token. Enforcement bypass condition. Immediate suspension of TZ-3 integration required.</li>
+            <li><strong>Model output feedback loop:</strong> TZ-7 outputs are returned to TZ-4 or TZ-5. The inside-boundary component is contaminated by untrusted data. All decisions produced during contamination are INVALID.</li>
+            <li><strong>Permit token exfiltration:</strong> TZ-7 extracts and reuses permit token parameters. Full permit token rotation MUST be executed immediately. Audit review of all decisions issued under the compromised token series is required.</li>
+          </ul>
+        </div>
+
+        <h3>External APIs (TZ-8)</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Containment Requirements</span>
+          <ul>
+            <li>TZ-8 components MUST have no connectivity to any inside-boundary component.</li>
+            <li>Inside-boundary components MUST NOT introduce service dependencies on TZ-8 components.</li>
+            <li>External dependencies required for operational purposes unrelated to enforcement MUST be isolated in a separately classified outside-boundary component.</li>
+          </ul>
+        </div>
+
+        <div class="consequence-block containment-block">
+          <span class="cq-label">Containment Failure Scenarios — TZ-8</span>
+          <ul>
+            <li><strong>Supply chain compromise:</strong> An external dependency loaded by an inside-boundary component is compromised. The inside-boundary component is immediately reclassified as potentially compromised. All decisions produced after the compromise point require forensic review.</li>
+            <li><strong>Data exfiltration channel:</strong> A TZ-8 component receives inside-boundary data through an undocumented channel. Classified as a cross-zone leakage event (TV-04). Critical incident response required.</li>
+          </ul>
+        </div>
+
+        <h3>Plugins and Extensions</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Containment Requirements</span>
+          <ul>
+            <li>No plugin, extension, or dynamically loaded module may be executed within the enforcement boundary without prior formal evaluation and explicit inclusion in the inside-boundary component inventory.</li>
+            <li>Plugins executing within TZ-3 or TZ-7 are subject to the untrusted zone rules of those zones without exception.</li>
+            <li>Plugins that interact with TZ-4 MUST present authenticated requestor identities and MUST pass all TZ-4 validation requirements.</li>
+          </ul>
+        </div>
+
+        <div class="consequence-block containment-block">
+          <span class="cq-label">Containment Failure Scenarios — Plugins</span>
+          <ul>
+            <li><strong>Unevaluated plugin execution inside boundary:</strong> Immediate suspension of all enforcement operations. Complete boundary audit required before resumption.</li>
+            <li><strong>Plugin identity spoofing:</strong> A plugin presents a fabricated authenticated identity to TZ-4. Constitutes a TV-01 boundary breach. Suspension and forensic review required.</li>
+          </ul>
+        </div>
+
+        <h3>User Inputs (TZ-1, TZ-2)</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Containment Requirements</span>
+          <ul>
+            <li>All user inputs MUST be sanitized and structurally validated before submission to any inside-boundary component.</li>
+            <li>TZ-4 MUST NOT execute any logic derived from or influenced by raw user input.</li>
+            <li>Declared intent is used only as a lookup key in consent and policy evaluation. It is NEVER executed, interpreted, or evaluated as a general-purpose instruction.</li>
+            <li>No user input may influence enforcement decision logic directly or through an intermediary.</li>
+          </ul>
+        </div>
+
+        <div class="consequence-block containment-block">
+          <span class="cq-label">Containment Failure Scenarios — User Inputs</span>
+          <ul>
+            <li><strong>Intent field injection:</strong> A user crafts an intent declaration that causes TZ-4 to execute unintended logic paths. The affected decision is INVALID. Input validation MUST be hardened before enforcement resumes.</li>
+            <li><strong>Consent scope inflation:</strong> A user submits a consent declaration with a broader scope than intended through exploiting validation gaps in TZ-1. All downstream enforcement decisions relying on the inflated consent record are INVALID pending registry audit.</li>
+          </ul>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-04 — No Model Interaction Outside Enforcement Boundary</span>
+          <p>No inside-boundary component MUST initiate or participate in a direct interaction with TZ-7. All model interactions MUST occur outside the enforcement boundary, initiated by TZ-3 upon receipt of a valid permit token from TZ-4.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Trust Violation Scenarios</h2>
+
+        <p>The following trust violation scenarios are explicitly recognized by this specification. Each scenario defines a detection condition, a mandatory response, and a conformance consequence. Mandatory responses are unconditional. No operational condition, performance requirement, or availability constraint overrides a mandatory response. Reduction in response severity for any enumerated scenario constitutes an independent non-compliance condition.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 8-A — Trust Violation Scenarios, Mandatory Responses, and Conformance Consequences</span>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Violation Type</th>
+                <th>Detection Condition</th>
+                <th>Mandatory Response</th>
+                <th>Conformance Consequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TV-01</td>
+                <td>Boundary Breach</td>
+                <td>An inference request reaches TZ-7 without a valid TZ-4-issued permit token, detectable through permit token verification at the model access point or through audit log correlation.</td>
+                <td>Immediate block of request. Session termination. Critical audit record generation. Governance authority notification. Immediate suspension of the originating integration account pending investigation.</td>
+                <td>All enforcement decisions produced by the affected integration from the point of boundary breach are INVALID. Certification is suspended. Resumption requires full architectural audit and re-certification.</td>
+              </tr>
+              <tr>
+                <td>TV-02</td>
+                <td>Implicit Trust Introduction</td>
+                <td>An inside-boundary component is found accepting data, instructions, or configuration from a component absent from the authorized trust inventory, without explicit validation per Section 6.4.</td>
+                <td>Immediate quarantine of the affected component. Suspension of all enforcement operations routed through it. Full audit of all decisions produced during the implicit trust exposure period. Invalidation of affected decisions pending audit outcome.</td>
+                <td>The affected component is reclassified as untrusted. All decisions it participated in are INVALID pending audit. Deployment is NON-COMPLIANT until trust inventory is remediated and full re-certification is obtained.</td>
+              </tr>
+              <tr>
+                <td>TV-03</td>
+                <td>Enforcement Bypass</td>
+                <td>Audit log analysis reveals a permitted inference operation not preceded by a logged enforcement decision for the same request identifier, or a permit token presented at model access does not match the TZ-4-issued token.</td>
+                <td>Immediate suspension of the relevant TZ-3 integration. Invalidation of all permit tokens currently in circulation for that integration. Full forensic review of the bypass mechanism. Governance authority report within the timeframe defined in the applicable governance configuration.</td>
+                <td>The deployment's enforcement guarantee is null for the period of bypass. All inference operations during the bypass period are unenforceable. QODIQA conformance certification is immediately revoked pending investigation outcome.</td>
+              </tr>
+              <tr>
+                <td>TV-04</td>
+                <td>Cross-Zone Data Leakage</td>
+                <td>Inside-boundary data — including enforcement decision logic, policy content, consent records, or audit entries — is found in TZ-7 or TZ-8 through a channel not defined in the cross-boundary interaction model.</td>
+                <td>Critical security incident classification. Execution of the incident response procedure in the QODIQA Security and Cryptographic Profile. Revocation of all signing keys potentially exposed during the leakage period. Notification of affected consent subjects. Immediate certification suspension.</td>
+                <td>The confidentiality and integrity of the enforcement boundary are compromised. All enforcement decisions produced after the leakage start point require forensic review. Certification MUST NOT be reinstated without independent security audit.</td>
+              </tr>
+              <tr>
+                <td>TV-05</td>
+                <td>Consent Registry Integrity Failure</td>
+                <td>TZ-4 receives a consent validity response from TZ-5 that fails signature verification, contains a timestamp outside the acceptable validity window, or references a consent record absent from the tamper-evident log.</td>
+                <td>Response treated as INVALID. Deny decision issued for the pending request. Audit record generated indicating registry integrity failure. TZ-5 suspended as trusted component. Fail-closed on all subsequent requests until TZ-5 trust is re-established through re-verification.</td>
+                <td>TZ-5 is downgraded to untrusted status. All enforcement decisions issued while TZ-5 integrity was compromised MUST be reviewed. Decisions relying on the compromised consent state are INVALID.</td>
+              </tr>
+              <tr>
+                <td>TV-06</td>
+                <td>Policy Version Integrity Failure</td>
+                <td>TZ-6 returns a recommendation based on a policy version whose hash does not match the canonical hash in the enforcement governance record, or the policy version identifier is unrecognized by the governance authority.</td>
+                <td>Recommendation treated as INVALID. Deny decision issued for the pending request. Audit record generated indicating policy integrity failure. All policy evaluations halted until the verified policy version is loaded and confirmed. Review of all decisions issued under the unverified policy version.</td>
+                <td>TZ-6 is downgraded to untrusted status for the period of policy version integrity failure. Decisions based on the unverified policy are INVALID and MUST be disclosed to relying parties.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant — Fail-Closed Default for Unenumerated Violations</span>
+          <p>In any trust violation scenario not enumerated in Table 8-A, the system MUST default to deny. Absence of a specific enumerated response rule for a detected anomaly mandates the most conservative available response: block the request, generate a critical audit record, and escalate to the governance authority. Permit issuance is PROHIBITED when the system state is anomalous.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Trust Reduction Strategy</h2>
+
+        <p>The QODIQA trust model MUST be continuously hardened. Trust reduction is a mandatory evolution direction, not an optional improvement. Each rule below is normative.</p>
+
+        <h3>Rule 1 — Assumption Elimination</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Mandatory Rule</span>
+          <p>Every existing trust relationship MUST be reviewed at each formal version cycle to determine whether the underlying assumption remains valid. Where an assumption can be replaced by a cryptographic verification, the substitution is MANDATORY. Where an assumption cannot be eliminated, it MUST be documented as a known trust dependency and tracked as a risk item under the QODIQA Risk and Assumption Disclosure Annex.</p>
+        </div>
+
+        <div class="constraint-block">
+          <span class="cb-label">Measurable Constraint</span>
+          <p>Undocumented trust assumptions are NON-COMPLIANT. An assumption-to-verification substitution deferred without documented justification is NON-COMPLIANT. Each version cycle MUST produce a trust assumption delta report enumerating: assumptions eliminated, assumptions pending elimination, and assumptions accepted as residual with risk justification.</p>
+        </div>
+
+        <div class="consequence-block">
+          <span class="cq-label">Consequence of Non-Elimination</span>
+          <p>Trust assumptions that persist without review accumulate as undocumented risk. A deployment that fails to produce a trust assumption delta report at each version cycle is NON-COMPLIANT and MUST NOT have its certification renewed.</p>
+        </div>
+
+        <h3>Rule 2 — Progressive Hardening</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Mandatory Rule</span>
+          <p>Each successive version of this specification MUST reduce, or hold constant, the total number of trust grants in the canonical trust model. Trust grants MUST NOT be added except where a new component is formally incorporated into the inside-boundary component set through the full governance process. Trust grants MUST NOT be added to address operational convenience, performance optimization, or integration simplification.</p>
+        </div>
+
+        <div class="constraint-block">
+          <span class="cb-label">Measurable Constraint</span>
+          <p>The trust grant count at version N+1 MUST be less than or equal to the trust grant count at version N. Any version in which the trust grant count increases without a formally approved boundary expansion is NON-COMPLIANT.</p>
+        </div>
+
+        <div class="consequence-block">
+          <span class="cq-label">Consequence of Trust Surface Expansion</span>
+          <p>A version that expands the trust surface without formal approval introduces unreviewed trust dependencies into the architecture. The affected version MUST NOT be deployed in production. The governance authority MUST review and explicitly approve any trust surface expansion before it is permitted in a normative version.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant — Non-Increasing Trust Surface</span>
+          <p>The total trust grant count of the canonical trust model MUST NOT increase between successive specification versions without a formally approved, governed boundary expansion. A version violating this invariant MUST NOT be deployed.</p>
+        </div>
+
+        <h3>Rule 3 — Reduction of Conditional Trust Dependencies</h3>
+
+        <div class="rule-block">
+          <span class="rb-label">Mandatory Rule</span>
+          <p>Implementations MUST actively reduce dependencies on conditionally trusted components. The conditional trust assigned to TZ-5 (Consent Registry) is the highest residual trust dependency in the architecture. Implementations MUST prioritize cryptographic mechanisms that enable TZ-4 to verify consent validity without relying on a live registry response, such as cryptographically self-contained consent tokens with short validity periods and embedded revocation indicators.</p>
+        </div>
+
+        <div class="constraint-block">
+          <span class="cb-label">Measurable Constraint</span>
+          <p>Implementations MUST document the maximum tolerated TZ-5 unavailability period before fail-closed behavior is triggered. This period MUST decrease at each version cycle where architectural changes permit. An implementation with no documented TZ-5 unavailability tolerance bound is NON-COMPLIANT.</p>
+        </div>
+
+        <div class="consequence-block">
+          <span class="cq-label">Consequence of Dependency Retention</span>
+          <p>Unreduced conditional trust dependencies sustain attack surfaces that cryptographic self-containment would eliminate. An implementation that retains avoidable conditional trust dependencies without documented justification is failing its trust reduction obligation. Certification renewal MUST NOT be granted without evidence of active trust reduction effort.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>System Invariants</h2>
+
+        <p>The following invariants MUST hold continuously in every conformant QODIQA implementation. An invariant is a property that MUST be true at every observable point in system operation, including degraded and adversarial conditions. Invariants I-01 through I-08 are referenced at their point of first relevance throughout this specification and consolidated here for auditability. Failure of any invariant is a critical system fault requiring immediate fail-closed response.</p>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-00 — Definition Immutability</span>
+          <p>Definitions 1, 2, and 3 in Section 1 are immutable at runtime. No operational condition modifies the scope of any definition. Redefinition without formal specification revision is NON-COMPLIANT. First referenced: Section 1.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-01 — No Inference Without Enforcement</span>
+          <p>No inference request may produce a model output unless a valid, gateway-issued permit token for that specific request exists and has been verified by the forwarding component. No exception. First referenced: Section 3 (TZ-4).</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-02 — No Trust Without Verification</span>
+          <p>No component MUST treat another component as trusted unless the trust relationship has been explicitly established through a defined trust contract and the conditions of that contract have been verified for the current interaction.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-03 — No Cross-Boundary Execution Without Full Validation</span>
+          <p>No data or control signal crossing a trust zone boundary MUST be acted upon until it has been fully validated per Section 6.4. Partial validation is INVALID. First referenced: Section 6.4.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-04 — No Model Interaction Outside Enforcement Boundary</span>
+          <p>No inside-boundary component MUST initiate or participate in a direct interaction with TZ-7. All model interactions MUST originate from TZ-3 upon receipt of a valid permit token. First referenced: Section 7.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-05 — No Permit Without Consent and Policy Confirmation</span>
+          <p>A permit token MUST NOT be issued unless both a signed TZ-5 consent validity affirmation and a TZ-6 policy permit recommendation have been received and verified for the specific request. Absence of either MUST result in deny. First referenced: Section 5.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-06 — No Enforcement Decision Without Audit Record</span>
+          <p>Every enforcement decision — permit or deny — MUST generate a corresponding audit record in TZ-9 before the decision is communicated to the requesting component. A decision without a pre-committed audit record MUST NOT be issued. First referenced: Section 3 (TZ-9).</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-07 — No Trust Propagation</span>
+          <p>Trust granted to any component is scoped exclusively to that component and the capabilities in its trust contract. Trust MUST NOT propagate to any third component through any mechanism. First referenced: Section 4.5.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Invariant I-08 — Boundary Immutability at Runtime</span>
+          <p>The composition of the inside-boundary component set MUST NOT change at runtime. Any change requires a governed specification revision and deployment re-certification. An undocumented runtime change is a critical security incident. First referenced: Section 2.4.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Non-Compliance Conditions</h2>
+
+        <p>Each condition below independently constitutes non-compliance with this specification. A NON-COMPLIANT implementation MUST NOT assert QODIQA conformance and MUST NOT be presented to relying parties as QODIQA-conformant. Non-compliance conditions are individually sufficient; satisfaction of all other requirements does not offset any single violation.</p>
+
+        <ul>
+          <li><strong>Missing boundary definitions.</strong> The implementation does not maintain a documented inside-boundary component inventory, or the inventory does not cover all components participating in enforcement, consent resolution, policy evaluation, or audit record generation.</li>
+          <li><strong>Implicit trust.</strong> Any trust relationship exists in the implementation that is not documented in the trust inventory and backed by an explicit trust contract satisfying Section 4.2.</li>
+          <li><strong>Enforcement outside the gateway.</strong> Any enforcement decision is made, or any permit token is issued, by a component other than TZ-4.</li>
+          <li><strong>Undefined zones.</strong> Any component participating in enforcement-related operations is not assigned to one of the nine canonical trust zones defined in Section 3.</li>
+          <li><strong>Fail-open behavior.</strong> The system issues a permit decision when TZ-4 is unavailable, when consent verification fails, when policy evaluation fails, or when any pre-condition in Section 5 cannot be confirmed.</li>
+          <li><strong>Trust propagation.</strong> The implementation relies on transitive trust in any enforcement-relevant operation.</li>
+          <li><strong>Unlogged decisions.</strong> Any enforcement decision is issued without a corresponding audit record committed to TZ-9 before decision delivery.</li>
+          <li><strong>Boundary bypass.</strong> Any inference request reaches TZ-7 through a path that does not traverse TZ-4.</li>
+          <li><strong>Non-revocable trust.</strong> Any trust grant exists for which no revocation mechanism has been defined and successfully tested.</li>
+          <li><strong>Unverified policy evaluation.</strong> Any enforcement decision is based on a policy evaluation performed against a policy version not verified against the canonical policy hash.</li>
+          <li><strong>Undocumented trust assumptions.</strong> Any trust assumption exists in the implementation that is not documented in the trust assumption register maintained under the QODIQA Risk and Assumption Disclosure Annex.</li>
+          <li><strong>Invalid architecture patterns.</strong> The implementation matches any pattern enumerated in Section 5 under "Invalid Architectures."</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Conformance Requirements</h2>
+
+        <p>QODIQA conformance with this specification requires demonstrable satisfaction of all requirements below. All items are mandatory. Partial conformance is not recognized. A claim of conformance that cannot be substantiated by evidence for every item below is INVALID.</p>
+
+        <h3>What Must Be Proven</h3>
+        <ul>
+          <li>The inside-boundary component inventory is complete, accurate, and maintained under the QODIQA Change Log and Version Control Protocol, demonstrable through version-controlled governance records.</li>
+          <li>No inference request can reach TZ-7 without traversing TZ-4, demonstrable through architectural analysis and network topology documentation reviewed by an independent auditor.</li>
+          <li>Every trust relationship in the implementation is documented in a trust inventory backed by explicit trust contracts satisfying Section 4.2, demonstrable through inspection of governance documentation.</li>
+          <li>Fail-closed behavior per Sections 5 and 8 is implemented without exception, demonstrable through fault injection test results.</li>
+          <li>All eight system invariants in Section 10 hold under normal, boundary-condition, and adversarial operation, demonstrable through structured test evidence.</li>
+        </ul>
+
+        <h3>What Must Be Testable</h3>
+        <ul>
+          <li>Blocking behavior of TZ-4 for requests failing pre-condition validation, tested using the QODIQA Conformance Test Suite test cases.</li>
+          <li>All six trust violation responses in Table 8-A, tested through controlled scenario injection with documented outcomes.</li>
+          <li>Non-bypassability of the enforcement boundary, tested through network-level bypass attempts as defined in the Conformance Test Suite.</li>
+          <li>Revocability of every trust grant in the trust inventory, tested through revocation execution and subsequent interaction attempt.</li>
+          <li>Cryptographic verification of all cross-boundary signals from TZ-5 and TZ-6, tested through signature forgery rejection scenarios.</li>
+          <li>Containment failure escalation paths defined in Section 7, tested through controlled containment breach scenarios.</li>
+        </ul>
+
+        <h3>What Must Be Auditable</h3>
+        <ul>
+          <li>Every enforcement decision MUST be reconstructible from the TZ-9 audit record without access to runtime state.</li>
+          <li>The policy version applied to every enforcement decision MUST be identifiable from the audit record.</li>
+          <li>The consent state consulted for every enforcement decision MUST be identifiable from the audit record and verifiable against the consent registry log.</li>
+          <li>The complete trust inventory MUST be available for inspection by authorized auditors at any time.</li>
+          <li>The trust assumption delta report MUST be available for every completed version cycle.</li>
+          <li>Any change to the inside-boundary component inventory MUST be recorded in the change log with the authorizing governance event referenced.</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Final Deterministic Statement</h2>
+
+        <p>This specification defines the complete, closed system boundary and trust model for deterministic runtime consent enforcement architecture. No element of the boundary or trust model is open to interpretation. No gap in this specification may be filled by implementer discretion. Where this specification is silent on a specific scenario, the fail-closed rule applies unconditionally.</p>
+
+        <div class="constraint-block">
+          <span class="cb-label">Boundary Violation — Consequence</span>
+          <p>Any violation of the system boundary as defined in Section 2 immediately and completely invalidates all QODIQA conformance claims for the affected deployment. A deployment with a violated boundary MUST NOT assert that consent has been enforced for any inference operation, regardless of the intended behavior of TZ-4.</p>
+        </div>
+
+        <div class="constraint-block">
+          <span class="cb-label">Trust Model Violation — Consequence</span>
+          <p>Any violation of the trust model — including implicit trust introduction, trust propagation across components, or operation of a trust grant without a defined revocation mechanism — immediately invalidates the integrity of all enforcement decisions produced under the affected trust configuration. Decisions produced under a violated trust model MUST be disclosed to relying parties as potentially invalid.</p>
+        </div>
+
+        <div class="consequence-block">
+          <span class="cq-label">Invariant Failure — Consequence</span>
+          <p>Failure of any system invariant in Section 10 is a critical architectural fault. The affected deployment MUST be suspended immediately. Enforcement decisions produced during the period of invariant failure MUST NOT be presented as valid enforcement evidence. Resumption of deployment MUST be preceded by root cause analysis, remediation, and re-certification.</p>
+        </div>
+
+        <div class="invariant-block">
+          <span class="inv-label">Final Invariant — Full and Continuous Compliance</span>
+          <p>Compliance with this specification requires full, continuous, and demonstrable adherence to every boundary definition, trust zone definition, trust model principle, enforcement boundary constraint, cross-boundary interaction rule, containment requirement, violation response, and invariant defined herein. No partial compliance is recognized. No waiver is permitted without formal specification revision under the QODIQA Governance Charter. The QODIQA system boundary and trust model is not a design recommendation. It is a structural requirement. Implementations that satisfy it can assert deterministic enforcement. Implementations that do not satisfy it cannot.</p>
+        </div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a foundational specification within the QODIQA corpus. It defines the complete system boundary and trust model governing the QODIQA deterministic runtime consent enforcement architecture. All boundary definitions, trust zone assignments, enforcement location constraints, cross-boundary interaction rules, and system invariants set forth herein are normative and binding on all conformant implementations.</p>
+
+          <p>This specification is a prerequisite for the correct interpretation of all other QODIQA corpus documents that reference trust zones, enforcement boundaries, or cross-boundary interaction rules. Implementations MUST satisfy the requirements of this document before asserting conformance with any other QODIQA specification.</p>
+
+          <p>This document MUST be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-SBTM-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">System Boundary and Trust Model Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Foundational Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Final — Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Classification</span>
+            <span class="doc-id-val">Public</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — System Boundary and Trust Model Specification</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-SBTM-2026-001</p>
+      <p>Foundational Specification</p>
+      <p>Status: Final — Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a formal specification for the QODIQA system boundary and trust model. All boundary definitions, trust zone assignments, and enforcement invariants described herein are intended for implementation guidance and conformance evaluation only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-SBTM-2026-001 &nbsp;·&nbsp; Version 1.0 — Final, Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================
+     SCROLLSPY — PRECISION IMPLEMENTATION
+     Position-based RAF-gated fallback is source of truth on every
+     scroll tick. IntersectionObserver accelerates initial activation
+     and programmatic scrolls. Single setActive gate: zero flicker.
+     ================================================================ */
+
+  const SECTION_IDS = [
+    'cover','s-abstract','s1',
+    's2','s2-1','s2-2','s2-3','s2-4',
+    's3','s3-tz1','s3-tz2','s3-tz3','s3-tz4','s3-tz5','s3-tz6','s3-tz7','s3-tz8','s3-tz9','s3-diagram',
+    's4','s4-1','s4-2','s4-3','s4-4','s4-5',
+    's5','s6','s6-1','s6-2','s6-3','s6-4',
+    's7','s8','s9','s10','s11','s12','s13','s-status'
+  ];
+
+  const navItems = Array.from(document.querySelectorAll('.nav-item'));
+  const sections = SECTION_IDS.map(id => document.getElementById(id)).filter(Boolean);
+  const sectionOrder = new Map(sections.map((s, i) => [s.id, i]));
+  let lastActive = '';
+
+  function getOffset() {
+    return window.innerWidth <= 768 ? 80 : 28;
+  }
+
+  function setActive(id) {
+    if (!id || id === lastActive) return;
+    lastActive = id;
+    const href = '#' + id;
+    navItems.forEach(item => {
+      const active = item.getAttribute('href') === href;
+      item.classList.toggle('active', active);
+      if (active) {
+        const nav = document.querySelector('.sidebar-nav');
+        if (nav) {
+          const ir = item.getBoundingClientRect();
+          const nr = nav.getBoundingClientRect();
+          if (ir.top < nr.top + 20 || ir.bottom > nr.bottom - 20) {
+            item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+      }
+    });
+  }
+
+  /* Position-based spy — runs every scroll frame, always correct */
+  let rafId = null;
+  function positionSpy() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      const threshold = getOffset();
+      let active = sections[0] ? sections[0].id : '';
+      for (let i = 0; i < sections.length; i++) {
+        if (sections[i].getBoundingClientRect().top <= threshold) {
+          active = sections[i].id;
+        }
+      }
+      setActive(active);
+    });
+  }
+
+  /* IntersectionObserver — accelerates detection on section entry */
+  function buildObserver() {
+    const off = getOffset();
+    return new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const scrollTop = window.scrollY + off;
+          let best = sections[0] ? sections[0].id : '';
+          let bestOrd = -1;
+          for (let i = 0; i < sections.length; i++) {
+            const absTop = sections[i].getBoundingClientRect().top + window.scrollY;
+            if (absTop <= scrollTop) {
+              const ord = sectionOrder.get(sections[i].id) ?? -1;
+              if (ord > bestOrd) { bestOrd = ord; best = sections[i].id; }
+            }
+          }
+          setActive(best);
+        }
+      });
+    }, { root: null, rootMargin: `-${off}px 0px -35% 0px`, threshold: 0 });
+  }
+
+  let observer = buildObserver();
+  sections.forEach(s => observer.observe(s));
+
+  window.addEventListener('scroll', positionSpy, { passive: true });
+  window.addEventListener('resize', () => {
+    observer.disconnect();
+    observer = buildObserver();
+    sections.forEach(s => observer.observe(s));
+    positionSpy();
+  }, { passive: true });
+
+  positionSpy();
+
+  /* ── Smooth nav clicks ── */
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('overlay');
+  const navToggle = document.getElementById('navToggle');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const off = getOffset();
+          const top = target.getBoundingClientRect().top + window.scrollY - off;
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ── Back to top ── */
+  const btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', () => {
+      btt.classList.toggle('visible', window.scrollY > 600);
+    }, { passive: true });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  /* ── Mobile sidebar toggle ── */
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      if (sidebar) sidebar.classList.toggle('open');
+      if (overlay) overlay.classList.toggle('active');
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      if (sidebar) sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

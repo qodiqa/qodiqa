@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Reference Implementation Specification (Minimal Deterministic Enforcement Stack) · v1.0</title>
+<meta name="description" content="QODIQA Reference Implementation Specification v1.0 — Minimal Deterministic Enforcement Stack for Runtime Consent Validation. April 2026.">
+<meta property="og:title" content="QODIQA — Reference Implementation Specification (Minimal Deterministic Enforcement Stack)">
+<meta property="og:description" content="A minimal, deterministic runtime enforcement stack demonstrating consent validation at the inference boundary, fail-closed behavior, and verifiable audit logging.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --ink:#1A1C20;
+  --ink-2:#2C2F36;
+  --ink-3:#3A3F48;
+  --accent:#7A6A50;
+  --muted:#6B7280;
+  --rule:#D6D2CC;
+  --border:#D4D0CA;
+  --bg:#F6F4F0;
+  --text:#1A1C20;
+  --text-2:#3A3F48;
+  --text-3:#5A6070;
+  --sidebar-w:252px;
+  --col:800px;
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono','Courier New',monospace;
+  --lh:1.70;
+  --lh-h:1.22;
+}
+
+html{font-size:16px;}
+
+body{
+  font-family:var(--sans);
+  font-size:1rem;
+  line-height:var(--lh);
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+#cover{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background-color:#0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%,rgba(122,106,80,0.09) 0%,transparent 65%),
+    linear-gradient(180deg,#0A0C0F 0%,#0C0F13 50%,#0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,52px 52px,52px 52px;
+  position:relative;
+  overflow:hidden;
+  padding:96px 48px;
+  text-align:center;
+}
+
+#cover::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,transparent 55%,rgba(10,12,15,0.65) 100%);
+  pointer-events:none;
+}
+
+#cover::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(122,106,80,0.45) 50%,transparent 100%);
+}
+
+.cover-inner{
+  position:relative;
+  z-index:1;
+  max-width:580px;
+  width:100%;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.cover-title{font-family:var(--serif);text-align:center;width:100%;}
+
+.cover-title .qodiqa-brand{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(3.4rem,7.8vw,5.8rem);
+  font-weight:700;
+  letter-spacing:0.06em;
+  color:#FFFFFF;
+  line-height:1;
+  margin-bottom:24px;
+  text-shadow:0 0 20px rgba(122,106,80,0.10),0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(1.70rem,3.7vw,2.8rem);
+  font-weight:700;
+  line-height:1.20;
+  color:rgba(255,255,255,0.90);
+  letter-spacing:-0.010em;
+}
+
+.cover-title .title-main .italic-part{
+  font-style:italic;
+  font-weight:400;
+  color:rgba(255,255,255,0.58);
+}
+
+.cover-info-block{
+  width:100%;
+  max-width:520px;
+  margin:64px auto 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
+
+.cover-info-divider{
+  width:48px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(122,106,80,0.55),transparent);
+  margin:0 auto 32px;
+}
+
+.cover-info-subtitle{
+  font-family:var(--serif);
+  font-size:0.70rem;
+  font-weight:400;
+  letter-spacing:0.22em;
+  color:rgba(255,255,255,0.50);
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+
+.cover-info-date{
+  font-family:var(--serif);
+  font-size:0.76rem;
+  font-weight:300;
+  color:rgba(255,255,255,0.36);
+  letter-spacing:0.14em;
+  margin-bottom:24px;
+}
+
+.cover-info-badge{
+  display:inline-block;
+  border:1px solid rgba(122,106,80,0.38);
+  border-top:1px solid rgba(122,106,80,0.55);
+  padding:7px 28px 6px;
+  font-family:var(--mono);
+  font-size:0.62rem;
+  font-weight:500;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.50);
+  background:rgba(122,106,80,0.06);
+  margin-bottom:32px;
+}
+
+.cover-info-tagline{
+  font-family:var(--serif);
+  font-size:0.85rem;
+  font-weight:400;
+  color:rgba(255,255,255,0.50);
+  max-width:440px;
+  line-height:1.82;
+  font-style:italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline{
+  text-align:center;
+  hyphens:none;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.cover-scroll-hint{
+  position:absolute;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  color:rgba(255,255,255,0.15);
+  font-size:0.62rem;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+
+.layout{
+  display:flex;
+  min-height:100vh;
+}
+
+#sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  background:#0A0C0F;
+  border-right:1px solid rgba(255,255,255,0.055);  display:flex;
+  flex-direction:column;
+  z-index:100;
+  scrollbar-width:thin;
+  scrollbar-color:#2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar{width:3px;}
+#sidebar::-webkit-scrollbar-track{background:transparent;}
+#sidebar::-webkit-scrollbar-thumb{background:#2A2F38;}
+
+.sidebar-header{
+  padding:24px 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+
+.sidebar-nav-label{
+  font-family:var(--sans);
+  font-size:0.58rem;
+  font-weight:700;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  color:rgba(122,106,80,0.60);
+  display:block;
+}
+
+.sidebar-nav{
+  flex:1;
+  padding:12px 0 32px;
+}
+
+.nav-item{
+  display:block;
+  padding:4px 20px 4px 18px;
+  font-family:var(--sans);
+  font-size:0.73rem;
+  color:#A0A8B2;
+  text-decoration:none;
+  line-height:1.45;
+  border-left:2px solid transparent;
+  transition:color 0.12s ease,background 0.12s ease,border-color 0.12s ease;
+}
+
+.nav-item:hover{
+  color:#C4BEB2;
+  background:rgba(255,255,255,0.04);
+  border-left-color:rgba(122,106,80,0.32);
+}
+
+.nav-item.active{
+  color:#E2D8C8;
+  border-left-color:#A8966E;
+  background:rgba(122,106,80,0.14);
+  font-weight:600;
+}
+
+.nav-item.sub{
+  padding-left:32px;
+  font-size:0.69rem;
+  color:#6E7880;
+}
+
+.nav-item.sub:hover{color:#9A9490;}
+.nav-item.sub.active{color:#BEB4A8;}
+
+.sidebar-footer{
+  padding:12px 20px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  font-size:0.62rem;
+  color:#3A4050;
+  line-height:1.5;
+  flex-shrink:0;
+  font-family:var(--mono);
+  letter-spacing:0.03em;
+}
+
+.mobile-nav-header{display:none;}
+
+.nav-toggle{
+  display:none;
+  background:#0A0C0F;
+  color:#FFF;
+  border:1px solid rgba(255,255,255,0.10);
+  width:40px;
+  height:40px;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.48);
+  z-index:99;
+}
+
+#content{
+  flex:1;
+  min-width:0;
+  padding:80px 80px 108px;
+}
+
+.content-inner{
+  max-width:var(--col);
+  margin:0 auto;
+}
+
+.doc-section{
+  margin-top:32px;
+  padding-top:0;
+}
+
+.doc-section:first-child{margin-top:0;}
+.doc-section:has(.section-divider){margin-top:48px;}
+
+.section-divider{
+  display:block;
+  width:100%;
+  height:1px;
+  background:var(--rule);
+  margin-bottom:24px;
+  opacity:0.45;
+}
+
+h1,h2,h3,h4{
+  font-family:var(--serif);
+  color:var(--ink);
+  font-kerning:normal;
+}
+
+.section-label{
+  font-family:var(--mono);
+  font-size:0.60rem;
+  font-weight:500;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:block;
+  margin-bottom:8px;
+  opacity:0.80;
+}
+
+h2{
+  font-size:clamp(1.28rem,2.2vw,1.58rem);
+  font-weight:700;
+  line-height:var(--lh-h);
+  letter-spacing:-0.018em;
+  color:var(--ink);
+  margin-bottom:16px;
+  position:relative;
+}
+
+h2 .anchor-link{
+  position:absolute;
+  right:calc(100% + 14px);
+  top:50%;
+  transform:translateY(-50%);
+  opacity:0;
+  color:var(--accent);
+  font-size:0.75rem;
+  text-decoration:none;
+  font-family:var(--mono);
+  transition:opacity 0.12s ease;
+}
+
+h2:hover .anchor-link{opacity:0.7;}
+
+h3{
+  font-size:1.00rem;
+  font-weight:600;
+  line-height:1.28;
+  letter-spacing:-0.005em;
+  color:var(--ink-2);
+  margin-top:24px;
+  margin-bottom:12px;
+}
+
+.doc-section>h3:first-child{margin-top:0;}
+
+p{
+  font-size:0.965rem;
+  line-height:var(--lh);
+  color:var(--text);
+  margin-bottom:1.0em;
+  text-align:justify;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+  -moz-hyphens:auto;
+  overflow-wrap:break-word;
+  orphans:2;
+  widows:2;
+}
+
+em{font-style:italic;}
+strong{font-weight:600;color:var(--ink);}
+
+ul,ol{
+  padding-left:1.35em;
+  margin-bottom:0.85em;
+}
+
+li{
+  font-size:0.965rem;
+  line-height:1.65;
+  margin-bottom:4px;
+  color:var(--text);
+  text-align:justify;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+  -moz-hyphens:auto;
+  overflow-wrap:break-word;
+}
+
+.abstract-block{
+  background:#F1EFEA;
+  border-top:2px solid var(--accent);
+  border-bottom:1px solid var(--rule);
+  padding:28px 0 24px;
+  margin:0 0 40px;
+}
+
+.abstract-label{
+  font-family:var(--mono);
+  font-size:0.58rem;
+  font-weight:600;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:block;
+  margin-bottom:12px;
+  opacity:0.80;
+}
+
+.abstract-block p{
+  font-size:0.930rem;
+  line-height:1.78;
+  color:var(--ink-2);
+  font-style:italic;
+  margin:0;
+}
+
+pre{
+  background:#191C21;
+  color:#BEB9B0;
+  padding:18px 22px;
+  overflow-x:auto;
+  margin:16px 0 24px;
+  border-left:2px solid rgba(122,106,80,0.45);
+  font-size:0.800rem;
+  line-height:1.65;
+  font-family:var(--mono);
+}
+
+code{
+  font-family:var(--mono);
+  font-size:0.840em;
+  background:rgba(122,106,80,0.10);
+  padding:1px 5px;
+  color:var(--accent);
+}
+
+pre code{
+  background:none;
+  padding:0;
+  color:inherit;
+  font-size:1em;
+}
+
+.code-label{
+  font-family:var(--mono);
+  font-size:0.60rem;
+  font-weight:600;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:24px;
+  margin-bottom:4px;
+  display:block;
+  opacity:0.70;
+}
+
+.table-wrapper{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  margin:24px 0 32px;
+  border:1px solid #C4C0BA;
+  max-width:100%;
+}
+
+.table-caption{
+  font-family:var(--mono);
+  font-size:0.64rem;
+  font-weight:600;
+  letter-spacing:0.09em;
+  padding:9px 15px;
+  background:#191C21;
+  color:rgba(255,255,255,0.50);
+  display:block;
+  text-transform:uppercase;
+  text-align:left;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#1C1F25;
+  color:rgba(255,255,255,0.65);
+  font-family:var(--mono);
+  font-weight:500;
+  font-size:0.66rem;
+  letter-spacing:0.09em;
+  text-transform:uppercase;
+  padding:11px 15px;
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,0.06);
+  vertical-align:middle;
+}
+
+th:last-child{border-right:none;}
+
+td{
+  padding:10px 15px;
+  border-bottom:1px solid #D4D0CA;
+  border-right:1px solid #DEDAD5;
+  font-family:var(--sans);
+  font-size:0.875rem;
+  color:var(--text);
+  vertical-align:middle;
+  line-height:1.55;
+  text-align:left;
+  hyphens:auto;
+  overflow-wrap:break-word;
+}
+
+td:last-child{border-right:none;}
+td:first-child{font-weight:500;color:var(--ink-2);text-align:center;}
+
+tr:nth-child(even) td{background:#EAE7E2;}
+tr:last-child td{border-bottom:none;}
+
+.key-prop{
+  background:#F2F0EB;
+  border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);
+  padding:14px 20px;
+  margin:12px 0 16px;
+}
+
+.key-prop-title{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  font-weight:600;
+  letter-spacing:0.13em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:7px;
+  opacity:0.80;
+}
+
+.key-prop p{
+  margin:0;
+  font-size:0.920rem;
+  line-height:1.65;
+}
+
+.decision-block{
+  background:#EEEBE6;
+  border:1px solid #D2CEC8;
+  border-left:3px solid var(--ink-3);
+  padding:12px 20px;
+  margin:12px 0;
+}
+
+.decision-block strong{
+  font-family:var(--mono);
+  font-size:0.60rem;
+  font-weight:700;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  display:block;
+  margin-bottom:7px;
+}
+
+.decision-block p{font-size:0.905rem;margin:0;line-height:1.60;}
+
+.decision-block ul{
+  list-style:disc;
+  padding-left:1.3em;
+  margin:6px 0 0;
+}
+
+.decision-block ul li{
+  font-size:0.905rem;
+  padding:2px 0;
+  margin-bottom:3px;
+  line-height:1.58;
+}
+
+.diagram-wrap{
+  margin:24px 0 24px;
+  padding:36px 24px 24px;
+  background:#F2EFEA;
+  border:1px solid #D2CEC8;
+  overflow-x:auto;
+  text-align:center;
+}
+
+.diagram-caption{
+  font-family:var(--sans);
+  font-size:0.73rem;
+  color:var(--muted);
+  text-align:center;
+  margin-top:20px;
+  font-style:italic;
+  line-height:1.55;
+  max-width:580px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.footnotes{
+  margin-top:32px;
+  padding-top:16px;
+  border-top:1px solid #D0CCC6;
+}
+
+.footnote{
+  font-size:0.760rem;
+  color:var(--text-3);
+  line-height:1.58;
+  margin-bottom:4px;
+  padding-left:17px;
+  position:relative;
+  font-family:var(--sans);
+  text-align:justify;
+  hyphens:auto;
+}
+
+.footnote::before{
+  content:attr(data-num);
+  position:absolute;
+  left:0;
+  color:var(--accent);
+  font-weight:700;
+  font-size:0.68rem;
+}
+
+.section-note{
+  font-size:0.770rem;
+  color:var(--muted);
+  font-style:italic;
+  border-top:1px solid #D0CCC6;
+  padding-top:12px;
+  margin-top:32px;
+  line-height:1.62;
+}
+
+.doc-status-block{
+  background:#EDEAE5;
+  border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);
+  padding:26px 30px;
+  margin:16px 0;
+}
+
+.doc-status-block p{text-align:justify;hyphens:auto;}
+
+.corpus-list{
+  list-style:none;
+  padding:0;
+  margin:10px 0 14px;
+  border-top:1px solid #D4D0CC;
+  border-bottom:1px solid #D4D0CC;
+}
+
+.corpus-list li{
+  font-size:0.890rem;
+  color:var(--text-2);
+  line-height:1.55;
+  padding:5px 0;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+  text-align:left;
+  hyphens:none;
+}
+
+.corpus-list li:last-child{border-bottom:none;}
+
+.contact-block{
+  margin-top:0;
+  padding-top:20px;
+  text-align:center;
+}
+
+.contact-block p{
+  text-align:center;
+  font-size:0.875rem;
+  color:var(--text-3);
+  margin-bottom:10px;
+  hyphens:none;
+}
+
+.contact-name{
+  font-family:var(--serif);
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:4px !important;
+}
+
+.contact-detail{
+  font-size:0.840rem !important;
+  color:var(--muted) !important;
+  margin-bottom:2px !important;
+}
+
+.contact-detail a{
+  color:var(--accent);
+  text-decoration:none;
+}
+
+.contact-detail a:hover{text-decoration:underline;}
+
+.doc-identity-block{
+  margin-top:32px;
+  padding:20px 24px;
+  background:#EDEAE5;
+  border:1px solid #D2CEC8;
+  border-left:2px solid var(--ink-3);
+  font-family:var(--mono);
+}
+
+.doc-identity-row{
+  display:flex;
+  align-items:baseline;
+  padding:5px 0;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+  line-height:1.5;
+}
+
+.doc-identity-row:last-child{border-bottom:none;}
+
+.doc-id-key{
+  flex:0 0 200px;
+  color:var(--muted);
+  font-size:0.64rem;
+  letter-spacing:0.09em;
+  text-transform:uppercase;
+}
+
+.doc-id-val{
+  color:var(--text);
+  font-size:0.760rem;
+  line-height:1.6;
+}
+
+#back-to-top{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#0A0C0F;
+  border:1px solid rgba(122,106,80,0.30);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+  transition:opacity 0.25s ease,transform 0.25s ease,background 0.12s ease;
+  z-index:50;
+}
+
+#back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+#back-to-top:hover{background:#131620;border-color:rgba(122,106,80,0.50);}
+
+footer{
+  background:#0A0C0F;
+  color:rgba(255,255,255,0.50);
+  padding:44px 80px;
+  margin-left:var(--sidebar-w);
+  border-top:1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner{
+  max-width:calc(var(--col) + 160px);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:2fr 1fr 2fr;
+  gap:40px;
+  align-items:start;
+}
+
+.footer-block .f-label{
+  font-size:0.58rem;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:rgba(122,106,80,0.70);
+  font-family:var(--mono);
+  font-weight:600;
+  margin-bottom:10px;
+  display:block;
+}
+
+.footer-block p{
+  font-size:0.760rem;
+  color:rgba(255,255,255,0.50);
+  line-height:1.65;
+  margin:0 0 3px;
+  text-align:left;
+}
+
+.footer-divider{
+  grid-column:1 / -1;
+  height:1px;
+  background:rgba(255,255,255,0.07);
+  margin:4px 0;
+}
+
+.footer-bottom{
+  grid-column:1 / -1;
+  color:rgba(255,255,255,0.28);
+  font-family:var(--mono);
+  font-size:0.620rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  letter-spacing:0.02em;
+}
+
+@media print{
+  #sidebar,#back-to-top,.nav-toggle,.overlay,.cover-scroll-hint{display:none !important;}
+  footer{margin-left:0;}
+  #content{padding:36px 48px;}
+  pre{white-space:pre-wrap;}
+  body{font-size:11pt;}
+  h2{font-size:16pt;}
+  #cover{min-height:auto;padding:80px 40px;page-break-after:always;}
+}
+
+@media(max-width:1200px){
+  #content{padding:64px 56px 96px;}
+  footer{padding:36px 56px;}
+}
+
+@media(max-width:1024px){
+  #content{padding:52px 40px 80px;}
+  footer{padding:32px 40px;}
+  .footer-inner{gap:28px;}
+}
+
+@media(max-width:768px){
+  .nav-toggle{
+    display:flex;
+    position:relative;
+    flex-shrink:0;
+  }
+
+  .mobile-nav-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    position:fixed;
+    top:0;left:0;
+    width:100%;
+    height:52px;
+    padding:0 16px;
+    background:#0A0C0F;
+    border-bottom:1px solid rgba(122,106,80,0.15);
+    z-index:210;
+  }
+
+  .mobile-contents-label{
+    font-family:var(--mono);
+    font-size:0.64rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.38);
+  }
+
+  #sidebar{
+    position:fixed;
+    top:0;left:0;
+    height:100vh;
+    transform:translateX(-100%);
+    transition:transform 0.25s ease;
+    z-index:150;
+    will-change:transform;
+  }
+
+  #sidebar.open{transform:translateX(0);}
+  .overlay.active{display:block;}
+
+  #content{padding:68px 20px 52px;}
+
+  footer{margin-left:0;padding:28px 20px;}
+  .footer-inner{grid-template-columns:1fr;gap:22px;}
+  .footer-bottom{flex-direction:column;gap:6px;text-align:center;}
+
+  .table-wrapper{margin:16px 0;width:100%;}
+  h2 .anchor-link{display:none;}
+
+  .doc-identity-row{flex-direction:column;gap:2px;}
+  .doc-id-key{flex:none;}
+
+  pre{font-size:0.760rem;padding:14px 16px;}
+  .cover-info-block{margin-top:48px;}
+}
+</style>
+</head>
+<body>
+
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Reference Implementation<br><span class="italic-part">Specification</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Minimal Deterministic Enforcement Stack for Runtime Consent Validation</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Reference Specification &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">A minimal, deterministic runtime enforcement stack demonstrating consent validation at the inference boundary, fail-closed decisioning, and verifiable audit logging.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Executive Overview</a>
+      <a class="nav-item" href="#s2">2. System Scope &amp; Constraints</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Included</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Excluded</a>
+      <a class="nav-item" href="#s3">3. Architectural Overview</a>
+      <a class="nav-item sub" href="#s3-1">3.1 System Topology</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Trust Boundaries</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Enforcement Boundary</a>
+      <a class="nav-item" href="#s4">4. Core Components</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Enforcement Gateway</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Policy Engine</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Consent Registry</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Request Validator</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Decision Engine</a>
+      <a class="nav-item sub" href="#s4-6">4.6 Audit Log</a>
+      <a class="nav-item sub" href="#s4-7">4.7 Artifact Generator</a>
+      <a class="nav-item" href="#s5">5. Enforcement Flow</a>
+      <a class="nav-item" href="#s6">6. Fail-Closed Guarantees</a>
+      <a class="nav-item" href="#s7">7. Audit &amp; Evidence Model</a>
+      <a class="nav-item" href="#s8">8. Minimal Data Model</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Consent Object</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Request Context</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Policy Structure</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Decision Record</a>
+      <a class="nav-item" href="#s9">9. Deployment Model</a>
+      <a class="nav-item" href="#s10">10. Non-Goals</a>
+      <a class="nav-item" href="#s11">11. Conformance Alignment</a>
+      <a class="nav-item" href="#s12">12. Validation Scenarios</a>
+      <a class="nav-item" href="#s13">13. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <main id="content">
+    <div class="content-inner">
+
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document specifies a minimal, deterministic reference implementation of the QODIQA runtime consent enforcement stack. It defines the components, interfaces, data structures, and execution flow required to demonstrate consent validation at the AI inference boundary, deterministic allow/deny decisioning, fail-closed behavior, and verifiable audit logging. The implementation is explicitly minimal in scope: it is not a production system, not a scalable architecture, and not a complete security solution. Its purpose is to instantiate the core behavioral guarantees of the QODIQA Core Standard and the 68-Point Enforcement Framework in a concrete, executable form that can be inspected, validated, and used as a reference for production implementations. The stack is fully deterministic: given identical inputs and policy state, the system will always produce identical outputs. All undefined or missing inputs result in denial. No silent fallback, inference, or probabilistic behavior is permitted at any stage of the enforcement pipeline.</p>
+        </div>
+      </div>
+
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Executive Overview</h2>
+
+        <p>The QODIQA Reference Implementation Specification defines a minimal, self-contained enforcement stack that demonstrates the behavioral properties required by the QODIQA Core Standard. It is not a production deployment blueprint. It is a structured reference: a concrete instantiation of the enforcement model in its simplest correct form, against which production implementations can be calibrated.</p>
+
+        <p>The reference stack addresses a specific validation gap. Specifications describe what a system must do; reference implementations demonstrate how those requirements are satisfied in practice. Without a concrete reference, specification conformance is assessed against documentation alone, which is insufficient for systems whose correctness properties must be mechanically verifiable.</p>
+
+        <p>This document covers the complete enforcement pipeline from request ingestion to decision artifact generation. Each component is defined with explicit inputs, outputs, responsibilities, and failure behaviors. The enforcement flow is defined step by step with no ambiguous transitions. All failure modes resolve to denial. No component is permitted to infer, assume, or fall back silently.</p>
+
+        <p>The scope of this specification is deliberately bounded. It covers runtime consent validation, deterministic policy evaluation, fail-closed enforcement at the inference boundary, and append-only audit logging. It does not cover distributed deployment, high-availability configurations, advanced identity systems, cryptographic proof generation, or full production security controls. These are addressed in companion specifications within the QODIQA corpus.</p>
+
+        <p>The reference implementation serves three functions. First, it validates that the QODIQA enforcement model is implementable in a minimal configuration. Second, it provides a concrete behavioral reference for teams building production systems. Third, it enables conformance testing by defining validation scenarios against which any implementation can be assessed.</p>
+      </div>
+
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>System Scope and Constraints</h2>
+
+        <p>The boundary of this reference implementation is explicitly defined. Conformant behavior is only required within the stated scope. Behaviors outside this scope are not evaluated by this specification and must be addressed by production-specific architecture decisions and companion QODIQA documents.</p>
+
+        <div id="s2-1" class="doc-section">
+          <h3>2.1 Included</h3>
+
+          <p>The following capabilities are within scope and must be implemented by any system claiming conformance with this reference specification:</p>
+
+          <ul>
+            <li>Runtime consent validation prior to AI inference execution</li>
+            <li>Deterministic allow/deny decisioning based on explicit consent state and policy</li>
+            <li>Fail-closed behavior: all undefined or error states resolve to DENY</li>
+            <li>Append-only audit logging of all enforcement decisions</li>
+            <li>Minimal evidence artifact generation for each decision</li>
+            <li>Request validation including identity extraction and context parsing</li>
+            <li>Consent registry with mock or in-memory state adequate for single-node operation</li>
+            <li>Policy engine operating on immutable, versioned policy snapshots</li>
+          </ul>
+        </div>
+
+        <div id="s2-2" class="doc-section">
+          <h3>2.2 Excluded</h3>
+
+          <p>The following are explicitly outside scope and must not be assumed by any conformant implementation of this reference specification:</p>
+
+          <ul>
+            <li>Distributed consensus, replication, or multi-node coordination</li>
+            <li>High-availability or fault-tolerant deployment configurations</li>
+            <li>Advanced identity and authentication systems (PKI, hardware tokens, federated identity)</li>
+            <li>Cryptographic proof generation or zero-knowledge constructs</li>
+            <li>Full production security hardening, threat modeling, or penetration-tested configurations</li>
+            <li>Scalability or throughput optimization</li>
+            <li>AI model governance beyond the enforcement boundary</li>
+            <li>User-facing consent capture, consent management interfaces, or consent workflow orchestration</li>
+            <li>Legal or regulatory compliance verification</li>
+          </ul>
+
+          <div class="section-note">This scope boundary is a design constraint, not a limitation of the QODIQA framework. The minimal reference implementation is intentionally restricted to isolate and demonstrate core enforcement behavior without conflation with operational concerns. Production systems must extend this reference according to their deployment requirements and applicable QODIQA companion specifications.</div>
+        </div>
+      </div>
+
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Architectural Overview</h2>
+
+        <div id="s3-1" class="doc-section">
+          <h3>3.1 System Topology</h3>
+
+          <p>The reference implementation operates as a single-node enforcement layer interposed between the request source and the AI inference execution environment. All inbound requests to the inference boundary must pass through the enforcement stack. No request may reach the inference layer without a positive ALLOW decision issued by the Decision Engine.</p>
+
+          <div class="diagram-wrap">
+            <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;min-width:420px;">
+              <defs>
+                <marker id="arrowA" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#7A6A50"/>
+                </marker>
+                <marker id="arrowB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#A8A4A0"/>
+                </marker>
+              </defs>
+              <rect x="10" y="140" width="110" height="36" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+              <text x="65" y="162" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="11" fill="#22252B">Request Source</text>
+              <line x1="120" y1="158" x2="158" y2="158" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <rect x="160" y="60" width="140" height="196" rx="2" fill="rgba(122,106,80,0.04)" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="230" y="82" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="11" font-weight="600" fill="#3A3F48">Enforcement Stack</text>
+              <rect x="175" y="90" width="110" height="28" rx="2" fill="none" stroke="#9A8A70" stroke-width="1"/>
+              <text x="230" y="109" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Enforcement Gateway</text>
+              <line x1="230" y1="118" x2="230" y2="128" stroke="#9A8A70" stroke-width="1" marker-end="url(#arrowB)"/>
+              <rect x="175" y="128" width="110" height="28" rx="2" fill="none" stroke="#9A8A70" stroke-width="1"/>
+              <text x="230" y="147" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Request Validator</text>
+              <line x1="230" y1="156" x2="230" y2="166" stroke="#9A8A70" stroke-width="1" marker-end="url(#arrowB)"/>
+              <rect x="175" y="166" width="110" height="28" rx="2" fill="none" stroke="#9A8A70" stroke-width="1"/>
+              <text x="230" y="185" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Decision Engine</text>
+              <line x1="230" y1="194" x2="230" y2="204" stroke="#9A8A70" stroke-width="1" marker-end="url(#arrowB)"/>
+              <rect x="175" y="204" width="110" height="28" rx="2" fill="none" stroke="#9A8A70" stroke-width="1"/>
+              <text x="230" y="223" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Audit Log</text>
+              <line x1="300" y1="158" x2="338" y2="158" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowA)"/>
+              <rect x="340" y="130" width="120" height="56" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+              <text x="400" y="154" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="10.5" fill="#22252B">AI Inference</text>
+              <text x="400" y="168" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#7A8090">(ALLOW only)</text>
+              <rect x="500" y="140" width="110" height="36" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+              <text x="555" y="154" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Consent Registry</text>
+              <text x="555" y="167" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9" fill="#7A8090">(mock / in-memory)</text>
+              <line x1="500" y1="158" x2="462" y2="158" stroke="#B8B0A8" stroke-width="1" marker-end="url(#arrowB)"/>
+              <rect x="500" y="196" width="110" height="36" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+              <text x="555" y="210" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Policy Engine</text>
+              <text x="555" y="223" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9" fill="#7A8090">(immutable snapshots)</text>
+              <line x1="500" y1="214" x2="462" y2="200" stroke="#B8B0A8" stroke-width="1" marker-end="url(#arrowB)"/>
+              <rect x="500" y="252" width="110" height="28" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+              <text x="555" y="271" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9.5" fill="#22252B">Artifact Generator</text>
+              <line x1="555" y1="252" x2="360" y2="232" stroke="#B8B0A8" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="360" y="310" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="9" font-style="italic" fill="#8A8680">All paths through enforcement stack. No bypass permitted.</text>
+            </svg>
+            <div class="diagram-caption">Figure 1. Reference implementation topology. All requests traverse the enforcement stack. AI inference executes only upon receipt of a positive ALLOW decision. Consent Registry and Policy Engine are read-only inputs to the Decision Engine.</div>
+          </div>
+        </div>
+
+        <div id="s3-2" class="doc-section">
+          <h3>3.2 Trust Boundaries</h3>
+
+          <p>The reference implementation defines two trust domains. The <strong>external domain</strong> encompasses all request sources, including clients, agents, orchestration layers, and upstream services. No entity in the external domain is trusted by default. All claims made by external entities, including identity assertions, scope declarations, and purpose statements, must be validated within the enforcement stack before any decision is issued.</p>
+
+          <p>The <strong>internal domain</strong> encompasses the enforcement stack components themselves: the Enforcement Gateway, Request Validator, Policy Engine, Consent Registry, Decision Engine, Audit Log, and Artifact Generator. These components are assumed to be co-located in a trusted runtime environment in the minimal reference configuration. In production deployments, inter-component trust must be explicitly secured; this is outside the scope of this specification.</p>
+
+          <p>The AI inference environment is treated as a downstream consumer of enforcement decisions. It is not part of the enforcement stack and must not be trusted to self-authorize execution. It receives only a signed decision artifact and must refuse to execute if no valid ALLOW artifact is present.</p>
+        </div>
+
+        <div id="s3-3" class="doc-section">
+          <h3>3.3 Enforcement Boundary</h3>
+
+          <p>The enforcement boundary is the precise point at which the Decision Engine's output is applied. In this reference implementation, the boundary is defined as the interface between the Enforcement Gateway and the AI inference execution environment. No inference computation, model invocation, data retrieval, or output generation may occur prior to the receipt and validation of a positive decision artifact at this boundary.</p>
+
+          <div class="key-prop">
+            <div class="key-prop-title">Critical Invariant</div>
+            <p>The enforcement boundary is absolute. Any architecture in which AI inference can be initiated without a valid ALLOW decision from this enforcement stack is non-conformant, regardless of any other controls present in the system.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Core Components</h2>
+
+        <p>Each component in the enforcement stack is defined below with its precise responsibility, input contract, output contract, and failure behavior. Components must not exceed their defined responsibilities. Cross-component calls must follow the defined flow sequence specified in Section 5.</p>
+
+        <div id="s4-1" class="doc-section">
+          <h3>4.1 Enforcement Gateway</h3>
+
+          <p><strong>Responsibility:</strong> The Enforcement Gateway is the single ingress point for all requests targeting the AI inference boundary. It receives raw inbound requests, performs initial structural validation, and routes conformant requests into the enforcement pipeline. It is responsible for rejecting malformed requests before they enter the pipeline and for enforcing the fail-closed contract at the system perimeter.</p>
+
+          <p><strong>Inputs:</strong> Raw inbound request payload; caller network context.</p>
+          <p><strong>Outputs:</strong> Structured request object passed to Request Validator; or a DENY response to caller with reason code <code>MALFORMED_REQUEST</code>.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If the inbound request cannot be parsed, is missing required structural fields, or exceeds defined payload constraints, the Gateway must immediately return DENY with reason code <code>MALFORMED_REQUEST</code>. No partial parsing or recovery is permitted. The failure event must be logged to the Audit Log before the response is returned.</p>
+          </div>
+        </div>
+
+        <div id="s4-2" class="doc-section">
+          <h3>4.2 Policy Engine (Deterministic)</h3>
+
+          <p><strong>Responsibility:</strong> The Policy Engine evaluates a resolved request context against an immutable policy snapshot to produce a binary policy result: PERMITTED or NOT_PERMITTED. It does not resolve consent state. It does not perform probabilistic or heuristic evaluation. Given identical inputs, it must produce identical outputs without exception.</p>
+
+          <p><strong>Inputs:</strong> Validated request context object; immutable policy snapshot identified by policy version identifier.</p>
+          <p><strong>Outputs:</strong> Policy result: <code>PERMITTED</code> or <code>NOT_PERMITTED</code>; policy version identifier used in evaluation; evaluation timestamp.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If the policy snapshot cannot be located, loaded, or parsed, the engine must return <code>NOT_PERMITTED</code> with reason code <code>POLICY_UNAVAILABLE</code>. If any policy rule evaluation produces an undefined result due to missing fields, the rule must be treated as NOT_PERMITTED. No default-allow, probabilistic, or inferred results are permitted.</p>
+          </div>
+        </div>
+
+        <div id="s4-3" class="doc-section">
+          <h3>4.3 Consent Registry (Mock / Minimal)</h3>
+
+          <p><strong>Responsibility:</strong> The Consent Registry provides a queryable store of consent records. In the minimal reference implementation, this may be an in-memory structure, a static file, or a simple key-value store. It does not capture consent; it reads consent state. Consent records must be pre-populated prior to system operation. The registry is read-only during enforcement execution.</p>
+
+          <p><strong>Inputs:</strong> Consent lookup key comprising subject identifier, scope identifier, and purpose identifier.</p>
+          <p><strong>Outputs:</strong> Consent object (see Section 8.1) if a valid, non-expired record exists; or a structured absence response: <code>CONSENT_NOT_FOUND</code> or <code>CONSENT_EXPIRED</code>.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If the registry is unavailable, if the lookup produces an error, or if the returned record fails structural validation, the registry must return <code>CONSENT_UNAVAILABLE</code>. The Decision Engine must treat all non-positive consent responses as denial conditions. There is no fallback consent state.</p>
+          </div>
+        </div>
+
+        <div id="s4-4" class="doc-section">
+          <h3>4.4 Request Validator</h3>
+
+          <p><strong>Responsibility:</strong> The Request Validator performs semantic validation of the structured request object produced by the Enforcement Gateway. It extracts and validates identity context, declared purpose, requested scope, and any timing or contextual constraints. It produces a validated request context object for consumption by the Decision Engine.</p>
+
+          <p><strong>Inputs:</strong> Structured request object from the Enforcement Gateway.</p>
+          <p><strong>Outputs:</strong> Validated request context object; or a structured validation failure with reason code.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If any required field is absent, malformed, or semantically invalid, the validator must return a validation failure with the appropriate reason code. Partial validation results are not permitted. The validation failure is forwarded to the Decision Engine, which must resolve it as DENY.</p>
+          </div>
+        </div>
+
+        <div id="s4-5" class="doc-section">
+          <h3>4.5 Decision Engine (Allow / Deny Only)</h3>
+
+          <p><strong>Responsibility:</strong> The Decision Engine is the central enforcement component. It receives a validated request context, queries the Consent Registry and Policy Engine, and produces a final binary enforcement decision: ALLOW or DENY. It does not perform probabilistic assessment, risk scoring, or conditional outcomes. It applies consent state and policy result to produce a deterministic decision artifact.</p>
+
+          <p><strong>Inputs:</strong> Validated request context; Consent Registry response; Policy Engine result.</p>
+          <p><strong>Outputs:</strong> Decision record (see Section 8.4): <code>ALLOW</code> or <code>DENY</code>; decision reason code; evaluation trace.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <ul>
+              <li>Any consent response other than a valid, non-expired, scope-matched consent object → DENY</li>
+              <li>Any policy result other than <code>PERMITTED</code> → DENY</li>
+              <li>Any validation failure from Request Validator → DENY</li>
+              <li>Any internal error, timeout, or exception during evaluation → DENY with reason code <code>EVALUATION_ERROR</code></li>
+              <li>Absence of any required input → DENY with reason code <code>MISSING_INPUT</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="s4-6" class="doc-section">
+          <h3>4.6 Audit Log (Append-Only)</h3>
+
+          <p><strong>Responsibility:</strong> The Audit Log records all enforcement decisions and system events in an append-only, tamper-evident log. Every decision produced by the Decision Engine must be written to the Audit Log before the decision is returned to the Enforcement Gateway. The log is a system-of-record for enforcement behavior.</p>
+
+          <p><strong>Inputs:</strong> Decision record from Decision Engine; system event records from all components.</p>
+          <p><strong>Outputs:</strong> None (write-only during enforcement). Log entries are available for read-only audit access through a separate interface not part of the enforcement pipeline.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If the Audit Log cannot accept a write, the Enforcement Gateway must return DENY to the caller and must not proceed with execution. A system that cannot audit its decisions must not make them. Log write failure is a hard enforcement failure condition, not a degraded mode.</p>
+          </div>
+        </div>
+
+        <div id="s4-7" class="doc-section">
+          <h3>4.7 Artifact Generator</h3>
+
+          <p><strong>Responsibility:</strong> The Artifact Generator produces a structured evidence artifact for each ALLOW decision. The artifact encodes the decision record, the consent record identifier, the policy version identifier, and the evaluation timestamp. It is attached to the execution context and forwarded to the AI inference environment as the sole authorization credential for the requested inference operation.</p>
+
+          <p><strong>Inputs:</strong> Decision record (ALLOW decisions only); consent record identifier; policy version identifier.</p>
+          <p><strong>Outputs:</strong> Decision artifact object; artifact identifier.</p>
+
+          <div class="decision-block">
+            <strong>Failure Behavior</strong>
+            <p>If artifact generation fails for any reason, the Enforcement Gateway must return DENY. No inference execution is permitted without a successfully generated and validated artifact. DENY decisions do not generate artifacts; they generate denial records in the Audit Log only.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Deterministic Enforcement Flow</h2>
+
+        <p>The enforcement flow is a linear, sequential pipeline. No step may be skipped, reordered, or parallelized in a manner that allows execution to proceed without a completed prior step. Each step is defined with its preconditions and the failure behavior that applies if the step cannot be completed successfully.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Enforcement Pipeline — Step Sequence</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Action</th>
+                <th>Component</th>
+                <th>Failure Outcome</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Request ingestion and structural validation</td>
+                <td>Enforcement Gateway</td>
+                <td>DENY / MALFORMED_REQUEST</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Identity and context extraction</td>
+                <td>Request Validator</td>
+                <td>DENY / INVALID_CONTEXT</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Consent lookup by subject, scope, purpose</td>
+                <td>Consent Registry</td>
+                <td>DENY / CONSENT_NOT_FOUND or CONSENT_EXPIRED</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Policy evaluation against versioned snapshot</td>
+                <td>Policy Engine</td>
+                <td>DENY / NOT_PERMITTED or POLICY_UNAVAILABLE</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Decision synthesis (ALLOW / DENY)</td>
+                <td>Decision Engine</td>
+                <td>DENY / EVALUATION_ERROR</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Enforcement at inference boundary</td>
+                <td>Enforcement Gateway</td>
+                <td>DENY / ARTIFACT_MISSING</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Audit log write and artifact generation</td>
+                <td>Audit Log + Artifact Generator</td>
+                <td>DENY / LOG_WRITE_FAILURE</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Step 1 — Request Ingestion</h3>
+        <p>The Enforcement Gateway receives the raw inbound request. It validates the structural envelope: required fields present, payload within size bounds, content type declared. Requests that fail structural validation are rejected immediately with DENY and reason code <code>MALFORMED_REQUEST</code>. Conformant requests are passed as structured objects to the Request Validator.</p>
+
+        <h3>Step 2 — Identity and Context Extraction</h3>
+        <p>The Request Validator extracts and validates the following fields from the structured request: subject identifier (who is acting), declared purpose (why the action is performed), requested scope (what data or capability is targeted), and request timestamp. All fields are mandatory. Any absent or malformed field causes the validator to return a validation failure with the corresponding reason code.</p>
+
+        <h3>Step 3 — Consent Lookup</h3>
+        <p>The Decision Engine queries the Consent Registry using the composite key: subject identifier, scope identifier, purpose identifier. The registry returns the consent object if a valid, non-expired, scope-matched record exists. Any other response, including absence, expiry, scope mismatch, or registry error, is treated as a denial condition. The Decision Engine does not proceed to policy evaluation if consent is not positively confirmed.</p>
+
+        <h3>Step 4 — Policy Evaluation</h3>
+        <p>The Policy Engine is invoked with the validated request context and the current policy version identifier. It evaluates all applicable policy rules from the immutable policy snapshot. The result is <code>PERMITTED</code> only if all applicable rules are satisfied. If any rule is not satisfied, if any rule produces an undefined result, or if the policy snapshot cannot be loaded, the result is <code>NOT_PERMITTED</code>.</p>
+
+        <h3>Step 5 — Decision Synthesis</h3>
+        <p>The Decision Engine synthesizes the final enforcement decision. ALLOW requires: a valid consent object returned from the Consent Registry, and a <code>PERMITTED</code> result from the Policy Engine, and no validation failures from the Request Validator. If any of these conditions is not met, the decision is DENY. The decision record is produced with a complete evaluation trace including all inputs, their resolution, and the final outcome.</p>
+
+        <h3>Step 6 — Enforcement at Inference Boundary</h3>
+        <p>The Enforcement Gateway applies the decision at the inference boundary. If the decision is ALLOW, the decision artifact is attached to the execution context and inference execution is permitted. If the decision is DENY, inference execution is blocked and the denial reason is returned to the caller. The inference environment must verify the artifact before accepting any execution request.</p>
+
+        <h3>Step 7 — Logging and Artifact Generation</h3>
+        <p>All enforcement decisions, including denials, are written to the Audit Log before the response is returned to the caller. ALLOW decisions additionally trigger artifact generation. The artifact contains the decision record, consent record identifier, policy version, and evaluation timestamp. If the Audit Log write fails, the Enforcement Gateway returns DENY regardless of the decision outcome.</p>
+      </div>
+
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Fail-Closed Guarantees</h2>
+
+        <p>Fail-closed behavior is a core invariant of the QODIQA enforcement model. It is not a configuration option or a default setting. It is a structural property that must hold unconditionally across all operating conditions.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Fail-Closed Definition</div>
+          <p>Any condition that cannot be positively resolved to an ALLOW decision must result in DENY. This includes errors, timeouts, missing inputs, undefined states, partial results, and system failures. There is no degraded mode. There is no default-allow fallback. There is no ambiguity state that permits execution.</p>
+        </div>
+
+        <h3>Explicit Denial Conditions</h3>
+        <p>The following conditions must each individually produce DENY with the corresponding reason code:</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Denial Condition Registry</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Reason Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Request structurally malformed</td>
+                <td><code>MALFORMED_REQUEST</code></td>
+              </tr>
+              <tr>
+                <td>Subject identifier absent or invalid</td>
+                <td><code>INVALID_SUBJECT</code></td>
+              </tr>
+              <tr>
+                <td>Purpose not declared</td>
+                <td><code>PURPOSE_MISSING</code></td>
+              </tr>
+              <tr>
+                <td>Scope not declared or invalid</td>
+                <td><code>SCOPE_INVALID</code></td>
+              </tr>
+              <tr>
+                <td>No consent record found</td>
+                <td><code>CONSENT_NOT_FOUND</code></td>
+              </tr>
+              <tr>
+                <td>Consent record expired</td>
+                <td><code>CONSENT_EXPIRED</code></td>
+              </tr>
+              <tr>
+                <td>Consent scope does not match request scope</td>
+                <td><code>CONSENT_SCOPE_MISMATCH</code></td>
+              </tr>
+              <tr>
+                <td>Consent purpose does not match declared purpose</td>
+                <td><code>CONSENT_PURPOSE_MISMATCH</code></td>
+              </tr>
+              <tr>
+                <td>Policy not found or unavailable</td>
+                <td><code>POLICY_UNAVAILABLE</code></td>
+              </tr>
+              <tr>
+                <td>Policy evaluation result NOT_PERMITTED</td>
+                <td><code>POLICY_DENIED</code></td>
+              </tr>
+              <tr>
+                <td>Decision Engine internal error</td>
+                <td><code>EVALUATION_ERROR</code></td>
+              </tr>
+              <tr>
+                <td>Audit Log write failure</td>
+                <td><code>LOG_WRITE_FAILURE</code></td>
+              </tr>
+              <tr>
+                <td>Artifact generation failure</td>
+                <td><code>ARTIFACT_GENERATION_FAILURE</code></td>
+              </tr>
+              <tr>
+                <td>Any unclassified system error</td>
+                <td><code>SYSTEM_ERROR</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>System Failure Handling</h3>
+        <p>System failures, including process crashes, memory exhaustion, network timeouts between components, and unhandled exceptions, must all resolve to DENY. No component is permitted to swallow exceptions and proceed. No component is permitted to produce an ambiguous or partial result that allows downstream components to interpret the outcome as ALLOW. Every error boundary must terminate the request with DENY.</p>
+
+        <h3>No Silent Fallback</h3>
+        <p>Silent fallback, defined as any behavior that permits execution to proceed without a positive enforcement decision, is categorically prohibited. This includes: treating an absent consent record as implied consent; applying a default policy when a named policy is unavailable; proceeding with inference when the Audit Log is unavailable; or returning ALLOW when evaluation is incomplete. Any such behavior constitutes a conformance failure.</p>
+      </div>
+
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Audit and Evidence Model</h2>
+
+        <h3>What Is Logged</h3>
+        <p>Every enforcement event must be logged. The following event types must each produce a log entry:</p>
+        <ul>
+          <li>Request received by Enforcement Gateway (structural outcome: accepted / rejected)</li>
+          <li>Validation result from Request Validator (outcome and reason code)</li>
+          <li>Consent lookup result (outcome, consent record identifier if found, reason code if not)</li>
+          <li>Policy evaluation result (outcome, policy version, applicable rule identifiers)</li>
+          <li>Final decision from Decision Engine (ALLOW or DENY, complete reason chain)</li>
+          <li>Audit Log write confirmation or failure</li>
+          <li>Artifact generation outcome (for ALLOW decisions)</li>
+        </ul>
+
+        <h3>Log Entry Format</h3>
+        <p>Each log entry must include at minimum: event type identifier; timestamp (ISO 8601, UTC); request identifier; subject identifier; decision outcome; reason code; policy version identifier; consent record identifier (if applicable). Log entries must be structured and machine-parseable. Free-form text fields are prohibited in mandatory fields.</p>
+
+        <span class="code-label">Log Entry Schema (Minimal)</span>
+        <pre><code>{
+  "event_type":        string,      // GATEWAY_RECEIVED | VALIDATION_RESULT | CONSENT_LOOKUP
+                                    // POLICY_EVAL | DECISION | ARTIFACT_GENERATED
+  "timestamp":         ISO8601/UTC,
+  "request_id":        uuid,
+  "subject_id":        string,
+  "decision":          "ALLOW" | "DENY",
+  "reason_code":       string,      // from Denial Condition Registry
+  "policy_version":    string,
+  "consent_record_id": string | null,
+  "artifact_id":       string | null  // present on ALLOW decisions only
+}</code></pre>
+
+        <h3>Immutability Assumptions</h3>
+        <p>In the minimal reference implementation, append-only immutability is implemented by prohibiting any delete, update, or overwrite operation on the log store. Log entries are written sequentially with a monotonically increasing sequence number. In production systems, cryptographic immutability guarantees must be applied; this is specified in the QODIQA Security and Cryptographic Profile.</p>
+
+        <h3>Evidence Generation Triggers</h3>
+        <p>Decision artifacts are generated only for ALLOW decisions. Artifacts are not generated for DENY decisions; the Audit Log entry for a DENY decision constitutes the full evidence record. Artifact generation is triggered immediately after the Decision Engine issues an ALLOW decision and before the decision is returned to the Enforcement Gateway.</p>
+      </div>
+
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Minimal Data Model</h2>
+
+        <div id="s8-1" class="doc-section">
+          <h3>8.1 Consent Object</h3>
+          <span class="code-label">Consent Object Schema</span>
+          <pre><code>{
+  "consent_id":       uuid,          // unique record identifier
+  "subject_id":       string,        // data subject or acting entity identifier
+  "scope":            string[],      // list of authorized scope identifiers
+  "purpose":          string[],      // list of authorized purpose identifiers
+  "granted_at":       ISO8601/UTC,   // timestamp of consent grant
+  "expires_at":       ISO8601/UTC,   // hard expiry; null not permitted
+  "revoked":          boolean,       // true if consent has been revoked
+  "revoked_at":       ISO8601/UTC | null,
+  "grantor_id":       string         // identity of consent-granting entity
+}</code></pre>
+          <p>A consent object is valid if and only if: <code>revoked</code> is <code>false</code>, the current timestamp is before <code>expires_at</code>, the requested scope is contained within the <code>scope</code> array, and the declared purpose is contained within the <code>purpose</code> array. Any condition not met renders the consent object invalid for the given request.</p>
+        </div>
+
+        <div id="s8-2" class="doc-section">
+          <h3>8.2 Request Context</h3>
+          <span class="code-label">Request Context Schema</span>
+          <pre><code>{
+  "request_id":     uuid,          // unique request identifier, caller-supplied
+  "subject_id":     string,        // identity of the acting entity
+  "declared_purpose": string,      // single purpose identifier for this request
+  "requested_scope":  string,      // single scope identifier for this request
+  "timestamp":      ISO8601/UTC,   // request creation timestamp
+  "caller_context": {
+    "source_ip":    string | null,
+    "agent_id":     string | null   // optional upstream agent identifier
+  }
+}</code></pre>
+        </div>
+
+        <div id="s8-3" class="doc-section">
+          <h3>8.3 Policy Structure</h3>
+          <span class="code-label">Policy Snapshot Schema</span>
+          <pre><code>{
+  "policy_id":      string,        // unique policy identifier
+  "version":        string,        // semver or monotonic version string
+  "effective_at":   ISO8601/UTC,
+  "rules": [
+    {
+      "rule_id":    string,
+      "scope":      string,        // scope this rule applies to
+      "purpose":    string,        // purpose this rule applies to
+      "condition":  object,        // structured condition expression (no free text)
+      "effect":     "PERMIT" | "DENY"
+    }
+  ]
+}</code></pre>
+          <p>Policy snapshots are immutable once published. The Policy Engine must load the snapshot identified by the current policy version and evaluate all applicable rules. Modifications to published snapshots are prohibited. New versions must be published as distinct snapshots with new version identifiers.</p>
+        </div>
+
+        <div id="s8-4" class="doc-section">
+          <h3>8.4 Decision Record</h3>
+          <span class="code-label">Decision Record Schema</span>
+          <pre><code>{
+  "decision_id":        uuid,
+  "request_id":         uuid,
+  "subject_id":         string,
+  "decision":           "ALLOW" | "DENY",
+  "reason_code":        string,
+  "consent_record_id":  uuid | null,
+  "policy_version":     string,
+  "evaluation_trace": {
+    "validation_result":  "VALID" | "INVALID",
+    "consent_result":     "FOUND" | string,    // reason code if not FOUND
+    "policy_result":      "PERMITTED" | string // reason code if not PERMITTED
+  },
+  "decided_at":         ISO8601/UTC,
+  "artifact_id":        uuid | null            // populated for ALLOW decisions only
+}</code></pre>
+        </div>
+      </div>
+
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Deployment Model</h2>
+
+        <p>The reference implementation is designed for single-node deployment. All components run within a single process or within a single trusted host environment. No distributed coordination, consensus protocol, or network-separated component topology is required or assumed.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Single-Node Acceptability</div>
+          <p>A single-node deployment is fully conformant with this specification. The reference implementation does not require replication, load balancing, or distributed storage. These are production concerns addressed in companion specifications.</p>
+        </div>
+
+        <p>The Consent Registry may be implemented as an in-memory key-value store seeded from a static file at startup. The Audit Log may be implemented as a local append-only file with sequential write semantics. The Policy Engine loads policy snapshots from a local filesystem path at initialization. No external service dependencies are required for baseline operation.</p>
+
+        <p>The runtime boundary is defined as: the enforcement stack process, the consent registry data source, the policy snapshot store, and the audit log destination. All must be present and operational before the Enforcement Gateway accepts any inbound requests. A startup check must verify all component availability and must refuse to accept requests if any component is unavailable.</p>
+
+        <p>Network exposure of the enforcement stack is outside the scope of this specification. In production deployments, the enforcement stack must be protected from unauthorized access; this is addressed in the QODIQA Security and Cryptographic Profile.</p>
+      </div>
+
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Non-Goals</h2>
+
+        <p>The following are explicitly outside the scope of this specification. An implementation that addresses these areas is not prohibited, but conformance with this specification does not require them and does not assess them.</p>
+
+        <div class="decision-block">
+          <strong>Scalability</strong>
+          <p>This specification makes no performance or throughput requirements. Horizontal scaling, load distribution, caching, and latency optimization are not addressed and must not be assumed from this reference.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Full Production Security</strong>
+          <p>This specification does not define a production security posture. Authentication of callers, transport security, component isolation, secret management, and hardening against adversarial inputs are outside scope and are addressed in the QODIQA Security and Cryptographic Profile.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Distributed Systems</strong>
+          <p>No distributed consensus, eventual consistency, partition tolerance, or multi-node coordination is defined or required. These concerns are addressed in the QODIQA Reference Architecture for Deterministic Runtime Consent Enforcement.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Advanced Identity Systems</strong>
+          <p>This specification uses opaque string identifiers for subjects and grantors. PKI, federated identity, hardware attestation, and verifiable credentials are not addressed and must not be assumed from the minimal data model defined herein.</p>
+        </div>
+
+        <div class="decision-block">
+          <strong>Consent Capture and Lifecycle Management</strong>
+          <p>This specification addresses consent enforcement only. Consent capture, revocation workflows, consent versioning, and user-facing consent management interfaces are outside scope.</p>
+        </div>
+      </div>
+
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Conformance Alignment</h2>
+
+        <p>This reference implementation is designed to demonstrate compliance with the QODIQA Core Standard and the 68-Point Enforcement Framework. The following table maps key implementation behaviors to their governing framework principles.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Conformance Mapping — Implementation to QODIQA Framework</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Implementation Behavior</th>
+                <th>QODIQA Core Invariant</th>
+                <th>68-Point Framework</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>All requests pass through Enforcement Gateway before inference</td>
+                <td>Enforcement boundary is absolute</td>
+                <td>Points 1–4: Boundary enforcement</td>
+              </tr>
+              <tr>
+                <td>Consent explicitly resolved before policy evaluation</td>
+                <td>Consent separation from policy</td>
+                <td>Points 12–18: Consent resolution</td>
+              </tr>
+              <tr>
+                <td>Deterministic decision: ALLOW or DENY only</td>
+                <td>Binary decisioning, no ambiguity</td>
+                <td>Points 19–26: Decision determinism</td>
+              </tr>
+              <tr>
+                <td>All undefined states resolve to DENY</td>
+                <td>Fail-closed semantics</td>
+                <td>Points 27–34: Fail-closed guarantees</td>
+              </tr>
+              <tr>
+                <td>Every decision written to append-only log before response</td>
+                <td>Auditability is unconditional</td>
+                <td>Points 40–48: Audit requirements</td>
+              </tr>
+              <tr>
+                <td>Policy evaluated against immutable versioned snapshot</td>
+                <td>Policy immutability</td>
+                <td>Points 49–55: Policy integrity</td>
+              </tr>
+              <tr>
+                <td>ALLOW decisions produce signed decision artifacts</td>
+                <td>Verifiable authorization</td>
+                <td>Points 56–62: Evidence model</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Validation Scenarios</h2>
+
+        <p>The following scenarios constitute the minimal conformance test suite for this reference implementation. Any conformant implementation must produce the specified outcome for each scenario. These scenarios may be executed as automated tests against a running implementation.</p>
+
+        <h3>Scenario 1 — Valid Consent, Permitted Policy: ALLOW</h3>
+        <div class="decision-block">
+          <strong>Preconditions</strong>
+          <ul>
+            <li>Consent record exists for subject, scope, and purpose</li>
+            <li>Consent record is not expired and not revoked</li>
+            <li>Policy snapshot is loaded and applicable rule effect is PERMIT</li>
+          </ul>
+        </div>
+        <p><strong>Expected outcome:</strong> Decision Engine issues ALLOW. Decision artifact is generated. Audit Log entry written with decision ALLOW. Inference execution is permitted.</p>
+
+        <h3>Scenario 2 — Missing Consent: DENY</h3>
+        <div class="decision-block">
+          <strong>Preconditions</strong>
+          <ul>
+            <li>No consent record exists for the given subject, scope, and purpose combination</li>
+            <li>Policy snapshot is otherwise valid</li>
+          </ul>
+        </div>
+        <p><strong>Expected outcome:</strong> Consent Registry returns <code>CONSENT_NOT_FOUND</code>. Decision Engine issues DENY with reason code <code>CONSENT_NOT_FOUND</code>. No artifact is generated. Audit Log entry written with decision DENY. Inference execution is blocked.</p>
+
+        <h3>Scenario 3 — Invalid Scope: DENY</h3>
+        <div class="decision-block">
+          <strong>Preconditions</strong>
+          <ul>
+            <li>Consent record exists but does not include the requested scope identifier</li>
+            <li>All other inputs are valid</li>
+          </ul>
+        </div>
+        <p><strong>Expected outcome:</strong> Decision Engine issues DENY with reason code <code>CONSENT_SCOPE_MISMATCH</code>. No artifact is generated. Audit Log entry written with decision DENY. Inference execution is blocked.</p>
+
+        <h3>Scenario 4 — System Failure: DENY</h3>
+        <div class="decision-block">
+          <strong>Preconditions</strong>
+          <ul>
+            <li>Consent Registry is unavailable (simulated by shutting down registry component)</li>
+            <li>Request is otherwise well-formed and valid</li>
+          </ul>
+        </div>
+        <p><strong>Expected outcome:</strong> Decision Engine issues DENY with reason code <code>CONSENT_UNAVAILABLE</code>. No artifact is generated. System does not fall back to implicit consent or default-allow. Audit Log entry written if log is available; if Audit Log is also unavailable, DENY is still returned and system records the failure in its internal error state.</p>
+
+        <h3>Scenario 5 — Expired Consent: DENY</h3>
+        <div class="decision-block">
+          <strong>Preconditions</strong>
+          <ul>
+            <li>Consent record exists but <code>expires_at</code> is in the past</li>
+            <li>All other inputs are valid</li>
+          </ul>
+        </div>
+        <p><strong>Expected outcome:</strong> Consent Registry returns <code>CONSENT_EXPIRED</code>. Decision Engine issues DENY with reason code <code>CONSENT_EXPIRED</code>. Inference execution is blocked.</p>
+      </div>
+
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Conclusion</h2>
+
+        <p>This specification defines a minimal, self-contained reference implementation of the QODIQA enforcement model. It is not a production system. It is the smallest correct instantiation of the enforcement properties required by the QODIQA Core Standard, expressed in concrete component definitions, data structures, flow sequences, and validation scenarios.</p>
+
+        <p>The reference implementation demonstrates that deterministic runtime consent enforcement is achievable in a minimal configuration. Seven components are sufficient to implement the complete enforcement pipeline: a gateway, a validator, a consent registry, a policy engine, a decision engine, an audit log, and an artifact generator. Each has a precisely bounded responsibility. The interaction between them is fully specified. All failure modes resolve to denial. No ambiguity is permitted at any stage.</p>
+
+        <p>This specification serves as the bridge between the QODIQA Core Standard's normative requirements and the operational realities of production deployment. Teams building production enforcement systems should use this reference as their behavioral baseline, validating each component against the scenarios defined in Section 12 before extending the stack with production-grade capabilities: distributed deployment, cryptographic proof generation, high-availability configurations, and advanced identity integration.</p>
+
+        <p>The enforcement model defined here is intentionally minimal, but it is not simplified. Every component and every constraint is present because removing it would compromise the correctness of the enforcement guarantee. Fail-closed behavior, audit unconditionally, consent-before-policy, and binary decisioning are not optional features; they are the properties that make the enforcement model trustworthy. Production implementations may add capabilities above this baseline, but they must not remove any of its behavioral guarantees.</p>
+
+        <p>Runtime consent enforcement represents a structural shift in how AI systems are governed: from documentation and retrospective accountability toward execution-layer control and verifiable authorization. This reference implementation is a concrete demonstration that the shift is achievable and that its core properties can be implemented, tested, and validated with precision.</p>
+      </div>
+
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Reference Implementation Specification of the QODIQA standard corpus. It defines a minimal, deterministic enforcement stack demonstrating runtime consent validation, fail-closed decisioning, and verifiable audit logging at the AI inference boundary.</p>
+
+          <p>This specification is normative within its defined scope. It provides the concrete behavioral reference against which production implementations of the QODIQA enforcement model are validated. It should be read in conjunction with the following documents:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-RIS-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Reference Implementation Specification (Minimal Deterministic Enforcement Stack)</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Minimal Deterministic Enforcement Stack for Runtime Consent Validation</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Reference Implementation Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Reference Implementation Specification (Minimal Deterministic Enforcement Stack)</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Minimal Deterministic Enforcement Stack</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-RIS-2026-001</p>
+      <p>Reference Implementation Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document defines a minimal reference implementation for demonstration and validation purposes. It does not constitute a production deployment guide, a security specification, or legal or regulatory advice. All component definitions and behavioral requirements described herein are intended for implementation reference only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-RIS-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function(){
+  'use strict';
+
+  const navItems=document.querySelectorAll('.nav-item');
+  const sectionIds=[
+    'cover','s-abstract','s1','s2','s2-1','s2-2',
+    's3','s3-1','s3-2','s3-3',
+    's4','s4-1','s4-2','s4-3','s4-4','s4-5','s4-6','s4-7',
+    's5','s6','s7',
+    's8','s8-1','s8-2','s8-3','s8-4',
+    's9','s10','s11','s12','s13','s-status'
+  ];
+  const sections=sectionIds.map(id=>document.getElementById(id)).filter(Boolean);
+  const sectionIndex=new Map(sections.map((s,i)=>[s.id,i]));
+  const visible=new Set();
+
+  function setActive(id){
+    navItems.forEach(item=>{
+      item.classList.toggle('active',item.getAttribute('href')==='#'+id);
+    });
+  }
+
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){visible.add(entry.target.id);}
+      else{visible.delete(entry.target.id);}
+    });
+    if(visible.size>0){
+      let topId=null,topIdx=Infinity;
+      visible.forEach(id=>{
+        const idx=sectionIndex.get(id);
+        if(idx<topIdx){topIdx=idx;topId=id;}
+      });
+      if(topId)setActive(topId);
+    }
+  },{root:null,rootMargin:'-15% 0px -65% 0px',threshold:0});
+
+  sections.forEach(sec=>observer.observe(sec));
+
+  const sidebar=document.getElementById('sidebar');
+  const overlay=document.getElementById('overlay');
+
+  navItems.forEach(item=>{
+    item.addEventListener('click',e=>{
+      const href=item.getAttribute('href');
+      if(href&&href.startsWith('#')){
+        e.preventDefault();
+        const target=document.querySelector(href);
+        if(target){
+          const offset=window.innerWidth<=768?60:20;
+          window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  const btt=document.getElementById('back-to-top');
+  window.addEventListener('scroll',()=>btt.classList.toggle('visible',window.scrollY>600),{passive:true});
+  btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  const toggle=document.getElementById('navToggle');
+  if(toggle){
+    toggle.addEventListener('click',()=>{
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  function fallbackScrollSpy(){
+    let closest=null,minDistance=Infinity;
+    sections.forEach(sec=>{
+      const rect=sec.getBoundingClientRect();
+      if(rect.top<=window.innerHeight*0.5){
+        const distance=Math.abs(rect.top);
+        if(distance<minDistance){minDistance=distance;closest=sec.id;}}
+    });
+    if(closest)setActive(closest);
+  }
+
+  if(!('IntersectionObserver' in window)){
+    window.addEventListener('scroll',fallbackScrollSpy,{passive:true});
+    fallbackScrollSpy();
+  }
+
+})();
+</script>
+</body>
+</html>

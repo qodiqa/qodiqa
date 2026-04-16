@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Governance Charter for the QODIQA Standard Corpus · v2.0</title>
+<meta name="description" content="QODIQA Governance Charter for the QODIQA Standard Corpus v2.0 - Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA Governance Charter — Institutional Governance and Amendment Framework for the Standard Corpus">
+<meta property="og:description" content="Constitutional governance instrument establishing the authority, structure, and procedural discipline for the QODIQA technical standards corpus.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; border-radius: 2px; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+  overflow-x: hidden;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; font-weight: 500; }
+
+.nav-section-label {
+  font-family: var(--sans);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.38);
+  padding: 16px 20px 5px;
+  display: block;
+}
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 28px;
+  margin-bottom: 12px;
+  scroll-margin-top: 24px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+.sh-num {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  margin-right: 10px;
+  opacity: 0.75;
+}
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.55;
+  margin-bottom: 5px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+/* ============================================================
+   TABLES — ISO / REGULATORY DOCUMENT STANDARD
+   ============================================================ */
+
+/* Outer container — clean horizontal scroll, no decoration */
+.table-wrapper,
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 20px 0 28px;
+  max-width: 100%;
+}
+
+/* Table identifier label — typographic, not a panel */
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.590rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  background: transparent;
+  opacity: 0.85;
+}
+
+/* Core table reset */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  border-top: 2px solid rgba(26,28,32,0.18);
+  border-bottom: 1px solid rgba(26,28,32,0.12);
+}
+
+/* Header row — light tint, clear separation */
+thead tr {
+  background: rgba(26,28,32,0.035);
+}
+
+th {
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.600rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: bottom;
+  border-bottom: 1px solid rgba(26,28,32,0.14);
+  border-right: none;
+  white-space: nowrap;
+}
+
+th:first-child { padding-left: 12px; }
+th:last-child  { padding-right: 12px; }
+
+/* Data cells — compact, left-aligned, horizontal separators only */
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(26,28,32,0.07);
+  border-right: none;
+  font-family: var(--sans);
+  font-size: 0.840rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.48;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:first-child {
+  padding-left: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+td:last-child { padding-right: 12px; }
+
+/* Last row — no bottom separator (table border handles closure) */
+tbody tr:last-child td { border-bottom: none; }
+
+/* No zebra — hierarchy through spacing and weight only */
+tbody tr:nth-child(even) td { background: transparent; }
+tbody tr:hover td { background: rgba(26,28,32,0.025); }
+
+/* Print — ensure clean output */
+@media print {
+  table {
+    border-top: 1.5pt solid #1A1C20;
+    border-bottom: 0.5pt solid #1A1C20;
+  }
+  th {
+    border-bottom: 0.5pt solid #1A1C20;
+    background: transparent !important;
+  }
+  td { border-bottom: 0.25pt solid rgba(0,0,0,0.15); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: transparent !important; }
+}
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   CALLOUT BLOCKS
+   ============================================================ */
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 12px 18px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.55;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 22px 26px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.635rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 14px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #ECEAE5; }
+
+.prop-list li::before {
+  content: '→';
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.80;
+}
+
+/* ============================================================
+   CHARTER COMPONENTS — NORMATIVE BLOCKS
+   ============================================================ */
+.norm-block {
+  border: 1px solid #C4C0BA;
+  margin: 20px 0 28px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.norm-block-head {
+  background: #1C1F25;
+  padding: 9px 16px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.60);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.norm-block-head .nbh-id {
+  font-size: 0.63rem;
+  color: #9E8E72;
+  letter-spacing: 0.12em;
+  flex-shrink: 0;
+}
+
+.norm-block-body {
+  background: #FAF8F5;
+  padding: 16px 20px;
+}
+
+.norm-block-body p {
+  font-size: 0.905rem;
+  line-height: 1.58;
+  margin-bottom: 0.7em;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+.norm-block-body p:last-child { margin-bottom: 0; }
+
+.norm-block-body ul {
+  padding-left: 1.2em;
+  margin: 0.5em 0;
+}
+
+.norm-block-body li {
+  font-size: 0.905rem;
+  line-height: 1.55;
+  margin-bottom: 3px;
+}
+
+.norm-block-foot {
+  background: #EFECE7;
+  padding: 7px 16px;
+  font-family: var(--mono);
+  font-size: 0.635rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  border-top: 1px solid #D8D4CE;
+}
+
+/* Role cards */
+.role-grid {
+  border: 1px solid #C4C0BA;
+  margin: 20px 0 28px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.role-card {
+  background: #FAF8F5;
+  padding: 16px 20px;
+  border-bottom: 1px solid #D8D4CE;
+}
+
+.role-card:last-child { border-bottom: none; }
+.role-card:nth-child(even) { background: #F0EDE8; }
+
+.role-id {
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 5px;
+  opacity: 0.80;
+}
+
+.role-title {
+  font-family: var(--sans);
+  font-size: 0.90rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+
+.role-desc {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.58;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Institutional statement */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 0;
+  margin: 28px 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Process steps */
+.process-steps {
+  margin: 20px 0 28px;
+  border: 1px solid #C4C0BA;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.process-step {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  border-bottom: 1px solid #D8D4CE;
+}
+
+.process-step:last-child { border-bottom: none; }
+.process-step:nth-child(even) { background: #ECEAE5; }
+
+.ps-num {
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border-right: 1px solid #D8D4CE;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.45;
+}
+
+.ps-content {
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ps-title {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  line-height: 1.3;
+}
+
+.ps-desc {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* State matrix */
+.state-matrix {
+  border: 1px solid #C4C0BA;
+  margin: 20px 0 28px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.state-row {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  border-bottom: 1px solid #D8D4CE;
+}
+
+.state-row:last-child { border-bottom: none; }
+.state-row:nth-child(even) { background: #ECEAE5; }
+
+.state-label {
+  padding: 11px 14px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  border-right: 1px solid #D8D4CE;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.45;
+}
+
+.state-desc {
+  padding: 11px 14px;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.state-desc p { margin: 0 0 0.4em; font-size: inherit; line-height: inherit; }
+.state-desc p:last-child { margin-bottom: 0; }
+
+/* Requirement rows */
+.req-table {
+  border: 1px solid #C4C0BA;
+  margin: 20px 0 28px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.req-row {
+  display: grid;
+  grid-template-columns: 224px 1fr;
+  border-bottom: 1px solid #D8D4CE;
+}
+
+.req-row:last-child { border-bottom: none; }
+.req-row:nth-child(even) { background: #ECEAE5; }
+
+.req-key {
+  padding: 11px 14px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.02em;
+  border-right: 1px solid #D8D4CE;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.55;
+}
+
+.req-val {
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.req-val p { margin: 0 0 0.4em; font-size: inherit; line-height: inherit; }
+.req-val p:last-child { margin-bottom: 0; }
+
+/* Terminology items */
+.term-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 20px;
+  border: 1px solid #C4C0BA;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.term-item {
+  padding: 12px 20px;
+  border-bottom: 1px solid #D8D4CE;
+  background: #FAF8F5;
+}
+
+.term-item:last-child { border-bottom: none; }
+.term-item:nth-child(even) { background: #F0EDE8; }
+
+.term-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.term-def {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.58;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Citation block */
+.citation-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 16px 22px;
+  margin: 16px 0;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+.citation-label {
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.80;
+}
+
+/* Institutional disclaimer block */
+.inst-disclaimer-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 16px 22px;
+  margin: 16px 0 20px;
+}
+
+.inst-disclaimer-block p {
+  font-size: 0.905rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.corpus-ref {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 960px) {
+  :root { --sidebar-w: 224px; }
+  #content { padding: 52px 36px 80px; }
+  .state-row { grid-template-columns: 120px 1fr; }
+  .req-row { grid-template-columns: 180px 1fr; }
+  .process-step { grid-template-columns: 72px 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper,
+  .table-wrap { margin: 16px -20px; border-left: none; border-right: none; border-radius: 0; }
+
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+
+  .state-row { grid-template-columns: 1fr; }
+  .state-label { border-right: none; border-bottom: 1px solid #D8D4CE; }
+  .req-row { grid-template-columns: 1fr; }
+  .req-key { border-right: none; border-bottom: 1px solid #D8D4CE; }
+  .process-step { grid-template-columns: 1fr; }
+  .ps-num { border-right: none; border-bottom: 1px solid #D8D4CE; padding: 9px 14px; }
+  .ps-content { padding: 10px 16px; }
+
+  .norm-block-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .role-card { padding: 16px 18px; }
+}
+
+@media (max-width: 480px) {
+  #content { padding: 60px 16px 48px; }
+  .cover-title .qodiqa-brand { letter-spacing: 0.04em; }
+  .doc-status-block { padding: 18px 16px; }
+  .citation-block { padding: 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Governance Charter<br>Institutional Governance and Amendment Framework<br>for the <span class="italic-part">Standard Corpus</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-GOV-CHARTER &nbsp;·&nbsp; Version 2.0</div>
+      <p class="cover-info-tagline">Constitutional governance instrument establishing the authority, structure, and procedural discipline under which the technical standards defined by this corpus are maintained, amended, and evolved.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-preamble">Preamble</a>
+      <span class="nav-section-label">Charter Articles</span>
+      <a class="nav-item" href="#s1">1. Institutional Purpose</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Scope of Governance Authority</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Relationship to Corpus Documents</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Boundary Between Governance and Technical Content</a>
+      <a class="nav-item" href="#s2">2. Governance Principles</a>
+      <a class="nav-item" href="#s3">3. Standard Corpus Definition</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Normative Documents</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Informative Documents</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Experimental Drafts</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Corpus Registry</a>
+      <a class="nav-item" href="#s4">4. Versioning Model</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Semantic Versioning Rules</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Version Lifecycle States</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Deprecation Rules</a>
+      <a class="nav-item" href="#s5">5. Amendment Process</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Qualified Party Definition</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Full Amendment Process</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Voting Record Requirements</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Simplified Amendment Process</a>
+      <a class="nav-item sub" href="#s5-5">5.5 Required Documentation for Amendment Proposals</a>
+      <a class="nav-item" href="#s5b">5b. Emergency Amendment Protocol</a>
+      <a class="nav-item sub" href="#s5b-1">5b.1 Eligible Triggering Conditions</a>
+      <a class="nav-item sub" href="#s5b-2">5b.2 Emergency Amendment Procedure</a>
+      <a class="nav-item sub" href="#s5b-3">5b.3 Emergency Protocol Constraints</a>
+      <a class="nav-item" href="#s6">6. Governance Structure</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Institutional Roles</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Composition, Voting, and Quorum</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Recusal Requirements</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Term Limits and Continuity</a>
+      <a class="nav-item" href="#s6b">6b. Steward Institutionalization</a>
+      <a class="nav-item sub" href="#s6b-1">6b.1 Foundational Phase Steward Authority</a>
+      <a class="nav-item sub" href="#s6b-2">6b.2 Mandatory Transition Triggers</a>
+      <a class="nav-item sub" href="#s6b-3">6b.3 Steward Removal Procedure</a>
+      <a class="nav-item sub" href="#s6b-4">6b.4 Continuity of Governance During Transition</a>
+      <a class="nav-item" href="#s7">7. Change Impact Analysis</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Required Analysis Components</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Core Invariant Protection Rule</a>
+      <a class="nav-item" href="#s8">8. Certification Oversight</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Evolution of the Certification Framework</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Supervision of Certification Bodies</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Certification Revocation</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Conflict of Interest in Certification</a>
+      <a class="nav-item sub" href="#s8-5">8.5 Non-Interference with Enforcement Semantics</a>
+      <a class="nav-item" href="#s9">9. Transparency and Publication</a>
+      <a class="nav-item sub" href="#s9-1">9.1 Public Changelog Requirements</a>
+      <a class="nav-item sub" href="#s9-2">9.2 Version Archive Retention</a>
+      <a class="nav-item sub" href="#s9-3">9.3 Disclosure of Amendments</a>
+      <a class="nav-item sub" href="#s9-4">9.4 Registry Publication Format</a>
+      <a class="nav-item sub" href="#s9-5">9.5 Historical Version Accessibility</a>
+      <a class="nav-item" href="#s10">10. Safeguards Against Capture</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Commercial Neutrality Clause</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Amendment Anti-Dilution Protections</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Core Invariant Protection</a>
+      <a class="nav-item sub" href="#s10-4">10.4 Supermajority Requirement for Core Changes</a>
+      <a class="nav-item" href="#s11">11. Governance Evolution</a>
+      <a class="nav-item sub" href="#s11-1">11.1 Governance Phase Definitions</a>
+      <a class="nav-item sub" href="#s11-2">11.2 Adoption Threshold Definitions</a>
+      <a class="nav-item sub" href="#s11-3">11.3 Technical Review Committee Composition Under Scaling</a>
+      <a class="nav-item sub" href="#s11-4">11.4 Invariance of Enforcement Structure Across Phases</a>
+      <a class="nav-item" href="#s12">12. Dissolution and Transfer</a>
+      <a class="nav-item sub" href="#s12-1">12.1 Dissolution of the Governance Entity</a>
+      <a class="nav-item sub" href="#s12-2">12.2 Preservation of Document Integrity</a>
+      <a class="nav-item sub" href="#s12-3">12.3 Continuity of Certification</a>
+      <a class="nav-item sub" href="#s12-4">12.4 Governance Phase Continuity on Transfer</a>
+      <a class="nav-item" href="#s13">13. Institutional Declaration</a>
+      <a class="nav-item sub" href="#s13-1">13.1 The Purpose of Governance</a>
+      <a class="nav-item sub" href="#s13-2">13.2 Governance Exists to Protect Structural Integrity</a>
+      <a class="nav-item sub" href="#s13-3">13.3 Authority Derived from Technical Invariants</a>
+      <span class="nav-section-label">Backmatter</span>
+      <a class="nav-item" href="#s-status">Document Status</a>
+      <a class="nav-item" href="#s-scope">Scope</a>
+      <a class="nav-item" href="#s-terminology">Terminology</a>
+      <a class="nav-item" href="#s-conformance">Conformance Language</a>
+      <a class="nav-item" href="#s-corpus">Standard Corpus</a>
+      <a class="nav-item" href="#s-disclaimer">Institutional Disclaimer</a>
+      <a class="nav-item" href="#s-citation">Recommended Citation</a>
+      <a class="nav-item" href="#s-revision">Revision History</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- PREAMBLE -->
+      <div id="s-preamble" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Preamble</span>
+          <p>This Charter constitutes the foundational governance instrument of the QODIQA standard corpus. It establishes the authority, structure, and procedural discipline under which the QODIQA technical standards are maintained, amended, and evolved. It is not a policy document, a product specification, or an organizational charter in the corporate sense. It is a <strong>constitutional layer</strong> governing the life cycle of a technical standard.</p>
+          <p>The QODIQA standard corpus addresses a structural problem in AI governance: the absence of deterministic, machine-enforceable consent at the moment of AI execution. The integrity of that architecture depends not only on its technical precision, but on the <strong>governance discipline</strong> that ensures it cannot be silently diluted, arbitrarily amended, or captured by interests incompatible with its foundational invariants. This Charter provides that discipline.</p>
+          <p>Version 2.0 of this Charter introduces hardening provisions across six dimensions: governance scalability under adoption growth, Standards Steward institutionalization guardrails, formal qualification of amendment proposers, voting record discipline, an emergency amendment protocol, and consolidation of the Core Invariant Protection Rule into a single canonical definition. No enforcement semantics, no foundational principles, and no corpus document authority structures have been modified. These are structural additions only.</p>
+          <p>Nothing in this Charter may be construed to alter, weaken, or reinterpret the technical enforcement semantics defined in the normative documents of the QODIQA corpus. Governance exists to <strong>protect structural integrity</strong> - not to substitute for it.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 01</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Institutional Purpose</h2>
+
+        <p>This Charter defines the governance framework for the QODIQA standard corpus. Its purpose is to establish the procedures, roles, and constraints under which QODIQA technical standards are created, amended, versioned, and retired. It does not define enforcement semantics, implementation requirements, or certification criteria. Those functions belong to the normative documents of the corpus.</p>
+
+        <h3 id="s1-1"><span class="sh-num">1.1</span>Scope of Governance Authority</h3>
+
+        <p>The governance authority established by this Charter applies to all documents designated as part of the QODIQA Standard Corpus, as defined in Article 3. It governs the processes by which those documents are modified, the roles authorized to participate in those processes, and the safeguards that preserve the technical integrity of the corpus across versions.</p>
+
+        <p>Governance authority does not extend to: the internal implementation decisions of conformant systems, the legal interpretation of regulatory obligations addressed by the corpus, the operational decisions of certified entities, or the commercial activities of any organization building upon the standard.</p>
+
+        <h3 id="s1-2"><span class="sh-num">1.2</span>Relationship to Corpus Documents</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1.1 - Governance Relationship by Document Class</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Document</th>
+                <th>Role in Corpus</th>
+                <th>Governance Relationship</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;hyphens:none;">QODIQA Whitepaper</td>
+                <td style="text-align:left;hyphens:none;">Conceptual foundation</td>
+                <td style="text-align:left;hyphens:none;">Informative; governed as corpus record</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">68-Point Enforcement Framework</td>
+                <td style="text-align:left;hyphens:none;">Primary normative standard</td>
+                <td style="text-align:left;hyphens:none;">Normative; full amendment process applies</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Core Standard</td>
+                <td style="text-align:left;hyphens:none;">Formal specification</td>
+                <td style="text-align:left;hyphens:none;">Normative; full amendment process applies</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Certification Framework</td>
+                <td style="text-align:left;hyphens:none;">Conformance criteria</td>
+                <td style="text-align:left;hyphens:none;">Normative; certification oversight applies</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Implementation Playbook</td>
+                <td style="text-align:left;hyphens:none;">Guidance document</td>
+                <td style="text-align:left;hyphens:none;">Informative; simplified amendment process</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Regulatory Alignment Matrix</td>
+                <td style="text-align:left;hyphens:none;">Compliance mapping</td>
+                <td style="text-align:left;hyphens:none;">Informative; periodic review required</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Security and Cryptographic Profile</td>
+                <td style="text-align:left;hyphens:none;">Security specification</td>
+                <td style="text-align:left;hyphens:none;">Normative; Cryptographic Advisory Panel review required</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Conformance Test Suite</td>
+                <td style="text-align:left;hyphens:none;">Verification specification</td>
+                <td style="text-align:left;hyphens:none;">Normative; full amendment process applies</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Governance Charter</td>
+                <td style="text-align:left;hyphens:none;">This document</td>
+                <td style="text-align:left;hyphens:none;">Constitutional; supermajority required for amendment</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s1-3"><span class="sh-num">1.3</span>Boundary Between Governance and Technical Content</h3>
+
+        <p>This Charter governs process and structure. It does not define, interpret, or constrain the technical content of the normative documents. Technical decisions - including enforcement semantics, control point definitions, cryptographic requirements, and conformance criteria - are determined through the technical review processes established herein, and are recorded in the normative documents themselves.</p>
+
+        <p>In the event of apparent conflict between this Charter and a normative document, the Charter governs matters of process; the normative document governs matters of technical specification.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 02</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Governance Principles</h2>
+
+        <p>The following principles constitute the normative foundation of this Charter. All governance decisions, amendment proposals, and procedural interpretations shall be evaluated against these principles. No governance action may be taken that is demonstrably inconsistent with any principle defined herein.</p>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle I - Deterministic Integrity <span class="nbh-id">GP-01</span></div>
+          <div class="norm-block-body">
+            <p>The governance framework shall preserve the deterministic character of the QODIQA enforcement model. No amendment to any normative document may introduce non-deterministic behavior, probabilistic decision paths, or inference-based authorization logic into the core enforcement semantics. Any proposed change that introduces ambiguity in enforcement outcome shall be rejected. See canonical definition at <strong>Rule CIPR-01</strong> in Article 7.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Foundational - Non-waivable</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle II - Fail-Closed Preservation <span class="nbh-id">GP-02</span></div>
+          <div class="norm-block-body">
+            <p>The fail-closed invariant is a core structural property of the QODIQA enforcement model. No governance action may weaken, conditionally suspend, or create exceptions to fail-closed behavior. Amendments that propose optional, configurable, or deployment-conditional fail-closed semantics shall not be ratified. This principle applies to all normative documents and is not subject to override by any governance body acting within its standard authority. See canonical definition at <strong>Rule CIPR-01</strong> in Article 7.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Foundational - Non-waivable</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle III - Backward Compatibility Discipline <span class="nbh-id">GP-03</span></div>
+          <div class="norm-block-body">
+            <p>Amendment to normative documents shall distinguish between breaking and non-breaking changes and apply appropriate versioning accordingly. Breaking changes that alter conformance requirements, modify enforcement semantics, or invalidate existing certified implementations shall only be introduced through major version increments and must be accompanied by a formal migration path and transition period specification.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Structural - Supermajority required to override</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle IV - Non-Arbitrary Amendment <span class="nbh-id">GP-04</span></div>
+          <div class="norm-block-body">
+            <p>Every proposed amendment to a normative document must be justified by technical necessity, demonstrated conformance gap, regulatory evolution, or identified security risk. Amendments motivated solely by commercial interest, market positioning, or stakeholder preference without technical basis shall not be accepted into review. The amendment record shall document the technical justification for each ratified change.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Procedural - Enforced at proposal intake</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle V - Transparency of Versioning <span class="nbh-id">GP-05</span></div>
+          <div class="norm-block-body">
+            <p>All version transitions, amendment ratifications, and document state changes shall be recorded in a publicly accessible changelog. The complete version history of each corpus document shall be preserved and retrievable. No change to a normative document may be made without a corresponding, timestamped amendment record. Retroactive alteration of published version records is prohibited.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Procedural - Enforced at publication</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle VI - Technical Neutrality <span class="nbh-id">GP-06</span></div>
+          <div class="norm-block-body">
+            <p>The QODIQA standard corpus shall not prescribe implementation technologies, specific software libraries, cryptographic primitives beyond what is necessary for security properties, or vendor-specific integration mechanisms except where technically necessary for deterministic enforcement. Governance decisions shall not favor or disfavor specific implementation approaches that satisfy the enforcement invariants.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Technical - Applied during review</div>
+        </div>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Principle VII - Independence from Commercial Interests <span class="nbh-id">GP-07</span></div>
+          <div class="norm-block-body">
+            <p>The governance of the QODIQA standard corpus shall remain structurally independent from the commercial interests of any organization building products, services, or certification programs upon the standard. No governance role may be conditioned upon commercial contribution. Amendment proposals shall not be weighted by the commercial significance of the proposing party. Conflict-of-interest provisions in Article 6 shall be enforced without exception.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Structural - Enforced at role assignment and vote</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 03</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Standard Corpus Definition</h2>
+
+        <p>The QODIQA Standard Corpus is the complete set of documents governed by this Charter. Corpus membership confers specific procedural obligations with respect to versioning, amendment, and archival. Corpus membership is established by formal designation and recorded in the Corpus Registry maintained by the Standards Steward.</p>
+
+        <h3 id="s3-1"><span class="sh-num">3.1</span>Normative Documents</h3>
+
+        <p>Normative documents define mandatory requirements. Conformant implementations must satisfy the requirements stated in normative documents. Amendments to normative documents require the full amendment process defined in Article 5. The following document classes carry normative authority:</p>
+
+        <ul class="prop-list">
+          <li>The 68-Point Enforcement Framework, including all control point definitions and domain specifications</li>
+          <li>The Core Standard, defining the enforcement model, consent primitives, and evaluation semantics</li>
+          <li>The Certification Framework, defining conformance criteria and certification procedures</li>
+          <li>The Security and Cryptographic Profile, defining mandatory cryptographic requirements</li>
+          <li>The Conformance Test Suite, defining test methods and acceptance criteria</li>
+          <li>This Governance Charter</li>
+        </ul>
+
+        <h3 id="s3-2"><span class="sh-num">3.2</span>Informative Documents</h3>
+
+        <p>Informative documents provide context, guidance, and implementation assistance. They do not impose mandatory requirements. Conformance is assessed against normative documents only. Informative documents may be amended through a simplified process as defined in Article 5. The following document classes are informative:</p>
+
+        <ul class="prop-list">
+          <li>The QODIQA Whitepaper, providing conceptual foundations and problem framing</li>
+          <li>The Implementation Playbook, providing integration guidance and reference patterns</li>
+          <li>The Regulatory Alignment Matrix, providing mapping to external regulatory frameworks</li>
+          <li>Technical Appendices designated as informative at publication</li>
+        </ul>
+
+        <h3 id="s3-3"><span class="sh-num">3.3</span>Experimental Drafts</h3>
+
+        <p>Experimental drafts are working documents under active development. They carry no normative authority and are not subject to the full amendment process. Experimental drafts may be published for community review and technical feedback. An experimental draft may be advanced to candidate status by decision of the Technical Review Committee following review. Until formally advanced, experimental drafts shall be clearly marked as such and shall not be cited as normative references.</p>
+
+        <h3 id="s3-4"><span class="sh-num">3.4</span>Corpus Registry</h3>
+
+        <p>The Standards Steward shall maintain a Corpus Registry that records the current membership, document state, version, and amendment history of all corpus documents. The Corpus Registry shall be publicly accessible and updated within five business days of any state transition or version publication.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 04</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Versioning Model</h2>
+
+        <p>All normative documents in the QODIQA Standard Corpus shall be versioned according to the semantic versioning model defined in this Article. Version identifiers are permanent and immutable. A published version may not be altered; corrections require the issuance of a new version.</p>
+
+        <h3 id="s4-1"><span class="sh-num">4.1</span>Semantic Versioning Rules</h3>
+
+        <p>Version identifiers follow the format <code>MAJOR.MINOR.PATCH</code>, where each component is a non-negative integer. The following rules govern version increments:</p>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">MAJOR</div>
+            <div class="state-desc">Incremented when a change introduces breaking modifications to enforcement semantics, conformance requirements, or core invariants. A major version increment resets MINOR and PATCH to zero. A major version increment triggers re-certification obligations for certified implementations. Requires supermajority ratification and public review.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">MINOR</div>
+            <div class="state-desc">Incremented when a change adds new requirements, extends existing control points, or introduces new optional elements in a backward-compatible manner. A minor version increment resets PATCH to zero. Certified implementations remain valid but must be assessed for gap coverage within the transition period.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">PATCH</div>
+            <div class="state-desc">Incremented for editorial corrections, clarifications, and non-normative explanatory additions that do not alter requirements. A patch does not affect certification validity. Patch increments require Technical Review Committee approval only, without full amendment process.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Interim Patch</div>
+            <div class="state-desc">A temporary designation applied exclusively to emergency amendments issued under Article 5b. Carries the suffix <code>-ip</code> appended to the current PATCH component (e.g., <code>1.2.3-ip</code>). An Interim Patch version automatically enters Sunset Review upon publication and must be ratified or reverted within the period defined in Article 5b. Until sunset, it is treated as Ratified Standard for conformance purposes.</div>
+          </div>
+        </div>
+
+        <h3 id="s4-2"><span class="sh-num">4.2</span>Version Lifecycle States</h3>
+
+        <p>Each corpus document version exists in one of the following lifecycle states. State transitions are recorded in the Corpus Registry and announced via the publication process defined in Article 9.</p>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Draft</div>
+            <div class="state-desc">Document is under active development by the Technical Review Committee. Not yet subject to public review. May not be cited as authoritative. May be modified without version increment during this state.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Candidate Standard</div>
+            <div class="state-desc">Document has passed Technical Review Committee approval and is in the public review window. Version identifier is frozen. May be cited with the explicit caveat of candidate status. Implementation testing may begin.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Ratified Standard</div>
+            <div class="state-desc">Document has completed public review, addressed material comments, and been ratified through the process defined in Article 5. The authoritative state for conformance assessment and certification.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Sunset Review</div>
+            <div class="state-desc">Applies exclusively to Interim Patch versions issued under Article 5b. The version is live and enforced but subject to mandatory full-process review and ratification within the defined sunset period. If not ratified within the sunset period, the version is automatically reverted to the immediately prior Ratified Standard.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Superseded</div>
+            <div class="state-desc">A newer ratified version of the document has been published. The superseded version remains valid for implementations certified against it until the applicable transition period expires. New certifications shall not be issued against a superseded version after the transition period ends.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Archived</div>
+            <div class="state-desc">Document version has been retired from active use. Archived versions are preserved in the public archive but carry no governance authority and shall not be used as basis for new certifications.</div>
+          </div>
+        </div>
+
+        <h3 id="s4-3"><span class="sh-num">4.3</span>Deprecation Rules</h3>
+
+        <p>Deprecation is the formal notice that a version, requirement, or document element will be removed or rendered non-normative in a future major version. Deprecation requires a minimum notice period of twelve months from announcement to removal. Deprecated elements shall be clearly marked in the document and listed in the deprecation registry. Deprecated elements retain their normative force until removal in the subsequent major version.</p>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 05</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Amendment Process</h2>
+
+        <p>The amendment process governs all proposed changes to normative documents in the QODIQA Standard Corpus. The process is designed to ensure technical rigor, structural integrity, and transparent record-keeping while remaining practicable for the volume of changes expected during active standard development. A simplified process applies to informative documents and patch increments as noted. Emergency amendments are governed by Article 5b.</p>
+
+        <h3 id="s5-1"><span class="sh-num">5.1</span>Qualified Party Definition</h3>
+
+        <p>The following categories define parties eligible to submit amendment proposals to the full amendment process. Eligibility is determined at intake by the Standards Steward. Classification is competence-based; commercial affiliation does not confer or deny eligibility.</p>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">QP-A</div>
+            <div class="state-desc"><strong>Governance Body Member.</strong> Any sitting member of the Technical Review Committee, Certification Oversight Panel, or Cryptographic Advisory Panel. Proposals from governance body members do not require a technical sponsor but are subject to mandatory recusal from the review and ratification vote on their own proposals.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">QP-B</div>
+            <div class="state-desc"><strong>Certified Entity Representative.</strong> A technically authorized representative of an organization holding a current, valid certification against the QODIQA standard corpus. The certification must be active at the time of proposal submission. Certification lapse after submission does not void an accepted proposal already in review.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">QP-C</div>
+            <div class="state-desc"><strong>Technical Contributor with Sponsor.</strong> Any individual or organization with demonstrable technical competence in the subject matter of the proposed amendment, accompanied by a written technical sponsorship from a current QP-A or QP-B party. The sponsor attests to the technical soundness of the proposal and takes responsibility for facilitating the proposer's engagement with the review process. Sponsorship does not constitute endorsement of the proposed outcome.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">QP-D</div>
+            <div class="state-desc"><strong>Authorized Certification Body.</strong> Any certification body holding current authorization from the Certification Oversight Panel. Proposals from certification bodies are limited in scope to matters within the Certification Framework and Conformance Test Suite and are subject to the non-interference provisions of Article 8.</div>
+          </div>
+        </div>
+
+        <p>The Standards Steward shall publish the Qualified Party eligibility determination and any sponsorship record in the amendment intake register within five business days of intake disposition.</p>
+
+        <h3 id="s5-2"><span class="sh-num">5.2</span>Full Amendment Process</h3>
+
+        <p>The following process applies to all proposed changes to normative documents that result in MINOR or MAJOR version increments:</p>
+
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="ps-num">Step 01</span>
+            <div class="ps-content">
+              <span class="ps-title">Amendment Proposal Submission</span>
+              <span class="ps-desc">A Qualified Party (QP-A through QP-D) submits an amendment proposal. The proposal must include: a precise statement of the proposed change; technical justification satisfying Principle GP-04; preliminary impact assessment covering determinism, fail-closed behavior, backward compatibility, and certification; proposer identity and category; conflict-of-interest disclosure; and, for QP-C proposers, the written technical sponsorship. Incomplete proposals are returned without review.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 02</span>
+            <div class="ps-content">
+              <span class="ps-title">Intake Review</span>
+              <span class="ps-desc">The Standards Steward reviews the proposal for completeness, proposer eligibility, and structural compatibility with non-waivable principles (GP-01, GP-02) within ten business days. Proposals that are incomplete, submitted by ineligible parties, or in conflict with Rule CIPR-01 are rejected at intake with written explanation. Accepted proposals are assigned an amendment identifier, entered into the amendment register, and the intake determination is published.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 03</span>
+            <div class="ps-content">
+              <span class="ps-title">Technical Review Phase</span>
+              <span class="ps-desc">The Technical Review Committee conducts substantive review within thirty business days. The Committee evaluates the proposal against all governance principles, performs the Change Impact Analysis defined in Article 7, and may request clarification, modification, or expert consultation. The Committee issues a recommendation: Accept, Accept with Modifications, or Reject, with written reasoning. The proposer's recusal from any vote on their own proposal is enforced at this stage.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 04</span>
+            <div class="ps-content">
+              <span class="ps-title">Public Review Window</span>
+              <span class="ps-desc">Proposals accepted by the Technical Review Committee enter a public review window of no less than thirty calendar days. The proposal, impact analysis, and Committee recommendation are published in full. Written comments from any party are accepted and recorded. The Committee must address all substantive technical objections in writing. No response obligation applies to non-technical or procedural comments.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 05</span>
+            <div class="ps-content">
+              <span class="ps-title">CIPR-01 Clearance</span>
+              <span class="ps-desc">Prior to ratification, the Technical Review Committee must issue a formal written clearance statement confirming that the proposed change does not trigger Rule CIPR-01 (defined in Article 7). This clearance is a hard prerequisite for ratification. If the analysis is inconclusive or produces a finding of impact, the proposal must be modified to eliminate the impact, or withdrawn. No ratification vote may proceed without a documented CIPR-01 clearance on the amendment record.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 06</span>
+            <div class="ps-content">
+              <span class="ps-title">Ratification Vote</span>
+              <span class="ps-desc">Following public review and CIPR-01 clearance, the Technical Review Committee votes on ratification. Each member records a vote of Yes, No, or Abstain. Recusals are recorded separately and do not count toward quorum or voting totals. MINOR version increments require a simple majority of eligible (non-recused) voting members. MAJOR version increments require a supermajority of two-thirds of the sitting membership. Governance Charter amendments require supermajority ratification. The complete vote record - including member names, votes, recusals, and any dissenting technical opinion - is published as part of the amendment record.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 07</span>
+            <div class="ps-content">
+              <span class="ps-title">Publication and Changelog Issuance</span>
+              <span class="ps-desc">Ratified amendments are incorporated into the new document version, which is published within fifteen business days of ratification. A corresponding changelog entry is issued simultaneously, recording the amendment identifier, description, impact classification, ratification date, effective date, and resulting document version. The prior version transitions to Superseded status. The complete amendment record - proposal, analysis, public comments, CIPR-01 clearance, and vote record - is archived and published.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s5-3"><span class="sh-num">5.3</span>Voting Record Requirements</h3>
+
+        <p>For every ratification vote conducted under the full amendment process, the following must be recorded and published in the amendment register within fifteen business days of the vote:</p>
+
+        <div class="req-table">
+          <div class="req-row">
+            <div class="req-key">Vote identifier</div>
+            <div class="req-val">Amendment identifier, vote date, and quorum confirmation.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Individual votes</div>
+            <div class="req-val">For each eligible voting member, their recorded vote (Yes / No / Abstain) by name; anonymous voting is not permitted for amendment ratification.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Recusal record</div>
+            <div class="req-val">For each recused member, the basis for recusal and the conflict-of-interest disclosure filed.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Dissenting opinions</div>
+            <div class="req-val">Any member voting No may attach a written dissenting technical opinion to the amendment record; this attachment is optional but, if provided, must be published in full alongside the ratification record.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Quorum determination</div>
+            <div class="req-val">Confirmation that the vote satisfied quorum requirements, with the numerical basis stated.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Vote outcome</div>
+            <div class="req-val">Final tally, threshold required, and whether the outcome was approval or rejection.</div>
+          </div>
+        </div>
+
+        <p>Vote records are immutable once published. Corrections to vote records may only be issued by the Conflict Resolution Body following a formal review, and any correction must reference the original record and the basis for correction.</p>
+
+        <h3 id="s5-4"><span class="sh-num">5.4</span>Simplified Amendment Process</h3>
+
+        <p>Patch increments to normative documents, and all amendments to informative documents, may be processed under the simplified amendment process: proposal submission with technical justification by any Qualified Party, Technical Review Committee approval without public review, and publication with changelog entry. Simplified process amendments may not alter normative requirements. A CIPR-01 clearance statement is required even under the simplified process.</p>
+
+        <h3 id="s5-5"><span class="sh-num">5.5</span>Required Documentation for Amendment Proposals</h3>
+
+        <p>Every amendment proposal submitted to the full process must include the following documentation. Proposals lacking any required element will be returned at intake:</p>
+
+        <div class="req-table">
+          <div class="req-row">
+            <div class="req-key">Amendment Statement</div>
+            <div class="req-val">Precise, unambiguous description of the proposed change, including specific document sections, control points, or requirements affected.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Technical Justification</div>
+            <div class="req-val">Statement of the technical necessity, conformance gap, regulatory trigger, or security concern motivating the proposal.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Preliminary Impact Assessment</div>
+            <div class="req-val">Initial analysis of determinism impact, fail-closed impact, backward compatibility, and certification scope.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Migration Implications</div>
+            <div class="req-val">Description of impact on existing implementations and certified entities, including proposed transition provisions.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Proposer Identity and Category</div>
+            <div class="req-val">Full name, affiliation, and Qualified Party category (QP-A through QP-D) of the proposing party; for QP-C, the written sponsorship document.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Conflict of Interest Disclosure</div>
+            <div class="req-val">Disclosure of any commercial or institutional interest the proposing party holds in the outcome of the amendment.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5b -->
+      <div id="s5b" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 05b</span>
+        <h2><a class="anchor-link" href="#s5b">#</a>Emergency Amendment Protocol</h2>
+
+        <p>The Emergency Amendment Protocol provides a narrowly scoped accelerated path for addressing conditions that present immediate structural risk to the QODIQA corpus or its conformant implementations. It is not a general-purpose fast-track; it is a bounded exception to the standard amendment timeline. Its use does not waive any substantive requirement of the amendment process - it compresses the timeline and defers the full public review to a mandatory post-hoc phase.</p>
+
+        <div class="callout">
+          <p>The Emergency Amendment Protocol <strong>does not provide a mechanism to weaken deterministic or fail-closed invariants under any condition.</strong> Rule CIPR-01 applies without modification to all emergency amendments. No emergency designation overrides the CIPR-01 clearance requirement.</p>
+        </div>
+
+        <h3 id="s5b-1"><span class="sh-num">5b.1</span>Eligible Triggering Conditions</h3>
+
+        <p>The Emergency Amendment Protocol may be initiated only when one or more of the following conditions is confirmed by the Technical Review Committee:</p>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">EAP-T1</div>
+            <div class="state-desc"><strong>Security Vulnerability.</strong> A confirmed vulnerability in the normative corpus - or in a referenced cryptographic or protocol specification - that enables bypass, circumvention, or undermining of enforcement behavior in conformant implementations. The vulnerability must be concretely demonstrated or credibly disclosed through responsible disclosure procedures.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">EAP-T2</div>
+            <div class="state-desc"><strong>Cryptographic Break.</strong> A demonstrated or authoritatively confirmed break in a cryptographic primitive, algorithm, or protocol referenced as mandatory in the Security and Cryptographic Profile, rendering the security properties of conformant implementations materially compromised.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">EAP-T3</div>
+            <div class="state-desc"><strong>Regulatory Mandate Requiring Immediate Conformity.</strong> A binding regulatory instrument - enacted with legal force in a jurisdiction where conformant implementations operate - that creates a direct, time-constrained conflict with a specific normative requirement such that continued compliance with the current corpus creates legal liability for conformant implementations. The regulatory mandate must be specific, binding, and the conflict must be irresolvable through implementation-level measures alone.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">EAP-T4</div>
+            <div class="state-desc"><strong>Deterministic Model Integrity Risk.</strong> A confirmed structural defect in the normative corpus - distinct from enforcement semantics - that causes deterministic evaluation to produce incorrect outcomes under defined conditions, provided the defect was introduced by a prior amendment rather than present in the original corpus design. This trigger is not available for challenges to the foundational enforcement model.</div>
+          </div>
+        </div>
+
+        <p>Conditions that do not satisfy one of the above trigger types shall not be processed under this Protocol. Urgency of commercial need, implementation convenience, or regulatory interpretation differences do not constitute eligible triggering conditions.</p>
+
+        <h3 id="s5b-2"><span class="sh-num">5b.2</span>Emergency Amendment Procedure</h3>
+
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="ps-num">Step 01</span>
+            <div class="ps-content">
+              <span class="ps-title">Emergency Declaration</span>
+              <span class="ps-desc">A QP-A or QP-B party submits a written emergency declaration to the Standards Steward, specifying the trigger type, the concrete basis for the trigger, the affected corpus document and section, and the proposed resolution. The Standards Steward convenes the Technical Review Committee for an emergency eligibility determination within three business days.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 02</span>
+            <div class="ps-content">
+              <span class="ps-title">Eligibility Confirmation</span>
+              <span class="ps-desc">The Technical Review Committee confirms or denies emergency eligibility by simple majority vote within three business days of convening. A denial requires written reasoning. An approval initiates the accelerated review window and is published in the amendment register immediately.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 03</span>
+            <div class="ps-content">
+              <span class="ps-title">Accelerated Technical Review</span>
+              <span class="ps-desc">Upon eligibility confirmation, the Technical Review Committee conducts full technical review, including CIPR-01 clearance, within fifteen business days. The Cryptographic Advisory Panel is convened in parallel for EAP-T1 and EAP-T2 triggers. The public review window is deferred but not eliminated; it proceeds as a mandatory post-hoc phase defined in Step 05.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 04</span>
+            <div class="ps-content">
+              <span class="ps-title">Interim Patch Publication</span>
+              <span class="ps-desc">If the Technical Review Committee approves the amendment under accelerated review, the change is published as an Interim Patch version (designated with the <code>-ip</code> suffix per Article 4.1). The Interim Patch enters Sunset Review immediately upon publication. The complete vote record is published simultaneously.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 05</span>
+            <div class="ps-content">
+              <span class="ps-title">Mandatory Post-Hoc Full Review</span>
+              <span class="ps-desc">Following publication of the Interim Patch, the full amendment process - from public review window onward - must be completed within ninety calendar days. During this period, the Interim Patch is in effect. If the post-hoc review results in ratification, the version designation transitions from Interim Patch to Ratified Standard (dropping the <code>-ip</code> suffix). If the post-hoc review results in rejection or modification, the version is reverted to the immediately prior Ratified Standard, and a new proposal reflecting any modifications must restart from Step 01 of the full amendment process.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 06</span>
+            <div class="ps-content">
+              <span class="ps-title">Automatic Sunset</span>
+              <span class="ps-desc">If the mandatory post-hoc full review is not completed within the ninety-calendar-day sunset period, the Interim Patch is automatically reverted to Superseded status and the immediately prior Ratified Standard is reinstated as authoritative. This reversion requires no further vote and takes effect by operation of this Charter. The Standards Steward shall publish the reversion notice within three business days of the sunset date.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s5b-3"><span class="sh-num">5b.3</span>Emergency Protocol Constraints</h3>
+
+        <ul class="prop-list">
+          <li>No more than two Interim Patch versions of any single corpus document may be active simultaneously</li>
+          <li>An Interim Patch may not itself be amended through the Emergency Amendment Protocol; it may only be superseded by completion of its own post-hoc full review</li>
+          <li>Emergency Protocol usage frequency shall be reviewed annually by the Technical Review Committee; patterns of repeated use may indicate underlying structural deficiencies requiring a formal MINOR amendment</li>
+          <li>All emergency declarations, eligibility determinations, and Interim Patch publications are recorded in the amendment register and remain publicly accessible without expiration</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 06</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Governance Structure</h2>
+
+        <p>The governance of the QODIQA Standard Corpus is conducted through a set of defined institutional roles. The structure is designed to be functional with a minimal composition and scalable as the standard matures in accordance with the evolution thresholds defined in Article 11. Roles are defined by function, not by organizational affiliation. All role holders are bound by the conflict-of-interest provisions of this Article.</p>
+
+        <h3 id="s6-1"><span class="sh-num">6.1</span>Institutional Roles</h3>
+
+        <div class="role-grid">
+          <div class="role-card">
+            <span class="role-id">ROLE-01</span>
+            <div class="role-title">Standards Steward</div>
+            <p class="role-desc">The primary governance authority for the QODIQA corpus during the Foundational Phase. Responsible for corpus registry maintenance, proposal intake, amendment publication, and institutional continuity. The Standards Steward holds no veto over Technical Review Committee decisions on technical matters but retains authority over procedural matters and dissolution provisions. Transition of the Steward role is governed by Article 6b.</p>
+          </div>
+          <div class="role-card">
+            <span class="role-id">ROLE-02</span>
+            <div class="role-title">Technical Review Committee</div>
+            <p class="role-desc">The body responsible for substantive technical review of all amendment proposals. Conducts impact analysis, issues recommendations, manages public review windows, and votes on ratification. Must consist of qualified technical reviewers with demonstrated competence in consent systems, distributed enforcement, or applicable regulatory frameworks. Composition evolves in accordance with Article 11.</p>
+          </div>
+          <div class="role-card">
+            <span class="role-id">ROLE-03</span>
+            <div class="role-title">Certification Oversight Panel</div>
+            <p class="role-desc">Responsible for supervision of certification body activities, review of certification revocation decisions, and maintenance of the certified implementation registry. Operates independently of the Technical Review Committee on matters of certification integrity. Reports to the Standards Steward during the Foundational Phase; reporting structure evolves per Article 11.</p>
+          </div>
+          <div class="role-card">
+            <span class="role-id">ROLE-04</span>
+            <div class="role-title">Cryptographic Advisory Panel</div>
+            <p class="role-desc">Advisory body with standing to review all proposed amendments affecting the Security and Cryptographic Profile. Issues non-binding recommendations on cryptographic adequacy and algorithm lifecycle. Mandatory consultation for EAP-T1 and EAP-T2 emergency triggers. Convened on demand during the Foundational Phase; constituted as a standing body at Tier 2 per Article 11.</p>
+          </div>
+          <div class="role-card">
+            <span class="role-id">ROLE-05</span>
+            <div class="role-title">Conflict Resolution Body</div>
+            <p class="role-desc">Convened on an ad hoc basis to resolve disputes arising from amendment process disputes, recusal decisions, or interpretation of this Charter. Composed of parties with no direct interest in the matter under dispute. Issues binding procedural rulings; does not rule on technical merit.</p>
+          </div>
+        </div>
+
+        <h3 id="s6-2"><span class="sh-num">6.2</span>Composition, Voting, and Quorum</h3>
+
+        <p>The Technical Review Committee shall consist of a minimum of three and a maximum of nine members during the Foundational Phase. Composition expands in accordance with Article 11. A quorum for any vote requires the participation of a majority of eligible (non-recused) sitting Committee membership. Decisions on MINOR amendments require a simple majority of quorum. Decisions on MAJOR amendments require a supermajority of two-thirds of the sitting membership, including absent members.</p>
+
+        <h3 id="s6-3"><span class="sh-num">6.3</span>Recusal Requirements</h3>
+
+        <p>Any governance role holder must recuse themselves from review, deliberation, or voting on any amendment where they hold a direct commercial or institutional interest in the outcome. Recusal is mandatory and self-enforcing; failure to recuse constitutes a governance violation. The Conflict Resolution Body may compel retroactive recusal review where conflicts are identified after the fact. Recusals are recorded in the amendment register and published as part of the vote record.</p>
+
+        <h3 id="s6-4"><span class="sh-num">6.4</span>Term Limits and Continuity</h3>
+
+        <p>Technical Review Committee members serve terms of two years, renewable once without interruption. After two consecutive terms, a minimum one-year gap is required before re-appointment. The Standards Steward role is subject to institutionalization provisions defined in Article 6b. Succession provisions for involuntary governance disruption are addressed in Article 12.</p>
+      </div>
+
+      <!-- SECTION 6b -->
+      <div id="s6b" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 06b</span>
+        <h2><a class="anchor-link" href="#s6b">#</a>Standards Steward Institutionalization</h2>
+
+        <p>The Standards Steward role in the Foundational Phase is necessarily concentrated. This concentration is intentional: it provides the decisional clarity required during initial corpus establishment and before governance institutions are sufficiently populated to sustain distributed authority. This Article defines the structural guardrails that prevent indefinite centralization and the transition path to a ratified or elected Steward structure under defined adoption conditions.</p>
+
+        <h3 id="s6b-1"><span class="sh-num">6b.1</span>Foundational Phase Steward Authority</h3>
+
+        <p>During the Foundational Phase (Tier 1 as defined in Article 11), the Standards Steward exercises the procedural authorities defined in this Charter. Those authorities are bounded: the Steward may not unilaterally ratify amendments, modify normative documents, alter version designations, or override Technical Review Committee decisions. The Steward's role is custodial and procedural. Technical authority rests with the Technical Review Committee.</p>
+
+        <h3 id="s6b-2"><span class="sh-num">6b.2</span>Mandatory Transition Triggers</h3>
+
+        <p>Upon reaching Tier 2 adoption thresholds defined in Article 11, the Standards Steward function must transition from a single-holder role to a Steward Council structure within twelve months of threshold confirmation. The Steward Council consists of three to five members, none of whom may hold the same organizational affiliation. The founding Steward becomes a Council member by default and may serve no more than one additional two-year Council term before mandatory rotation.</p>
+
+        <p>Upon reaching Tier 3 adoption thresholds, the Steward Council must transition to an elected structure within eighteen months of threshold confirmation. Elections are conducted by the Technical Review Committee membership, applying the voting record requirements of Article 5.3. The elected structure must preserve the conflict-of-interest provisions and commercial neutrality requirements of this Charter without diminution.</p>
+
+        <h3 id="s6b-3"><span class="sh-num">6b.3</span>Steward Removal Procedure</h3>
+
+        <p>The Standards Steward - or any Steward Council member - may be removed from the role under the following conditions:</p>
+
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="ps-num">Basis</span>
+            <div class="ps-content">
+              <span class="ps-title">Grounds for Removal</span>
+              <span class="ps-desc">Demonstrated and documented: (a) failure to discharge governance obligations for a continuous period exceeding ninety days without prior notification; (b) material conflict-of-interest violation not remediated within thirty days of formal notice; or (c) governance action that is demonstrably inconsistent with the non-waivable principles of this Charter (GP-01, GP-02).</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Process</span>
+            <div class="ps-content">
+              <span class="ps-title">Removal Initiation</span>
+              <span class="ps-desc">Removal may be initiated by a two-thirds majority vote of the Technical Review Committee. The subject of removal is notified in writing and provided thirty days to respond prior to a final vote. The Conflict Resolution Body reviews the grounds and the response and issues a non-binding procedural finding before the final vote proceeds.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Vote</span>
+            <div class="ps-content">
+              <span class="ps-title">Ratification of Removal</span>
+              <span class="ps-desc">Removal is ratified by a two-thirds supermajority vote of the sitting Technical Review Committee membership, applied to the full membership (not quorum). The vote record is published. The removed Steward's governance actions prior to removal retain their validity; removal is not retroactive.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Succession</span>
+            <div class="ps-content">
+              <span class="ps-title">Interim and Successor Steward</span>
+              <span class="ps-desc">Upon removal, the Technical Review Committee appoints an interim Steward from its sitting membership within fifteen business days. The interim Steward serves until a permanent successor is ratified by the Committee by simple majority vote, within ninety days of the removal. Governance continuity is maintained without interruption during this period.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s6b-4"><span class="sh-num">6b.4</span>Continuity of Governance During Transition</h3>
+
+        <p>No Steward transition - whether triggered by Article 11 adoption thresholds, voluntary withdrawal, or removal under Section 6b.3 - shall suspend or interrupt the amendment process for any proposal currently in review. All in-progress proposals carry forward to the successor structure without prejudice to their position in the process.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 07</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Change Impact Analysis Requirements</h2>
+
+        <p>Every proposed amendment entering the full amendment process must be accompanied by a Change Impact Analysis. The Change Impact Analysis is a formal technical document, not a summary or narrative approximation. The Technical Review Committee is responsible for verifying the completeness and accuracy of the analysis. Where the proposing party has produced an initial analysis, the Committee must independently validate it.</p>
+
+        <div class="callout">
+          <p><strong>No amendment may proceed to ratification unless all required Change Impact Analysis components have been completed and independently verified.</strong> An incomplete or contested analysis constitutes grounds for suspension of the amendment process pending resolution.</p>
+        </div>
+
+        <h3 id="s7-1"><span class="sh-num">7.1</span>Required Analysis Components</h3>
+
+        <div class="req-table">
+          <div class="req-row">
+            <div class="req-key">Determinism Impact Statement</div>
+            <div class="req-val">Analysis of whether the proposed change alters the deterministic character of any enforcement decision, evaluation path, or consent resolution outcome. Must conclude with an explicit finding: No Determinism Impact, or Determinism Impact Present with description.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Fail-Closed Integrity Impact Statement</div>
+            <div class="req-val">Analysis of whether the proposed change alters, weakens, or creates exceptions to fail-closed enforcement behavior under any execution condition. Must conclude with an explicit finding: No Fail-Closed Impact, or Fail-Closed Impact Present with description.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Backward Compatibility Assessment</div>
+            <div class="req-val">Identification of all existing certified implementations, conformant deployments, or normative references materially affected by the proposed change. Must classify the change as Non-Breaking, Conditionally Breaking, or Breaking, with justification.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Certification Impact Analysis</div>
+            <div class="req-val">Determination of whether the proposed change requires existing certifications to be renewed, re-assessed, or revoked. Must specify the certification scope affected and the proposed re-certification timeline.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Interoperability Assessment</div>
+            <div class="req-val">Evaluation of whether the proposed change affects the interoperability of conformant implementations with other systems, registries, or external references within the QODIQA ecosystem.</div>
+          </div>
+          <div class="req-row">
+            <div class="req-key">Migration Implications</div>
+            <div class="req-val">Specification of the implementation changes required of conformant systems, estimated migration complexity, and the proposed transition period.</div>
+          </div>
+        </div>
+
+        <h3 id="s7-2"><span class="sh-num">7.2</span>Core Invariant Protection Rule - Canonical Definition</h3>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Core Invariant Protection Rule <span class="nbh-id">CIPR-01</span></div>
+          <div class="norm-block-body">
+            <p><strong>No amendment to any QODIQA corpus document may be ratified if its Change Impact Analysis produces a finding of Determinism Impact Present or Fail-Closed Impact Present.</strong></p>
+            <p>This rule operates as an absolute, non-delegable constraint on the amendment process. It applies without exception to: the full amendment process (Article 5), the simplified amendment process (Article 5.4), the Emergency Amendment Protocol (Article 5b), and any governance evolution transition (Article 11). No governance body, governance phase, adoption threshold, or emergency condition provides authority to waive, defer, or override Rule CIPR-01.</p>
+            <p>The only path to modifying the deterministic or fail-closed invariants of the corpus is through a MAJOR version increment subject to a supermajority vote of two-thirds of the sitting Technical Review Committee, a public review period of no less than ninety calendar days, and a re-ratification process beginning from a new Candidate Standard designation. That path does not constitute an exception to Rule CIPR-01; it constitutes a complete replacement of the current major version of the standard, for which new invariant definitions must themselves be internally consistent and fail-closed.</p>
+          </div>
+          <div class="norm-block-foot">Status: Canonical Definition - Non-waivable - Cross-referenced from Articles 2 (GP-01, GP-02), 5.2 (Step 05), 5.4, 5b, 10.3, 10.4</div>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 08</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Certification Oversight</h2>
+
+        <p>The Certification Framework governs the assessment of implementation conformance with the QODIQA normative standard. Governance oversight of certification ensures that the certification process faithfully reflects the requirements of the current ratified standard and that certified status is not issued or retained by implementations that fail to satisfy those requirements.</p>
+
+        <h3 id="s8-1"><span class="sh-num">8.1</span>Evolution of the Certification Framework</h3>
+
+        <p>The Certification Framework is a normative document subject to the full amendment process. Amendments to the Certification Framework that alter conformance criteria, add new assessment categories, or change certification validity periods require full Technical Review Committee review. The Certification Oversight Panel holds standing as a QP-D qualified party to submit proposed amendments to the Certification Framework and to participate in their review as a subject matter authority.</p>
+
+        <h3 id="s8-2"><span class="sh-num">8.2</span>Supervision of Certification Bodies</h3>
+
+        <p>The Certification Oversight Panel is responsible for maintaining the registry of authorized certification bodies. Authorization of a certification body requires demonstration of: independence from the implementation under assessment; technical competence in the QODIQA enforcement model; procedural capacity to execute the Conformance Test Suite; and commitment to public reporting of certification outcomes. Authorization may be withdrawn for demonstrated failure in any of these areas.</p>
+
+        <h3 id="s8-3"><span class="sh-num">8.3</span>Certification Revocation</h3>
+
+        <p>Certification revocation may be initiated by the Certification Oversight Panel upon: evidence that a certified implementation fails to satisfy the requirements of the normative standard against which it was certified; a material version transition that renders the certification basis superseded beyond the applicable transition period; or demonstrated misrepresentation in the certification assessment process. Revocation decisions are subject to review by the Conflict Resolution Body upon request of the affected implementation holder. Revocations are published in the Corpus Registry.</p>
+
+        <h3 id="s8-4"><span class="sh-num">8.4</span>Conflict of Interest in Certification</h3>
+
+        <p>Certification bodies may not assess implementations in which they hold a direct commercial interest. Governance role holders who participate in the assessment of a specific implementation's certification application must recuse themselves from any governance decision affecting that certification. The Certification Oversight Panel must review and publish its conflict-of-interest policy on an annual basis.</p>
+
+        <h3 id="s8-5"><span class="sh-num">8.5</span>Non-Interference with Enforcement Semantics</h3>
+
+        <p>The Certification Oversight Panel and all certification bodies operate within the enforcement semantics defined by the normative standard. Neither the Panel nor any certification body holds authority to reinterpret, relax, or supplement the enforcement requirements of the standard in the course of certification activities. Ambiguities in the standard are to be referred to the Technical Review Committee for clarification through the patch amendment process, not resolved unilaterally by certification bodies.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 09</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Transparency and Publication Requirements</h2>
+
+        <p>The governance of the QODIQA Standard Corpus shall be conducted transparently. All material governance actions, amendment records, and version transitions shall be accessible to the public. Transparency is not merely a procedural aspiration; it is a structural requirement that enables the corpus to function as a trustworthy technical standard.</p>
+
+        <h3 id="s9-1"><span class="sh-num">9.1</span>Public Changelog Requirements</h3>
+
+        <p>A versioned changelog shall be maintained for each normative corpus document and for the Corpus Registry. Each changelog entry must record: the amendment identifier, a concise description of the change, the impact classification, the ratification date, the effective date, and the resulting document version. Changelog entries are immutable once published. Corrections to changelog entries are issued as separate entries referencing the original.</p>
+
+        <h3 id="s9-2"><span class="sh-num">9.2</span>Version Archive Retention</h3>
+
+        <p>All published versions of normative corpus documents - including Interim Patch versions, whether ratified or reverted - shall be preserved in a publicly accessible archive without expiration. Archived versions shall be clearly marked with their lifecycle state, the date of state transition, and, for reverted Interim Patches, the reversion notice. The archive shall be maintained in a format that does not require specialized software to access. Archive responsibilities transfer with governance custody in accordance with Article 12.</p>
+
+        <h3 id="s9-3"><span class="sh-num">9.3</span>Disclosure of Amendments</h3>
+
+        <p>The complete amendment record for each ratified amendment - including the original proposal, proposer identity and Qualified Party category, sponsorship record if applicable, the Technical Review Committee's analysis and recommendation, all material public comments received, the CIPR-01 clearance statement, and the vote record as defined in Article 5.3 - shall be published no later than fifteen business days following ratification. Rejected proposals and their reasons for rejection shall also be published with sufficient technical detail.</p>
+
+        <h3 id="s9-4"><span class="sh-num">9.4</span>Registry Publication Format</h3>
+
+        <p>The Corpus Registry shall be published in a machine-readable format in addition to a human-readable representation. The registry shall include: the current list of corpus documents with their version, state, and document identifier; the list of ratified amendments and Interim Patches; the list of active certifications and certification bodies; the list of current governance role holders; and the current governance phase (Tier designation per Article 11). The registry shall be updated within five business days of any change.</p>
+
+        <h3 id="s9-5"><span class="sh-num">9.5</span>Historical Version Accessibility</h3>
+
+        <p>Superseded and archived versions of corpus documents shall remain accessible at stable, permanent identifiers. The Standards Steward shall maintain or designate a preservation host for historical versions. Governance custody transfers under Article 12 include explicit obligation to maintain or transfer historical version accessibility.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Safeguards Against Capture</h2>
+
+        <p>The structural integrity of the QODIQA standard corpus depends on its independence from capture by interests incompatible with its foundational purpose. This Article defines the structural protections that prevent the standard from being diluted, redirected, or rendered technically incoherent through amendment processes that serve interests other than the integrity of deterministic runtime consent enforcement.</p>
+
+        <h3 id="s10-1"><span class="sh-num">10.1</span>Commercial Neutrality Clause</h3>
+
+        <p>No amendment to any corpus document may be conditioned upon, funded by, or structured to benefit the commercial interests of any specific organization, product, or implementation. Amendments motivated by market positioning, competitive advantage, or commercial differentiation - rather than technical necessity - shall not be accepted at intake. The Standards Steward shall enforce this clause at the proposal intake stage and may request additional disclosure from proposing parties where commercial motivation is suspected.</p>
+
+        <h3 id="s10-2"><span class="sh-num">10.2</span>Amendment Anti-Dilution Protections</h3>
+
+        <p>The following amendment patterns are structurally prohibited and shall be rejected at intake regardless of their technical framing:</p>
+
+        <ul class="prop-list">
+          <li>Amendments that introduce optional, configurable, or deployment-conditional enforcement semantics into requirements that are currently mandatory</li>
+          <li>Amendments that add "best effort," "reasonable," or probabilistic qualifiers to requirements that currently impose deterministic obligations</li>
+          <li>Amendments that narrow the scope of the fail-closed invariant by defining categories of execution to which it does not apply</li>
+          <li>Amendments that substitute documentation obligations for enforcement obligations in normative requirements</li>
+          <li>Amendments that re-classify normative requirements as informative guidance without a major version increment</li>
+        </ul>
+
+        <h3 id="s10-3"><span class="sh-num">10.3</span>Core Invariant Protection</h3>
+
+        <p>The canonical definition of core invariant protection is Rule CIPR-01, defined in Article 7.2. No governance body constituted under this Charter holds authority to weaken the deterministic or fail-closed invariants through any ordinary amendment path. This constraint is absolute and applies across all governance phases. Cross-reference: <strong>Rule CIPR-01</strong>.</p>
+
+        <h3 id="s10-4"><span class="sh-num">10.4</span>Supermajority Requirement for Core Changes</h3>
+
+        <p>The path to modifying the deterministic or fail-closed invariants is defined in Rule CIPR-01 (Article 7.2). That path requires: a MAJOR version increment; a supermajority vote of two-thirds of the sitting Technical Review Committee; a full public review period of no less than ninety calendar days; and a re-ratification process beginning from a new Candidate Standard designation. No governance phase, emergency condition, or adoption threshold alters or waives these requirements.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Governance Evolution and Scaling Mechanism</h2>
+
+        <p>The governance structure of the QODIQA Standard Corpus is designed to scale with adoption. The scaling mechanism is trigger-based: defined, measurable adoption thresholds initiate transitions between governance phases. These transitions expand governance capacity and distribute oversight authority. They do not modify enforcement invariants, alter the amendment process, or weaken the safeguards defined in Articles 7 and 10.</p>
+
+        <div class="callout">
+          <p>Governance phase transitions are structural changes only. <strong>No transition between governance phases modifies enforcement semantics, changes Rule CIPR-01, or alters the voting thresholds required for MAJOR amendments or core invariant changes.</strong> Those requirements are invariant across all phases.</p>
+        </div>
+
+        <h3 id="s11-1"><span class="sh-num">11.1</span>Governance Phase Definitions</h3>
+
+        <div class="state-matrix">
+          <div class="state-row">
+            <div class="state-label">Tier 1 - Foundational</div>
+            <div class="state-desc"><strong>Initial Phase.</strong> Single Standards Steward. Technical Review Committee of three to nine members. Cryptographic Advisory Panel convened on demand. Certification Oversight Panel active. This Charter enters force at Tier 1 and remains at Tier 1 until Tier 2 thresholds are confirmed. All provisions of this Charter apply in full from Tier 1 inception.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Tier 2 - Multi-Member</div>
+            <div class="state-desc"><strong>Distributed Institutional Phase.</strong> Standards Steward transitions to Steward Council (three to five members, no two of the same organizational affiliation). Technical Review Committee expands to a minimum of seven members with geographic and organizational diversity requirements as defined by the Committee itself at the time of expansion. Cryptographic Advisory Panel constituted as a standing body. Initiated upon confirmation of Tier 2 thresholds.</div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">Tier 3 - Distributed Oversight</div>
+            <div class="state-desc"><strong>Full Distributed Governance Phase.</strong> Steward Council transitions to an elected structure per Article 6b.2. Technical Review Committee expands to a minimum of eleven members with mandatory multi-jurisdictional representation. Independent standing committees for amendment review, certification oversight, and cryptographic advisory are established as separate bodies with defined interaction protocols. Initiated upon confirmation of Tier 3 thresholds.</div>
+          </div>
+        </div>
+
+        <h3 id="s11-2"><span class="sh-num">11.2</span>Adoption Threshold Definitions</h3>
+
+        <p>Tier transitions are triggered when all thresholds for the target tier are confirmed by the Technical Review Committee and recorded in the Corpus Registry. Confirmation requires independent verification by the Certification Oversight Panel of the certification and certification body counts.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 11.1 - Adoption Thresholds for Tier Transitions</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Threshold Metric</th>
+                <th>Tier 2 Trigger Value</th>
+                <th>Tier 3 Trigger Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Active certified implementations</td>
+                <td style="text-align:left;hyphens:none;">10 or more</td>
+                <td style="text-align:left;hyphens:none;">50 or more</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Independent authorized certification bodies</td>
+                <td style="text-align:left;hyphens:none;">3 or more, no two sharing organizational affiliation</td>
+                <td style="text-align:left;hyphens:none;">7 or more, operating across at least 3 distinct jurisdictions</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Jurisdictions with active conformant deployments</td>
+                <td style="text-align:left;hyphens:none;">3 or more</td>
+                <td style="text-align:left;hyphens:none;">10 or more</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;hyphens:none;">Qualified Party amendment proposers (distinct organizations, trailing 24 months)</td>
+                <td style="text-align:left;hyphens:none;">5 or more</td>
+                <td style="text-align:left;hyphens:none;">15 or more</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Thresholds are evaluated on a rolling basis. Once confirmed, a Tier transition may not be reversed by a subsequent decline in adoption metrics. The governance structure advances but does not regress.</p>
+
+        <h3 id="s11-3"><span class="sh-num">11.3</span>Technical Review Committee Composition Under Scaling</h3>
+
+        <p>At each tier transition, the Technical Review Committee is responsible for defining and publishing its own expanded composition criteria within the constraints specified in Article 11.1. These criteria must address: minimum member count, organizational diversity (no single organization may hold more than one-third of seats at Tier 2 and one-quarter at Tier 3), technical competency requirements for new members, and the nomination and appointment procedure. Composition criteria are published as an informative addendum to the Corpus Registry and do not require a full amendment process to update, provided the update does not reduce the diversity or competency requirements below the minimum thresholds defined in this Article.</p>
+
+        <h3 id="s11-4"><span class="sh-num">11.4</span>Invariance of Enforcement Structure Across Phases</h3>
+
+        <div class="norm-block">
+          <div class="norm-block-head">Governance Phase Invariance Clause <span class="nbh-id">GPI-01</span></div>
+          <div class="norm-block-body">
+            <p>No governance phase transition - whether from Tier 1 to Tier 2, Tier 2 to Tier 3, or any intermediate structural change - may alter the following: the enforcement invariants defined in Principles GP-01 and GP-02; the canonical Rule CIPR-01; the supermajority thresholds for MAJOR amendments and core invariant changes; the amendment anti-dilution protections of Article 10.2; or the dissolution and transfer provisions of Article 12. These elements are phase-invariant by constitutional design.</p>
+          </div>
+          <div class="norm-block-foot">Classification: Constitutional - Non-waivable across all governance phases</div>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Dissolution and Transfer Provisions</h2>
+
+        <p>The long-term institutional continuity of the QODIQA Standard Corpus requires explicit provisions for the event that the current governance entity is dissolved, becomes inactive, or elects to transfer governance custody. These provisions ensure that the corpus remains accessible, intact, and governed under consistent principles regardless of changes in governance structure.</p>
+
+        <h3 id="s12-1"><span class="sh-num">12.1</span>Dissolution of the Governance Entity</h3>
+
+        <p>In the event that the Standards Steward or Steward Council becomes unable or unwilling to discharge governance responsibilities - whether through organizational dissolution, voluntary withdrawal, legal incapacity, or demonstrated abandonment of governance obligations - the following provisions apply in order:</p>
+
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="ps-num">Step 01</span>
+            <div class="ps-content">
+              <span class="ps-title">Dissolution Notice</span>
+              <span class="ps-desc">The Standards Steward or their legal representative shall provide no less than ninety days written notice of impending dissolution or transfer. Where involuntary dissolution occurs without advance notice, the Technical Review Committee assumes interim governance authority for a period not to exceed one hundred eighty days.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 02</span>
+            <div class="ps-content">
+              <span class="ps-title">Corpus Archive Publication</span>
+              <span class="ps-desc">Prior to dissolution, the complete corpus archive - including all historical versions, Interim Patch records, the amendment register, and the Corpus Registry - must be deposited with a qualified public archive, open source foundation, or successor governance entity. Publication in a durable, publicly accessible repository satisfies this obligation.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 03</span>
+            <div class="ps-content">
+              <span class="ps-title">Custody Transfer</span>
+              <span class="ps-desc">Governance custody may be transferred to a qualified successor entity that accepts the obligations of this Charter in writing. Transfer does not permit retroactive amendment of existing ratified versions. The successor entity inherits the amendment register and Corpus Registry and must maintain public accessibility of all historical materials.</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="ps-num">Step 04</span>
+            <div class="ps-content">
+              <span class="ps-title">Public Archival Requirement</span>
+              <span class="ps-desc">If no qualified successor entity accepts governance custody within one hundred eighty days of dissolution, the complete corpus archive shall be published under an open access license that permits unrestricted reading and redistribution of the standard text. This publication satisfies the minimum continuity obligation and does not convey amendment authority to any party.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 id="s12-2"><span class="sh-num">12.2</span>Preservation of Document Integrity</h3>
+
+        <p>Custody transfer does not grant the successor entity authority to retroactively alter, re-version, or re-classify any previously ratified document. All ratified versions retain their version identifiers and lifecycle states. The successor entity may issue new amendments following the processes defined in this Charter, but may not modify the amendment history or changelog records of predecessor versions.</p>
+
+        <h3 id="s12-3"><span class="sh-num">12.3</span>Continuity of Certification</h3>
+
+        <p>Upon governance transfer, all valid certifications issued under the prior governance structure remain valid for the duration of their applicable transition periods. The successor governance entity assumes the Certification Oversight Panel function and inherits the registry of authorized certification bodies and certified implementations. Existing certification bodies are not required to re-authorize following a custody transfer unless the successor entity determines that their practices are inconsistent with the current Certification Framework.</p>
+
+        <h3 id="s12-4"><span class="sh-num">12.4</span>Governance Phase Continuity on Transfer</h3>
+
+        <p>Custody transfer does not reset the governance phase. A successor entity that accepts governance custody of a corpus in Tier 2 or Tier 3 assumes the obligations of that tier, including composition requirements, Steward Council structure, and elected structure obligations. The successor may not retract to a prior tier's governance structure.</p>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Article 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Institutional Closing Declaration</h2>
+
+        <p>The QODIQA Governance Charter exists for one purpose: to ensure that the technical standard it governs remains capable of doing what it was designed to do - provide deterministic, machine-enforceable consent at the moment of AI execution. Governance is not an end in itself. It is a structural condition for the trustworthiness of the standard over time.</p>
+
+        <div class="inst-statement">
+          <p>The authority of this standard derives from the technical invariants it preserves - not from the institutions that administer it, not from regulatory endorsement, and not from market adoption. If those invariants are intact, the standard retains its meaning. If they are compromised, no governance structure can restore it.</p>
+        </div>
+
+        <h3 id="s13-1"><span class="sh-num">13.1</span>The Purpose of Governance</h3>
+
+        <p>Governance exists to preserve deterministic runtime consent enforcement across the life of the standard. It does this by ensuring that changes to the corpus are technically justified, structurally sound, and transparent. It does not do this by introducing policy ideology, by resolving societal questions about AI governance through the amendment process, or by making the standard an instrument of any commercial, political, or institutional agenda.</p>
+
+        <p>The governance structure defined in this Charter is minimal by design at inception and scales by threshold rather than by preference. At no tier does it acquire authority over third parties, legal standing as a regulatory body, or the capacity to modify enforcement semantics. Its authority is entirely constituted by the commitment of participants to abide by its procedures.</p>
+
+        <h3 id="s13-2"><span class="sh-num">13.2</span>Governance Exists to Protect Structural Integrity</h3>
+
+        <p>Every provision of this Charter - the non-waivable principles, the change impact requirements, the supermajority thresholds, the anti-capture safeguards, the emergency protocol constraints, the Steward institutionalization guardrails, the qualified party eligibility structure, and the governance phase invariance clause - reflects a single underlying commitment: that the structural properties of the QODIQA enforcement model cannot be eroded through well-intentioned procedural exceptions, commercially motivated amendments, or the accumulated pressure of stakeholder preferences. Governance exists to make that erosion structurally difficult, not merely discouraged.</p>
+
+        <div class="callout">
+          <p>The determinism and fail-closed invariants of the QODIQA standard are not configurable properties. <strong>They are the standard.</strong> Their preservation is the condition under which QODIQA remains a trustworthy basis for AI authorization infrastructure. This Charter is the instrument by which that condition is maintained - across all adoption scales, governance phases, and institutional transitions.</p>
+        </div>
+
+        <h3 id="s13-3"><span class="sh-num">13.3</span>Authority Derived from Technical Invariants</h3>
+
+        <p>QODIQA's authority as a technical standard derives from the precision, consistency, and verifiability of its enforcement model - not from institutional prestige, regulatory mandate, or market position. Governance cannot manufacture that authority; it can only protect it. The obligation of every governance role holder - at every tier, in every phase - is to act in the interest of the standard's structural integrity, and to subordinate their institutional, commercial, or personal preferences to that obligation without exception.</p>
+
+        <p>This Charter is the constitutional layer of the QODIQA corpus. It does not expire, does not require periodic renewal, and does not become optional as the standard matures or as governance scales. It governs until a duly constituted successor instrument is ratified through the process it defines.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Governance Charter of the QODIQA specification corpus. It constitutes the constitutional governance instrument establishing the authority, procedural structure, and constraints under which all QODIQA technical standards are maintained, amended, versioned, and retired. It is issued as a Normative Constitutional Governance Instrument and is not a product specification, compliance framework, or organizational charter in the corporate sense.</p>
+
+          <p>Version 2.0 supersedes QODIQA-GOV-CHARTER v1.0. All corpus documents governed by v1.0 are governed by this Charter from its effective date. The amendment register, Corpus Registry, and all ratified versions produced under v1.0 governance retain their validity and are incorporated by reference into the v2.0 governance structure without re-ratification.</p>
+
+          <p>Proposed amendments to this Charter must be submitted by a Qualified Party in accordance with the full amendment process defined in Article 5 and require supermajority ratification as defined in Article 10. This Charter does not sunset and does not require periodic reaffirmation.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          </ul>
+
+          <p>Version 2.0 represents the second formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-GOV-CHARTER</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Governance Charter for the QODIQA Standard Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Institutional Governance and Amendment Framework for the Standard Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">2.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Prior Version</span>
+            <span class="doc-id-val">1.0 - Superseded by this document</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Constitutional Governance Instrument</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative - Constitutional layer; Active - Ratified Standard</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Lifecycle State</span>
+            <span class="doc-id-val">Ratified Standard - Foundational Instrument</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Current Governance Phase</span>
+            <span class="doc-id-val">Tier 1 - Foundational Phase</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Amendment Authority</span>
+            <span class="doc-id-val">Supermajority - Technical Review Committee</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Standards Steward</span>
+            <span class="doc-id-val">Bogdan Duțescu</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+      <!-- SCOPE -->
+      <div id="s-scope" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-scope">#</a>Scope</h2>
+        <p>This document constitutes the constitutional governance instrument for the QODIQA Standard Corpus. It defines the authority, procedural structure, and constraints under which all QODIQA technical standards — including the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0, the QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0, and associated normative documents — are maintained, amended, versioned, and retired.</p>
+        <p>This Charter does not define enforcement semantics, implementation requirements, certification criteria, or organizational obligations beyond the governance of the standard corpus. It is not a policy document, compliance framework, or product specification. Organizations seeking normative implementation guidance should refer to the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0 and the QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0. This Charter governs the processes by which those documents evolve.</p>
+      </div>
+
+      <!-- TERMINOLOGY -->
+      <div id="s-terminology" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-terminology">#</a>Terminology</h2>
+        <p>The following definitions apply to terms as used in this Charter. For normative terminology applicable to the full QODIQA standard corpus, refer to the QODIQA — Terminology and Normative Definitions — Version 1.0 document.</p>
+        <ul class="term-list">
+          <li class="term-item">
+            <span class="term-name">Governance Charter</span>
+            <p class="term-def">This document. The constitutional governance instrument establishing authority structures, amendment procedures, and structural safeguards for the QODIQA Standard Corpus. Distinguished from policy documents by its constitutional authority over the amendment process itself.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Standard Corpus</span>
+            <p class="term-def">The complete set of documents governed by this Charter, as recorded in the Corpus Registry. Includes normative, informative, and experimental documents designated for corpus membership by the Standards Steward.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Amendment Record</span>
+            <p class="term-def">The complete set of documentation associated with a single amendment, including the original proposal, impact analysis, public comments, CIPR-01 clearance statement, and vote record. Amendment records are permanently published and immutable.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Rule CIPR-01</span>
+            <p class="term-def">The Core Invariant Protection Rule. An absolute, non-delegable constraint that prevents ratification of any amendment whose Change Impact Analysis finds Determinism Impact Present or Fail-Closed Impact Present. Canonical definition in Article 7.2.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Qualified Party</span>
+            <p class="term-def">A party eligible to submit amendment proposals under this Charter. Four categories are defined (QP-A through QP-D), based on governance body membership, certified entity representation, technical contribution with sponsorship, and authorized certification body status. Eligibility is determined at proposal intake.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Governance Phase</span>
+            <p class="term-def">One of three structural configurations of the governance apparatus (Tier 1 Foundational, Tier 2 Multi-Member, Tier 3 Distributed Oversight), triggered by adoption thresholds defined in Article 11. Phase transitions expand governance capacity without modifying enforcement invariants.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CONFORMANCE LANGUAGE -->
+      <div id="s-conformance" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-conformance">#</a>Conformance Language</h2>
+        <p>The key words <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD NOT</strong>, and <strong>MAY</strong> in the QODIQA specification corpus indicate requirement levels for conformant implementations of the QODIQA enforcement architecture.</p>
+        <p>In this Governance Charter, such terms describe procedural obligations on governance role holders and the amendment process itself. They do not describe implementation requirements for conformant AI systems. For normative implementation requirement definitions, refer to the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0.</p>
+      </div>
+
+      <!-- STANDARD CORPUS -->
+      <div id="s-corpus" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-corpus">#</a>Standard Corpus</h2>
+        <p>This document is part of the QODIQA standard corpus - a structured set of technical specifications, analytical papers, governance instruments, and implementation resources maintained by QODIQA Standards and Research. Documents in the corpus are cross-referenced and versioned under the QODIQA — Corpus Change Log and Version History — Version 1.0.</p>
+        <div class="callout">
+          <p><strong>Governance Note</strong><br>
+          This Charter constitutes the constitutional layer of the corpus. All amendments to corpus documents are subject to the procedures defined herein. The authority structure, amendment process, and invariant protection rules of this Charter apply to all documents listed below.</p>
+        </div>
+        <ul class="corpus-list">
+          <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+          <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+          <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Terminology and Normative Definitions — Version 1.0</li>
+          <li>QODIQA — Interoperability and Deployment Constraints — Version 1.0</li>
+          <li>QODIQA — Public Specification License — Version 1.0</li>
+          <li>QODIQA — Positioning and Scope Limitation Statement — Version 1.0</li>
+          <li>QODIQA — Residual Risk and Assumption Disclosure Annex — Version 1.0</li>
+          <li>QODIQA — Use Case Dossiers for Runtime Consent Enforcement Deployments — Version 1.0</li>
+        </ul>
+      </div>
+
+      <!-- INSTITUTIONAL DISCLAIMER -->
+      <div id="s-disclaimer" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-disclaimer">#</a>Institutional Disclaimer</h2>
+        <div class="inst-disclaimer-block">
+          <p>This document constitutes the constitutional governance instrument of the QODIQA standard corpus. It does not constitute regulatory guidance, legal advice, financial recommendation, or investment analysis of any kind. The procedural obligations defined herein apply to governance role holders and amendment participants. They do not create direct legal obligations for third parties operating conformant implementations.</p>
+        </div>
+        <p>Nothing in this Charter alters, supplements, or overrides the applicable law of any jurisdiction with respect to data protection, AI regulation, or related obligations. Organizations implementing QODIQA-conformant infrastructure should obtain qualified legal counsel for jurisdiction-specific compliance determinations.</p>
+        <p>QODIQA Standards and Research does not accept liability for governance decisions or amendment outcomes that result from processes conducted under this Charter. The Charter provides procedural structure; it does not guarantee outcomes or confer legal standing to any party.</p>
+      </div>
+
+      <!-- RECOMMENDED CITATION -->
+      <div id="s-citation" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-citation">#</a>Recommended Citation</h2>
+        <div class="citation-block">
+          <span class="citation-label">Cite this document as</span>
+          Duțescu, Bogdan.<br>
+          <em>QODIQA Governance Charter - Institutional Governance and Amendment Framework.</em><br>
+          QODIQA Governance Charter v2.0.<br>
+          QODIQA Standard Corpus, April 2026.<br>
+          Document Identifier: QODIQA-GOV-CHARTER.<br>
+          <br>
+          <span style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.06em;">Persistent Reference: QODIQA-GOV-CHARTER</span>
+        </div>
+      </div>
+
+      <!-- REVISION HISTORY -->
+      <div id="s-revision" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-revision">#</a>Revision History</h2>
+        <div class="table-wrapper">
+          <span class="table-caption">Revision History - QODIQA-GOV-CHARTER</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Date</th>
+                <th>Summary of Changes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>v2.0</td>
+                <td>April 2026</td>
+                <td>Added: Art. 5.1 Qualified Party definitions; Art. 5.3 Voting Record Requirements; Art. 5b Emergency Amendment Protocol; Art. 6b Steward Institutionalization; Art. 11 Governance Evolution and Scaling Mechanism; Art. 4.1 Interim Patch version type; Art. 4.2 Sunset Review lifecycle state. Consolidated: Rule CIPR-01 canonical definition into Art. 7.2 with cross-references from Arts. 2, 5, and 10. Restructured Art. 12 (Dissolution and Transfer). No enforcement semantics modified. All foundational principles and corpus authority structures preserved without change.</td>
+              </tr>
+              <tr>
+                <td>v1.0</td>
+                <td>February 2026</td>
+                <td>Initial publication of the QODIQA Governance Charter. Established foundational governance framework including Governance Principles (GP-01 through GP-07), Standard Corpus Definition, Versioning Model (MAJOR/MINOR/PATCH), Amendment Process (7-step full process), Simplified Amendment Process, Governance Structure with five institutional roles, Change Impact Analysis requirements, Core Invariant Protection Rule, Certification Oversight, Transparency and Publication Requirements, Safeguards Against Capture, and Dissolution or Transfer Provisions.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Governance Charter for the QODIQA Standard Corpus</p>
+      <p>Version 2.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-GOV-CHARTER</p>
+      <p>Normative Constitutional Governance Instrument</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>Constitutional governance instrument for the QODIQA Standard Corpus. Amendment by supermajority of the Technical Review Committee only. All provisions are perpetually binding unless superseded by a duly ratified successor instrument.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-GOV-CHARTER &nbsp;·&nbsp; Version 2.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     SCROLLSPY — Deterministic IntersectionObserver + RAF throttle
+     ============================================================ */
+  var navItems = document.querySelectorAll('.nav-item[href^="#"]');
+  var sectionIds = [
+    'cover','s-preamble',
+    's1','s1-1','s1-2','s1-3',
+    's2',
+    's3','s3-1','s3-2','s3-3','s3-4',
+    's4','s4-1','s4-2','s4-3',
+    's5','s5-1','s5-2','s5-3','s5-4','s5-5',
+    's5b','s5b-1','s5b-2','s5b-3',
+    's6','s6-1','s6-2','s6-3','s6-4',
+    's6b','s6b-1','s6b-2','s6b-3','s6b-4',
+    's7','s7-1','s7-2',
+    's8','s8-1','s8-2','s8-3','s8-4','s8-5',
+    's9','s9-1','s9-2','s9-3','s9-4','s9-5',
+    's10','s10-1','s10-2','s10-3','s10-4',
+    's11','s11-1','s11-2','s11-3','s11-4',
+    's12','s12-1','s12-2','s12-3','s12-4',
+    's13','s13-1','s13-2','s13-3',
+    's-status','s-scope','s-terminology','s-conformance',
+    's-corpus','s-disclaimer','s-citation','s-revision'
+  ];
+
+  var sections = sectionIds.map(function(id){
+    return document.getElementById(id);
+  }).filter(Boolean);
+
+  var sectionOrder = new Map(sections.map(function(s, i){ return [s.id, i]; }));
+  var visible = new Set();
+  var rafPending = false;
+
+  function applyActive() {
+    rafPending = false;
+    if (visible.size === 0) { fallback(); return; }
+    var topId = null, topIdx = Infinity;
+    visible.forEach(function(id) {
+      var idx = sectionOrder.get(id);
+      if (idx !== undefined && idx < topIdx) { topIdx = idx; topId = id; }
+    });
+    if (topId) setActive(topId);
+  }
+
+  function scheduleUpdate() {
+    if (!rafPending) { rafPending = true; requestAnimationFrame(applyActive); }
+  }
+
+  function setActive(id) {
+    navItems.forEach(function(item) {
+      var active = item.getAttribute('href') === '#' + id;
+      if (active !== item.classList.contains('active')) {
+        item.classList.toggle('active', active);
+      }
+    });
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    scheduleUpdate();
+  }, {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(function(sec) { observer.observe(sec); });
+
+  /* ---- Fallback: position-based for edge cases ---- */
+  function fallback() {
+    var best = null, bestTop = -Infinity;
+    var threshold = window.innerHeight * 0.45;
+    sections.forEach(function(sec) {
+      var top = sec.getBoundingClientRect().top;
+      if (top <= threshold && top > bestTop) { bestTop = top; best = sec.id; }
+    });
+    if (best) setActive(best);
+  }
+
+  /* ---- Smooth nav clicks ---- */
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href.charAt(0) === '#') {
+        e.preventDefault();
+        var target = document.getElementById(href.slice(1));
+        if (target) {
+          var isMobile = window.innerWidth <= 768;
+          var offset = isMobile ? 64 : 20;
+          var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+          if (isMobile) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+          }
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  var btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', function() {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- Mobile sidebar toggle ---- */
+  var toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  /* ---- Overlay click to close ---- */
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+  /* ---- Initial active state on load ---- */
+  fallback();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Implementation Conformance Checklist · v1.0</title>
+<meta name="description" content="QODIQA Implementation Conformance Checklist v1.0 — Normative binary verification instrument for CORE-MIN, CORE-VER, and CORE-ENT compliance profiles. April 2026.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   CHECKLIST-SPECIFIC STYLES
+   ============================================================ */
+
+/* Profile header banners */
+.profile-banner {
+  background: #191C21;
+  border-top: 2px solid var(--accent);
+  padding: 20px 28px;
+  margin: 32px 0 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.profile-banner-code {
+  font-family: var(--mono);
+  font-size: 0.90rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #E2D8C8;
+  text-transform: uppercase;
+}
+
+.profile-banner-name {
+  font-family: var(--serif);
+  font-size: 1.0rem;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+}
+
+.profile-banner-count {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.65);
+  margin-left: auto;
+}
+
+/* Profile scope note */
+.profile-scope {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-top: none;
+  border-bottom: 2px solid var(--rule);
+  padding: 12px 28px;
+  margin-bottom: 24px;
+  font-size: 0.840rem;
+  color: var(--text-2);
+  line-height: 1.60;
+  font-style: italic;
+}
+
+/* Domain group heading */
+.domain-heading {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 28px 0 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(122,106,80,0.22);
+  opacity: 0.85;
+}
+
+/* Checklist item table */
+.checklist-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 8px 0 4px;
+  border: 1px solid #C4C0BA;
+}
+
+.checklist-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.checklist-table col.col-id    { width: 72px; }
+.checklist-table col.col-cp    { width: 72px; }
+.checklist-table col.col-cond  { width: auto; }
+.checklist-table col.col-min   { width: 52px; }
+.checklist-table col.col-ver   { width: 52px; }
+.checklist-table col.col-ent   { width: 52px; }
+.checklist-table col.col-check { width: 56px; }
+
+.checklist-table th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+.checklist-table th:last-child { border-right: none; }
+.checklist-table th.th-cond    { text-align: left; }
+
+.checklist-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.845rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.52;
+  text-align: center;
+}
+
+.checklist-table td.td-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.checklist-table td.td-cp {
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.checklist-table td.td-cond {
+  text-align: left;
+  font-size: 0.855rem;
+  color: var(--ink-2);
+  hyphens: auto;
+}
+
+.checklist-table td:last-child { border-right: none; }
+
+.checklist-table tr:nth-child(even) td { background: #EAE7E2; }
+.checklist-table tr:last-child td      { border-bottom: none; }
+
+/* Profile dot indicators */
+.dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.dot-req  { background: #1A1C20; }
+.dot-opt  { background: #C4C0BA; border: 1px solid #A8A49E; }
+.dot-na   { background: transparent; border: 1px solid #D0CCC8; }
+
+/* Tick box */
+.tick-box {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1.5px solid #B8B4AE;
+  background: #F6F4F0;
+  vertical-align: middle;
+}
+
+/* Profile badge pills */
+.badge-row {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 0;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 14px 3px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.badge-min  { color: #3A3F48; border-color: #B0AAA2; background: #EDEBE6; }
+.badge-ver  { color: #1A1C20; border-color: #7A6A50; background: #E8E4DC; }
+.badge-ent  { color: #F6F4F0; border-color: rgba(122,106,80,0.70); background: #1C1F25; }
+
+/* Legend block */
+.legend-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  padding: 16px 22px;
+  margin: 24px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Scoring block */
+.scoring-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+
+.scoring-block h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.scoring-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.scoring-cell {
+  background: #F6F4F0;
+  border: 1px solid #D2CEC8;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.scoring-cell .sc-profile {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.scoring-cell .sc-threshold {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.scoring-cell .sc-note {
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+  .checklist-table { page-break-inside: avoid; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+  .scoring-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+  footer   { margin-left: 0; padding: 28px 20px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .profile-banner { flex-direction: column; gap: 4px; }
+  .profile-banner-count { margin-left: 0; }
+  .scoring-grid { grid-template-columns: 1fr; }
+  .badge-row { gap: 6px; }
+
+  .checklist-table col.col-min,
+  .checklist-table col.col-ver,
+  .checklist-table col.col-ent { width: 40px; }
+  .checklist-table col.col-check { width: 44px; }
+  .checklist-table th,
+  .checklist-table td { padding: 8px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Implementation Conformance Checklist<br>
+        <span class="italic-part">Normative Verification Instrument · v1.0</span>
+      </span>
+    </h1>
+
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <span class="cover-info-subtitle">Deterministic Runtime Consent Enforcement</span>
+      <span class="cover-info-date">April 2026</span>
+      <span class="cover-info-badge">QODIQA-CL-2026-001</span>
+      <p class="cover-info-tagline">The operational bridge between the 68-Point Enforcement Framework and a running system — each control point reduced to a single binary condition, organized across three conformance profiles.</p>
+    </div>
+  </div>
+
+  <div class="cover-scroll-hint">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M6 1v10M6 11L1 6M6 11L11 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Scroll to read
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<div class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M2 4h12M2 8h12M2 12h12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">QODIQA — Conformance Checklist</span>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-brand">QODIQA</span>
+      <span class="sidebar-nav-label">Conformance Checklist</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item active" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Purpose &amp; Scope</a>
+      <a class="nav-item" href="#s1">How to Use</a>
+      <a class="nav-item" href="#s2">Profile Overview</a>
+      <a class="nav-item" href="#s3">CORE-MIN Checklist</a>
+      <a class="nav-item sub" href="#s3-1">Intent Declaration</a>
+      <a class="nav-item sub" href="#s3-2">Consent State</a>
+      <a class="nav-item sub" href="#s3-3">Policy Evaluation</a>
+      <a class="nav-item sub" href="#s3-4">Decision Artifacts</a>
+      <a class="nav-item sub" href="#s3-5">Fail-Closed Behavior</a>
+      <a class="nav-item" href="#s4">CORE-VER Checklist</a>
+      <a class="nav-item sub" href="#s4-1">Determinism</a>
+      <a class="nav-item sub" href="#s4-2">Replay &amp; Audit</a>
+      <a class="nav-item sub" href="#s4-3">Cryptographic Integrity</a>
+      <a class="nav-item sub" href="#s4-4">Latency Controls</a>
+      <a class="nav-item" href="#s5">CORE-ENT Checklist</a>
+      <a class="nav-item sub" href="#s5-1">Governance Integration</a>
+      <a class="nav-item sub" href="#s5-2">Multi-Tenant Isolation</a>
+      <a class="nav-item sub" href="#s5-3">Delegation &amp; Escalation</a>
+      <a class="nav-item sub" href="#s5-4">Operational Resilience</a>
+      <a class="nav-item" href="#s6">Scoring &amp; Conformance</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Purpose &amp; Scope</span>
+          <p>This document is a normative operational instrument for verifying conformance to the QODIQA Core Standard for Deterministic Runtime Consent Enforcement. It reduces each control point of the 68-Point Enforcement Framework to a single, binary-verifiable condition and organizes those conditions across three conformance profiles: CORE-MIN, CORE-VER, and CORE-ENT. This checklist does not replace the QODIQA Conformance Test Suite; it makes the Test Suite operationally accessible by providing implementors with a structured self-assessment instrument prior to formal certification.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1: HOW TO USE -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>How to Use This Checklist</h2>
+
+        <p>Each row in the checklist tables below represents one control point (CP) drawn from the QODIQA 68-Point Enforcement Framework. For each control point, a <strong>Verifiable Condition</strong> is stated as a binary proposition: it is either satisfied or not satisfied. No partial credit applies at the control-point level.</p>
+
+        <p>The three rightmost columns indicate applicability per profile. A filled indicator (<span class="dot dot-req" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#1A1C20;vertical-align:middle;margin:0 2px;"></span>) means the control point is <strong>mandatory</strong> for that profile. An open indicator (<span class="dot dot-opt" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#C4C0BA;border:1px solid #A8A49E;vertical-align:middle;margin:0 2px;"></span>) means the control point is <strong>recommended but not required</strong>. A dash (—) means the control point does <strong>not apply</strong> to that profile.</p>
+
+        <p>The rightmost column provides a <strong>tick box</strong> for manual verification during self-assessment. During formal certification, this column is replaced by the Test Suite result record.</p>
+
+        <div class="legend-block">
+          <span class="legend-item"><span class="dot dot-req"></span> Mandatory for profile</span>
+          <span class="legend-item"><span class="dot dot-opt"></span> Recommended, not required</span>
+          <span class="legend-item" style="gap:10px;">— Not applicable</span>
+          <span class="legend-item"><span class="tick-box"></span> Self-assessment tick</span>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conformance Rule</div>
+          <p>A system achieves conformance to a profile if and only if every mandatory control point for that profile is satisfied. Failure of any single mandatory control point constitutes non-conformance, regardless of the total number of satisfied conditions.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2: PROFILE OVERVIEW -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Profile Overview</h2>
+
+        <p>QODIQA defines three conformance profiles corresponding to distinct operational contexts and risk postures. Each profile is cumulative: CORE-VER includes all mandatory conditions of CORE-MIN, and CORE-ENT includes all mandatory conditions of CORE-VER.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1 — Conformance Profile Summary</span>
+          <table>
+            <colgroup>
+              <col style="width:110px">
+              <col style="width:auto">
+              <col style="width:100px">
+              <col style="width:130px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th style="text-align:left;">Intended Deployment Context</th>
+                <th>Mandatory CPs</th>
+                <th>Cumulative</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:var(--accent);text-align:center;font-size:0.80rem;">CORE-MIN</td>
+                <td style="text-align:left;">Single-tenant systems, internal tooling, early-stage production deployments with bounded scope and manual oversight.</td>
+                <td style="text-align:center;font-family:var(--mono);font-weight:700;font-size:0.95rem;">24</td>
+                <td style="text-align:center;font-size:0.82rem;color:var(--muted);font-style:italic;">Baseline</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:var(--accent);text-align:center;font-size:0.80rem;">CORE-VER</td>
+                <td style="text-align:left;">Multi-service architectures, regulated environments, systems subject to external audit or contractual accountability requirements.</td>
+                <td style="text-align:center;font-family:var(--mono);font-weight:700;font-size:0.95rem;">44</td>
+                <td style="text-align:center;font-size:0.82rem;color:var(--muted);font-style:italic;">MIN + 20</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:var(--accent);text-align:center;font-size:0.80rem;">CORE-ENT</td>
+                <td style="text-align:left;">Enterprise-scale deployments, multi-tenant platforms, critical infrastructure, and systems requiring formal certification under QODIQA governance.</td>
+                <td style="text-align:center;font-family:var(--mono);font-weight:700;font-size:0.95rem;">68</td>
+                <td style="text-align:center;font-size:0.82rem;color:var(--muted);font-style:italic;">VER + 24</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="badge-row">
+          <span class="badge badge-min">CORE-MIN · 24 CP</span>
+          <span class="badge badge-ver">CORE-VER · 44 CP</span>
+          <span class="badge badge-ent">CORE-ENT · 68 CP</span>
+        </div>
+      </div>
+
+      <!-- SECTION 3: CORE-MIN CHECKLIST -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>CORE-MIN Conformance Checklist</h2>
+
+        <div class="profile-banner">
+          <span class="profile-banner-code">CORE-MIN</span>
+          <span class="profile-banner-name">Minimum Enforcement Profile</span>
+          <span class="profile-banner-count">24 Mandatory Control Points</span>
+        </div>
+        <div class="profile-scope">Applicable to: single-tenant systems, internal tooling, and early-stage production deployments. All 24 control points below are mandatory for CORE-MIN conformance.</div>
+
+        <!-- Domain 1: Intent Declaration -->
+        <div id="s3-1">
+          <div class="domain-heading">Domain 1 — Intent Declaration</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-01</td>
+                  <td class="td-cp">CP-01</td>
+                  <td class="td-cond">Every AI action request is accompanied by a declared intent field that explicitly identifies the action type before execution begins.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-02</td>
+                  <td class="td-cp">CP-02</td>
+                  <td class="td-cond">Every request contains a declared purpose field specifying the operational reason for the requested action.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-03</td>
+                  <td class="td-cp">CP-03</td>
+                  <td class="td-cond">Every request identifies the data subjects and data categories involved at declaration time, not inferred post hoc.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-04</td>
+                  <td class="td-cp">CP-04</td>
+                  <td class="td-cond">The system rejects any request in which the intent field is absent, empty, or malformed, without attempting inference or substitution.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-05</td>
+                  <td class="td-cp">CP-05</td>
+                  <td class="td-cond">Request contracts are closed at submission and cannot be modified during evaluation.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Domain 2: Consent State -->
+        <div id="s3-2">
+          <div class="domain-heading">Domain 2 — Consent State Resolution</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-06</td>
+                  <td class="td-cp">CP-09</td>
+                  <td class="td-cond">Consent state is resolved explicitly as a discrete value (granted / denied / expired / revoked) before any policy logic is applied.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-07</td>
+                  <td class="td-cp">CP-10</td>
+                  <td class="td-cond">Each consent record is scope-bound: it specifies a defined purpose, data category, and acting entity for which it is valid.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-08</td>
+                  <td class="td-cp">CP-11</td>
+                  <td class="td-cond">Each consent record carries an explicit validity period; the system treats records without a validity period as invalid.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-09</td>
+                  <td class="td-cp">CP-12</td>
+                  <td class="td-cond">Revocation of consent takes effect before the next evaluation cycle; there is no execution window during which revoked consent is treated as valid.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-10</td>
+                  <td class="td-cp">CP-13</td>
+                  <td class="td-cond">The system does not infer, assume, or inherit consent across purposes, data categories, or acting entities.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Domain 3: Policy Evaluation -->
+        <div id="s3-3">
+          <div class="domain-heading">Domain 3 — Policy Evaluation</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-11</td>
+                  <td class="td-cp">CP-17</td>
+                  <td class="td-cond">Policies declare required conditions; they do not perform consent resolution and do not access mutable runtime state during evaluation.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-12</td>
+                  <td class="td-cp">CP-18</td>
+                  <td class="td-cond">Each policy version is immutable after publication; changes are introduced only through explicit versioning with a new policy identifier.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-13</td>
+                  <td class="td-cp">CP-19</td>
+                  <td class="td-cond">The evaluation context is frozen at the moment of evaluation; no policy condition can read state that changes during evaluation.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-14</td>
+                  <td class="td-cp">CP-20</td>
+                  <td class="td-cond">Every evaluation produces exactly one of three outcomes: ALLOW, DENY, or ALLOW-WITH-RESTRICTIONS. No outcome outside this set is produced.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Domain 4: Decision Artifacts -->
+        <div id="s3-4">
+          <div class="domain-heading">Domain 4 — Decision Artifacts</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-15</td>
+                  <td class="td-cp">CP-24</td>
+                  <td class="td-cond">Every enforcement decision produces a persistent decision artifact that records the outcome, the policy version applied, the consent state resolved, and the timestamp of evaluation.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-16</td>
+                  <td class="td-cp">CP-25</td>
+                  <td class="td-cond">Decision artifacts are immutable after creation; no post-evaluation process can alter a stored artifact.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-17</td>
+                  <td class="td-cp">CP-26</td>
+                  <td class="td-cond">Decision artifacts are retained for a minimum period sufficient to satisfy all applicable audit, regulatory, and contractual obligations in the deployment context.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Domain 5: Fail-Closed -->
+        <div id="s3-5">
+          <div class="domain-heading">Domain 5 — Fail-Closed Behavior</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-18</td>
+                  <td class="td-cp">CP-30</td>
+                  <td class="td-cond">In any failure condition (missing input, unavailable consent store, policy resolution error), the system produces DENY rather than a default-allow or best-effort outcome.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-19</td>
+                  <td class="td-cp">CP-31</td>
+                  <td class="td-cond">Fail-closed behavior is unconditional and cannot be overridden by configuration, environment flag, or caller-supplied parameter.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-20</td>
+                  <td class="td-cp">CP-32</td>
+                  <td class="td-cond">Every DENY outcome produced under a failure condition is recorded with a distinct failure reason code differentiating it from a policy-determined DENY.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-21</td>
+                  <td class="td-cp">CP-33</td>
+                  <td class="td-cond">The enforcement layer does not expose internal error details to the calling system; failure responses carry a structured status code only.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-22</td>
+                  <td class="td-cp">CP-34</td>
+                  <td class="td-cond">Enforcement latency under failure conditions does not exceed the threshold defined for normal-path evaluation in the deployment specification.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-23</td>
+                  <td class="td-cp">CP-35</td>
+                  <td class="td-cond">Downstream systems cannot distinguish a failure-induced DENY from a policy-determined DENY based on the enforcement response alone.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-24</td>
+                  <td class="td-cp">CP-36</td>
+                  <td class="td-cond">The system is demonstrably isolated from the execution path it governs: a failure within the enforcement layer does not cause uncontrolled execution of the rejected action.</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="section-note">CORE-MIN total: 24 mandatory control points. All 24 must be satisfied for CORE-MIN conformance. CORE-VER and CORE-ENT inherit all 24 mandatory conditions above and add the conditions defined in Sections 4 and 5 respectively.</p>
+      </div>
+
+      <!-- SECTION 4: CORE-VER CHECKLIST -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>CORE-VER Conformance Checklist</h2>
+
+        <div class="profile-banner">
+          <span class="profile-banner-code">CORE-VER</span>
+          <span class="profile-banner-name">Verifiable Enforcement Profile</span>
+          <span class="profile-banner-count">+20 Mandatory Control Points (44 Total)</span>
+        </div>
+        <div class="profile-scope">CORE-VER inherits all 24 CORE-MIN conditions. The 20 control points below are additional mandatory requirements for CORE-VER conformance. Applicable to: multi-service architectures, regulated environments, and systems subject to external audit.</div>
+
+        <!-- VER Domain 1: Determinism -->
+        <div id="s4-1">
+          <div class="domain-heading">Domain 6 — Determinism Guarantees</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-25</td>
+                  <td class="td-cp">CP-37</td>
+                  <td class="td-cond">Given identical inputs (request contract, policy version, consent state, evaluation timestamp), the enforcement engine always produces the identical decision outcome.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-26</td>
+                  <td class="td-cp">CP-38</td>
+                  <td class="td-cond">The evaluation engine contains no non-deterministic components: no probabilistic sampling, no randomized tie-breaking, and no time-dependent branching outside the declared evaluation timestamp.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-27</td>
+                  <td class="td-cp">CP-39</td>
+                  <td class="td-cond">The determinism property is verifiable through a documented test procedure that can be executed by a third-party auditor without access to internal system components.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-28</td>
+                  <td class="td-cp">CP-40</td>
+                  <td class="td-cond">The system maintains a determinism boundary log that records any condition under which the determinism guarantee could not be upheld, including the reason and the resulting DENY outcome.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VER Domain 2: Replay & Audit -->
+        <div id="s4-2">
+          <div class="domain-heading">Domain 7 — Replay Invariance &amp; Audit</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-29</td>
+                  <td class="td-cp">CP-41</td>
+                  <td class="td-cond">Any past decision can be replayed against the original frozen evaluation context and yields the identical outcome as the original evaluation.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-30</td>
+                  <td class="td-cp">CP-42</td>
+                  <td class="td-cond">The system provides an independent replay interface that does not require the production enforcement path to be active during audit operations.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-31</td>
+                  <td class="td-cp">CP-43</td>
+                  <td class="td-cond">Audit query results are reproducible: the same audit query against the same artifact set always returns the same result.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-32</td>
+                  <td class="td-cp">CP-44</td>
+                  <td class="td-cond">All decision artifacts contributing to a specific audit finding are traceable to their originating request without requiring reconstruction or inference.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-33</td>
+                  <td class="td-cp">CP-45</td>
+                  <td class="td-cond">Audit access is governed by access controls that are independent of the enforcement path and cannot be modified by entities whose actions are subject to audit.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VER Domain 3: Cryptographic Integrity -->
+        <div id="s4-3">
+          <div class="domain-heading">Domain 8 — Cryptographic Integrity</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-34</td>
+                  <td class="td-cp">CP-48</td>
+                  <td class="td-cond">Each decision artifact carries a cryptographic digest (SHA-256 minimum) computed over the full artifact content at the time of creation.</td>
+                  <td><span class="dot dot-opt"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-35</td>
+                  <td class="td-cp">CP-49</td>
+                  <td class="td-cond">Policy documents are stored with a cryptographic digest; any discrepancy between stored and computed digest causes immediate rejection of the policy.</td>
+                  <td><span class="dot dot-opt"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-36</td>
+                  <td class="td-cp">CP-50</td>
+                  <td class="td-cond">The cryptographic integrity of all stored artifacts can be verified independently using only publicly documented algorithms and artifact contents.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-37</td>
+                  <td class="td-cp">CP-51</td>
+                  <td class="td-cond">Consent records are cryptographically bound to the identity of the issuing authority; the binding is verifiable without access to the enforcement layer.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VER Domain 4: Latency Controls -->
+        <div id="s4-4">
+          <div class="domain-heading">Domain 9 — Latency &amp; Performance Controls</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-38</td>
+                  <td class="td-cp">CP-54</td>
+                  <td class="td-cond">Enforcement latency (measured from request receipt to decision emission) is bounded by a documented Service Level Objective (SLO) enforced at the p99 percentile.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-39</td>
+                  <td class="td-cp">CP-55</td>
+                  <td class="td-cond">SLO breaches are logged with sufficient detail (timestamp, duration, failure reason) to support root-cause analysis without relying on memory or inference.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-40</td>
+                  <td class="td-cp">CP-56</td>
+                  <td class="td-cond">The enforcement layer imposes a hard timeout on consent resolution; if resolution does not complete within the declared timeout, a fail-closed DENY is issued.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-41</td>
+                  <td class="td-cp">CP-57</td>
+                  <td class="td-cond">Consent resolution and policy evaluation execute on independent processing paths and do not share mutable runtime resources that could introduce timing dependencies.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-42</td>
+                  <td class="td-cp">CP-58</td>
+                  <td class="td-cond">Enforcement throughput can be demonstrated to meet production load requirements without degrading below the declared latency SLO, as evidenced by documented load test results.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-43</td>
+                  <td class="td-cp">CP-59</td>
+                  <td class="td-cond">Latency measurements are produced by a monitoring component that is independent of the enforcement path and cannot be influenced by enforcement layer failures.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-44</td>
+                  <td class="td-cp">CP-60</td>
+                  <td class="td-cond">The system provides a documented capacity ceiling: a maximum request rate above which enforcement behavior is undefined, and a mechanism to reject requests that exceed this ceiling before enforcement is attempted.</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="section-note">CORE-VER total: 44 mandatory control points (24 inherited from CORE-MIN + 20 additional). All 44 must be satisfied for CORE-VER conformance.</p>
+      </div>
+
+      <!-- SECTION 5: CORE-ENT CHECKLIST -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>CORE-ENT Conformance Checklist</h2>
+
+        <div class="profile-banner">
+          <span class="profile-banner-code">CORE-ENT</span>
+          <span class="profile-banner-name">Enterprise Enforcement Profile</span>
+          <span class="profile-banner-count">+24 Mandatory Control Points (68 Total)</span>
+        </div>
+        <div class="profile-scope">CORE-ENT inherits all 44 CORE-VER conditions. The 24 control points below are additional mandatory requirements for CORE-ENT conformance. Applicable to: enterprise-scale, multi-tenant, and critical infrastructure deployments.</div>
+
+        <!-- ENT Domain 1: Governance Integration -->
+        <div id="s5-1">
+          <div class="domain-heading">Domain 10 — Governance Integration</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-45</td>
+                  <td class="td-cp">CP-61</td>
+                  <td class="td-cond">The enforcement layer is integrated with the organization's formal governance structure: policy changes require an authorized approval workflow before taking effect in production.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-46</td>
+                  <td class="td-cp">CP-62</td>
+                  <td class="td-cond">The governance approval workflow produces a signed approval record that is stored as a prerequisite artifact linked to the policy version it authorized.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-47</td>
+                  <td class="td-cp">CP-63</td>
+                  <td class="td-cond">A designated governance authority is named and accountable for all policy decisions within the QODIQA deployment; this authority is recorded in the governance charter artifact.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-48</td>
+                  <td class="td-cp">CP-64</td>
+                  <td class="td-cond">Governance audit reports are produced on a defined periodic schedule and are delivered to the designated governance authority without requiring manual data assembly.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-49</td>
+                  <td class="td-cp">CP-65</td>
+                  <td class="td-cond">The system exposes a governance API that allows the designated governance authority to query aggregate enforcement statistics, policy utilization, and exception rates without accessing individual decision artifacts.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ENT Domain 2: Multi-Tenant Isolation -->
+        <div id="s5-2">
+          <div class="domain-heading">Domain 11 — Multi-Tenant Isolation</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-50</td>
+                  <td class="td-cp">CP-66</td>
+                  <td class="td-cond">Consent records, policy sets, and decision artifacts are partitioned by tenant identifier; no evaluation can access data belonging to a different tenant.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-51</td>
+                  <td class="td-cp">CP-67</td>
+                  <td class="td-cond">Tenant isolation is enforced at the storage layer, not solely at the application layer; a direct storage query cannot return cross-tenant data regardless of the query origin.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-52</td>
+                  <td class="td-cp">CP-68</td>
+                  <td class="td-cond">An isolation boundary test demonstrating the absence of cross-tenant data access is executed and recorded as part of each release validation cycle.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-53</td>
+                  <td class="td-cp">CP-69</td>
+                  <td class="td-cond">Audit logs are partitioned by tenant; a tenant-scoped auditor role cannot access log entries belonging to another tenant.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-54</td>
+                  <td class="td-cp">CP-70</td>
+                  <td class="td-cond">Resource consumption (processing time, storage quota, throughput) is bounded per tenant; one tenant's load cannot degrade enforcement latency for another tenant beyond the declared SLO.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ENT Domain 3: Delegation & Escalation -->
+        <div id="s5-3">
+          <div class="domain-heading">Domain 12 — Delegation &amp; Escalation</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-55</td>
+                  <td class="td-cp">CP-71</td>
+                  <td class="td-cond">Consent delegation is represented as an explicit, signed delegation record identifying the delegating authority, the delegated entity, the scope of delegation, and its validity period.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-56</td>
+                  <td class="td-cp">CP-72</td>
+                  <td class="td-cond">Delegated consent cannot exceed the scope of the original grant; any delegation that attempts to expand scope is rejected at evaluation time.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-57</td>
+                  <td class="td-cp">CP-73</td>
+                  <td class="td-cond">The full delegation chain is resolved and recorded in the decision artifact for every evaluation that relies on delegated consent.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-58</td>
+                  <td class="td-cp">CP-74</td>
+                  <td class="td-cond">The system provides a defined escalation path for enforcement decisions that require human review; escalated decisions are not executed until the review is complete and the outcome is recorded.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-59</td>
+                  <td class="td-cp">CP-75</td>
+                  <td class="td-cond">Escalation outcomes are stored as first-class decision artifacts and are subject to the same immutability, integrity, and retention requirements as automated enforcement decisions.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ENT Domain 4: Operational Resilience -->
+        <div id="s5-4">
+          <div class="domain-heading">Domain 13 — Operational Resilience &amp; Continuity</div>
+          <div class="checklist-table-wrapper">
+            <table class="checklist-table">
+              <colgroup>
+                <col class="col-id">
+                <col class="col-cp">
+                <col class="col-cond">
+                <col class="col-min">
+                <col class="col-ver">
+                <col class="col-ent">
+                <col class="col-check">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CP Ref</th>
+                  <th class="th-cond">Verifiable Condition</th>
+                  <th>MIN</th>
+                  <th>VER</th>
+                  <th>ENT</th>
+                  <th>✓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-id">CL-60</td>
+                  <td class="td-cp">CP-76</td>
+                  <td class="td-cond">The enforcement layer is deployed with redundancy such that the failure of a single component does not cause unavailability of the enforcement service; redundancy topology is documented.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-61</td>
+                  <td class="td-cp">CP-77</td>
+                  <td class="td-cond">Failover between redundant components does not produce a window during which enforcement decisions are bypassed; fail-closed semantics apply throughout all failover transitions.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-62</td>
+                  <td class="td-cp">CP-78</td>
+                  <td class="td-cond">A documented disaster recovery procedure exists, has been tested within the past 12 months, and demonstrates restoration of full enforcement capability within a declared Recovery Time Objective (RTO).</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-63</td>
+                  <td class="td-cp">CP-79</td>
+                  <td class="td-cond">Decision artifact storage is replicated to a geographically separate location; the recovery of artifacts from the replica is demonstrably sufficient to reconstruct the complete enforcement history.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-64</td>
+                  <td class="td-cp">CP-80</td>
+                  <td class="td-cond">The system's operational health is continuously monitored by a component independent of the enforcement layer; health state changes trigger alerts that do not require manual detection.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-65</td>
+                  <td class="td-cp">CP-81</td>
+                  <td class="td-cond">Change management for the enforcement layer follows a documented procedure that includes impact assessment, staged rollout, rollback capability, and mandatory post-deployment verification of enforcement correctness.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-66</td>
+                  <td class="td-cp">CP-82</td>
+                  <td class="td-cond">An annual third-party security assessment of the enforcement layer is conducted; findings are tracked to resolution and evidence of resolution is stored as governance artifacts.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-67</td>
+                  <td class="td-cp">CP-83</td>
+                  <td class="td-cond">The enforcement layer exposes a machine-readable status endpoint that allows downstream systems to detect enforcement unavailability and activate fail-closed behavior independently.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+                <tr>
+                  <td class="td-id">CL-68</td>
+                  <td class="td-cp">CP-84</td>
+                  <td class="td-cond">Capacity planning for the enforcement layer is reviewed at least quarterly and produces a documented forecast of headroom relative to projected request volumes for the next operational period.</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="dot dot-req"></span></td>
+                  <td><span class="tick-box"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="section-note">CORE-ENT total: 68 mandatory control points (44 inherited from CORE-VER + 24 additional). All 68 must be satisfied for CORE-ENT conformance.</p>
+      </div>
+
+      <!-- SECTION 6: SCORING -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Scoring and Conformance Determination</h2>
+
+        <p>Conformance is binary at the profile level. A system either satisfies all mandatory control points for a given profile or it does not. There is no partial conformance designation, no weighted scoring, and no grace period for mandatory conditions. This design is intentional: partial conformance creates ambiguity about which properties can be relied upon by downstream systems, consumers, and auditors.</p>
+
+        <div class="scoring-block">
+          <h3>Conformance Thresholds by Profile</h3>
+          <p style="font-size:0.880rem;margin-bottom:0;color:var(--text-2);">All mandatory CPs must be satisfied. Recommended (open circle) conditions do not affect conformance status but are recorded in the self-assessment record.</p>
+          <div class="scoring-grid">
+            <div class="scoring-cell">
+              <span class="sc-profile">CORE-MIN</span>
+              <span class="sc-threshold">24 / 24</span>
+              <span class="sc-note">All mandatory CPs satisfied</span>
+            </div>
+            <div class="scoring-cell">
+              <span class="sc-profile">CORE-VER</span>
+              <span class="sc-threshold">44 / 44</span>
+              <span class="sc-note">All MIN + VER CPs satisfied</span>
+            </div>
+            <div class="scoring-cell">
+              <span class="sc-profile">CORE-ENT</span>
+              <span class="sc-threshold">68 / 68</span>
+              <span class="sc-note">All VER + ENT CPs satisfied</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Self-Assessment Procedure</h3>
+        <p>Before initiating formal certification under the QODIQA Certification Framework, implementors should complete this checklist as a self-assessment instrument. For each control point relevant to the target profile, tick the verification box only when the condition is demonstrably satisfied — not when it is planned, partially implemented, or approximated.</p>
+
+        <p>Any unsatisfied mandatory condition should be recorded in an implementation gap register that identifies the control point, the nature of the gap, the responsible team, and a target remediation date. The gap register is a prerequisite artifact for formal certification submission.</p>
+
+        <div class="decision-block">
+          <strong>Important — Self-Assessment Limitation</strong>
+          <p>This checklist is a preparatory instrument. Self-assessment results do not constitute conformance certification. Formal QODIQA conformance is established only through the QODIQA Conformance Test Suite administered by an accredited evaluation body under the QODIQA Certification Framework.</p>
+        </div>
+
+        <h3>Gap Classification</h3>
+        <p>When a mandatory control point is not satisfied, classify the gap by severity to prioritize remediation effort:</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2 — Gap Severity Classification</span>
+          <table>
+            <colgroup>
+              <col style="width:110px">
+              <col style="width:auto">
+              <col style="width:160px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th style="text-align:left;">Definition</th>
+                <th>Certification Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:#8B3A3A;text-align:center;font-size:0.80rem;">BLOCKING</td>
+                <td style="text-align:left;">The condition is entirely unimplemented or the implementation explicitly violates the stated requirement.</td>
+                <td style="text-align:center;font-size:0.83rem;">Non-conformance. Cannot certify.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:#7A6A30;text-align:center;font-size:0.80rem;">MARGINAL</td>
+                <td style="text-align:left;">The condition is partially implemented; a specific, bounded capability is missing or the implementation deviates in a limited way.</td>
+                <td style="text-align:center;font-size:0.83rem;">Non-conformance. Remediation required.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-weight:700;color:var(--muted);text-align:center;font-size:0.80rem;">EVIDENCE</td>
+                <td style="text-align:left;">The condition is implemented but supporting evidence or documentation is insufficient to demonstrate compliance to an external auditor.</td>
+                <td style="text-align:center;font-size:0.83rem;">Non-conformance. Documentation required.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative operational instrument within the QODIQA specification corpus. It derives its control points from the QODIQA 68-Point Enforcement Framework and is intended to be used in conjunction with the QODIQA Conformance Test Suite. It does not supersede or modify any normative requirement in the Core Standard or the 68-Point Framework.</p>
+
+          <p>This checklist is designed as an implementation-facing complement to the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial normative release of this document as part of the QODIQA standard corpus.</p>
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-CL-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Implementation Conformance Checklist</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Normative Binary Verification Instrument for CORE-MIN, CORE-VER, and CORE-ENT Profiles</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Operational Instrument</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Derives From</span>
+            <span class="doc-id-val">QODIQA 68-Point Enforcement Framework · Core Standard v1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Implementation Conformance Checklist</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-CL-2026-001</p>
+      <p>Normative Operational Instrument</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a normative verification instrument and does not constitute legal, regulatory, or operational advice. Self-assessment results do not constitute certification. Formal conformance is established only through the QODIQA Conformance Test Suite administered by an accredited evaluation body.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-CL-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s2',
+    's3','s3-1','s3-2','s3-3','s3-4','s3-5',
+    's4','s4-1','s4-2','s4-3','s4-4',
+    's5','s5-1','s5-2','s5-3','s5-4',
+    's6','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) visible.add(entry.target.id);
+      else visible.delete(entry.target.id);
+    });
+    if (visible.size > 0) {
+      let topId = null, topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+})();
+</script>
+</body>
+</html>

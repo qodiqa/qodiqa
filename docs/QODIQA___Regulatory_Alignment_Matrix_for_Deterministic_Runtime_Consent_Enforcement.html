@@ -1,0 +1,2977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Regulatory Alignment Matrix for AI Governance Frameworks · Version 1.0</title>
+<meta name="description" content="QODIQA Regulatory Alignment Matrix for AI Governance Frameworks v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Regulatory Alignment Matrix for AI Governance Frameworks">
+<meta property="og:description" content="Technical alignment matrix for deterministic runtime enforcement across major AI and data governance frameworks.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+/* =============================================================
+   RESET
+   ============================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* =============================================================
+   DESIGN TOKENS
+   ============================================================= */
+:root{
+  --ink:#1A1C20;--ink-2:#2C2F36;--ink-3:#3A3F48;
+  --accent:#7A6A50;--muted:#6B7280;
+  --rule:#D6D2CC;--border:#D4D0CA;
+  --bg:#F6F4F0;--bg-raised:#EFECEA;--bg-sunken:#E8E5E0;
+  --text:#1A1C20;--text-2:#3A3F48;--text-3:#5A6070;
+  --sidebar-w:252px;--col:800px;
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono','Courier New',monospace;
+  --lh:1.70;--lh-h:1.22;
+  /* spacing scale */
+  --sp-xs:4px;--sp-sm:8px;--sp-md:16px;--sp-lg:24px;--sp-xl:32px;--sp-2xl:48px;--sp-3xl:64px;
+}
+
+/* =============================================================
+   BASE
+   ============================================================= */
+html{font-size:16px}
+body{
+  font-family:var(--sans);font-size:1rem;line-height:var(--lh);
+  color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility
+}
+
+/* =============================================================
+   COVER
+   ============================================================= */
+#cover{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background-color:#0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%,rgba(122,106,80,.09) 0%,transparent 65%),
+    linear-gradient(180deg,#0A0C0F 0%,#0C0F13 50%,#0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,52px 52px,52px 52px;
+  position:relative;overflow:hidden;padding:96px 48px;text-align:center
+}
+#cover::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 55%,rgba(10,12,15,.65) 100%);
+  pointer-events:none
+}
+#cover::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(122,106,80,.45) 50%,transparent 100%)
+}
+.cover-inner{
+  position:relative;z-index:1;max-width:580px;width:100%;
+  text-align:center;display:flex;flex-direction:column;align-items:center
+}
+.cover-title{font-family:var(--serif);text-align:center;width:100%}
+.cover-title .qodiqa-brand{
+  display:block;font-family:var(--serif);
+  font-size:clamp(3.4rem,7.8vw,5.8rem);font-weight:700;
+  letter-spacing:.06em;color:#fff;line-height:1;margin-bottom:var(--sp-lg);
+  text-shadow:0 0 20px rgba(122,106,80,.10),0 1px 2px rgba(0,0,0,.55)
+}
+.cover-title .title-main{
+  display:block;font-family:var(--serif);
+  font-size:clamp(1.70rem,3.7vw,2.8rem);font-weight:700;
+  line-height:1.20;color:rgba(255,255,255,.90);letter-spacing:-.010em
+}
+.cover-title .title-main .italic-part{font-style:italic;font-weight:400;color:rgba(255,255,255,.58)}
+.cover-info-block{
+  width:100%;max-width:520px;margin:var(--sp-3xl) auto 0;
+  display:flex;flex-direction:column;align-items:center;text-align:center
+}
+.cover-info-divider{
+  width:48px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(122,106,80,.55),transparent);
+  margin:0 auto var(--sp-xl)
+}
+.cover-info-subtitle{
+  font-family:var(--serif);font-size:.70rem;font-weight:400;
+  letter-spacing:.22em;color:rgba(255,255,255,.50);
+  margin-bottom:12px;text-transform:uppercase
+}
+.cover-info-date{
+  font-family:var(--serif);font-size:.76rem;font-weight:300;
+  color:rgba(255,255,255,.36);letter-spacing:.14em;margin-bottom:var(--sp-lg)
+}
+.cover-info-badge{
+  display:inline-block;
+  border:1px solid rgba(122,106,80,.38);border-top:1px solid rgba(122,106,80,.55);
+  padding:7px 28px 6px;font-family:var(--mono);font-size:.62rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.50);background:rgba(122,106,80,.06);margin-bottom:var(--sp-xl)
+}
+.cover-info-tagline{
+  font-family:var(--serif);font-size:.85rem;font-weight:400;
+  color:rgba(255,255,255,.50);max-width:440px;line-height:1.82;font-style:italic
+}
+#cover p,#cover .cover-info-subtitle,#cover .cover-info-date,#cover .cover-info-tagline{
+  text-align:center;hyphens:none;margin-left:auto;margin-right:auto
+}
+.cover-scroll-hint{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:var(--sp-sm);
+  color:rgba(255,255,255,.15);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase
+}
+
+/* =============================================================
+   LAYOUT
+   ============================================================= */
+.layout{display:flex;min-height:100vh}
+
+/* =============================================================
+   SIDEBAR
+   ============================================================= */
+#sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:#0A0C0F;border-right:1px solid rgba(255,255,255,.055);
+  display:flex;flex-direction:column;z-index:100;
+  scrollbar-width:thin;scrollbar-color:#2A2F38 transparent
+}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-track{background:transparent}
+#sidebar::-webkit-scrollbar-thumb{background:#2A2F38}
+.sidebar-header{
+  padding:var(--sp-lg) 20px var(--sp-md);
+  border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0
+}
+.sidebar-nav-label{
+  font-family:var(--sans);font-size:.58rem;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(122,106,80,.60);display:block
+}
+.sidebar-nav{flex:1;padding:12px 0 var(--sp-xl)}
+.nav-item{
+  display:block;padding:4px 20px 4px 18px;
+  font-family:var(--sans);font-size:.73rem;color:#A0A8B2;
+  text-decoration:none;line-height:1.45;
+  border-left:2px solid transparent;
+  transition:color .12s,background .12s,border-color .12s
+}
+.nav-item:hover{color:#C4BEB2;background:rgba(255,255,255,.04);border-left-color:rgba(122,106,80,.32)}
+.nav-item.active{color:#E2D8C8;border-left-color:#A8966E;background:rgba(122,106,80,.14);font-weight:600}
+.nav-item.sub{padding-left:32px;font-size:.69rem;color:#6E7880}
+.nav-item.sub:hover{color:#9A9490}
+.nav-item.sub.active{color:#BEB4A8}
+.sidebar-footer{
+  padding:12px 20px;border-top:1px solid rgba(255,255,255,.05);
+  font-size:.62rem;color:#3A4050;line-height:1.5;flex-shrink:0;
+  font-family:var(--mono);letter-spacing:.03em
+}
+.mobile-nav-header{display:none}
+.nav-toggle{
+  display:none;background:#0A0C0F;color:#fff;
+  border:1px solid rgba(255,255,255,.10);
+  width:40px;height:40px;cursor:pointer;
+  align-items:center;justify-content:center;flex-shrink:0
+}
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.48);z-index:99
+}
+
+/* =============================================================
+   MAIN CONTENT
+   ============================================================= */
+#content{flex:1;min-width:0;padding:80px 80px 108px}
+.content-inner{max-width:var(--col);margin:0 auto}
+
+/* =============================================================
+   SECTION STRUCTURE
+   ============================================================= */
+.doc-section{margin-top:var(--sp-xl);padding-top:0}
+.doc-section:first-child{margin-top:0}
+.doc-section:has(.section-divider){margin-top:var(--sp-2xl)}
+.section-divider{
+  display:block;width:100%;height:1px;
+  background:var(--rule);margin-bottom:var(--sp-lg);opacity:.45
+}
+
+/* =============================================================
+   HEADINGS
+   ============================================================= */
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-kerning:normal}
+.section-label{
+  font-family:var(--mono);font-size:.60rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:var(--sp-sm);opacity:.80
+}
+h2{
+  font-size:clamp(1.28rem,2.2vw,1.58rem);font-weight:700;
+  line-height:var(--lh-h);letter-spacing:-.018em;color:var(--ink);
+  margin-bottom:var(--sp-md);position:relative;
+  scroll-margin-top:var(--sp-lg)
+}
+h2 .anchor-link{
+  position:absolute;right:calc(100% + 14px);top:50%;transform:translateY(-50%);
+  opacity:0;color:var(--accent);font-size:.75rem;
+  text-decoration:none;font-family:var(--mono);transition:opacity .12s
+}
+h2:hover .anchor-link{opacity:.7}
+h3{
+  font-size:1.00rem;font-weight:600;line-height:1.30;
+  letter-spacing:-.005em;color:var(--ink-2);
+  margin-top:var(--sp-lg);margin-bottom:12px;
+  scroll-margin-top:var(--sp-lg)
+}
+h3[id]{scroll-margin-top:var(--sp-lg)}
+.doc-section>h3:first-child{margin-top:0}
+
+/* =============================================================
+   BODY TEXT
+   ============================================================= */
+p{
+  font-size:.965rem;line-height:var(--lh);color:var(--text);
+  margin-bottom:1em;text-align:justify;
+  hyphens:auto;-webkit-hyphens:auto;-moz-hyphens:auto;
+  overflow-wrap:break-word;orphans:2;widows:2
+}
+em{font-style:italic}
+strong{font-weight:600;color:var(--ink)}
+
+/* =============================================================
+   LISTS
+   ============================================================= */
+ul,ol{padding-left:1.35em;margin-bottom:.85em}
+li{
+  font-size:.965rem;line-height:1.65;margin-bottom:var(--sp-xs);
+  color:var(--text);text-align:justify;
+  hyphens:auto;-webkit-hyphens:auto;-moz-hyphens:auto;overflow-wrap:break-word
+}
+
+/* =============================================================
+   ABSTRACT BLOCK
+   ============================================================= */
+.abstract-block{
+  background:#F1EFEA;border-top:2px solid var(--accent);
+  border-bottom:1px solid var(--rule);
+  padding:28px 0 var(--sp-lg);margin:0 0 40px
+}
+.abstract-label{
+  font-family:var(--mono);font-size:.58rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:12px;opacity:.80
+}
+.abstract-block p{
+  font-size:.930rem;line-height:1.78;
+  color:var(--ink-2);font-style:italic;margin:0
+}
+.abstract-block p+p{margin-top:1em}
+
+/* =============================================================
+   CODE
+   ============================================================= */
+pre{
+  background:#191C21;color:#BEB9B0;
+  padding:18px 22px;overflow-x:auto;
+  margin:var(--sp-md) 0 var(--sp-lg);
+  border-left:2px solid rgba(122,106,80,.45);
+  font-size:.800rem;line-height:1.65;font-family:var(--mono)
+}
+code{
+  font-family:var(--mono);font-size:.840em;
+  background:rgba(122,106,80,.10);padding:1px 5px;color:var(--accent)
+}
+pre code{background:none;padding:0;color:inherit;font-size:1em}
+
+/* =============================================================
+   TABLES — INSTITUTIONAL GRADE
+   ============================================================= */
+.table-wrap,.table-wrapper{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  margin:var(--sp-lg) 0 var(--sp-xl);
+  border:1px solid #C4C0BA;max-width:100%
+}
+/* caption is first child inside wrapper */
+.table-wrap>.table-caption,
+.table-wrapper>.table-caption{
+  display:block;font-family:var(--mono);font-size:.64rem;font-weight:600;
+  letter-spacing:.09em;padding:9px 15px;
+  background:#191C21;color:rgba(255,255,255,.50);
+  text-transform:uppercase;text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.06)
+}
+table{width:100%;border-collapse:collapse;table-layout:auto}
+th{
+  background:#1C1F25;color:rgba(255,255,255,.65);
+  font-family:var(--mono);font-weight:500;font-size:.66rem;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:13px 16px;text-align:left;
+  border-right:1px solid rgba(255,255,255,.07);vertical-align:middle
+}
+th:last-child{border-right:none}
+td{
+  padding:12px 16px;
+  border-bottom:1px solid #D4D0CA;border-right:1px solid #DEDAD5;
+  font-family:var(--sans);font-size:.875rem;color:var(--text);
+  vertical-align:top;line-height:1.58;
+  text-align:left;hyphens:auto;overflow-wrap:break-word
+}
+td:last-child{border-right:none}
+td:first-child{font-weight:500;color:var(--ink-2)}
+tr:nth-child(even) td{background:#EDEAE6}
+tr:last-child td{border-bottom:none}
+td code{
+  font-size:.800em;padding:1px 4px;
+  background:rgba(122,106,80,.08);color:var(--accent);white-space:nowrap
+}
+td .scope-pill{vertical-align:middle}
+
+/* =============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================= */
+.key-prop{
+  background:#F2F0EB;border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);
+  padding:14px 20px;margin:12px 0 var(--sp-md)
+}
+.key-prop-title{
+  font-family:var(--mono);font-size:.62rem;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:7px;opacity:.80
+}
+.key-prop p{margin:0;font-size:.920rem;line-height:1.65;text-align:justify;hyphens:auto}
+
+/* =============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================= */
+.decision-block{
+  background:#EEEBE6;border:1px solid #D2CEC8;
+  border-left:3px solid var(--ink-3);
+  padding:0;margin:13px 0;overflow:hidden
+}
+.decision-block--executive{margin-bottom:var(--sp-xl)}
+.decision-block-head{
+  background:#1C1F25;padding:9px 15px;
+  font-family:var(--mono);font-size:.60rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);border-bottom:1px solid rgba(255,255,255,.05)
+}
+.decision-block-body{padding:12px var(--sp-md)}
+.decision-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:5px 0;font-size:.905rem;line-height:1.60;color:var(--text);
+  border-bottom:1px solid rgba(0,0,0,.04);
+  text-align:justify;hyphens:auto
+}
+.decision-item:last-child{border-bottom:none}
+.di-icon{
+  color:var(--accent);font-family:var(--mono);font-size:.80rem;
+  flex-shrink:0;margin-top:3px;opacity:.65
+}
+.callout{
+  background:#F2F0EB;border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);
+  padding:15px 20px;margin:var(--sp-md) 0
+}
+.callout--how-to-read{margin-top:0;margin-bottom:40px}
+.callout p{
+  font-size:.920rem;margin:0;line-height:1.65;
+  text-align:justify;hyphens:auto;font-style:normal;color:var(--text)
+}
+.callout p+p{margin-top:10px}
+.callout-label{
+  font-family:var(--mono);font-size:.60rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);opacity:.80;display:block;margin-bottom:10px
+}
+
+/* =============================================================
+   NORMATIVE BLOCKS
+   ============================================================= */
+.normative-block{
+  background:#F2F0EB;border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);margin:var(--sp-md) 0 18px
+}
+.normative-block-head{
+  background:#191C21;padding:10px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--sp-md)
+}
+.nb-id{font-family:var(--mono);font-size:.64rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.48)}
+.nb-title{font-family:var(--mono);font-size:.60rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.60);flex:1}
+.nb-level{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:3px 10px;border:1px solid;white-space:nowrap
+}
+.nb-level.must,.nb-level.shall{color:#e87d7d;border-color:#5a2a2a;background:#1a0a0a}
+.nb-level.should{color:#e8c47d;border-color:#5a4020;background:#1a1205}
+.nb-level.may{color:#7db8e8;border-color:#1a3a5a;background:#050d1a}
+.normative-block-body{padding:14px 18px}
+.normative-block-body p{
+  font-size:.905rem;color:var(--text);line-height:1.65;
+  margin-bottom:var(--sp-sm);text-align:justify;hyphens:auto
+}
+.normative-block-body p:last-child{margin-bottom:0}
+.normative-block-body strong{color:var(--ink)}
+.nb-row{
+  display:grid;grid-template-columns:140px 1fr;
+  gap:var(--sp-md);padding:6px 0;
+  border-bottom:1px solid var(--bg-sunken);align-items:baseline
+}
+.nb-row:last-child{border-bottom:none}
+.nb-key{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.nb-val{font-size:.875rem;color:var(--text);line-height:1.60;text-align:justify;hyphens:auto}
+
+/* =============================================================
+   MAPPING CHAIN
+   ============================================================= */
+.mapping-chain{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:22px 0}
+.mapping-chain--coverage{margin-bottom:22px}
+.chain-node{
+  background:var(--bg-sunken);border:1px solid var(--rule);
+  padding:var(--sp-sm) 14px;font-family:var(--mono);font-size:.64rem;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)
+}
+.chain-node--direct{border-left:3px solid #2d6b35;flex:1;min-width:0}
+.chain-node--partial{border-left:3px solid #7a5a1a;flex:1;min-width:0}
+.chain-node--out{border-left:3px solid #7a2a2a;flex:1;min-width:0}
+.chain-arrow{color:var(--accent);font-family:var(--mono);font-size:.875rem;opacity:.65}
+.cn-label{
+  font-family:var(--mono);font-size:.58rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:6px
+}
+.cn-label--direct{color:#2d6b35}
+.cn-label--partial{color:#7a5a1a}
+.cn-label--out{color:#7a2a2a}
+.cn-desc{font-family:var(--sans);font-size:.76rem;color:var(--text-2);line-height:1.55}
+
+/* =============================================================
+   SCOPE PILLS
+   ============================================================= */
+.scope-pill{
+  display:inline-block;padding:2px 8px;
+  font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;white-space:nowrap
+}
+.scope-pill.direct{background:#e8f4ea;color:#2d6b35;border:1px solid #b8dcc0}
+.scope-pill.partial{background:#fef8ec;color:#7a5a1a;border:1px solid #e8d490}
+.scope-pill.structural{background:#eef4fc;color:#1a4a7a;border:1px solid #b0c8e8}
+.scope-pill.out{background:#f8f0f0;color:#7a2a2a;border:1px solid #e0b8b8}
+
+/* =============================================================
+   DISCLAIMER BLOCK
+   ============================================================= */
+.disclaimer-block{
+  background:#EEEBE6;border:1px solid #D2CEC8;
+  border-left:3px solid var(--ink-3);
+  padding:0;margin:13px 0;overflow:hidden
+}
+.disclaimer-block-head{
+  background:#1C1F25;padding:9px 15px;
+  font-family:var(--mono);font-size:.60rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  border-bottom:1px solid rgba(255,255,255,.05);display:block
+}
+.disclaimer-block p{
+  font-size:.905rem;line-height:1.60;color:var(--text);
+  margin:12px var(--sp-md);text-align:justify;hyphens:auto
+}
+
+/* =============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================= */
+.inst-statement{
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:22px 0;margin:var(--sp-xl) 0
+}
+.inst-statement p{
+  font-family:var(--serif);font-size:1.08rem;line-height:1.65;
+  color:var(--ink-2);font-style:italic;margin:0;
+  text-align:justify;hyphens:auto
+}
+.inst-statement .inst-lead{
+  font-family:var(--mono)!important;font-size:.60rem!important;font-weight:600!important;
+  letter-spacing:.18em!important;text-transform:uppercase!important;
+  color:var(--accent)!important;display:block!important;
+  margin-bottom:14px!important;opacity:.80!important;font-style:normal!important
+}
+.inst-statement .inst-body{
+  font-family:var(--serif)!important;
+  font-size:clamp(1rem,1.8vw,1.18rem)!important;
+  line-height:1.60!important;color:var(--ink)!important;
+  margin-bottom:18px!important;font-style:normal!important;
+  text-align:justify!important;hyphens:auto!important
+}
+.inst-statement .inst-close{
+  font-family:var(--mono)!important;font-size:.62rem!important;
+  letter-spacing:.10em!important;text-transform:uppercase!important;
+  color:var(--muted)!important;line-height:1.5!important;
+  padding-top:14px!important;border-top:1px solid var(--rule)!important;
+  margin-top:14px!important;opacity:.70!important;
+  display:block!important;font-style:normal!important
+}
+
+/* =============================================================
+   PROP LIST
+   ============================================================= */
+.prop-list{list-style:none;padding:0;margin:12px 0 18px;border:1px solid #C4C0BA}
+.prop-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:9px 15px;border-bottom:1px solid #D4D0CA;
+  font-size:.875rem;color:var(--text);line-height:1.55;
+  text-align:justify;hyphens:auto
+}
+.prop-list li:last-child{border-bottom:none}
+.prop-list li:nth-child(even){background:#EAE7E2}
+.prop-list li::before{
+  content:'2';font-family:var(--mono);font-size:.80rem;
+  color:var(--accent);flex-shrink:0;margin-top:2px;opacity:.65
+}
+
+/* =============================================================
+   SECTION NOTE
+   ============================================================= */
+.section-note{
+  display:block;font-size:.770rem;color:var(--muted);font-style:italic;
+  border-top:1px solid #D0CCC6;padding-top:12px;margin-top:var(--sp-xl);line-height:1.62
+}
+
+/* =============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================= */
+.doc-status-block{
+  background:#EDEAE5;border:1px solid #D2CEC8;
+  border-left:3px solid var(--accent);
+  padding:26px 30px;margin:var(--sp-md) 0
+}
+.doc-status-block p{text-align:justify;hyphens:auto}
+.audience-list{list-style:none;padding:0;margin:10px 0 14px}
+.audience-list li{
+  padding:4px 0 4px 18px;position:relative;
+  font-size:.900rem;color:var(--text-3);line-height:1.55;
+  text-align:justify;hyphens:auto
+}
+.audience-list li::before{
+  content:'92';position:absolute;left:0;
+  color:var(--accent);font-size:.75em;top:7px;opacity:.65
+}
+.corpus-list{
+  list-style:none;padding:0;margin:10px 0 14px;
+  border-top:1px solid #D4D0CC;border-bottom:1px solid #D4D0CC
+}
+.corpus-list li{
+  font-size:.890rem;color:var(--text-2);line-height:1.55;
+  padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);
+  text-align:left;hyphens:none
+}
+.corpus-list li:last-child{border-bottom:none}
+.contact-block{margin-top:0;padding-top:20px;text-align:center}
+.contact-block p{
+  text-align:center;font-size:.875rem;color:var(--text-3);
+  margin-bottom:10px;hyphens:none
+}
+.contact-name{
+  font-family:var(--serif);font-size:1.05rem;font-weight:700;
+  color:var(--ink);margin-bottom:4px!important
+}
+.contact-detail{
+  display:block;font-size:.840rem!important;
+  color:var(--muted)!important;margin-bottom:2px!important
+}
+.contact-detail a{color:var(--accent);text-decoration:none}
+.contact-detail a:hover{text-decoration:underline}
+.status-divider{border:none;border-top:1px solid #C8C4BE;margin:22px 0}
+
+/* =============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================= */
+.doc-identity-block{
+  margin-top:var(--sp-xl);padding:20px var(--sp-lg);
+  background:#EDEAE5;border:1px solid #D2CEC8;
+  border-left:2px solid var(--ink-3);font-family:var(--mono)
+}
+.doc-identity-row{
+  display:flex;align-items:baseline;
+  padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);line-height:1.5
+}
+.doc-identity-row:last-child{border-bottom:none}
+.doc-id-key{flex:0 0 200px;color:var(--muted);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase}
+.doc-id-val{color:var(--text);font-size:.760rem;line-height:1.6}
+
+/* =============================================================
+   BACK TO TOP
+   ============================================================= */
+#back-to-top{
+  position:fixed;bottom:28px;right:28px;
+  width:36px;height:36px;border-radius:50%;
+  background:#0A0C0F;border:1px solid rgba(122,106,80,.30);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transform:translateY(8px);
+  transition:opacity .25s,transform .25s,background .12s;z-index:50
+}
+#back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+#back-to-top:hover{background:#131620;border-color:rgba(122,106,80,.50)}
+
+/* =============================================================
+   FOOTER
+   ============================================================= */
+footer{
+  background:#0A0C0F;color:rgba(255,255,255,.50);
+  padding:44px 80px;margin-left:var(--sidebar-w);
+  border-top:1px solid rgba(122,106,80,.18)
+}
+.footer-inner{
+  max-width:calc(var(--col) + 160px);margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 2fr;
+  gap:40px;align-items:start
+}
+.footer-block .f-label{
+  font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(122,106,80,.70);font-family:var(--mono);font-weight:600;
+  margin-bottom:10px;display:block
+}
+.footer-block p{
+  font-size:.760rem;color:rgba(255,255,255,.50);
+  line-height:1.65;margin:0 0 3px;text-align:left
+}
+.footer-divider{grid-column:1/-1;height:1px;background:rgba(255,255,255,.07);margin:4px 0}
+.footer-bottom{
+  grid-column:1/-1;color:rgba(255,255,255,.28);
+  font-family:var(--mono);font-size:.620rem;
+  display:flex;justify-content:space-between;align-items:center;letter-spacing:.02em
+}
+
+/* =============================================================
+   PRINT
+   ============================================================= */
+@media print{
+  #sidebar,#back-to-top,.nav-toggle,.overlay,.cover-scroll-hint{display:none!important}
+  footer{margin-left:0}
+  #content{padding:36px 48px}
+  pre{white-space:pre-wrap}
+  body{font-size:11pt}
+  h2{font-size:16pt}
+  #cover{min-height:auto;padding:80px 40px;page-break-after:always}
+}
+
+/* =============================================================
+   RESPONSIVE — 1200px
+   ============================================================= */
+@media(max-width:1200px){
+  #content{padding:64px 56px 96px}
+  footer{padding:36px 56px}
+}
+
+/* =============================================================
+   RESPONSIVE — 1024px
+   ============================================================= */
+@media(max-width:1024px){
+  #content{padding:52px 40px 80px}
+  footer{padding:32px 40px}
+  .footer-inner{gap:28px}
+}
+
+/* =============================================================
+   RESPONSIVE — 768px (mobile)
+   ============================================================= */
+@media(max-width:768px){
+  .nav-toggle{display:flex;position:relative;flex-shrink:0}
+  .mobile-nav-header{
+    display:flex;align-items:center;gap:12px;
+    position:fixed;top:0;left:0;width:100%;height:52px;
+    padding:0 var(--sp-md);background:#0A0C0F;
+    border-bottom:1px solid rgba(122,106,80,.15);z-index:210
+  }
+  .mobile-contents-label{
+    font-family:var(--mono);font-size:.64rem;
+    letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.38)
+  }
+  #sidebar{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);transition:transform .25s ease;
+    z-index:150;will-change:transform
+  }
+  #sidebar.open{transform:translateX(0)}
+  .overlay.active{display:block}
+  #content{padding:68px 20px 52px}
+  footer{margin-left:0;padding:28px 20px}
+  .footer-inner{grid-template-columns:1fr;gap:22px}
+  .footer-bottom{flex-direction:column;gap:6px;text-align:center}
+  /* tables — clean scroll, no hacks */
+  .table-wrap,.table-wrapper{margin:var(--sp-md) 0;width:100%}
+  td,th{padding:10px 12px}
+  h2 .anchor-link{display:none}
+  .mapping-chain{flex-direction:column;align-items:flex-start}
+  .doc-identity-row{flex-direction:column;gap:2px}
+  .doc-id-key{flex:none}
+  pre{font-size:.760rem;padding:14px var(--sp-md)}
+  .cover-info-block{margin-top:48px}
+  .scope-pill{font-size:.54rem;padding:2px 6px}
+}
+
+/* =============================================================
+   RESPONSIVE — 480px
+   ============================================================= */
+@media(max-width:480px){
+  #cover{padding:72px 28px}
+  .cover-info-block{margin-top:40px}
+  .cover-title .qodiqa-brand{font-size:clamp(2.8rem,12vw,3.4rem)}
+}
+</style>
+</head>
+<body>
+
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Regulatory Alignment Matrix<br>for <span class="italic-part">AI Governance Frameworks</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-RAM-2026-001 &nbsp;&middot;&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Technical alignment matrix for deterministic runtime enforcement across major AI and data governance frameworks.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+<div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Scope</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Purpose of This Matrix</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Scope of Interpretation</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Relationship to Corpus</a>
+      <a class="nav-item sub" href="#s1-4">1.4 Frameworks Covered</a>
+      <a class="nav-item sub" href="#s1-5">1.5 Scope Limitation</a>
+      <a class="nav-item sub" href="#s1-6">1.6 Regulatory Disclaimer</a>
+      <a class="nav-item" href="#s2">2. Mapping Methodology</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Control-Based Mapping</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Mapping Logic Chain</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Coverage Classification</a>
+      <a class="nav-item sub" href="#s2-4">2.4 Evidence Artifact Classes</a>
+      <a class="nav-item sub" href="#s2-5">2.5 Interpretation Constraints</a>
+      <a class="nav-item sub" href="#s2-6">2.6 Execution Boundary</a>
+      <a class="nav-item" href="#s2x">2.X Control Index and Registry</a>
+      <a class="nav-item sub" href="#s2x-1">2.X.1 Consent Domain</a>
+      <a class="nav-item sub" href="#s2x-2">2.X.2 Purpose Limitation</a>
+      <a class="nav-item sub" href="#s2x-3">2.X.3 Enforcement Domain</a>
+      <a class="nav-item sub" href="#s2x-4">2.X.4 Revocation Domain</a>
+      <a class="nav-item sub" href="#s2x-5">2.X.5 Audit Domain</a>
+      <a class="nav-item sub" href="#s2x-6">2.X.6 Certification and Crypto</a>
+      <a class="nav-item sub" href="#s2x-7">2.X.7 Lifecycle Domain</a>
+      <a class="nav-item" href="#s3">3. GDPR Alignment</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Article 5 - Principles</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Article 6 - Lawfulness</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Article 7 - Consent</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Articles 13–14 - Transparency</a>
+      <a class="nav-item sub" href="#s3-5">3.5 Article 25 - Privacy by Design</a>
+      <a class="nav-item sub" href="#s3-6">3.6 Article 30 - Records</a>
+      <a class="nav-item sub" href="#s3-7">3.7 Article 32 - Security</a>
+      <a class="nav-item" href="#s4">4. EU AI Act Alignment</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Article 9 - Risk Management</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Article 12 - Logging</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Article 13 - Transparency</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Article 14 - Human Oversight</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Article 17 - Quality Mgmt</a>
+      <a class="nav-item sub" href="#s4-6">4.6 Article 26 - Deployers</a>
+      <a class="nav-item" href="#s5">5. NIST AI RMF Alignment</a>
+      <a class="nav-item sub" href="#s5-1">5.1 GOVERN Function</a>
+      <a class="nav-item sub" href="#s5-2">5.2 MAP Function</a>
+      <a class="nav-item sub" href="#s5-3">5.3 MEASURE Function</a>
+      <a class="nav-item sub" href="#s5-4">5.4 MANAGE Function</a>
+      <a class="nav-item" href="#s6">6. ISO/IEC 27001 Alignment</a>
+      <a class="nav-item sub" href="#s6-1">6.1 A.5 - Organisational Controls</a>
+      <a class="nav-item sub" href="#s6-2">6.2 A.8 - Technological Controls</a>
+      <a class="nav-item" href="#s7">7. ISO/IEC 42001 Alignment</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Clause 6 - Planning</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Clause 8 - Operation</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Clause 9 - Evaluation</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Annex A - AI Controls</a>
+      <a class="nav-item" href="#s8">8. OECD AI Principles</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Principle-Level Alignment</a>
+      <a class="nav-item" href="#s9">9. Residual Risk and Non-Coverage</a>
+      <a class="nav-item sub" href="#s9-1">9.1 Non-Coverage Table</a>
+      <a class="nav-item" href="#s10">10. Cross-Framework Matrix</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Control-to-Framework Matrix</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Coverage Density Summary</a>
+      <a class="nav-item" href="#s10x">10.X Ambiguity Surface Reduction</a>
+      <a class="nav-item sub" href="#s10x-1">10.X.1 Ambiguity Surface</a>
+      <a class="nav-item sub" href="#s10x-2">10.X.2 Risk Vector Analysis</a>
+      <a class="nav-item sub" href="#s10x-3">10.X.3 Reduction Summary</a>
+      <a class="nav-item" href="#s11">11. Institutional Closing</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document presents a <strong>technical control alignment matrix</strong> mapping QODIQA enforcement constructs to major AI and data governance frameworks: GDPR, EU AI Act, NIST AI Risk Management Framework, ISO/IEC 27001, ISO/IEC 42001, and the OECD AI Principles.</p>
+          <p>The matrix is structured around a deterministic enforcement anchor model. For each regulatory requirement, it identifies which QODIQA controls provide structural support, the evidence artifacts generated, and the residual scope not addressed by runtime enforcement. <strong>This document does not constitute legal advice. It does not certify regulatory compliance. It is a technical cross-reference instrument.</strong></p>
+          <p>The matrix is intended for enterprise risk teams, compliance architects, regulatory affairs specialists, and AI governance practitioners evaluating the control coverage characteristics of QODIQA within their broader compliance posture.</p>
+        </div>
+      </div>
+
+      <!-- HOW TO READ (NON-NORMATIVE) -->
+      <div class="callout callout--how-to-read">
+        <p><span class="callout-label">How to Read This Matrix (Non-Normative)</span>
+        <strong>Direct:</strong> The control enforces the requirement deterministically at runtime.<br>
+        <strong>Structural:</strong> The system produces verifiable evidence supporting the requirement, but does not enforce it directly.<br>
+        <strong>Out of Scope:</strong> The requirement lies outside the runtime enforcement boundary and is not addressed.</p>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Scope</h2>
+
+        <h3 id="s1-1">1.1 Purpose of This Matrix</h3>
+        <p>This Regulatory Alignment Matrix provides a structured, technical mapping of QODIQA enforcement constructs to the requirements of major AI and data governance frameworks. Its purpose is to enable organizations deploying QODIQA to understand, in precise structural terms, which regulatory control objectives are addressed by deterministic runtime consent enforcement, which are partially supported through evidence generation, and which fall outside the scope of the QODIQA enforcement boundary.</p>
+        <p>The matrix answers four operational questions: Which QODIQA controls correspond to which regulatory requirements? What evidence artifacts does QODIQA generate that may be relevant to regulatory demonstrability? Where does QODIQA not claim coverage? How does deterministic runtime enforcement reduce the ambiguity surface at execution time?</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Mandatory Disclaimer</span>
+          <p>This document does not constitute legal advice. It does not represent regulatory guidance from any supervisory authority. It does not guarantee, certify, or warrant compliance with any regulation, standard, or law referenced herein. All regulatory interpretation, gap analysis, legal assessment, and compliance determination must be performed by qualified legal counsel and certified compliance professionals in the relevant jurisdiction. QODIQA's role is technical control enforcement, not regulatory adjudication.</p>
+        </div>
+
+        <h3 id="s1-2">1.2 Scope of Interpretation</h3>
+        <p>Mappings in this document are limited to <strong>structural and functional alignment</strong> between QODIQA enforcement constructs and published regulatory text or guidance. The matrix does not interpret regulatory intent, predict supervisory authority interpretation, or assess the legal sufficiency of any particular implementation. Regulatory frameworks are cited in their published form as of Q1 2026.</p>
+
+        <h3 id="s1-3">1.3 Relationship to QODIQA Corpus</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 1.3 - Relationship to Corpus Documents</span>
+          <table>
+            <thead>
+              <tr><th>Document</th><th>Document ID</th><th>Relationship to This Matrix</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Core Standard v1.0</strong></td><td>QODIQA-CORE-1.0</td><td>Normative source for enforcement constructs cited in mappings</td></tr>
+              <tr><td><strong>68-Point Enforcement Framework</strong></td><td>QODIQA-68P-1.0</td><td>Source of control identifiers used in alignment tables</td></tr>
+              <tr><td><strong>Certification Framework v1.0</strong></td><td>QODIQA-CERT-1.0</td><td>Defines audit artifacts referenced as evidence outputs</td></tr>
+              <tr><td><strong>Implementation Playbook v1.0</strong></td><td>QODIQA-PLAY-1.0</td><td>Operational context for deployment-level control activation</td></tr>
+              <tr><td><strong>Security and Cryptographic Profile v1.0</strong></td><td>QODIQA-SEC-1.0</td><td>Cryptographic evidence generation supporting audit trails</td></tr>
+              <tr><td><strong>Reference Architecture v1.0</strong></td><td>QODIQA-ARCH-1.0</td><td>Structural enforcement model underlying all control mappings</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s1-4">1.4 Frameworks Covered</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 1.4 - Regulatory and Standards Frameworks in Scope</span>
+          <table>
+            <thead>
+              <tr><th>Framework</th><th>Jurisdiction / Body</th><th>Version / Edition</th><th>Mapping Type</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>General Data Protection Regulation (GDPR)</strong></td><td>European Union</td><td>Regulation 2016/679</td><td>Article-level control mapping</td></tr>
+              <tr><td><strong>EU Artificial Intelligence Act</strong></td><td>European Union</td><td>Regulation 2024/1689</td><td>Obligation-level control mapping</td></tr>
+              <tr><td><strong>NIST AI Risk Management Framework</strong></td><td>NIST (USA)</td><td>AI RMF 1.0 (2023)</td><td>Function/category alignment</td></tr>
+              <tr><td><strong>ISO/IEC 27001</strong></td><td>ISO / IEC JTC 1</td><td>ISO/IEC 27001:2022</td><td>Control family alignment</td></tr>
+              <tr><td><strong>ISO/IEC 42001</strong></td><td>ISO / IEC JTC 1/SC 42</td><td>ISO/IEC 42001:2023</td><td>Clause-level structural mapping</td></tr>
+              <tr><td><strong>OECD AI Principles</strong></td><td>OECD</td><td>OECD/LEGAL/0449 (2024 rev.)</td><td>Principle-level structural support</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s1-5">1.5 Scope Limitation</h3>
+        <p>This document provides a technical crosswalk between the QODIQA enforcement model and selected regulatory frameworks. The mappings presented are analytical in nature and are intended to support architectural alignment discussions and technical interpretation. They do not constitute legal advice, regulatory interpretation, or formal compliance certification.</p>
+        <p>The Regulatory Alignment Matrix identifies where QODIQA technical controls structurally correspond to regulatory control objectives. It does not assess the sufficiency of those controls for any specific deployment context, nor does it substitute for jurisdiction-specific legal analysis. Organizations must conduct independent compliance assessments with qualified legal and regulatory counsel.</p>
+
+        <h3 id="s1-6">1.6 Regulatory Interpretation Disclaimer</h3>
+        <p>The mappings presented in this matrix represent an analytical interpretation of how deterministic runtime consent enforcement may interact with existing governance frameworks. The alignment claims are structural and technical - they reflect the logical correspondence between QODIQA enforcement constructs and the stated control objectives of each framework.</p>
+        <p>Final regulatory interpretation remains the responsibility of competent authorities and qualified legal advisors. QODIQA does not claim regulatory authority, does not certify compliance outcomes, and does not warrant that any deployment of QODIQA controls satisfies the requirements of any referenced regulation or standard.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Mapping Methodology</h2>
+
+        <h3 id="s2-1">2.1 Control-Based Mapping Model</h3>
+        <p>All mappings in this document are structured around QODIQA enforcement controls as the primary anchor. Each regulatory requirement is evaluated against the QODIQA control set to determine whether a direct structural correspondence exists, whether QODIQA provides supporting evidence without direct enforcement, or whether the requirement falls outside the enforcement boundary. This approach prevents overclaiming while identifying genuine structural contributions.</p>
+
+        <h3 id="s2-2">2.2 Mapping Logic Chain</h3>
+        <p>Each alignment entry follows a four-stage traceability chain from QODIQA control through to residual gap disclosure:</p>
+        <div class="mapping-chain">
+          <div class="chain-node">QODIQA Control</div>
+          <span class="chain-arrow">→</span>
+          <div class="chain-node">Regulatory Requirement</div>
+          <span class="chain-arrow">→</span>
+          <div class="chain-node">Evidence Artifact</div>
+          <span class="chain-arrow">→</span>
+          <div class="chain-node">Residual Gap</div>
+        </div>
+
+        <h3 id="s2-3">2.3 Coverage Classification Scheme</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.3 - Coverage Classification Definitions</span>
+          <table>
+            <thead>
+              <tr><th>Classification</th><th>Definition</th><th>Indicator</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Direct</strong></td><td>QODIQA control directly enforces the requirement at runtime through deterministic gating, token validation, or cryptographic verification.</td><td><span class="scope-pill direct">Direct</span></td></tr>
+              <tr><td><strong>Structural</strong></td><td>QODIQA generates structured, replayable evidence that supports demonstrability of the requirement but does not constitute enforcement of the requirement itself.</td><td><span class="scope-pill structural">Structural</span></td></tr>
+              <tr><td><strong>Partial</strong></td><td>QODIQA addresses a subset of the requirement within the runtime enforcement boundary. Other dimensions of the requirement require complementary controls outside QODIQA.</td><td><span class="scope-pill partial">Partial</span></td></tr>
+              <tr><td><strong>Out of Scope</strong></td><td>The requirement addresses areas outside the QODIQA enforcement boundary (e.g., model training, fairness, business process governance). No coverage claimed.</td><td><span class="scope-pill out">Out of Scope</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2-4">2.4 Evidence Artifact Classes</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.4 - QODIQA Evidence Artifact Reference</span>
+          <table>
+            <thead>
+              <tr><th>Artifact Class</th><th>Description</th><th>Source</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Consent Token (CT)</strong></td><td>Cryptographically signed consent record with subject identity binding, scope, expiry, and purpose encoding</td><td>Core Standard 4; SEC Profile 4</td></tr>
+              <tr><td><strong>Audit Ledger Entry (ALE)</strong></td><td>Append-only, hash-chained record of every enforcement decision at the SUP boundary</td><td>Core Standard 7; SEC Profile 8</td></tr>
+              <tr><td><strong>Enforcement Attestation (EA)</strong></td><td>Signed summary of enforcement posture for a defined period or system scope</td><td>Certification Framework 6</td></tr>
+              <tr><td><strong>Revocation Record (RR)</strong></td><td>Timestamped, cryptographically bound record of consent withdrawal with propagation confirmation</td><td>Core Standard 6; SEC Profile 6</td></tr>
+              <tr><td><strong>Purpose Binding Record (PBR)</strong></td><td>Deterministic record of the declared purpose scope at time of consent grant and enforcement evaluation</td><td>Core Standard 3; 68-Point Framework C</td></tr>
+              <tr><td><strong>Lifecycle Event Record (LER)</strong></td><td>Structured record of AI system lifecycle state transitions from training through retirement</td><td>Core Standard 9; Reference Architecture 5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2-5">2.5 Interpretation Constraints</h3>
+        <div class="callout">
+          <p>Mappings are <strong>structural, not legal</strong>. The presence of a QODIQA control in an alignment table does not imply that deploying QODIQA satisfies the associated regulatory requirement. Regulatory compliance requires legal analysis, operational controls, organizational governance, and in many cases external audit - none of which QODIQA substitutes for. QODIQA provides a technical control plane that may support compliance demonstration; determination of actual compliance status is outside its scope.</p>
+        </div>
+
+        <h3 id="s2-6">2.6 Deterministic Execution Boundary Definition</h3>
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">EXEC-BOUNDARY-DEF</span>
+            <span class="nb-title">Deterministic Execution Boundary - Formal Definition</span>
+            <span class="nb-level must">NORMATIVE</span>
+          </div>
+          <div class="normative-block-body">
+            <div class="nb-row">
+              <span class="nb-key">Boundary</span>
+              <span class="nb-val">The <strong>System Usage Plane (SUP)</strong> is the deterministic enforcement boundary interposed between all external requestors and all AI system invocation targets. No invocation path may bypass the SUP boundary. The SUP boundary is architecturally invariant across all QODIQA deployment profiles.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-key">Enforcement Invariant</span>
+              <span class="nb-val"><strong>For all invocation i:</strong> execute(i) if and only if there exists token T such that: valid(T) and not-expired(T) and not-revoked(T) and purpose_match(T, declared_scope(i)). Where any conjunct evaluates to false, the SUP MUST emit a deterministic BLOCK decision and generate an Audit Ledger Entry recording the failure condition, timestamp, and requestor identity binding.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-key">Evaluation Time</span>
+              <span class="nb-val">Token validation is performed at invocation time, not at consent grant time. A token valid at grant may be non-valid at invocation if it has expired or been revoked in the intervening period. The enforcement evaluation is synchronous with respect to invocation; no deferred or asynchronous evaluation model is permitted.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-key">Cryptographic Verifiability</span>
+              <span class="nb-val">Token validity is established through cryptographic signature verification against the Trust Anchor public key. Validation does not depend on system state beyond the revocation registry and the Trust Anchor. The verification function is deterministic and stateless with respect to application-layer state.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-key">Default Posture</span>
+              <span class="nb-val">The SUP boundary operates in default-deny posture. In the absence of a valid, non-expired, non-revoked, purpose-matched token, processing MUST NOT proceed. An ambiguous, malformed, or unparseable token state is treated as a denial condition, not as a pass-through. No fail-open behavior is permitted under any QODIQA compliance profile.</span>
+            </div>
+            <div class="nb-row">
+              <span class="nb-key">Mapping Assumption</span>
+              <span class="nb-val">All regulatory alignment mappings in Sections 3 through 10 of this document assume the enforcement invariant above is operative. Coverage classifications (Direct, Structural, Partial) are valid only for deployments in which the SUP boundary invariant is enforced without modification. Deployments that bypass, weaken, or partially implement the SUP boundary invalidate all Direct coverage classifications for their deployment context.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2.X -->
+      <div id="s2x" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2.X</span>
+        <h2><a class="anchor-link" href="#s2x">#</a>QODIQA Control Index and Traceability Registry</h2>
+
+        <p>This section provides the formal control registry for all QODIQA enforcement constructs referenced in the regulatory alignment tables of Sections 3 through 10. Each control is assigned a stable identifier, domain classification, enforcement layer, evidence output, control type, and maturity classification. Regulatory reviewers, auditors, and risk analysts should use this registry as the primary reference for control traceability across all framework mappings.</p>
+
+        <h3 id="s2x-1">2.X.1 Consent Domain Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.1 - Consent Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>CT-01</code></td><td>Consent</td><td>Core Standard 4.1</td><td>Token</td><td>CT, ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>CT-02</code></td><td>Consent</td><td>Core Standard 4.2</td><td>Token</td><td>CT, PBR</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>CT-03</code></td><td>Consent</td><td>Core Standard 4.3</td><td>Token</td><td>CT</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>CT-EXPIRY</code></td><td>Consent</td><td>Core Standard 4.4</td><td>Token</td><td>CT (expiry field), ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>CT-SCOPE</code></td><td>Consent</td><td>Core Standard 4.5</td><td>Token</td><td>CT, PBR</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-2">2.X.2 Purpose Limitation Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.2 - Purpose Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>PL-01</code></td><td>Purpose</td><td>Core Standard 3.1; 68-Point C.01</td><td>SUP Boundary</td><td>PBR, ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>PL-02</code></td><td>Purpose</td><td>Core Standard 3.2; 68-Point C.02</td><td>SUP Boundary</td><td>PBR, ALE</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>PL-03</code></td><td>Purpose</td><td>Core Standard 3.3; 68-Point C.03</td><td>SUP Boundary</td><td>PBR, CT</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>PBR-01</code></td><td>Purpose</td><td>Core Standard 3.4</td><td>Token</td><td>PBR</td><td>Structural Evidence</td><td>Foundational</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-3">2.X.3 Enforcement Domain Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.3 - Enforcement Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>ENF-01</code></td><td>Enforcement</td><td>68-Point E.01</td><td>SUP Boundary</td><td>ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>ENF-07</code></td><td>Enforcement</td><td>68-Point E.07</td><td>SUP Boundary</td><td>ALE, PBR</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>ENF-DEFAULT-DENY</code></td><td>Enforcement</td><td>Core Standard 2.1; 68-Point E.10</td><td>SUP Boundary</td><td>ALE (BLOCK events)</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>ENF-HALT</code></td><td>Enforcement</td><td>Core Standard 2.3</td><td>SUP Boundary</td><td>ALE (HALT events)</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>ENF-RETIRE</code></td><td>Enforcement</td><td>Core Standard 9.4</td><td>SUP Boundary</td><td>LER</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>ENF-SESSION</code></td><td>Enforcement</td><td>Core Standard 5.2</td><td>SUP Boundary</td><td>ALE (session records)</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>ENF-TEST</code></td><td>Enforcement</td><td>Certification Framework 4</td><td>SUP Boundary</td><td>Test records</td><td>Governance Support</td><td>Advanced</td></tr>
+              <tr><td><code>ENF-THIRD-PARTY</code></td><td>Enforcement</td><td>Core Standard 8.1</td><td>SUP Boundary</td><td>ALE, CT</td><td>Deterministic Enforcement</td><td>High-Assurance</td></tr>
+              <tr><td><code>ENF-REVOKE</code></td><td>Enforcement</td><td>Core Standard 6.3</td><td>Registry</td><td>RR, ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-4">2.X.4 Revocation Domain Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.4 - Revocation Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>REV-01</code></td><td>Consent</td><td>Core Standard 6.1; SEC Profile 6.1</td><td>Registry</td><td>RR, ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>REV-02</code></td><td>Consent</td><td>Core Standard 6.2; SEC Profile 6.2</td><td>Registry</td><td>RR</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>REV-03</code></td><td>Consent</td><td>Core Standard 6.3; SEC Profile 6.3</td><td>Registry</td><td>RR, ALE</td><td>Deterministic Enforcement</td><td>High-Assurance</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-5">2.X.5 Audit Domain Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.5 - Audit Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>AUD-01</code></td><td>Audit</td><td>Core Standard 7.1; SEC Profile 8.1</td><td>Ledger</td><td>ALE</td><td>Structural Evidence</td><td>Foundational</td></tr>
+              <tr><td><code>AUD-02</code></td><td>Audit</td><td>Core Standard 7.2; SEC Profile 8.2</td><td>Ledger</td><td>ALE</td><td>Structural Evidence</td><td>Foundational</td></tr>
+              <tr><td><code>AUD-03</code></td><td>Audit</td><td>Core Standard 7.3</td><td>Ledger</td><td>ALE</td><td>Structural Evidence</td><td>Advanced</td></tr>
+              <tr><td><code>AUD-04</code></td><td>Audit</td><td>Core Standard 7.4</td><td>Ledger</td><td>ALE</td><td>Structural Evidence</td><td>Advanced</td></tr>
+              <tr><td><code>AUD-05</code></td><td>Audit</td><td>Core Standard 7.5; Certification Framework 5</td><td>Ledger</td><td>ALE, EA</td><td>Structural Evidence</td><td>Advanced</td></tr>
+              <tr><td><code>AUD-RETAIN</code></td><td>Audit</td><td>Core Standard 7.6</td><td>Ledger</td><td>ALE</td><td>Governance Support</td><td>Foundational</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-6">2.X.6 Certification and Cryptographic Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.6 - Certification and Crypto Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>CERT-01</code></td><td>Audit</td><td>Certification Framework 1</td><td>Ledger</td><td>EA</td><td>Governance Support</td><td>Foundational</td></tr>
+              <tr><td><code>CERT-04</code></td><td>Audit</td><td>Certification Framework 4</td><td>Ledger</td><td>EA, Test records</td><td>Governance Support</td><td>Advanced</td></tr>
+              <tr><td><code>SEC-ALG-01</code></td><td>Crypto</td><td>SEC Profile 3.1 (AES-256-GCM)</td><td>Key Management</td><td>CT (encrypted), ALE</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>SEC-ALG-02</code></td><td>Crypto</td><td>SEC Profile 3.2 (SHA-3/SHA-256)</td><td>Key Management</td><td>ALE (hash chain)</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>SEC-ALG-03</code></td><td>Crypto</td><td>SEC Profile 3.3 (Ed25519)</td><td>Key Management</td><td>CT (signature)</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>SEC-ALG-AGILITY-01</code></td><td>Crypto</td><td>SEC Profile 3.4</td><td>Key Management</td><td>SEC Profile 3.4</td><td>Governance Support</td><td>High-Assurance</td></tr>
+              <tr><td><code>SEC-KEY-01</code></td><td>Crypto</td><td>SEC Profile 5.1 (Key storage)</td><td>Key Management</td><td>SEC Profile 5</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>SEC-KEY-02</code></td><td>Crypto</td><td>SEC Profile 5.2 (Prohibited patterns)</td><td>Key Management</td><td>SEC Profile 5</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+              <tr><td><code>SEC-KEY-03</code></td><td>Crypto</td><td>SEC Profile 5.3 (FIPS 140-2 L3, dual-control)</td><td>Key Management</td><td>SEC Profile 5</td><td>Deterministic Enforcement</td><td>High-Assurance</td></tr>
+              <tr><td><code>SEC-NET-01</code></td><td>Crypto</td><td>SEC Profile 10.1 (TLS 1.3)</td><td>Key Management</td><td>SEC Profile 10</td><td>Deterministic Enforcement</td><td>Foundational</td></tr>
+              <tr><td><code>SEC-NET-PFS</code></td><td>Crypto</td><td>SEC Profile 10.2 (ECDHE)</td><td>Key Management</td><td>SEC Profile 10</td><td>Deterministic Enforcement</td><td>Advanced</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s2x-7">2.X.7 Lifecycle Domain Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 2.X.7 - Lifecycle Domain Control Registry</span>
+          <table>
+            <thead>
+              <tr><th>Control ID</th><th>Control Domain</th><th>Core Reference</th><th>Enforcement Layer</th><th>Evidence Artifact</th><th>Control Type</th><th>Maturity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>LER</code></td><td>Lifecycle</td><td>Core Standard 9; Reference Architecture 5</td><td>Ledger</td><td>LER</td><td>Structural Evidence</td><td>Foundational</td></tr>
+              <tr><td><code>CERT-REVIEW</code></td><td>Lifecycle</td><td>Certification Framework 7</td><td>Ledger</td><td>EA</td><td>Governance Support</td><td>Advanced</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>GDPR Technical Alignment</h2>
+
+        <p>The General Data Protection Regulation (Regulation 2016/679) establishes the foundational legal framework for personal data processing in the European Union. QODIQA's deterministic consent enforcement constructs correspond structurally to several GDPR obligations, particularly those requiring demonstrable consent, purpose limitation, and records of processing. The following tables map QODIQA controls to GDPR Articles with explicit coverage classification and evidence artifact identification.</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Scope Limitation</span>
+          <p>GDPR encompasses legal basis determination, data subject rights administration, Data Protection Officer obligations, international transfer mechanisms, and supervisory authority interactions - all of which are outside QODIQA's technical scope. This section addresses only those GDPR obligations where QODIQA's runtime enforcement constructs provide structural technical support.</p>
+        </div>
+
+        <h3 id="s3-1">3.1 Article 5 - Principles Relating to Processing</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.1 - GDPR Article 5 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Article 5 Principle</th><th>Requirement Summary</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art. 5(1)(a) - Lawfulness, Fairness, Transparency</strong></td>
+                <td>Processing must be lawful, fair, and transparent to the data subject</td>
+                <td>CT-01, CT-02, CT-03</td>
+                <td>Consent token records declared legal basis; SUP boundary enforces processing only when valid token present</td>
+                <td>Consent Token (CT), Audit Ledger Entry (ALE)</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(1)(b) - Purpose Limitation</strong></td>
+                <td>Data collected for specified, explicit, and legitimate purposes; not processed further in incompatible manner</td>
+                <td>PL-01, PL-02, PL-03, ENF-07</td>
+                <td>Purpose hash encoded in consent token; SUP evaluates purpose binding at every invocation; processing blocked on mismatch</td>
+                <td>Purpose Binding Record (PBR), ALE</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(1)(c) - Data Minimisation</strong></td>
+                <td>Data adequate, relevant, and limited to what is necessary</td>
+                <td>Outside enforcement boundary</td>
+                <td>QODIQA does not govern data collection volume or field selection</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(1)(d) - Accuracy</strong></td>
+                <td>Data accurate and kept up to date</td>
+                <td>Outside enforcement boundary</td>
+                <td>QODIQA does not govern data quality</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(1)(e) - Storage Limitation</strong></td>
+                <td>Data retained no longer than necessary</td>
+                <td>CT-EXPIRY, ENF-RETIRE</td>
+                <td>Consent token expiry enforced at SUP; processing blocked on expired token; LER records retirement transitions</td>
+                <td>CT (expiry field), LER</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(1)(f) - Integrity and Confidentiality</strong></td>
+                <td>Appropriate security of personal data</td>
+                <td>SEC-ALG-01 through SEC-ALG-03, SEC-KEY-01 through SEC-KEY-03</td>
+                <td>Cryptographic integrity enforcement on all consent tokens and audit entries; Ed25519 / AES-256-GCM enforcement</td>
+                <td>CT (signature), ALE (hash chain)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 5(2) - Accountability</strong></td>
+                <td>Controller must demonstrate compliance with principles</td>
+                <td>AUD-01 through AUD-05, CERT-01</td>
+                <td>Append-only audit ledger with cryptographic tamper evidence; enforcement attestation generation</td>
+                <td>ALE, Enforcement Attestation (EA)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-2">3.2 Article 6 - Lawfulness of Processing</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.2 - GDPR Article 6 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Article 6 Basis</th><th>Requirement Summary</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art. 6(1)(a) - Consent</strong></td>
+                <td>Data subject has given consent for one or more specific purposes</td>
+                <td>CT-01, CT-02, CT-03, PL-01</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Consent validity under Art. 7 (freely given, specific, informed, unambiguous) is a legal determination; QODIQA enforces the token, not consent quality</td>
+              </tr>
+              <tr>
+                <td><strong>Art. 6(1)(b) - Contract</strong></td>
+                <td>Processing necessary for contract performance</td>
+                <td>CT legal-basis field (informational)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA can encode basis type in token; enforcement of contractual necessity is outside scope</td>
+              </tr>
+              <tr>
+                <td><strong>Art. 6(1)(c) - Legal Obligation</strong></td>
+                <td>Processing necessary for legal obligation compliance</td>
+                <td>CT legal-basis field (informational)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Legal obligation determination is entirely outside enforcement boundary</td>
+              </tr>
+              <tr>
+                <td><strong>Art. 6(1)(e–f) - Public / Legitimate Interest</strong></td>
+                <td>Processing for public task or legitimate interests</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Balancing test required; cannot be technically enforced at runtime</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-3">3.3 Article 7 - Conditions for Consent</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.3 - GDPR Article 7 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 7 Requirement</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art. 7(1) - Demonstrability of consent</strong></td>
+                <td>CT-01, AUD-02, CERT-01</td>
+                <td>Cryptographically signed consent token with subject binding; append-only ledger entry at consent capture time; enforcement attestation available for audit</td>
+                <td>CT, ALE, EA</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 7(2) - Intelligibility of consent request</strong></td>
+                <td>Outside enforcement boundary</td>
+                <td>UX and presentation layer - not addressed by QODIQA</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 7(3) - Right to withdraw consent</strong></td>
+                <td>REV-01, REV-02, REV-03, ENF-REVOKE</td>
+                <td>Revocation propagates to registry within defined SLA; SUP consults registry at each invocation; processing blocked on revoked token; revocation timestamp recorded</td>
+                <td>RR, ALE</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 7(3) - Withdrawal as easy as giving consent</strong></td>
+                <td>Outside enforcement boundary</td>
+                <td>UX parity is a product design requirement; QODIQA enforces downstream effect of withdrawal</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 7(4) - Conditioning of consent</strong></td>
+                <td>Outside enforcement boundary</td>
+                <td>Legal assessment of conditionality; not deterministic at runtime</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-4">3.4 Articles 13–14 - Transparency Information</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.4 - GDPR Articles 13–14 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Provision of processing information to data subject</td>
+                <td>CT (purpose scope field, informational)</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Privacy notice delivery is outside enforcement boundary; purpose field in CT supports record of declared purpose only</td>
+              </tr>
+              <tr>
+                <td>Documentation of purposes at point of collection</td>
+                <td>PBR-01, CT-02</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Purpose Binding Record documents purpose scope at consent time; legal sufficiency of purpose description requires separate determination</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-5">3.5 Article 25 - Data Protection by Design and Default</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.5 - GDPR Article 25 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 25 Requirement</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art. 25(1) - Data protection by design</strong></td>
+                <td>ENF-01 through ENF-10, CT-01 through CT-03, SEC-ALG-01</td>
+                <td>QODIQA enforces consent as a structural prerequisite to AI execution; default posture is deny; cryptographic integrity built into architecture</td>
+                <td>ALE (deny events), CT (design artifact)</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 25(2) - Data protection by default</strong></td>
+                <td>ENF-DEFAULT-DENY, ENF-01</td>
+                <td>SUP boundary operates default-deny; processing requires valid, non-expired, non-revoked consent token; no processing on ambiguous or absent consent</td>
+                <td>ALE (blocked invocations)</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td>Technical and organisational measures for processing principles</td>
+                <td>All QODIQA enforcement controls</td>
+                <td>QODIQA constitutes a technical measure; organisational measures are outside scope</td>
+                <td>EA</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-6">3.6 Article 30 - Records of Processing Activities</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.6 - GDPR Article 30 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 30 Requirement</th><th>QODIQA Control(s)</th><th>Evidence Artifact</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Name and contact details of controller</td>
+                <td>Outside enforcement boundary</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Organisational record maintenance</td>
+              </tr>
+              <tr>
+                <td>Purposes of processing</td>
+                <td>PBR-01, CT-02</td>
+                <td>PBR, CT</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA purpose records support ROPA population; full ROPA maintenance is organisational</td>
+              </tr>
+              <tr>
+                <td>Categories of data subjects and personal data</td>
+                <td>Outside enforcement boundary</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Data inventory and classification outside QODIQA scope</td>
+              </tr>
+              <tr>
+                <td>Recipients and transfers</td>
+                <td>Outside enforcement boundary</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Transfer governance outside scope</td>
+              </tr>
+              <tr>
+                <td>Time limits for erasure</td>
+                <td>CT-EXPIRY, LER</td>
+                <td>CT (expiry), LER</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Expiry records support ROPA; erasure execution is outside enforcement boundary</td>
+              </tr>
+              <tr>
+                <td>Security measures description</td>
+                <td>All SEC controls</td>
+                <td>EA</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA security controls documented in SEC Profile; compliance assessment separate</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s3-7">3.7 Article 32 - Security of Processing</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 3.7 - GDPR Article 32 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 32 Requirement</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pseudonymisation and encryption</td>
+                <td>SEC-ALG-01 (AES-256-GCM), SEC-ALG-03 (Ed25519)</td>
+                <td>Cryptographic enforcement on token issuance and verification; all consent artifacts encrypted in transit per SEC-NET-01</td>
+                <td>CT (encrypted fields), ALE</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>Confidentiality, integrity, availability, resilience</td>
+                <td>SEC-KEY-01 through SEC-KEY-03, SEC-NET-01, AUD-01</td>
+                <td>HSM-backed key storage; TLS 1.3 enforcement; append-only audit structure; revocation SLA enforcement</td>
+                <td>EA, ALE</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>Process for regular testing and evaluation</td>
+                <td>CERT-04, AUD-05</td>
+                <td>Certification framework mandates periodic enforcement attestation; audit ledger integrity verification</td>
+                <td>EA</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>EU AI Act Technical Alignment</h2>
+
+        <p>The EU Artificial Intelligence Act (Regulation 2024/1689) establishes a risk-based regulatory framework for AI systems deployed in the European Union. QODIQA's runtime enforcement architecture aligns structurally with the Act's obligations relating to logging, record-keeping, human oversight support, and operational transparency for high-risk AI systems. The following tables address those obligations specifically.</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Scope Limitation</span>
+          <p>The EU AI Act encompasses risk classification, conformity assessment, notified body certification, post-market monitoring, market surveillance, and AI system registration - all substantially outside QODIQA's technical scope. Mappings below address only the operational and logging obligations where QODIQA provides structural technical support. QODIQA does not constitute a conformity assessment instrument and does not substitute for EU AI Act certification processes.</p>
+        </div>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Article 10 Structural Bridge</span>
+          <p>QODIQA does not govern training data quality, dataset representativeness, or data governance obligations under EU AI Act Article 10. These requirements address the upstream model development phase, which precedes the SUP enforcement boundary. No coverage is claimed for Article 10. However, enforcement records generated at inference time - specifically Audit Ledger Entries documenting each invocation context, purpose scope, and consent state - may provide traceability artifacts relevant to post-deployment risk analysis under Articles 72 and 73. The utility of such artifacts in post-deployment contexts is informational; it does not extend QODIQA's coverage classification for Article 10 and does not reduce the obligation for independent compliance with Article 10 requirements.</p>
+        </div>
+
+        <h3 id="s4-1">4.1 Article 9 - Risk Management System</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.1 - EU AI Act Article 9 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 9 Obligation</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Risk management system for high-risk AI - establishment and maintenance</td>
+                <td>ENF-01 through ENF-10; CERT-01</td>
+                <td>QODIQA provides a runtime enforcement control that reduces consent-related risk surface; enforcement attestation documents control operation</td>
+                <td>EA</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+              <tr>
+                <td>Risk identification and analysis</td>
+                <td>Outside enforcement boundary</td>
+                <td>Risk assessment is an organisational and analytical function; QODIQA provides enforcement, not risk analysis</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td>Residual risk evaluation and mitigation measures</td>
+                <td>SEC Profile - 14 Non-Coverage Disclosure</td>
+                <td>QODIQA's explicit non-coverage disclosure supports residual risk documentation</td>
+                <td>SEC Profile 14</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-2">4.2 Article 12 - Record-Keeping and Logging</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.2 - EU AI Act Article 12 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 12 Requirement</th><th>QODIQA Control(s)</th><th>Enforcement Mechanism</th><th>Evidence Artifact</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art. 12(1) - Automatic logging capability</strong></td>
+                <td>AUD-01, AUD-02, AUD-03</td>
+                <td>Every invocation at SUP boundary generates an append-only audit ledger entry; logging is non-bypassable at enforcement layer</td>
+                <td>ALE (all enforcement events)</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 12(2) - Traceability across lifetime</strong></td>
+                <td>AUD-01 through AUD-05, LER</td>
+                <td>Hash-chained audit ledger provides tamper-evident traceability; lifecycle event records cover training through retirement transitions</td>
+                <td>ALE, LER</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 12(3) - Log period retention</strong></td>
+                <td>AUD-RETAIN</td>
+                <td>Audit ledger retention policy configurable per deployment profile; tamper evidence maintained throughout retention period</td>
+                <td>ALE</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>Art. 12(4) - High-risk: logging of each use period</strong></td>
+                <td>AUD-02, ENF-SESSION</td>
+                <td>Session-level enforcement records generated per invocation sequence; consent token validity verified and recorded at session initiation</td>
+                <td>ALE (session records)</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-3">4.3 Article 13 - Transparency and Provision of Information</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.3 - EU AI Act Article 13 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 13 Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>System designed to be sufficiently transparent</td>
+                <td>CT (purpose encoding), ALE (decision records)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Transparency to deployers and users via QODIQA audit logs; model transparency is outside scope</td>
+              </tr>
+              <tr>
+                <td>Instructions for use - capabilities, limitations, human oversight</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Documentation obligation; QODIQA does not produce AI system instructions for use</td>
+              </tr>
+              <tr>
+                <td>Disclosure when interacting with AI system</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>User notification is a product/UX layer obligation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-4">4.4 Article 14 - Human Oversight</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.4 - EU AI Act Article 14 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 14 Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Oversight measures enabling human intervention</td>
+                <td>ENF-HALT, REV-01</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>QODIQA supports consent revocation as an enforcement-level halt mechanism; broader human oversight interfaces are outside scope</td>
+              </tr>
+              <tr>
+                <td>Ability to override AI system output</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Output override is an AI system interface obligation; QODIQA operates at consent enforcement, not output layer</td>
+              </tr>
+              <tr>
+                <td>Monitoring of operation for anomalies and malfunctions</td>
+                <td>AUD-04, AUD-05</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA audit ledger enables anomaly detection at enforcement layer; broader system monitoring is outside scope</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-5">4.5 Article 17 - Quality Management System</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.5 - EU AI Act Article 17 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 17 Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>QMS - strategies, techniques for achieving compliance</td>
+                <td>CERT-01 through CERT-04</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Certification framework provides structured compliance assessment for QODIQA controls; broader QMS is organisational</td>
+              </tr>
+              <tr>
+                <td>QMS - procedures for design, development, and monitoring</td>
+                <td>LER, Implementation Playbook</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA lifecycle controls provide evidence for QMS documentation; process governance outside scope</td>
+              </tr>
+              <tr>
+                <td>Record-keeping for QMS</td>
+                <td>AUD-01 through AUD-05, EA</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA's enforcement records support QMS documentation requirements</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-6">4.6 Article 26 - Deployers' Obligations</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 4.6 - EU AI Act Article 26 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>Art. 26 Obligation</th><th>QODIQA Control(s)</th><th>Coverage</th><th>Residual Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Appropriate use within intended purpose</td>
+                <td>PL-01 through PL-03</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Purpose-bound enforcement at runtime; contextual hash verification prevents out-of-scope use</td>
+              </tr>
+              <tr>
+                <td>Human oversight assignment</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Personnel and governance assignment is organisational</td>
+              </tr>
+              <tr>
+                <td>Monitoring for risks to health, safety, or fundamental rights</td>
+                <td>AUD-04</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA enforcement anomaly logs support monitoring; risk content evaluation outside scope</td>
+              </tr>
+              <tr>
+                <td>Keeping logs as per Art. 12 for the required period</td>
+                <td>AUD-01 through AUD-05, AUD-RETAIN</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>QODIQA audit ledger satisfies technical logging obligation; organisational retention policy configuration required</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>NIST AI Risk Management Framework Alignment</h2>
+
+        <p>The NIST AI Risk Management Framework (AI RMF 1.0, January 2023) provides a structured approach to managing risks associated with AI systems across four core functions: <strong>Govern, Map, Measure, and Manage</strong>. QODIQA's deterministic runtime enforcement contributes to risk traceability, control effectiveness evidence, and operational accountability within AI RMF-aligned programs.</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Scope Limitation</span>
+          <p>The NIST AI RMF is a voluntary framework intended for organisational use. Alignment with the AI RMF does not constitute NIST certification or endorsement. QODIQA's contribution is technical - providing enforcement controls and evidence artifacts that support the Govern, Measure, and Manage functions. Organisational AI governance programs, risk culture, and stakeholder engagement (which constitute the majority of Govern and Map function requirements) are outside QODIQA's technical scope.</p>
+        </div>
+
+        <h3 id="s5-1">5.1 GOVERN Function</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 5.1 - NIST AI RMF GOVERN Alignment</span>
+          <table>
+            <thead>
+              <tr><th>GOVERN Category</th><th>GOVERN Subcategory</th><th>QODIQA Control(s)</th><th>Contribution</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GV-1: Policies, processes, procedures</td>
+                <td>GV-1.1 - AI risk management policies</td>
+                <td>CERT-01, Implementation Playbook 1</td>
+                <td>QODIQA certification framework provides policy-level enforcement documentation</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>GV-1: Policies</td>
+                <td>GV-1.2 - Accountability for AI risk</td>
+                <td>AUD-01 through AUD-05, EA</td>
+                <td>Append-only audit ledger with enforcement attestation provides technical accountability evidence</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>GV-4: Organisational teams</td>
+                <td>GV-4.1 - Roles and responsibilities</td>
+                <td>Outside enforcement boundary</td>
+                <td>Organisational role assignment</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td>GV-6: Policies for third-party risk</td>
+                <td>GV-6.1 - Third-party AI risk management</td>
+                <td>ENF-THIRD-PARTY, CT-SCOPE</td>
+                <td>QODIQA enforces consent boundary at third-party AI invocation; purpose binding prevents scope creep across integrations</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s5-2">5.2 MAP Function</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 5.2 - NIST AI RMF MAP Alignment</span>
+          <table>
+            <thead>
+              <tr><th>MAP Category</th><th>MAP Subcategory</th><th>QODIQA Control(s)</th><th>Contribution</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MP-2: Scientific and established methods</td>
+                <td>MP-2.3 - AI system context and scope</td>
+                <td>CT (purpose scope), PBR</td>
+                <td>Purpose Binding Record documents processing context at consent grant; supports AI system context mapping</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>MP-3: AI risks and benefits</td>
+                <td>MP-3.4 - Risks to data subjects</td>
+                <td>PL-01, ENF-DEFAULT-DENY, REV-01</td>
+                <td>Default-deny posture and revocation enforcement reduce runtime risk to data subjects</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+              <tr>
+                <td>MP-4: Risk identification</td>
+                <td>MP-4.1 - Categorisation of risks</td>
+                <td>Outside enforcement boundary</td>
+                <td>Risk categorisation is analytical; QODIQA provides enforcement, not risk analysis</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td>MP-5: Impacts on individuals</td>
+                <td>MP-5.2 - Privacy risks</td>
+                <td>CT-01, PL-01, REV-01</td>
+                <td>Consent enforcement and withdrawal mechanisms directly address runtime privacy risk to individuals</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s5-3">5.3 MEASURE Function</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 5.3 - NIST AI RMF MEASURE Alignment</span>
+          <table>
+            <thead>
+              <tr><th>MEASURE Category</th><th>Subcategory</th><th>QODIQA Control(s)</th><th>Contribution</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MS-1: AI risk measurement methods</td>
+                <td>MS-1.1 - Identified and documented AI risks</td>
+                <td>SEC Profile 14 (Non-Coverage Disclosure)</td>
+                <td>Explicit non-coverage disclosure provides documented residual risk boundary</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>MS-2: AI risk evaluation</td>
+                <td>MS-2.5 - Testing conducted in realistic conditions</td>
+                <td>CERT-04, ENF-TEST</td>
+                <td>Certification framework mandates enforcement testing under operational conditions; test records generated</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>MS-3: AI system performance</td>
+                <td>MS-3.3 - Effectiveness of risk controls</td>
+                <td>AUD-05, EA</td>
+                <td>Enforcement attestation provides measurable evidence of control operation; blocked-invocation rates quantifiable from ALE</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td>MS-4: Feedback and incident capture</td>
+                <td>MS-4.1 - Collection of incident feedback</td>
+                <td>AUD-03, AUD-04</td>
+                <td>Enforcement anomaly records support incident identification; consent failure events captured in ALE</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s5-4">5.4 MANAGE Function</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 5.4 - NIST AI RMF MANAGE Alignment</span>
+          <table>
+            <thead>
+              <tr><th>MANAGE Category</th><th>Subcategory</th><th>QODIQA Control(s)</th><th>Contribution</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MG-1: Risk treatment</td>
+                <td>MG-1.3 - Responses to identified risks</td>
+                <td>REV-01 through REV-03, ENF-HALT</td>
+                <td>Revocation and enforcement halt mechanisms provide technical risk response at runtime</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td>MG-2: Risk treatment monitoring</td>
+                <td>MG-2.2 - Effectiveness of risk treatments</td>
+                <td>AUD-05, EA</td>
+                <td>Enforcement attestation and audit ledger analysis support ongoing treatment effectiveness evaluation</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>MG-3: Risk management improvement</td>
+                <td>MG-3.1 - Identified risk improvements</td>
+                <td>SEC-ALG-AGILITY-01, CERT-REVIEW</td>
+                <td>Algorithm agility framework and certification review cycle support continuous improvement</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td>MG-4: Residual risk</td>
+                <td>MG-4.1 - Residual risks documented</td>
+                <td>Section 9 Non-Coverage Disclosure (this document)</td>
+                <td>Explicit residual risk and non-coverage disclosure provides documented residual risk register input</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>ISO/IEC 27001 Control Family Alignment</h2>
+
+        <p>ISO/IEC 27001:2022 (Information Security Management Systems) provides a framework for establishing, implementing, maintaining, and continually improving an information security management system (ISMS). QODIQA's security and enforcement controls operate as a runtime enforcement layer supplementing, but not replacing, an organisation's ISMS. The following tables map QODIQA to relevant Annex A control families.</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Scope Limitation</span>
+          <p>QODIQA does not implement an ISMS. It provides a runtime enforcement control plane that contributes technical controls relevant to several ISO 27001 control families. ISO 27001 certification requires an organisation-wide management system, risk assessment process, statement of applicability, and independent audit - none of which QODIQA substitutes for. Controls below are informative mappings only.</p>
+        </div>
+
+        <h3 id="s6-1">6.1 A.5 - Organisational Controls (Selected)</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 6.1 - ISO 27001:2022 Annex A.5 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>ISO 27001 Control</th><th>Control Title</th><th>QODIQA Control(s)</th><th>Coverage</th><th>QODIQA Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A.5.18</td>
+                <td>Access rights</td>
+                <td>CT-01, CT-SCOPE, ENF-01</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>Consent token scopes function as access rights in AI processing context; SUP enforces scope boundaries deterministically</td>
+              </tr>
+              <tr>
+                <td>A.5.20</td>
+                <td>Addressing security within supplier agreements</td>
+                <td>ENF-THIRD-PARTY</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA's enforcement at third-party AI invocation boundary supports supplier security control documentation</td>
+              </tr>
+              <tr>
+                <td>A.5.33</td>
+                <td>Protection of records</td>
+                <td>AUD-01, AUD-02, AUD-RETAIN</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Append-only, cryptographically tamper-evident audit ledger provides protected records with configurable retention</td>
+              </tr>
+              <tr>
+                <td>A.5.36</td>
+                <td>Compliance with information security policies</td>
+                <td>CERT-01, EA</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Enforcement attestation provides structured evidence of consent enforcement policy compliance</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s6-2">6.2 A.8 - Technological Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 6.2 - ISO 27001:2022 Annex A.8 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>ISO 27001 Control</th><th>Control Title</th><th>QODIQA Control(s)</th><th>Coverage</th><th>QODIQA Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A.8.2</td>
+                <td>Privileged access rights</td>
+                <td>SEC-KEY-03 (dual-control)</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>Dual-control key activation for High-Assurance profile enforces separation of duties at cryptographic layer</td>
+              </tr>
+              <tr>
+                <td>A.8.15</td>
+                <td>Logging</td>
+                <td>AUD-01 through AUD-05</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Non-bypassable audit logging of all enforcement events with hash-chain integrity; tamper-evident retention</td>
+              </tr>
+              <tr>
+                <td>A.8.16</td>
+                <td>Monitoring activities</td>
+                <td>AUD-04, AUD-05</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Audit ledger provides monitoring data for enforcement anomaly detection; alerting on consent failures</td>
+              </tr>
+              <tr>
+                <td>A.8.24</td>
+                <td>Use of cryptography</td>
+                <td>SEC-ALG-01 through SEC-ALG-03, SEC-ALG-AGILITY-01</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Normative cryptographic algorithm requirements; agility framework; FIPS-aligned algorithm selection; HSM key storage</td>
+              </tr>
+              <tr>
+                <td>A.8.25</td>
+                <td>Secure development life cycle</td>
+                <td>LER, Implementation Playbook 4</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA lifecycle event records and playbook integration guidance support SDL documentation</td>
+              </tr>
+              <tr>
+                <td>A.8.28</td>
+                <td>Secure coding</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Application code security is outside QODIQA scope; QODIQA enforces consent boundary, not code quality</td>
+              </tr>
+              <tr>
+                <td>A.8.33</td>
+                <td>Test information</td>
+                <td>CERT-04, ENF-TEST</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Certification framework test procedures provide structured test evidence documentation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <p>QODIQA supplements an ISMS by adding a deterministic runtime enforcement layer at the AI execution boundary. It does not replace ISMS processes for asset management, physical security, supplier management, business continuity, or human resource security - all of which remain organisational responsibilities outside QODIQA's technical scope.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>ISO/IEC 42001 AI Management System Alignment</h2>
+
+        <p>ISO/IEC 42001:2023 (AI Management Systems) provides requirements for establishing, implementing, maintaining, and continually improving an artificial intelligence management system (AIMS). QODIQA operates as a technical control component within the operational layer of an ISO 42001-aligned AIMS, providing runtime enforcement, consent governance, and audit evidence generation.</p>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-head">Scope Limitation</span>
+          <p>ISO/IEC 42001 encompasses organisational context, leadership commitment, planning, support, operation, performance evaluation, and improvement - representing a full management system scope. QODIQA's contribution is specifically at the operational control layer (Clause 8) and performance evaluation layer (Clause 9). All other AIMS requirements remain outside QODIQA's technical scope and must be addressed through organisational governance structures.</p>
+        </div>
+
+        <h3 id="s7-1">7.1 Clause 6 - Planning</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 7.1 - ISO 42001 Clause 6 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>ISO 42001 Clause</th><th>Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>QODIQA Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>6.1.1</td>
+                <td>Actions to address AI risks and opportunities</td>
+                <td>ENF-01 through ENF-10; SEC Profile 14</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>QODIQA defines technical enforcement actions for consent risk; non-coverage disclosure identifies residual risk requiring organisational treatment</td>
+              </tr>
+              <tr>
+                <td>6.1.2</td>
+                <td>AI risk assessment</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Risk assessment is an analytical and organisational function</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s7-2">7.2 Clause 8 - Operation</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 7.2 - ISO 42001 Clause 8 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>ISO 42001 Clause</th><th>Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>QODIQA Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>8.1</td>
+                <td>Operational planning and control</td>
+                <td>ENF-01 through ENF-10; Implementation Playbook 3</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>QODIQA provides the runtime operational control plane for consent enforcement; playbook defines integration procedures</td>
+              </tr>
+              <tr>
+                <td>8.3</td>
+                <td>AI system lifecycle management</td>
+                <td>LER, ENF-RETIRE</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>Lifecycle event records cover training, deployment, and retirement transitions; training-phase governance outside QODIQA scope</td>
+              </tr>
+              <tr>
+                <td>8.4</td>
+                <td>Data governance</td>
+                <td>CT-01, PBR-01, REV-01</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>Consent token and purpose binding records contribute to data governance documentation; data quality and inventory are outside scope</td>
+              </tr>
+              <tr>
+                <td>8.5</td>
+                <td>Responsible development</td>
+                <td>Outside enforcement boundary</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>Development practices, impact assessments, and responsible AI considerations are organisational</td>
+              </tr>
+              <tr>
+                <td>8.6</td>
+                <td>Responsible deployment and operation</td>
+                <td>ENF-01 through ENF-10; PL-01 through PL-03</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>QODIQA's deterministic enforcement constitutes a core technical component of responsible deployment; purpose gating prevents out-of-scope operation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s7-3">7.3 Clause 9 - Performance Evaluation</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 7.3 - ISO 42001 Clause 9 Alignment</span>
+          <table>
+            <thead>
+              <tr><th>ISO 42001 Clause</th><th>Requirement</th><th>QODIQA Control(s)</th><th>Coverage</th><th>QODIQA Contribution</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>9.1</td>
+                <td>Monitoring, measurement, analysis, and evaluation</td>
+                <td>AUD-01 through AUD-05, EA</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>Audit ledger provides quantitative enforcement performance data; enforcement attestation supports periodic measurement</td>
+              </tr>
+              <tr>
+                <td>9.2</td>
+                <td>Internal audit</td>
+                <td>CERT-01 through CERT-04</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>QODIQA certification framework provides structured audit evidence and assessment procedures for internal audit use</td>
+              </tr>
+              <tr>
+                <td>9.3</td>
+                <td>Management review</td>
+                <td>EA (periodic reporting)</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>Enforcement attestation reports provide structured input to AIMS management review; broader review governance is organisational</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s7-4">7.4 Annex A (ISO 42001) - AI-Specific Controls</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 7.4 - ISO 42001 Annex A Selected Controls</span>
+          <table>
+            <thead>
+              <tr><th>Annex A Control</th><th>Title</th><th>QODIQA Control(s)</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A.2.2</td><td>AI system processes - data for AI</td><td>CT-01, PBR-01</td><td><span class="scope-pill structural">Structural</span></td></tr>
+              <tr><td>A.2.4</td><td>Documentation</td><td>ALE, EA, LER</td><td><span class="scope-pill structural">Structural</span></td></tr>
+              <tr><td>A.3.3</td><td>Governance of AI - objectives</td><td>CERT-01</td><td><span class="scope-pill structural">Structural</span></td></tr>
+              <tr><td>A.4.2</td><td>Human oversight of AI systems</td><td>REV-01, ENF-HALT</td><td><span class="scope-pill partial">Partial</span></td></tr>
+              <tr><td>A.6.1</td><td>AI system logging</td><td>AUD-01 through AUD-05</td><td><span class="scope-pill direct">Direct</span></td></tr>
+              <tr><td>A.7.4</td><td>Security of AI system</td><td>SEC Profile - all sections</td><td><span class="scope-pill direct">Direct</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>OECD AI Principles Structural Support</h2>
+
+        <p>The OECD AI Principles (OECD/LEGAL/0449, updated 2024) provide non-binding guidance on trustworthy AI across five values-based principles. Mappings below identify where QODIQA's technical enforcement constructs provide structural support for the technical dimensions of these principles. Philosophical, policy, and societal dimensions of the principles are outside QODIQA's technical scope and are not addressed here.</p>
+
+        <h3 id="s8-1">8.1 Principle-Level Alignment</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 8.1 - OECD AI Principles Technical Support</span>
+          <table>
+            <thead>
+              <tr><th>OECD Principle</th><th>Technical Dimension</th><th>QODIQA Control(s)</th><th>Technical Contribution</th><th>Coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1.1 - Inclusive Growth, Sustainable Development, Well-being</strong></td>
+                <td>AI benefits distributed with respect to affected persons' interests</td>
+                <td>Outside enforcement boundary</td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+              </tr>
+              <tr>
+                <td><strong>1.2 - Human-centred Values and Fairness</strong></td>
+                <td>Respect for rule of law; privacy; freedom from manipulation; human dignity</td>
+                <td>CT-01, PL-01, REV-01, ENF-DEFAULT-DENY</td>
+                <td>Consent enforcement and revocation support privacy protection at runtime; default-deny posture prevents processing without valid consent; purpose binding prevents manipulation through scope creep</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+              </tr>
+              <tr>
+                <td><strong>1.3 - Transparency and Explainability</strong></td>
+                <td>Actors should be transparent about AI systems; provide meaningful information</td>
+                <td>ALE, CT, EA</td>
+                <td>Audit ledger provides verifiable, replayable record of enforcement decisions; consent token encodes declared purpose; enforcement attestation provides structured transparency artifact</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+              </tr>
+              <tr>
+                <td><strong>1.4 - Robustness, Security, and Safety</strong></td>
+                <td>AI systems should be robust, secure, safe throughout lifetime</td>
+                <td>SEC Profile (all sections); LER; ENF-DEFAULT-DENY</td>
+                <td>Cryptographic integrity enforcement; HSM-backed key management; hash-chained audit integrity; default-deny posture; lifecycle event tracking through retirement</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+              <tr>
+                <td><strong>1.5 - Accountability</strong></td>
+                <td>Actors accountable for proper functioning of AI systems; mechanisms for redress</td>
+                <td>AUD-01 through AUD-05; EA; CERT-01 through CERT-04</td>
+                <td>Append-only tamper-evident audit ledger provides accountability evidence; enforcement attestation documents control operation; certification framework supports structured accountability review</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <p>The OECD AI Principles are <strong>policy-level instruments</strong> requiring organisational commitment, governance structures, and societal engagement that substantially exceed the scope of any technical control. QODIQA's structural contributions are confined to the technical dimensions identified above. No claim is made that deploying QODIQA constitutes adherence to or implementation of the OECD AI Principles as a whole.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Residual Risk and Non-Coverage Disclosure</h2>
+
+        <p>This section provides a definitive, structured disclosure of areas outside QODIQA's enforcement boundary. These disclosures are intended to prevent overclaiming in compliance contexts and to ensure that organizations understand where complementary controls are required. Items listed here are not gaps or deficiencies - they reflect the deliberate and appropriate boundary of a runtime consent enforcement system.</p>
+
+        <div class="normative-block">
+          <div class="normative-block-head">
+            <span class="nb-id">NON-COV-DISCLOSURE</span>
+            <span class="nb-title">Definitive Non-Coverage Declaration</span>
+            <span class="nb-level must">NORMATIVE</span>
+          </div>
+          <div class="normative-block-body">
+            <p>QODIQA provides deterministic runtime consent enforcement. It generates structured, replayable evidence. It does not provide, and does not claim to provide, coverage for any item listed in Section 9.1. Organizations MUST NOT represent QODIQA deployment as satisfying the non-covered areas listed herein without independent complementary controls and qualified legal or compliance assessment.</p>
+          </div>
+        </div>
+
+        <h3 id="s9-1">9.1 Explicit Non-Coverage Table</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 9.1 - Definitive Non-Coverage Disclosure</span>
+          <table>
+            <thead>
+              <tr><th>Area</th><th>Description</th><th>Why Outside Scope</th><th>Where Addressed</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Model Training Governance</strong></td>
+                <td>Data provenance, training data consent, training-phase data handling, model card generation</td>
+                <td>QODIQA enforces at inference/use-time SUP boundary; training phase precedes enforcement layer</td>
+                <td>ML governance frameworks; data management systems; EU AI Act Art. 10 (training data)</td>
+              </tr>
+              <tr>
+                <td><strong>Algorithmic Fairness and Bias</strong></td>
+                <td>Evaluation of model outputs for demographic bias, disparate impact, or fairness metrics</td>
+                <td>QODIQA enforces consent boundary, not output content or fairness characteristics</td>
+                <td>Fairness evaluation frameworks; AI impact assessments; EU AI Act Art. 10(2)(f)</td>
+              </tr>
+              <tr>
+                <td><strong>Content Moderation</strong></td>
+                <td>Evaluation of AI-generated output for harmful, illegal, or policy-violating content</td>
+                <td>QODIQA operates at enforcement layer upstream of output generation; does not inspect output content</td>
+                <td>Output moderation systems; trust and safety controls; DSA compliance infrastructure</td>
+              </tr>
+              <tr>
+                <td><strong>Legal Validity of Consent</strong></td>
+                <td>Determination of whether a given consent satisfies GDPR Art. 7 requirements (freely given, specific, informed, unambiguous)</td>
+                <td>Legal validity is a jurisprudential determination; QODIQA enforces the presence and integrity of a consent token, not its legal quality</td>
+                <td>Legal counsel; DPO assessment; supervisory authority guidance</td>
+              </tr>
+              <tr>
+                <td><strong>Data Subject Rights Administration</strong></td>
+                <td>Subject access requests, right to erasure (Art. 17), portability (Art. 20), objection (Art. 21)</td>
+                <td>QODIQA enforces processing boundaries; data subject rights administration requires organisational processes, not only enforcement controls</td>
+                <td>DSR management platforms; legal operations; DPO office</td>
+              </tr>
+              <tr>
+                <td><strong>Privacy Notice and UX Delivery</strong></td>
+                <td>Provision of privacy information to data subjects (Art. 13–14); intelligibility of consent interface</td>
+                <td>User interface and notice delivery are product/design layer obligations outside enforcement boundary</td>
+                <td>Product design; privacy engineering; UX governance</td>
+              </tr>
+              <tr>
+                <td><strong>International Data Transfers</strong></td>
+                <td>GDPR Chapter V - SCCs, adequacy decisions, BCRs</td>
+                <td>Transfer mechanisms are legal instruments; QODIQA does not govern data movement or transfer basis</td>
+                <td>Legal counsel; EDPB guidance; transfer impact assessments</td>
+              </tr>
+              <tr>
+                <td><strong>Business Process Governance</strong></td>
+                <td>Organisational AI governance structures, ethics boards, decision authority, AI policy</td>
+                <td>Governance is an organisational and managerial function; QODIQA provides a technical control, not governance structures</td>
+                <td>AI governance frameworks; ISO 42001 (organisational clauses); board-level AI governance</td>
+              </tr>
+              <tr>
+                <td><strong>ISMS Completeness</strong></td>
+                <td>Full ISO 27001 ISMS scope including asset management, physical security, HR security, BCP</td>
+                <td>QODIQA supplements selected control families; it does not implement or certify an ISMS</td>
+                <td>Certified ISMS programme; ISO 27001 audit</td>
+              </tr>
+              <tr>
+                <td><strong>Conformity Assessment and Certification</strong></td>
+                <td>EU AI Act conformity assessment; CE marking; notified body engagement</td>
+                <td>Conformity assessment is a legal and regulatory process conducted by qualified bodies; QODIQA provides technical controls, not certification</td>
+                <td>Notified bodies; EU AI Act Chapters V–VI</td>
+              </tr>
+              <tr>
+                <td><strong>Incident Notification to Authorities</strong></td>
+                <td>GDPR Art. 33–34 breach notification; EU AI Act Art. 73 serious incident reporting</td>
+                <td>Notification obligations require organisational incident response processes beyond enforcement layer</td>
+                <td>Incident response plans; supervisory authority notification procedures</td>
+              </tr>
+              <tr>
+                <td><strong>AI System Impact Assessment</strong></td>
+                <td>DPIA (GDPR Art. 35); AI system fundamental rights impact assessment (EU AI Act)</td>
+                <td>Impact assessments require interdisciplinary analysis of systemic effects; QODIQA provides enforcement records as input, not assessment capability</td>
+                <td>DPIA process; DPO; fundamental rights teams</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Cross-Framework Comparative Matrix</h2>
+
+        <p>This section consolidates the preceding section-by-section alignments into a single cross-framework matrix, presenting QODIQA enforcement controls against all six frameworks simultaneously. The matrix is intended for rapid cross-reference in enterprise risk and compliance review contexts. Coverage indicators follow the classification scheme defined in Section 2.3.</p>
+
+        <p>This section provides a consolidated cross-framework view of control alignment. It highlights where deterministic runtime enforcement provides direct coverage, where it supports evidentiary traceability, and where residual gaps remain outside the enforcement boundary.</p>
+
+        <!-- EXECUTIVE SUMMARY BLOCK -->
+        <div class="decision-block decision-block--executive">
+          <div class="decision-block-head">Executive Summary - Cross-Framework Coverage</div>
+          <div class="decision-block-body">
+            <div class="decision-item"><span class="di-icon">→</span><span><strong>Strong Coverage Domains:</strong> runtime enforcement (deterministic gating), consent validation and revocation handling, audit logging and cryptographic traceability</span></div>
+            <div class="decision-item"><span class="di-icon">→</span><span><strong>Partial Coverage Domains:</strong> transparency and explainability support (evidence-level), risk management integration (indirect)</span></div>
+            <div class="decision-item"><span class="di-icon">→</span><span><strong>Out of Scope Domains:</strong> model training processes, fairness and bias mitigation, organizational governance structures</span></div>
+          </div>
+        </div>
+
+        <!-- COVERAGE SIGNAL ROW -->
+        <div class="mapping-chain mapping-chain--coverage">
+          <div class="chain-node chain-node--direct">
+            <span class="cn-label cn-label--direct">Strong Coverage</span>
+            <span class="cn-desc">runtime enforcement, consent validation, audit traceability</span>
+          </div>
+          <span class="chain-arrow">→</span>
+          <div class="chain-node chain-node--partial">
+            <span class="cn-label cn-label--partial">Partial Coverage</span>
+            <span class="cn-desc">transparency support, risk mapping</span>
+          </div>
+          <span class="chain-arrow">→</span>
+          <div class="chain-node chain-node--out">
+            <span class="cn-label cn-label--out">Out of Scope</span>
+            <span class="cn-desc">training, fairness, governance</span>
+          </div>
+        </div>
+
+        <h3 id="s10-1">10.1 Consolidated Control-to-Framework Matrix</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 10.1 - QODIQA Cross-Framework Alignment Summary</span>
+          <table>
+            <thead>
+              <tr>
+                <th>QODIQA Control Domain</th>
+                <th>Key Controls</th>
+                <th>GDPR</th>
+                <th>EU AI Act</th>
+                <th>NIST AI RMF</th>
+                <th>ISO 27001</th>
+                <th>ISO 42001</th>
+                <th>OECD AI</th>
+                <th>Evidence Type</th>
+                <th>Primary Risk Domain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Consent Token Enforcement</strong></td>
+                <td>CT-01, CT-02, CT-03</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>CT, ALE</td>
+                <td>Consent Enforcement</td>
+              </tr>
+              <tr>
+                <td><strong>Purpose Limitation Enforcement</strong></td>
+                <td>PL-01, PL-02, PL-03</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>PBR, CT, ALE</td>
+                <td>Privacy</td>
+              </tr>
+              <tr>
+                <td><strong>Default-Deny Enforcement</strong></td>
+                <td>ENF-DEFAULT-DENY, ENF-01</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>ALE (denied invocations)</td>
+                <td>Consent Enforcement</td>
+              </tr>
+              <tr>
+                <td><strong>Revocation Enforcement</strong></td>
+                <td>REV-01, REV-02, REV-03</td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td>RR, ALE</td>
+                <td>Consent Enforcement</td>
+              </tr>
+              <tr>
+                <td><strong>Audit Ledger Integrity</strong></td>
+                <td>AUD-01 through AUD-05</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td>ALE, EA</td>
+                <td>Traceability</td>
+              </tr>
+              <tr>
+                <td><strong>Enforcement Attestation</strong></td>
+                <td>CERT-01 through CERT-04</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>EA</td>
+                <td>Accountability</td>
+              </tr>
+              <tr>
+                <td><strong>Cryptographic Algorithm Enforcement</strong></td>
+                <td>SEC-ALG-01, SEC-ALG-02, SEC-ALG-03</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>CT (signature), ALE</td>
+                <td>Security</td>
+              </tr>
+              <tr>
+                <td><strong>Cryptographic Agility</strong></td>
+                <td>SEC-ALG-AGILITY-01</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>SEC Profile 3.4</td>
+                <td>Security</td>
+              </tr>
+              <tr>
+                <td><strong>Key Management</strong></td>
+                <td>SEC-KEY-01, SEC-KEY-02, SEC-KEY-03</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>SEC Profile 5</td>
+                <td>Security</td>
+              </tr>
+              <tr>
+                <td><strong>Lifecycle Event Records</strong></td>
+                <td>LER, ENF-RETIRE</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>LER</td>
+                <td>Lifecycle Integrity</td>
+              </tr>
+              <tr>
+                <td><strong>Purpose Binding Records</strong></td>
+                <td>PBR-01, CT-02</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>PBR</td>
+                <td>Traceability</td>
+              </tr>
+              <tr>
+                <td><strong>Transport Security</strong></td>
+                <td>SEC-NET-01, SEC-NET-PFS</td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill direct">Direct</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>SEC Profile 10</td>
+                <td>Security</td>
+              </tr>
+              <tr>
+                <td><strong>Third-Party Enforcement</strong></td>
+                <td>ENF-THIRD-PARTY</td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td><span class="scope-pill partial">Partial</span></td>
+                <td><span class="scope-pill structural">Structural</span></td>
+                <td>ALE, CT</td>
+                <td>Governance Support</td>
+              </tr>
+              <tr>
+                <td><strong>Model Training / Fairness / Bias</strong></td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>See Section 9.1</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td><strong>Legal Consent Validity</strong></td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>See Section 9.1</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td><strong>Data Subject Rights Admin</strong></td>
+                <td>N/A</td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td><span class="scope-pill out">Out of Scope</span></td>
+                <td>See Section 9.1</td>
+                <td>N/A</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s10-2">10.2 Coverage Density Summary</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 10.2 - Coverage Distribution by Framework</span>
+          <table>
+            <thead>
+              <tr><th>Framework</th><th>Direct Coverage Areas</th><th>Structural Coverage Areas</th><th>Partial Coverage Areas</th><th>Out of Scope Areas</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>GDPR</strong></td>
+                <td>Art. 5(1)(b) purpose limitation; Art. 7(1) demonstrability; Art. 7(3) revocation; Art. 25(1)(2) privacy by design/default</td>
+                <td>Art. 5(1)(f) security; Art. 5(2) accountability; Art. 30 records; Art. 32 security measures</td>
+                <td>Art. 5(1)(a) lawfulness; Art. 5(1)(e) storage; Art. 6(1)(a) consent basis; Art. 25 organisational</td>
+                <td>Data minimisation; accuracy; rights admin; transfer mechanisms; notice delivery; DPIA</td>
+              </tr>
+              <tr>
+                <td><strong>EU AI Act</strong></td>
+                <td>Art. 12 logging (all sub-requirements); Art. 26(a) intended purpose; Art. 26 log retention</td>
+                <td>Art. 9 risk management (residual); Art. 13 transparency; Art. 17 QMS; Art. 14 monitoring</td>
+                <td>Art. 9 risk management; Art. 14 oversight</td>
+                <td>Conformity assessment; CE marking; model transparency; output oversight; bias evaluation</td>
+              </tr>
+              <tr>
+                <td><strong>NIST AI RMF</strong></td>
+                <td>MS-3.3 control effectiveness; MG-1.3 risk treatment; MG-4.1 residual risk; MP-5.2 privacy risks</td>
+                <td>GV-1.1 policies; GV-1.2 accountability; MS-1.1 risk measurement; MS-2.5 testing; MS-4.1 incidents; MG-2.2 monitoring</td>
+                <td>GV-6.1 third-party; MP-3.4 data subject risk; MP-2.3 system context</td>
+                <td>Organisational AI governance; risk categorisation; stakeholder engagement; explainability</td>
+              </tr>
+              <tr>
+                <td><strong>ISO/IEC 27001</strong></td>
+                <td>A.5.33 records protection; A.8.15 logging; A.8.24 cryptography</td>
+                <td>A.5.20 supplier; A.5.36 policy compliance; A.8.16 monitoring; A.8.25 SDL; A.8.33 test info</td>
+                <td>A.5.18 access rights; A.8.2 privileged access</td>
+                <td>ISMS scope (asset, physical, HR, BCP); all organisational ISMS clauses</td>
+              </tr>
+              <tr>
+                <td><strong>ISO/IEC 42001</strong></td>
+                <td>8.1 operational control; 8.6 responsible deployment; 9.1 monitoring; A.6.1 logging; A.7.4 security</td>
+                <td>6.1.1 risk actions; 9.2 internal audit; 9.3 management review; A.2.2 data; A.2.4 documentation; A.3.3 governance</td>
+                <td>8.3 lifecycle; 8.4 data governance; A.4.2 human oversight</td>
+                <td>Risk assessment; leadership; responsible development; organisational AIMS clauses</td>
+              </tr>
+              <tr>
+                <td><strong>OECD AI Principles</strong></td>
+                <td>1.4 Robustness/Security/Safety; 1.5 Accountability</td>
+                <td>1.3 Transparency/Explainability</td>
+                <td>1.2 Human-centred values</td>
+                <td>1.1 Inclusive growth; societal and policy dimensions of all principles</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Deterministic runtime enforcement provides the highest level of control assurance at the point of system invocation. Coverage is strongest in areas where enforcement can be applied synchronously and cryptographically verified. Domains such as model training, fairness, and organizational governance remain outside this boundary and require complementary control frameworks.</p>
+
+      </div>
+
+      <!-- SECTION 10.X -->
+      <div id="s10x" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10.X</span>
+        <h2><a class="anchor-link" href="#s10x">#</a>Regulatory Ambiguity Surface Reduction Analysis</h2>
+
+        <h3 id="s10x-1">10.X.1 Definition: Regulatory Ambiguity Surface</h3>
+        <p>For the purposes of this analysis, <strong>regulatory ambiguity surface</strong> is defined as: <em>the set of execution-time states in which legal obligations depend on non-deterministic enforcement</em> - that is, states where processing may occur without verifiable consent token validation, purpose binding evaluation, or revocation registry consultation. In non-deterministic enforcement environments, the ambiguity surface is unbounded at runtime: any invocation may or may not have occurred with valid consent, and no cryptographically verifiable record distinguishes compliant from non-compliant invocations after the fact.</p>
+        <p>Deterministic enforcement - as implemented through the QODIQA SUP boundary invariant defined in Section 2.6 - reduces this ambiguity surface by converting probabilistic compliance postures into binary enforcement decisions with cryptographically bound, replayable evidence. The following table quantifies this reduction across identified risk vectors.</p>
+
+        <h3 id="s10x-2">10.X.2 Risk Vector Analysis</h3>
+        <div class="table-wrap">
+          <span class="table-caption">Table 10.X.2 - Ambiguity Surface Reduction by Risk Vector</span>
+          <table>
+            <thead>
+              <tr><th>Risk Vector</th><th>Definition</th><th>Non-Deterministic Environment</th><th>Deterministic Enforcement Impact</th><th>Residual Risk</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Silent Consent Drift</strong></td>
+                <td>Processing continues under a consent scope that has materially narrowed since grant, without enforcement-layer detection</td>
+                <td>No runtime gate; scope evaluation performed at audit or complaint time, if at all; processing and non-compliance may be separated by months or years of invocation history</td>
+                <td>Purpose hash in CT evaluated against declared scope at every invocation; scope mismatch results in deterministic BLOCK; ALE entry generated for each blocked invocation with timestamp and failure reason; drift detectable in real time from ALE</td>
+                <td>Consent scope definition quality is upstream of enforcement boundary; QODIQA enforces the declared scope, not its legal adequacy; legal sufficiency determination remains outside scope</td>
+              </tr>
+              <tr>
+                <td><strong>Scope Creep</strong></td>
+                <td>AI system invoked for purposes beyond declared consent scope, either deliberately or through feature expansion</td>
+                <td>Without enforcement gating, purpose scope expansion is governed only by internal policy controls; violations may be undetected until DPA investigation or data subject complaint</td>
+                <td>PL-01 through PL-03 enforce purpose binding at invocation time; new purpose requires new consent token with updated scope; invocations under undeclared purposes blocked at SUP boundary; every attempt generates ALE entry</td>
+                <td>Determination of whether a new use case constitutes a compatible purpose under GDPR Art. 5(1)(b) requires legal analysis outside QODIQA scope; QODIQA enforces the technical boundary, not the legal determination of compatibility</td>
+              </tr>
+              <tr>
+                <td><strong>Revocation Lag</strong></td>
+                <td>Processing continues after consent withdrawal due to propagation delays, registry synchronisation failures, or system unawareness of revocation event</td>
+                <td>In poll-based or batch-updated systems, revocation may take hours or days to propagate; processing during lag period constitutes processing without valid legal basis; no cryptographic evidence of when processing actually stopped</td>
+                <td>REV-01 through REV-03 enforce revocation propagation SLA; SUP consults registry at each invocation; revocation takes effect within defined SLA window; RR provides cryptographic timestamp of revocation and propagation confirmation; post-revocation invocations blocked and ALE-recorded</td>
+                <td>SLA window creates a bounded residual processing risk during propagation period; SLA duration is configurable by profile (Foundational / Advanced / High-Assurance) and must be assessed against applicable regulatory requirements in each jurisdiction</td>
+              </tr>
+              <tr>
+                <td><strong>Undocumented Invocation</strong></td>
+                <td>AI system invoked without any record of the invocation event, rendering post-hoc compliance review impossible</td>
+                <td>Logging dependent on application-layer implementation; logs may be mutable, deletable, incomplete, or absent; no cryptographic guarantee of completeness or tamper-evidence; logging gaps create irresolvable ambiguity in regulatory proceedings</td>
+                <td>AUD-01 through AUD-05 enforce non-bypassable, append-only, hash-chained logging of every enforcement decision at the SUP boundary; logging is architecturally pre-application-layer; cryptographic tamper evidence maintained throughout retention period; completeness verifiable through hash chain integrity check</td>
+                <td>QODIQA logs enforcement decisions, not application-layer invocation content; logs do not capture AI output, user interaction detail, or data processed; content-level audit remains outside QODIQA scope and requires complementary application-layer logging</td>
+              </tr>
+              <tr>
+                <td><strong>Consent State Ambiguity at Audit Time</strong></td>
+                <td>Inability to reconstruct the consent state operative at the time of any specific historical AI invocation</td>
+                <td>Without cryptographic binding, reconstructing historical consent state requires assembling evidence from multiple mutable systems; reconstruction may be contested, incomplete, or impossible; creates significant regulatory exposure in investigations and DPA proceedings</td>
+                <td>Each ALE entry records consent token state, purpose scope, expiry, revocation status, and cryptographic token identifier at invocation time; historical consent state for any recorded invocation is fully reconstructable from the ALE and the consent token archive; evidence is cryptographically verifiable and non-repudiable</td>
+                <td>Reconstruction capability depends on retention policy compliance (AUD-RETAIN); organisations must configure retention periods to meet applicable regulatory requirements; QODIQA does not determine applicable retention periods, which are a legal and regulatory analysis function</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s10x-3">10.X.3 Ambiguity Surface Reduction Summary</h3>
+        <div class="callout">
+          <p>Deterministic enforcement does not eliminate regulatory risk. It <strong>converts non-deterministic ambiguity into bounded, documented, cryptographically verifiable states</strong>. The ambiguity surface is reduced to: (a) the SLA window during revocation propagation; (b) the legal sufficiency of consent scope definitions upstream of the enforcement boundary; and (c) content-layer audit gaps outside QODIQA's enforcement scope. All other vectors listed above are addressed within the SUP boundary invariant. No claim of regulatory compliance follows from this reduction analysis.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Institutional Closing Statement</h2>
+
+        <p>This matrix has mapped QODIQA's deterministic runtime enforcement controls to the requirements of six major AI and data governance frameworks. The mappings are structural and technical. They establish where QODIQA's enforcement architecture provides genuine, verifiable support for regulatory control objectives - and where it does not.</p>
+
+        <p>The matrix demonstrates that QODIQA's contribution is concentrated in three areas: <strong>deterministic consent enforcement</strong> at the AI execution boundary, <strong>structured evidence generation</strong> through tamper-evident audit ledgers and cryptographically bound artifacts, and <strong>residual risk reduction</strong> through default-deny posture and purpose-bound processing gates. These contributions are technically meaningful and can reduce the ambiguity surface at the execution boundary where compliance failures most frequently originate.</p>
+
+        <p>At the same time, the matrix confirms that QODIQA does not address - and does not claim to address - the substantial majority of requirements in each framework that require organisational governance, legal interpretation, human judgment, or external certification. The non-coverage disclosures in Section 9 are as important as the coverage claims in Sections 3 through 8.</p>
+
+        <div class="inst-statement">
+          <p class="inst-lead">Institutional Position</p>
+          <p class="inst-body">QODIQA provides <strong>deterministic runtime enforcement</strong> at the AI execution boundary. It generates <strong>structured, replayable evidence</strong> through cryptographically bound audit artifacts. It reduces <strong>ambiguity at the execution boundary</strong> where consent obligations are most frequently violated. It does not replace legal compliance frameworks, organisational governance structures, or regulatory certification processes. It is a <strong>technical control plane</strong> that can structurally support them - with precisely defined scope and explicitly bounded non-coverage.</p>
+          <p class="inst-close">QODIQA-RAM-2026-001 · Regulatory Alignment Matrix · April 2026 · Technical Mapping Specification · Institutional Distribution</p>
+        </div>
+
+        <div class="decision-block">
+          <div class="decision-block-head">Final Mandatory Disclaimer</div>
+          <div class="decision-block-body">
+            <div class="decision-item"><span class="di-icon">→</span>Nothing in this document constitutes legal advice, regulatory guidance, compliance certification, or a warranty of any kind.</div>
+            <div class="decision-item"><span class="di-icon">→</span>This document is a technical cross-reference instrument. Regulatory compliance determinations must be made by qualified legal counsel and certified compliance professionals with jurisdiction-specific expertise.</div>
+            <div class="decision-item"><span class="di-icon">→</span>QODIQA makes no representations regarding the legal sufficiency of any deployment of QODIQA controls for any regulatory purpose.</div>
+            <div class="decision-item"><span class="di-icon">→</span>All framework citations are for structural cross-reference only and do not imply endorsement, affiliation, or certification by any standards body, regulatory authority, or government agency.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document presents a technical control alignment matrix mapping QODIQA enforcement constructs to major AI and data governance frameworks. It is issued as a Technical Mapping Specification and is not a product specification, a commercial certification program, or a legal instrument.</p>
+
+          <p>QODIQA is not presented as a theoretical framework, but as an implementable infrastructure standard designed to introduce enforceable authorization, deterministic policy execution, runtime verifiability, and auditable proof mechanisms into AI-native systems.</p>
+
+          <p>The material contained herein is intended for:</p>
+          <ul class="audience-list">
+            <li>Enterprise risk teams and compliance architects</li>
+            <li>Regulatory affairs specialists</li>
+            <li>AI governance practitioners</li>
+            <li>Security and governance officers</li>
+            <li>Organizations building or operating autonomous AI systems</li>
+          </ul>
+
+          <p>This matrix serves as a canonical reference for organizations evaluating the control coverage characteristics of QODIQA within their broader compliance posture. All regulatory framework citations are for structural cross-reference only.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA &mdash; Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA &mdash; Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; Implementation Playbook for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA &mdash; Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr class="status-divider">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-RAM-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Regulatory Alignment Matrix for AI Governance Frameworks</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Technical Control Alignment of QODIQA Enforcement Constructs to Major AI and Data Governance Frameworks</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Technical Mapping Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative - Technical Mapping Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA &mdash; Regulatory Alignment Matrix for AI Governance Frameworks</p>
+      <p>Version 1.0 &nbsp;&middot;&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-RAM-2026-001</p>
+      <p>Technical Mapping Specification</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document is a technical cross-reference instrument and does not constitute legal advice. All regulatory framework citations are for structural cross-reference only and do not imply endorsement, affiliation, or certification by any standards body, regulatory authority, or government agency.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-RAM-2026-001 &nbsp;&middot;&nbsp; Version 1.0 &nbsp;&middot;&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ----------------------------------------------------------
+     1. SECTION REGISTRY
+     ---------------------------------------------------------- */
+  var IDS=[
+    'cover','s-abstract',
+    's1','s1-1','s1-2','s1-3','s1-4','s1-5','s1-6',
+    's2','s2-1','s2-2','s2-3','s2-4','s2-5','s2-6',
+    's2x','s2x-1','s2x-2','s2x-3','s2x-4','s2x-5','s2x-6','s2x-7',
+    's3','s3-1','s3-2','s3-3','s3-4','s3-5','s3-6','s3-7',
+    's4','s4-1','s4-2','s4-3','s4-4','s4-5','s4-6',
+    's5','s5-1','s5-2','s5-3','s5-4',
+    's6','s6-1','s6-2',
+    's7','s7-1','s7-2','s7-3','s7-4',
+    's8','s8-1',
+    's9','s9-1',
+    's10','s10-1','s10-2',
+    's10x','s10x-1','s10x-2','s10x-3',
+    's11','s-status'
+  ];
+
+  var sections=IDS.map(function(id){return document.getElementById(id);}).filter(Boolean);
+  var navItems=document.querySelectorAll('.nav-item');
+  /* stable order map */
+  var ORDER=new Map(sections.map(function(s,i){return[s.id,i];}));
+
+  /* ----------------------------------------------------------
+     2. ACTIVE STATE
+     ---------------------------------------------------------- */
+  var currentActive=null;
+  function setActive(id){
+    if(id===currentActive)return;
+    currentActive=id;
+    navItems.forEach(function(a){
+      var active=a.getAttribute('href')==='#'+id;
+      a.classList.toggle('active',active);
+    });
+    /* scroll sidebar so active link is visible */
+    var sidebar=document.getElementById('sidebar');
+    var link=sidebar&&sidebar.querySelector('.nav-item.active');
+    if(link&&sidebar){
+      var sRect=sidebar.getBoundingClientRect();
+      var lRect=link.getBoundingClientRect();
+      if(lRect.top<sRect.top+20||lRect.bottom>sRect.bottom-20){
+        sidebar.scrollTo({top:sidebar.scrollTop+(lRect.top-sRect.top)-80,behavior:'smooth'});
+      }
+    }
+  }
+
+  /* ----------------------------------------------------------
+     3. SCROLLSPY — IntersectionObserver (primary)
+     ---------------------------------------------------------- */
+  var visible=new Set();
+
+  function pickActive(){
+    if(!visible.size)return;
+    var bestId=null,bestIdx=Infinity;
+    visible.forEach(function(id){
+      var idx=ORDER.get(id);
+      if(idx<bestIdx){bestIdx=idx;bestId=id;}
+    });
+    if(bestId)setActive(bestId);
+  }
+
+  /* single observer — rootMargin calibrated to 20% top / 60% bottom dead zone
+     active zone = middle 20% of viewport (roughly reading zone) */
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){visible.add(e.target.id);}
+      else{visible.delete(e.target.id);}
+    });
+    pickActive();
+  },{root:null,rootMargin:'-18% 0px -58% 0px',threshold:0});
+
+  sections.forEach(function(s){io.observe(s);});
+
+  /* ----------------------------------------------------------
+     4. SCROLLSPY — position fallback (runs on scroll, stable)
+        Activates the section whose top is closest to 28% of
+        viewport height (reading line), never going below it.
+     ---------------------------------------------------------- */
+  var rafPending=false;
+  function positionSpy(){
+    if(rafPending)return;
+    rafPending=true;
+    requestAnimationFrame(function(){
+      rafPending=false;
+      var line=window.innerHeight*0.28;
+      var bestId=null,bestDelta=Infinity;
+      for(var i=0;i<sections.length;i++){
+        var rect=sections[i].getBoundingClientRect();
+        /* only consider sections that have crossed the reading line */
+        if(rect.top<=line){
+          var delta=line-rect.top;
+          if(delta<bestDelta){bestDelta=delta;bestId=sections[i].id;}
+        }
+      }
+      if(bestId)setActive(bestId);
+    });
+  }
+
+  window.addEventListener('scroll',positionSpy,{passive:true});
+  /* run once on load */
+  positionSpy();
+
+  /* ----------------------------------------------------------
+     5. NAV CLICK — smooth scroll + close mobile sidebar
+     ---------------------------------------------------------- */
+  var sidebar=document.getElementById('sidebar');
+  var overlay=document.getElementById('overlay');
+
+  navItems.forEach(function(item){
+    item.addEventListener('click',function(e){
+      var href=item.getAttribute('href');
+      if(href&&href.charAt(0)==='#'){
+        e.preventDefault();
+        var target=document.getElementById(href.slice(1));
+        if(target){
+          /* 20px desktop, 60px mobile (accounts for fixed header) */
+          var offset=window.innerWidth<=768?60:20;
+          var top=target.getBoundingClientRect().top+window.scrollY-offset;
+          window.scrollTo({top:top,behavior:'smooth'});
+          /* immediately mark active — don't wait for observer */
+          setActive(href.slice(1));
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ----------------------------------------------------------
+     6. BACK TO TOP
+     ---------------------------------------------------------- */
+  var btt=document.getElementById('back-to-top');
+  window.addEventListener('scroll',function(){
+    btt.classList.toggle('visible',window.scrollY>600);
+  },{passive:true});
+  btt.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  /* ----------------------------------------------------------
+     7. MOBILE SIDEBAR TOGGLE
+     ---------------------------------------------------------- */
+  var toggle=document.getElementById('navToggle');
+  if(toggle){
+    toggle.addEventListener('click',function(){
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if(overlay){
+    overlay.addEventListener('click',function(){
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

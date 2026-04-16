@@ -1,0 +1,2908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement · v1.0</title>
+<meta name="description" content="QODIQA Economic Impact Analysis of Deterministic Runtime Consent Enforcement v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement">
+<meta property="og:description" content="A structured, first-principles economic and risk-surface analysis of the general class of deterministic runtime consent enforcement architectures.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --bg:         #F6F4F0;
+  --bg-raised:  #EFECEA;
+  --bg-sunken:  #E8E5E0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* sh-num — subsection number */
+.sh-num {
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  color: var(--accent);
+  font-weight: 400;
+  margin-right: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* EIP-specific table cell classes */
+td.mono {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+td.band {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+td.reduction {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 13px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-section {
+  margin: 40px 0 32px;
+}
+
+.diagram-section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.80;
+}
+
+.diagram-section-title {
+  font-family: var(--serif);
+  font-size: 1.00rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #D2CEC8;
+}
+
+.diagram-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #D2CEC8;
+  border: 1px solid #D2CEC8;
+  margin-bottom: 14px;
+}
+
+.diagram-panel {
+  background: #F2F0EB;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.diagram-panel:nth-child(even) { background: #EDEAE5; }
+
+.diagram-panel-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.80;
+  text-align: center;
+  width: 100%;
+}
+
+.diagram-panel-title {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.flow-step-box {
+  border: 1px solid #D2CEC8;
+  padding: 7px 20px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: var(--bg);
+  min-width: 200px;
+  max-width: 260px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.flow-step-box.step-highlight {
+  background: rgba(122,106,80,0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.flow-step-box.step-output {
+  background: #1C1F25;
+  border-color: #26282E;
+  color: rgba(255,255,255,0.75);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.flow-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 22px;
+  justify-content: center;
+}
+
+.flow-arrow::before {
+  content: '';
+  width: 1px;
+  height: 22px;
+  background: #D2CEC8;
+  display: block;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+  font-style: italic;
+  line-height: 1.52;
+}
+
+/* ============================================================
+   KEY FINDINGS BLOCK
+   ============================================================ */
+.key-findings-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 24px 26px;
+  margin: 0 0 48px;
+}
+
+.key-findings-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: block;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #D2CEC8;
+  opacity: 0.80;
+}
+
+.key-findings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.key-findings-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(214,210,204,0.55);
+  font-size: 0.940rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.58;
+  margin: 0;
+  hyphens: auto;
+}
+
+.key-findings-list li:last-child { border-bottom: none; }
+
+.key-findings-list li::before {
+  content: '→';
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* ============================================================
+   SCENARIO GRID
+   ============================================================ */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  margin: 20px 0 24px;
+  border: 1px solid #C4C0BA;
+  background: #C4C0BA;
+}
+
+.scenario-card {
+  background: #F2F0EB;
+  padding: 18px 20px;
+}
+
+.scenario-card:nth-child(even) { background: #EDEAE5; }
+
+.scenario-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.80;
+}
+
+.scenario-title {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: 12px;
+}
+
+.scenario-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.77rem;
+  color: var(--text-3);
+}
+
+.scenario-row:last-child { border-bottom: none; }
+
+.scenario-row-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  min-width: 64px;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PROPERTY LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '→';
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   ECONOMIC INTERPRETATION BLOCK
+   ============================================================ */
+.econ-interp-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 24px 26px;
+  margin: 24px 0;
+}
+
+.econ-interp-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.econ-interp-block p {
+  font-size: 0.940rem;
+  line-height: 1.72;
+  color: var(--text);
+  margin-bottom: 10px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.econ-interp-block p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   DISCLAIMER BLOCK
+   ============================================================ */
+.disclaimer-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 18px 20px;
+  margin: 20px 0;
+}
+
+.disclaimer-block-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #D2CEC8;
+}
+
+.disclaimer-block p {
+  font-size: 0.905rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.disclaimer-block p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 32px 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   NON-COVERAGE LIST
+   ============================================================ */
+.non-coverage-list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+}
+
+.non-coverage-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 0.900rem;
+  color: var(--text-2);
+  border-bottom: 1px solid rgba(214,210,204,0.45);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.non-coverage-list li:last-child { border-bottom: none; }
+
+.non-coverage-list li::before {
+  content: '×';
+  font-family: var(--mono);
+  font-size: 0.70rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+/* ============================================================
+   TERMINOLOGY LIST
+   ============================================================ */
+.term-list {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0;
+  border: 1px solid #D2CEC8;
+}
+
+.term-item {
+  padding: 14px 20px;
+  border-bottom: 1px solid #D2CEC8;
+}
+
+.term-item:last-child { border-bottom: none; }
+
+.term-name {
+  font-family: var(--mono);
+  font-size: 0.760rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.term-def {
+  font-size: 0.900rem;
+  color: var(--text-2);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ============================================================
+   CORPUS REFERENCE INLINE
+   ============================================================ */
+.corpus-ref {
+  font-family: var(--mono);
+  font-size: 0.820em;
+  color: var(--accent);
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   CITATION BLOCK
+   ============================================================ */
+.citation-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  padding: 18px 24px;
+  margin: 22px 0;
+  font-family: var(--mono);
+  font-size: 0.800rem;
+  line-height: 1.80;
+  color: var(--text);
+}
+
+.citation-block .citation-label {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #D2CEC8;
+  opacity: 0.80;
+}
+
+/* ============================================================
+   INSTITUTIONAL DISCLAIMER BLOCK
+   ============================================================ */
+.inst-disclaimer-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+
+.inst-disclaimer-block p {
+  font-size: 0.900rem;
+  line-height: 1.70;
+  color: var(--text-2);
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+
+  .scenario-grid { grid-template-columns: 1fr; }
+  .diagram-grid  { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  #content { padding: 76px 16px 48px; }
+  .flow-step-box { min-width: auto; width: 100%; }
+  footer { padding: 24px 16px; }
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Economic Impact Analysis<br>of <span class="italic-part">Runtime Consent Enforcement</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-EIP-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Structural economic and risk-surface analysis of deterministic runtime consent enforcement architectures — analytical companion to the standard corpus.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s-methodology">Methodological Positioning</a>
+      <a class="nav-item" href="#s-governance-frameworks">Governance Frameworks</a>
+      <a class="nav-item" href="#s-findings">Key Economic Findings</a>
+      <a class="nav-item" href="#s1">1. Executive Economic Overview</a>
+      <a class="nav-item sub" href="#s1">1.1 Scope of Analysis</a>
+      <a class="nav-item sub" href="#s1">1.2 Modeling Constraints</a>
+      <a class="nav-item sub" href="#s1">1.3 Relationship to QODIQA Reference Architecture</a>
+      <a class="nav-item" href="#s2">2. Risk Surface Categories</a>
+      <a class="nav-item sub" href="#s2">2.1 Unauthorized Action Exposure</a>
+      <a class="nav-item sub" href="#s2">2.2 Purpose Drift Liability</a>
+      <a class="nav-item sub" href="#s2">2.3 Revocation Non-Propagation</a>
+      <a class="nav-item sub" href="#s2">2.4 Audit Reconstruction Overhead</a>
+      <a class="nav-item sub" href="#s2">2.5 Regulatory Penalty Exposure</a>
+      <a class="nav-item sub" href="#s2">2.6 Incident Response Amplification</a>
+      <a class="nav-item sub" href="#s2">2.7 Multi-Agent Propagation Risk</a>
+      <a class="nav-item" href="#s3">3. Baseline Exposure Model</a>
+      <a class="nav-item sub" href="#s3">3.1 Modeling Assumptions</a>
+      <a class="nav-item sub" href="#s3">3.2 Baseline Cost Band Table</a>
+      <a class="nav-item sub" href="#s3">3.3 Structural Cost Driver</a>
+      <a class="nav-item sub" href="#s3">3.4 Modeling Methodology Clarification</a>
+      <a class="nav-item" href="#s4">4. Impact of Enforcement</a>
+      <a class="nav-item sub" href="#s4">4.1 Reduction in Ambiguity Cost</a>
+      <a class="nav-item sub" href="#s4">4.2 Reduction in Audit Reconstruction Time</a>
+      <a class="nav-item sub" href="#s4">4.3 Reduction in Incident Containment Time</a>
+      <a class="nav-item sub" href="#s4">4.4 Cost Comparison Table</a>
+      <a class="nav-item sub" href="#s4">4.5 Defensibility Posture</a>
+      <a class="nav-item" href="#s5">5. Audit and Compliance Cost</a>
+      <a class="nav-item sub" href="#s5">5.1 Audit Cost Components</a>
+      <a class="nav-item sub" href="#s5">5.2 The Artifact-Based Replay Model</a>
+      <a class="nav-item sub" href="#s5">5.3 Regulatory Framework Alignment Cost</a>
+      <a class="nav-item" href="#s6">6. Incident Response Modeling</a>
+      <a class="nav-item sub" href="#s6">6.1 Mean Time to Attribution</a>
+      <a class="nav-item sub" href="#s6">6.2 Mean Time to Scope Determination</a>
+      <a class="nav-item sub" href="#s6">6.3 Forensic Ambiguity Cost</a>
+      <a class="nav-item" href="#s7">7. Multi-Agent Risk Economics</a>
+      <a class="nav-item sub" href="#s7">7.1 The Propagation Multiplier</a>
+      <a class="nav-item sub" href="#s7">7.2 Deterministic Gating as Cost Containment</a>
+      <a class="nav-item sub" href="#s7">7.3 Risk Surface Growth Function</a>
+      <a class="nav-item" href="#s8">8. Implementation Cost Envelope</a>
+      <a class="nav-item sub" href="#s8">8.1 Cryptographic Overhead</a>
+      <a class="nav-item sub" href="#s8">8.2 Cost Introduced vs. Cost Mitigated</a>
+      <a class="nav-item" href="#s9">9. Scenario Analysis</a>
+      <a class="nav-item sub" href="#s9">9.1 Scenario A — Mid-Size Enterprise</a>
+      <a class="nav-item sub" href="#s9">9.2 Scenario B — Large Regulated Institution</a>
+      <a class="nav-item sub" href="#s9">9.3 Scenario C — AI-Native Platform at Scale</a>
+      <a class="nav-item" href="#s10">10. Residual Risk and Non-Coverage</a>
+      <a class="nav-item sub" href="#s10">10.1 Model Performance Failures</a>
+      <a class="nav-item sub" href="#s10">10.2 Business Strategy and Product Decisions</a>
+      <a class="nav-item sub" href="#s10">10.3 Ethical Design Costs</a>
+      <a class="nav-item sub" href="#s10">10.4 Training Data and IP Exposure</a>
+      <a class="nav-item sub" href="#s10">10.5 Product Liability Unrelated to Consent</a>
+      <a class="nav-item" href="#s11">11. Infrastructure Stabilization</a>
+      <a class="nav-item sub" href="#s11">11.1 Reduced Compliance Cost Volatility</a>
+      <a class="nav-item sub" href="#s11">11.2 Reduced Litigation Unpredictability</a>
+      <a class="nav-item sub" href="#s11">11.3 Standardization Effect on Insurance Pricing</a>
+      <a class="nav-item sub" href="#s11">11.4 Cost Predictability Benefits</a>
+      <a class="nav-item" href="#s-econ-interp">Economic Interpretation</a>
+      <a class="nav-item" href="#s12">12. Institutional Closing</a>
+      <a class="nav-item sub" href="#s12">12.1 What This Analysis Establishes</a>
+      <a class="nav-item sub" href="#s12">12.2 The Infrastructure Framing</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+      <a class="nav-item" href="#s-scope">Scope</a>
+      <a class="nav-item" href="#s-terminology">Terminology</a>
+      <a class="nav-item" href="#s-conformance">Conformance Language</a>
+      <a class="nav-item" href="#s-non-coverage">Non-Coverage</a>
+      <a class="nav-item" href="#s-corpus">Standard Corpus</a>
+      <a class="nav-item" href="#s-disclaimer">Institutional Disclaimer</a>
+      <a class="nav-item" href="#s-citation">Recommended Citation</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This paper presents a structured economic and risk-surface analysis of a specific class of AI infrastructure: deterministic runtime consent enforcement architectures — systems in which authorization state is evaluated and recorded as an immutable, machine-verifiable artifact at the moment of AI action execution, rather than inferred retroactively from logs. It does not constitute investment guidance, revenue projection, or regulatory legal advice.</p>
+          <p>The analysis examines how runtime determinism addresses identifiable cost surfaces across ambiguity-driven liability exposure, audit reconstruction overhead, incident containment latency, and multi-agent propagation risk. QODIQA is treated throughout as a reference implementation of this architectural class, not as the source of the model's validity. Modeling is conservative, scenario-based, and assumption-bound throughout. All figures represent estimated structural cost bands derived from first-principles reasoning about the operational mechanics of enforced and non-enforced governance environments, not actuarial measurements or empirical benchmarks. This paper is an independent technical and economic analysis, prepared for institutional review by risk, compliance, legal, and infrastructure leadership audiences.</p>
+        </div>
+      </div>
+
+      <!-- METHODOLOGICAL POSITIONING -->
+      <div id="s-methodology" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Methodological Note</span>
+        <h2><a class="anchor-link" href="#s-methodology">#</a>Methodological Positioning and Limitations</h2>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-label">Required Reading — Analytical Scope and Constraints</span>
+          <p>This document is a first-principles analytical model. It reasons forward from the known structural properties of enforced and non-enforced AI governance architectures to estimate the cost surfaces those properties generate. It does not rely on empirical breach datasets, actuarial claims tables, or published industry benchmarks for AI governance incidents, because no such datasets exist in sufficient specificity or public accessibility for this domain at the time of writing.</p>
+          <p>Accordingly, this model makes no predictive claims. It does not forecast incident frequency, regulatory fine probability, or litigation likelihood. It does not purport to measure what will happen to any specific organization. Its purpose is structural cost analysis: to reason about the categories of cost that the presence or absence of deterministic enforcement architecture creates, and to establish order-of-magnitude bounds on those categories based on stated operational assumptions.</p>
+          <p>Every numeric figure in this paper is a structural estimate. The assumptions from which it is derived are stated explicitly wherever the figure appears. Numbers should be interpreted as directional cost bands within their stated assumption constraints, not as point estimates, actuarial projections, or empirically validated benchmarks. Actual costs will vary materially based on organizational scale, incident frequency, regulatory jurisdiction, and implementation fidelity.</p>
+          <p>No component of this model derives from cited external research, benchmark surveys, or industry studies. The model is self-consistent within its stated assumptions and is intended to be evaluated on the basis of its structural reasoning. External validation — through empirical deployment data, actuarial analysis, or academic study — would materially strengthen the model and is acknowledged as absent.</p>
+        </div>
+
+        <h3>On the Absence of Empirical Data</h3>
+        <p>The most foreseeable critique of this model is the absence of empirical data. That absence is real and acknowledged. It is also, at this stage of the field, structurally unavoidable. Empirical datasets for AI governance incident costs — specifically, for the labor and legal costs attributable to authorization ambiguity in AI-deployed systems — do not currently exist in any publicly accessible, domain-specific form. This is not because such incidents are rare; it is because the governance layer at which these costs arise is not yet routinely instrumented, categorized, or disclosed at the granularity required for actuarial modeling. Incident costs are absorbed into general legal, compliance, and engineering line items. Authorization failures, where they are detected at all, are rarely classified as such in disclosed reporting. The domain lacks the incident taxonomy, disclosure standards, and historical depth that actuarial modeling requires. Building empirical models for costs that are not yet measured is not methodologically feasible; waiting for such datasets before conducting structural analysis would mean deferring the analysis indefinitely, during a period when AI deployment is accelerating and governance infrastructure decisions are being made now. First-principles structural modeling is not a substitute for empirical validation — it is the appropriate analytical instrument for the present state of evidence, and it is offered as such. Structural reasoning from known architectural properties toward cost surface estimates is a defensible methodology precisely when empirical alternatives do not yet exist. The validity of the arguments in this paper therefore does not depend on empirical confirmation; it depends on whether the causal chains — ambiguity to investigation cost, absence of artifacts to audit overhead, propagation without gating to risk amplification — are structurally sound. Readers are invited to evaluate them on that basis.</p>
+
+        <h3>What This Analysis Does Not Claim</h3>
+        <ul class="non-coverage-list">
+          <li>It does not claim that any specific organization will experience the cost bands described</li>
+          <li>It does not claim that deterministic enforcement architectures have been empirically validated to produce the modeled reductions</li>
+          <li>It does not claim that QODIQA, as a reference implementation, has been deployed and measured at production scale</li>
+          <li>It does not claim actuarial equivalence with insurance, financial, or legal modeling disciplines</li>
+          <li>It does not constitute a regulatory compliance determination or legal position on any applicable framework</li>
+        </ul>
+
+        <div class="callout">
+          <p>The analytical credibility of this paper rests on the coherence of its structural reasoning, not on external validation it does not possess. Readers are encouraged to evaluate the causal chains — ambiguity toward investigation cost; absence of artifacts toward audit overhead; propagation without gating toward risk amplification — on their merits and to apply independent judgment about the plausibility of the stated cost bands within their organizational context.</p>
+        </div>
+      </div>
+
+      <!-- GOVERNANCE FRAMEWORKS -->
+      <div id="s-governance-frameworks" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Governance Context</span>
+        <h2><a class="anchor-link" href="#s-governance-frameworks">#</a>Relationship to Existing Governance Frameworks</h2>
+
+        <p>Deterministic runtime consent enforcement architectures operate at the execution layer of AI governance — the point at which a specific AI action is permitted or denied based on evaluated authorization state. This position is distinct from, and complementary to, the policy and governance layers addressed by existing regulatory and standards frameworks. This section clarifies the relationship between execution-layer enforcement and those frameworks without claiming compliance mappings or regulatory equivalence.</p>
+
+        <h3>General Data Protection Regulation (GDPR)</h3>
+        <p>GDPR Article 7 establishes conditions for the validity of consent, and Article 5 imposes data minimization and purpose limitation principles. Execution-layer enforcement directly supports the operationalization of these principles: by evaluating consent validity and purpose declaration at the moment of AI action execution, it generates a timestamped, immutable record of whether the conditions for lawful processing were evaluated and what the outcome was. This does not constitute GDPR compliance — compliance determinations require qualified legal review of the full processing context — but it does produce the evidentiary substrate that compliance demonstration requires. The cost implications of this distinction are addressed in Section 5.</p>
+
+        <h3>EU AI Act</h3>
+        <p>The EU AI Act imposes transparency, logging, and human oversight obligations on high-risk AI systems under Articles 12 and 13. Execution-layer enforcement, through its mandatory production of decision artifacts at runtime, is structurally aligned with the logging and auditability requirements of these provisions. However, alignment is not compliance: the EU AI Act's requirements extend to model documentation, conformity assessments, and risk management systems that are outside the scope of runtime consent enforcement. This model positions execution-layer enforcement as one component of a compliant AI governance architecture, not as a sufficient condition for it.</p>
+
+        <h3>NIST AI Risk Management Framework (AI RMF)</h3>
+        <p>The NIST AI RMF GOVERN function addresses organizational practices for managing AI risk, including documentation, accountability, and oversight mechanisms. The MEASURE function addresses evaluation of AI system performance against defined criteria. Execution-layer enforcement contributes to the GOVERN.1 (policies and procedures) and MANAGE.2 (incident response) functions by providing machine-verifiable evidence of authorization state at execution time. It does not address the full breadth of the AI RMF's risk management scope, which includes model accuracy, societal impact, and organizational governance structures.</p>
+
+        <h3>ISO/IEC 42001</h3>
+        <p>ISO/IEC 42001 establishes a management system standard for AI, requiring organizations to demonstrate systematic approaches to AI risk identification, treatment, and monitoring. Execution-layer enforcement is relevant to Clause 8 (Operation) and Clause 9 (Performance Evaluation) in the degree to which it provides objective evidence of control operation. As with other frameworks, execution-layer conformance is a component of, not a substitute for, a complete management system implementation.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Positioning Summary</div>
+          <p>Execution-layer enforcement architectures address a specific gap: the absence of machine-verifiable authorization state at the moment of AI action. They do not replace policy-layer governance, ethical design practices, model risk management, or organizational accountability structures. They operate below and in support of those layers, providing the evidentiary infrastructure that higher-layer governance requires. The economic analysis in this paper is scoped to this execution layer; it does not model the full cost of GDPR, EU AI Act, NIST AI RMF, or ISO/IEC 42001 compliance.</p>
+        </div>
+      </div>
+
+      <!-- KEY FINDINGS -->
+      <div id="s-findings" class="doc-section">
+        <div class="key-findings-block">
+          <span class="key-findings-label">Key Economic Findings</span>
+          <ul class="key-findings-list">
+            <li>Deterministic runtime enforcement is expected to reduce ambiguity-driven investigation cost, under conditions of complete enforcement coverage, by making authorization state queryable rather than requiring forensic reconstruction</li>
+            <li>Audit reconstruction overhead is expected to compress from a modeled 40–180 analyst-hours (log-based forensics) to a modeled 2–12 hours (artifact retrieval and verification) per material incident, under full-coverage assumptions — both bands are structural estimates, not empirical measurements</li>
+            <li>Incident containment time is expected to decrease from day-to-week bands toward hour-to-day bands due to deterministic authorization evidence at each execution point, subject to artifact store integrity and complete enforcement deployment</li>
+            <li>Multi-agent propagation risk is expected to become bounded through deterministic gating at agent boundaries, constraining upstream failures rather than allowing cascade multiplication, under conditions of complete gate deployment across all agent interfaces</li>
+            <li>Governance cost structure is expected to shift from variable, incident-driven investigation labor toward fixed, predictable infrastructure operational cost under enforced architectures</li>
+            <li>Annual operational cost of conformant enforcement infrastructure represents approximately 7–35% of modeled mid-band annual baseline direct cost exposure, under full-conformance and mid-band incident frequency assumptions — a structural cost-ratio observation, not a validated return-on-investment figure</li>
+          </ul>
+        </div>
+
+        <div class="diagram-section">
+          <span class="diagram-section-label">Visual Analysis</span>
+          <div class="diagram-section-title">Governance Architecture Comparison</div>
+          <div class="diagram-grid">
+            <div class="diagram-panel">
+              <span class="diagram-panel-label">Model A</span>
+              <div class="diagram-panel-title">Traditional AI Governance Model</div>
+              <div class="flow-steps">
+                <div class="flow-step"><div class="flow-step-box">AI Action Executes</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box">Dispersed Log Systems</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box">Manual Reconstruction</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box">Analyst Interpretation</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box">Compliance Narrative</div></div>
+              </div>
+            </div>
+            <div class="diagram-panel">
+              <span class="diagram-panel-label">Model B — Deterministic Enforcement Architecture</span>
+              <div class="diagram-panel-title">Deterministic Enforcement Model</div>
+              <div class="flow-steps">
+                <div class="flow-step"><div class="flow-step-box">AI Action Request</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box step-highlight">Enforcement Gateway (Deterministic)</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box step-output">Decision Artifact (Immutable)</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box">Queryable Evidence Store</div></div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step"><div class="flow-step-box step-highlight">Deterministic Audit Replay</div></div>
+              </div>
+            </div>
+          </div>
+          <p class="diagram-caption">Figure 1 — Model A requires forensic reconstruction at inquiry time; Model B produces machine-verifiable artifacts at execution time, compressing audit overhead and eliminating authorization ambiguity.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Executive Economic Overview</h2>
+
+        <p>The economics of AI governance are rarely analyzed with structural precision. Most discussions remain at the policy level, addressing compliance obligations, ethical requirements, or reputational considerations in qualitative terms. This paper takes a different approach: it attempts to quantify the economic implications of a specific infrastructure gap in AI-deployed organizational environments — the absence of deterministic runtime consent enforcement — using conservative modeling, clearly stated assumptions, and scenario-bounded analysis.</p>
+
+        <p>The core economic premise is straightforward. <strong>Ambiguity is expensive.</strong> When an organization cannot deterministically establish whether a given AI action was authorized — for the purpose declared, using the data involved, at the time it occurred — every downstream consequence becomes harder to contain, defend, and close. Audit reconstruction takes longer. Legal review is more involved. Incident response lacks precision. Regulatory inquiry requires more documentation.</p>
+
+        <p>These costs are not hypothetical; they are the structural consequence of enforcement architectures that are unable to produce machine-verifiable decision artifacts at execution time.</p>
+
+        <div class="callout">
+          <p>Deterministic runtime enforcement architectures address this gap by converting runtime authorization from a probabilistic inference into a deterministic artifact. The economic effect of that conversion is the subject of this analysis: <strong>not the elimination of risk, but the reduction of its most expensive structural properties.</strong> QODIQA is examined as a reference implementation of this architectural class throughout this paper.</p>
+        </div>
+
+        <h3><span class="sh-num">1.1</span> Scope of Analysis</h3>
+        <p>This analysis models cost surfaces across the following domains: unauthorized AI action exposure, purpose drift liability, revocation non-propagation, audit reconstruction cost, regulatory penalty exposure, incident response amplification, and multi-agent propagation risk. It does not project revenue, market sizing, competitive positioning, or investment return. It does not constitute legal advice with respect to regulatory penalties or litigation exposure.</p>
+
+        <h3><span class="sh-num">1.2</span> Modeling Constraints</h3>
+        <p>All estimates in this paper are band-based, reflecting low, mid, and high exposure scenarios across defined organizational profiles. They are not point estimates and must not be interpreted as guaranteed outcomes or empirically validated benchmarks. The modeling is structural in nature: it reasons about cost dynamics from first principles, drawing on the mechanistic properties of deterministic enforcement architectures and non-enforced governance environments. No component of this model is derived from actuarial claims data, published breach cost surveys, or empirical incident measurements. The assumptions underlying each figure are stated explicitly, and the figures should be interpreted as directional cost bands within those assumption constraints, not as predictions of organizational cost experience.</p>
+
+        <h3><span class="sh-num">1.3</span> Relationship to the QODIQA Reference Architecture</h3>
+        <p>This paper uses enforcement architectures conformant with the QODIQA Core Standard v1.0 and the 68-Point Enforcement Framework v3.0 as its reference implementation of the broader class of deterministic runtime consent enforcement systems. The economic properties modeled here — immutable decision artifacts, deterministic policy evaluation, fail-closed semantics, cryptographic integrity — are properties of the architectural class, not exclusive properties of QODIQA. QODIQA is referenced as a concrete specification of this class, providing definitional precision to the architectural properties under analysis.</p>
+
+        <p>References to enforcement properties assume full conformance with the QODIQA specifications where QODIQA is cited. Partial deployments, non-conformant implementations, or alternative architectures that approximate but do not fully satisfy these properties may produce narrower or different cost profiles than those modeled here. The economic claims in this paper are contingent on the full set of properties being present; they should not be interpreted as applicable to partial or approximate implementations.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Risk Surface Categories</h2>
+
+        <p>The following categories define the primary economic risk surfaces created by operating AI systems without deterministic runtime consent enforcement. Each represents a distinct class of cost exposure that enforcement infrastructure is designed to address.</p>
+
+        <h3><span class="sh-num">2.1</span> Unauthorized Action Exposure</h3>
+        <p>When AI systems execute actions without deterministically confirmed consent, the organization faces potential liability for the consequences of those actions. The economic exposure is not limited to the immediate harm caused; it includes the cost of establishing after the fact what the authorization state was, whether consent existed, and what obligations were triggered. Without a deterministic enforcement record, this determination requires forensic reconstruction of system state from logs, policy snapshots, and execution traces — a process that is both expensive and imprecise.</p>
+
+        <h3><span class="sh-num">2.2</span> Purpose Drift Liability</h3>
+        <p>AI systems deployed for declared purposes may, over time, be applied to adjacent purposes for which consent was not obtained. Purpose drift is economically costly because it is often invisible in real-time — the drift accumulates through incremental decisions, each individually arguable, until an aggregate pattern emerges that creates material liability. Without deterministic enforcement that records and validates the purpose declaration at execution time, establishing the drift pattern and its associated liability requires exhaustive forensic analysis.</p>
+
+        <h3><span class="sh-num">2.3</span> Revocation Non-Propagation</h3>
+        <p>Consent revocation in distributed AI systems requires that the revocation signal propagate to all components that might act on the revoked consent. Without deterministic enforcement, this propagation is neither guaranteed nor verifiable — and in architectures where components cache consent state or evaluate it asynchronously, the revocation gap may persist for operationally significant durations before detection. The economic consequence is continued AI action on revoked consent, creating liability exposure that may not be detected until audit or incident. The cost of retroactive remediation, which must account for every action taken after revocation, significantly exceeds the cost of deterministic enforcement at the point of execution, where the revocation state would be evaluated before any action proceeds.</p>
+
+        <h3><span class="sh-num">2.4</span> Audit Reconstruction Overhead</h3>
+        <p>Regulatory audits, internal compliance reviews, and litigation discovery in AI-deployed organizations currently require labor-intensive reconstruction of authorization states that were never recorded in queryable form. The cost of this reconstruction is paid on every audit cycle and in every incident investigation. It is not a tail-risk cost — it is an operational cost that recurs predictably and scales with AI deployment volume.</p>
+
+        <h3><span class="sh-num">2.5</span> Regulatory Penalty Exposure</h3>
+        <p>GDPR, the EU AI Act, and equivalent regulatory frameworks impose penalties for consent violations, inadequate transparency, and insufficient control mechanisms. The economic exposure from regulatory penalty is not primarily determined by whether violations occurred — it is substantially determined by whether the organization can demonstrate that appropriate controls existed and functioned. Without enforcement infrastructure, this demonstration requires arguing from process documentation and policy attestation; with enforcement infrastructure, it is supported by machine-verifiable artifact evidence.</p>
+
+        <h3><span class="sh-num">2.6</span> Incident Response Amplification</h3>
+        <p>When an AI-related incident occurs in a non-enforced environment, the response effort is amplified by the inability to quickly establish the authorization state at the time of the incident. Incident responders must expand the investigation boundary to include all actions that might be related, because the system cannot deterministically exclude actions that were actually authorized. This over-investigation is the primary source of incident response cost amplification in AI-deployed organizations.</p>
+
+        <h3><span class="sh-num">2.7</span> Multi-Agent Propagation Risk</h3>
+        <p>In architectures where AI agents call other AI agents, consent violations do not remain isolated. An agent acting beyond its authorized scope may trigger downstream actions by other agents, each of which inherits the upstream consent failure. The economic consequence is a multiplier effect: the cost of a single upstream authorization failure scales with the number of downstream actions it initiated. Without deterministic enforcement at each gate, the propagation scope cannot be established without exhaustive trace analysis.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Baseline Economic Exposure Model</h2>
+
+        <p>The following model establishes a baseline cost envelope for organizations operating AI systems without deterministic runtime consent enforcement. It uses assumed operational parameters across three organizational profiles and three incident frequency bands. All figures are structural estimates, not actuarial measurements.</p>
+
+        <h3><span class="sh-num">3.1</span> Modeling Assumptions</h3>
+
+        <div class="disclaimer-block">
+          <span class="disclaimer-block-label">Stated Assumptions — Required Reading</span>
+          <p><strong>AI usage volume:</strong> 500,000 to 50,000,000 AI-executed actions per year, varying by organizational profile.</p>
+          <p><strong>Consent ambiguity rate:</strong> Estimated 2–8% of AI actions where consent validity cannot be deterministically confirmed at time of execution, based on the structural properties of non-enforced systems.</p>
+          <p><strong>Incident frequency:</strong> Low (1–3 material consent-related incidents per year), Medium (4–12), High (13+).</p>
+          <p><strong>Audit overhead estimate:</strong> 40–180 analyst-hours per material incident for log-based reconstruction in non-enforced environments.</p>
+          <p><strong>Legal review cost:</strong> $15,000–$250,000 per material incident requiring external legal counsel, depending on regulatory context and data sensitivity.</p>
+        </div>
+
+        <h3><span class="sh-num">3.2</span> Baseline Cost Band Table</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 3.1 — Annual Baseline Exposure by Incident Band (Without Deterministic Enforcement)</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Cost Category</th>
+                <th>Low Band</th>
+                <th>Mid Band</th>
+                <th>High Band</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Audit Reconstruction (Internal Labor)</td>
+                <td class="mono">$40k – $120k</td>
+                <td class="mono">$180k – $540k</td>
+                <td class="mono">$540k – $1.8M</td>
+              </tr>
+              <tr>
+                <td>Incident Response Scoping</td>
+                <td class="mono">$20k – $80k</td>
+                <td class="mono">$90k – $360k</td>
+                <td class="mono">$300k – $1.2M</td>
+              </tr>
+              <tr>
+                <td>Legal Review and Counsel</td>
+                <td class="mono">$15k – $75k</td>
+                <td class="mono">$75k – $500k</td>
+                <td class="mono">$250k – $2.5M</td>
+              </tr>
+              <tr>
+                <td>Compliance Documentation</td>
+                <td class="mono">$30k – $90k</td>
+                <td class="mono">$90k – $270k</td>
+                <td class="mono">$270k – $900k</td>
+              </tr>
+              <tr>
+                <td>Regulatory Inquiry Response</td>
+                <td class="mono">$0 – $150k</td>
+                <td class="mono">$50k – $750k</td>
+                <td class="mono">$200k – $5M+</td>
+              </tr>
+              <tr>
+                <td>Total Annual Exposure Estimate</td>
+                <td class="band">$105k – $515k</td>
+                <td class="band">$485k – $2.4M</td>
+                <td class="band">$1.56M – $11.4M+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>These bands represent the direct operational cost of operating without enforcement infrastructure, exclusive of any regulatory fines, class-action exposure, or reputational remediation. They reflect the cost of institutional effort applied to resolving ambiguity that deterministic enforcement would have removed at the point of execution.</p>
+
+        <h3><span class="sh-num">3.3</span> Structural Cost Driver</h3>
+        <p>The dominant cost driver across all bands is not the frequency of actual violations — it is the <strong>inability to distinguish authorized from unauthorized actions without significant forensic effort</strong>. In a system without deterministic enforcement artifacts, every investigated incident must treat all ambiguous actions as potentially unresolved, regardless of whether they were actually problematic. This means that even a small number of genuine violations can generate investigation effort that spans a much larger population of ambiguous but legitimate actions — a structural over-investigation that is the principal source of audit cost inflation in AI-deployed organizations.</p>
+
+        <p>The cost bands in this model reflect direct operational costs only. They exclude tail-risk events such as class-action proceedings, maximum-scale regulatory fines, or systemic reputational remediation. The absence of tail-risk figures in this model does not imply the absence of tail-risk exposure; it reflects a deliberate methodological boundary intended to keep the model within the scope of structural reasoning rather than speculative estimation. Organizations should assess tail-risk exposure separately through qualified legal and actuarial review.</p>
+
+        <h3><span class="sh-num">3.4</span> Modeling Methodology Clarification</h3>
+        <p>The cost bands presented in this section are derived from structural reasoning about the operational mechanics of non-enforced AI governance environments, not from actuarial datasets, breach insurance claims, or empirical incident measurements. The methodology is explicitly first-principles in character: it reasons forward from the known properties of log-based reconstruction, cross-system correlation, and legal review cycles to estimate the labor and external cost surfaces those processes generate.</p>
+
+        <p>Analyst-hour bands for audit reconstruction are derived from the composition of work required in log-based governance environments: cross-system log correlation to establish event sequences, schema normalization across heterogeneous storage systems, timestamp reconciliation where execution events and consent records are logged at different granularities, and interpretive narrative construction for auditor or legal audiences. Each of these phases contributes independently to the total reconstruction burden.</p>
+
+        <p>No component of this model derives from cited external research, benchmark surveys, or industry studies. The model is self-consistent within its stated assumptions and is intended to be evaluated on the basis of its structural reasoning, not its conformance to external data sources that do not yet exist for this specific domain.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Economic Impact of Deterministic Runtime Enforcement</h2>
+
+        <p>Deterministic runtime enforcement does not eliminate risk. It does, however, structurally alter several of the cost dynamics described in the baseline model by removing the condition — authorization ambiguity — from which the largest cost categories derive. The following analysis addresses each affected cost category and traces the reduction mechanism to its structural cause, rather than asserting a reduction percentage without causal grounding.</p>
+
+        <h3><span class="sh-num">4.1</span> Reduction in Ambiguity Cost</h3>
+        <p>When every executed AI action produces an immutable decision artifact — containing the resolved consent state, the evaluated policy version, the declared purpose, and the outcome — the set of actions where authorization state is indeterminate at query time becomes structurally empty. As specified in the 68-Point Enforcement Framework v3.0, conformant enforcement points are required to evaluate consent state and policy version at the moment of execution and to record the deterministic outcome as an immutable artifact before permitting downstream action. This structural requirement, if fully satisfied, is expected to eliminate the authorization ambiguity surface under conditions of complete and uninterrupted enforcement coverage.</p>
+
+        <p>Under this architecture, organizations are positioned — to the extent that artifact integrity is preserved and enforcement coverage is complete — to establish at query time whether a given action was authorized, for what purpose, and under which policy, without forensic reconstruction. This is expected to reduce, under defined enforcement conditions, the class of investigation that currently consumes the largest share of audit labor: the determination of what the authorization state was at time of execution.</p>
+
+        <h3><span class="sh-num">4.2</span> Reduction in Audit Reconstruction Time</h3>
+        <p>Current audit processes for AI-related incidents rely on log aggregation, cross-system correlation, and analyst interpretation. In enforced environments, a queried decision artifact is expected to provide directly: the request context hash, the consent state at evaluation, the applicable policy identifier and version, and the deterministic outcome — assuming the artifact store is intact, queryable, and the enforcement architecture has been operating without interruption. Under these conditions, the reconstruction step is expected to be replaced by artifact retrieval. The 40–180 hour analyst-time band for log-based reconstruction represents an estimate derived from structural decomposition of the investigation workflow phases described in Section 3.4, not an empirical measurement. The 2–12 hour band for artifact retrieval and verification is similarly derived from the structural simplification that querying a keyed artifact store represents relative to multi-system log correlation. Both figures should be interpreted as directional estimates within their stated assumption constraints, not as benchmarks applicable to any specific organization or deployment.</p>
+
+        <h3><span class="sh-num">4.3</span> Reduction in Incident Containment Time</h3>
+        <p>Mean time to scope determination — the interval between incident detection and a defensible boundary on what was affected — is a primary driver of incident response cost. In non-enforced systems, scope is constructed by expanding the investigation boundary until the team can argue with reasonable confidence that no additional material actions fall outside it — a process that tends to run longer than anticipated because each expanded boundary reveals additional ambiguous actions that must themselves be evaluated. In enforced systems operating under full artifact coverage, scope becomes determinable by query: all actions where the decision artifact indicates a specific consent scope, purpose, or data classification within a defined time window. Where deterministic evaluation has been consistently applied across all execution points, this query-based scoping approach is expected to compress containment timelines from day-to-week bands toward hour-to-day bands. Organizations with partial enforcement coverage should expect proportionally reduced compression of this timeline, as ungated execution paths restore the reconstruction overhead that full coverage would otherwise remove.</p>
+
+        <h3><span class="sh-num">4.4</span> Cost Comparison Table</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 4.1 — Modeled Cost Reduction by Category (Mid-Band Scenario, Full-Conformance Assumption)</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Cost Category</th>
+                <th>Baseline Exposure (modeled)</th>
+                <th>With Deterministic Enforcement (modeled)</th>
+                <th>Reduction Mechanism</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Audit Reconstruction</td>
+                <td class="mono">$180k – $540k</td>
+                <td class="mono">$20k – $80k</td>
+                <td class="reduction">Reconstruction overhead compresses to artifact retrieval under full coverage</td>
+              </tr>
+              <tr>
+                <td>Incident Response Scoping</td>
+                <td class="mono">$90k – $360k</td>
+                <td class="mono">$25k – $90k</td>
+                <td class="reduction">Scope determined by artifact query rather than expanding investigation</td>
+              </tr>
+              <tr>
+                <td>Legal Review Overhead</td>
+                <td class="mono">$75k – $500k</td>
+                <td class="mono">$30k – $150k</td>
+                <td class="reduction">Evidentiary basis is artifact-supplied; reduces interpretive legal work</td>
+              </tr>
+              <tr>
+                <td>Compliance Documentation</td>
+                <td class="mono">$90k – $270k</td>
+                <td class="mono">$20k – $60k</td>
+                <td class="reduction">Documentation generated at execution time, not assembled after the fact</td>
+              </tr>
+              <tr>
+                <td>Regulatory Inquiry Response</td>
+                <td class="mono">$50k – $750k</td>
+                <td class="mono">$20k – $200k</td>
+                <td class="reduction">Artifact-based response reduces reconstruction and narrative burden</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>All figures in Table 4.1 are structural estimates derived from first-principles reasoning about enforcement mechanics. They represent modeled cost bands under full-conformance conditions and mid-band incident frequency, as defined in Section 3.1. They are not derived from empirical deployment data, actuarial measurements, or industry benchmarks. The "With Deterministic Enforcement" column represents expected costs under the assumption that the enforcement architecture is fully conformant, has complete coverage of all AI action execution points, and maintains uninterrupted artifact integrity. Partial or non-conformant implementations will produce narrower reductions than those indicated.</p>
+
+        <div class="callout">
+          <p>The cost reduction mechanism is structurally consistent across all categories: <strong>deterministic artifacts compress the investigation burden</strong> by replacing the need to infer authorization state with the ability to retrieve it. The economic benefit is not a function of deterministic enforcement reducing the frequency of violations — it is a function of making the authorization record queryable rather than requiring forensic reconstruction. This distinction matters: the model does not depend on enforcement preventing more incidents; it depends on enforcement making existing incidents cheaper to investigate and close.</p>
+        </div>
+
+        <h3><span class="sh-num">4.5</span> Defensibility Posture</h3>
+        <p>Beyond direct cost reduction, deterministic enforcement is expected to alter the organization's posture in regulatory and legal proceedings under conditions where the artifact corpus is intact and legally admissible. Where a non-enforced organization must reconstruct and argue what its authorization state was — relying on narrative construction from logs, policy snapshots, and analyst interpretation — an organization with complete artifact coverage is expected to be able to present machine-verifiable authorization records directly. This shift from narrative explanation to artifact-based demonstration is structurally significant in proceedings where the burden of proof is on the organization. The degree to which this posture improvement translates into reduced proceeding length or cost will depend on the legal jurisdiction, the regulatory framework, and the specific conduct under review; no generalizable litigation cost reduction is claimed.</p>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Audit and Compliance Cost Model</h2>
+
+        <p>Audit preparation and compliance documentation represent a persistent operational overhead in AI-deployed regulated organizations. This section models the cost structure of audit activity in both non-enforced and artifact-based enforcement environments.</p>
+
+        <h3><span class="sh-num">5.1</span> Audit Cost Components</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 5.1 — Audit Cost Component Comparison</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Without Enforcement</th>
+                <th>With Artifact-Based Replay</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Audit Preparation</td>
+                <td class="mono">60–200 hrs/audit cycle</td>
+                <td class="mono">10–40 hrs/audit cycle</td>
+              </tr>
+              <tr>
+                <td>Log Reconstruction</td>
+                <td>High — cross-system correlation</td>
+                <td>Minimal — artifact retrieval</td>
+              </tr>
+              <tr>
+                <td>Evidence Packaging</td>
+                <td>Manual curation, interpretive</td>
+                <td>Structured export, verifiable</td>
+              </tr>
+              <tr>
+                <td>Internal Compliance Review</td>
+                <td class="mono">8–24 hrs per incident</td>
+                <td class="mono">1–4 hrs per incident</td>
+              </tr>
+              <tr>
+                <td>External Auditor Query Response</td>
+                <td>Days to weeks per query</td>
+                <td>Hours per query</td>
+              </tr>
+              <tr>
+                <td>Audit Trail Defensibility</td>
+                <td>Inferred, arguable</td>
+                <td>Deterministic, replayable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span class="sh-num">5.2</span> The Artifact-Based Replay Model</h3>
+        <p>The central compliance cost innovation introduced by deterministic enforcement is the artifact-based replay model. Rather than asking "what happened and why?" — which requires forensic reconstruction, typically involving multiple log systems with inconsistent granularity and schema — an auditor operating against a complete artifact corpus can request retrieval of a specific decision artifact and receive the exact inputs, policy version, consent state, and outcome that existed at execution time. Conditional on complete artifact coverage and the operational availability of replay infrastructure, this model is analytically expected to transform audit from a narrative construction exercise into a verification exercise, compressing the time and interpretive labor required by the highest-cost audit activities. Incomplete artifact coverage — arising from enforcement gaps, system interruptions, or partial deployment — would reduce the proportion of audit work amenable to this compression, restoring reconstruction overhead for the affected execution period.</p>
+
+        <h3><span class="sh-num">5.3</span> Regulatory Framework Alignment Cost</h3>
+        <p>Demonstrating compliance with GDPR Article 7 (consent conditions), EU AI Act Article 13 (transparency requirements), and NIST AI RMF GOVERN.1 (governance documentation) typically requires documentation of decision processes, data handling justifications, and consent records. In non-enforced environments, this documentation is assembled after the fact — retrospectively constructed from logs, policy records, and process attestations, each of which introduces interpretive uncertainty. In artifact-enforced environments, the compliance evidence substrate is produced as a structural byproduct of the enforcement mechanism at execution time, specifically because the artifact contains the consent state, policy version, and purpose declaration that compliance documentation would otherwise need to reconstruct. The marginal cost of compliance documentation is analytically expected to decrease materially under this architecture, within the stated modeling assumptions. Whether the artifact corpus meets the evidentiary standards required by the applicable regulatory framework is a legal determination, not a technical one, and requires qualified legal review in the relevant jurisdiction.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Incident Response Containment Modeling</h2>
+
+        <p>Incident response in AI-deployed environments presents distinct challenges from conventional cybersecurity incident response. The question is not only "what system was breached" but "what was authorized, what was not, and what was the consent state at each relevant execution point." Deterministic enforcement alters the cost structure of this inquiry fundamentally.</p>
+
+        <h3><span class="sh-num">6.1</span> Mean Time to Attribution</h3>
+        <p>In non-enforced environments, attributing an AI action to a specific authorization context requires correlation across application logs, consent storage systems, policy records, and execution traces. This correlation is often imprecise — consent records may be timestamped at a coarser granularity than execution events, or stored in separate systems with inconsistent schemas.</p>
+
+        <p>Estimated mean time to attribution in non-enforced environments ranges from 6 hours to 14 days depending on system architecture and logging completeness — a range that reflects both the variability of log infrastructure maturity and the interpretive labor required when logs were designed for operational monitoring rather than forensic attribution. In artifact-enforced environments, where deterministic evaluation has been consistently applied, attribution reduces to artifact identifier lookup — a process measurable in minutes to hours rather than days.</p>
+
+        <h3><span class="sh-num">6.2</span> Mean Time to Scope Determination</h3>
+        <p>Scope determination — establishing which actions, data subjects, and systems were involved in an incident — is the most expensive phase of AI incident response. In non-enforced environments, scope is constructed by expanding the investigation boundary until the team can argue with reasonable confidence that no additional material actions fall within the incident scope.</p>
+
+        <p>In artifact-enforced environments operating under complete coverage, scope is expected to be addressable by query: all decision artifacts matching specified consent scope, data classification, or agent identity within a defined time window. This is expected to reduce scope determination from a multi-day analytical effort to a structured query operation, under the conditions that enforcement has been continuously applied across all relevant execution points, the artifact store is intact and queryable, and the query infrastructure is available during the incident response period. Gaps in any of these conditions will partially restore the reconstruction overhead that enforcement otherwise removes.</p>
+
+        <div class="table-wrapper" id="table-6-1">
+          <span class="table-caption">Table 6.1 — Modeled Incident Response Timeline Comparison (Full-Coverage Assumption)</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left;">Metric</th>
+                <th style="text-align:left;">Without Enforcement (modeled)</th>
+                <th style="text-align:left;">With Deterministic Enforcement (modeled, full coverage)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;">Mean Time to Attribution</td>
+                <td class="mono" style="text-align:left;">6 hrs – 14 days</td>
+                <td class="mono" style="text-align:left;">15 min – 4 hrs</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Mean Time to Scope Determination</td>
+                <td class="mono" style="text-align:left;">2 days – 6 weeks</td>
+                <td class="mono" style="text-align:left;">2 hrs – 2 days</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Log Integrity Validation</td>
+                <td style="text-align:left;">Uncertain — mutable logs</td>
+                <td style="text-align:left;">Cryptographic verification available where signing is implemented</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Cross-System Trace Effort</td>
+                <td style="text-align:left;">High — manual correlation</td>
+                <td style="text-align:left;">Reduced — artifact-anchored tracing where coverage is complete</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Regulatory Notification Confidence</td>
+                <td style="text-align:left;">Low — scope uncertain</td>
+                <td style="text-align:left;">Higher — scope queryable under complete artifact coverage</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="section-note">All timeline bands in Table 6.1 are structural estimates. The "Without Enforcement" column is derived from the decomposition of investigation workflow phases described in Section 3.4. The "With Deterministic Enforcement" column assumes full and continuous enforcement coverage across all relevant AI execution points. Neither column represents empirically measured incident response data.</p>
+
+        <h3><span class="sh-num">6.3</span> Forensic Ambiguity Cost</h3>
+        <p>Forensic ambiguity — the condition where the authorization state at execution time cannot be established with certainty at investigation time — is the primary structural cost amplifier in AI incident response. It drives over-notification (informing more data subjects than necessary because scope cannot be bounded), over-containment (suspending more systems than affected because the boundary of impact cannot be determined), and extended legal review (because counsel cannot advise with confidence on exposure scope). Where deterministic evaluation has been consistently applied, enforcement architecture addresses the structural cause of forensic ambiguity by recording authorization state at execution time rather than leaving it to be inferred at investigation time. The degree to which forensic ambiguity is reduced in practice depends on the completeness of enforcement deployment, the integrity of the artifact corpus, and the operational availability of artifact query infrastructure during response activities — conditions that are matters of implementation quality rather than architectural design alone.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Multi-Agent System Risk Amplification Economics</h2>
+
+        <p>As AI deployments mature, tool-calling and multi-agent architectures are becoming standard rather than exceptional. In these environments, an AI agent may invoke other agents, consume outputs from automated pipelines, and chain tool calls across multiple systems. The economic consequence of this architecture is a risk amplification effect: a single upstream authorization failure propagates through the system, generating a cascade of actions each of which may independently constitute a consent violation.</p>
+
+        <h3><span class="sh-num">7.1</span> The Propagation Multiplier</h3>
+        <p>Consider an orchestrating agent authorized for purpose A that inadvertently invokes a downstream agent with a request parameterized for purpose B. Without enforcement at the downstream gate, purpose B actions execute under the upstream agent's authorization context — a context that does not cover purpose B. The exposure is not one unauthorized action but a sequence of them.</p>
+
+        <p>If the downstream agent itself calls further tools, the propagation continues. The propagation multiplier — the number of derivative actions generated by a single upstream authorization failure — can reach an order of magnitude or more in complex agentic workflows.</p>
+
+        <div class="callout">
+          <p>The economic significance of the propagation multiplier is that <strong>incident scope, remediation cost, and notification obligations scale with it</strong>. An incident that would be contained to a single action in a simple pipeline becomes a multi-action consent event in a multi-agent architecture — with corresponding increases in audit scope, legal review, and potential regulatory exposure.</p>
+        </div>
+
+        <h3><span class="sh-num">7.2</span> Deterministic Gating as Cost Containment</h3>
+        <p>A deterministic enforcement gate at each agent boundary is structured to constrain the propagation effect, assuming no degradation of enforcement guarantees across agent interfaces. If every agent invocation is subject to independent consent and policy evaluation at its own enforcement gate, an upstream authorization failure is analytically expected to be blocked at the first downstream gate it encounters rather than propagating through the system. The economic benefit is not merely a reduction in the likelihood of additional violations — it is the expected bounding of incident scope to a queryable set of artifacts, rather than an unbounded cascade requiring exhaustive trace reconstruction. This benefit is contingent on enforcement gates being present at every agent boundary; architectures with selectively deployed gates will contain propagation only at gated boundaries, leaving ungated paths as residual propagation channels that restore the unbounded cost structure at those interfaces.</p>
+
+        <h3><span class="sh-num">7.3</span> Risk Surface Growth Function</h3>
+        <p>In a system with N agent nodes and an average fan-out of F (downstream calls per node), an upstream authorization failure in a non-enforced system can affect up to F^(N-1) actions before reaching leaf nodes. This is a structural property of the architecture, not a worst-case anomaly. With deterministic gating at each node, the affected action set is bounded at 1 (the originating action) plus a deterministic query identifying which downstream gates rejected. The cost curve is therefore exponential in non-enforced architectures and constant-bounded in enforced ones, relative to the propagation structure of the system.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Implementation Cost Envelope</h2>
+
+        <p>A balanced analysis requires accounting for the costs introduced by deterministic enforcement infrastructure alongside the costs it mitigates. The following estimates reflect the deployment and operational overhead of a conformant reference implementation of this architectural class. These are structural estimates derived from the known components of enforcement architecture deployment; actual costs will depend on organizational scale, existing infrastructure, and implementation approach and may vary materially from these bands.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 8.1 — Implementation and Operational Cost Bands</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Cost Component</th>
+                <th>Initial Deployment</th>
+                <th>Annual Operational</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Enforcement Gateway Deployment</td>
+                <td class="mono">$40k – $200k</td>
+                <td class="mono">$10k – $50k</td>
+              </tr>
+              <tr>
+                <td>Policy Registry Configuration</td>
+                <td class="mono">$15k – $60k</td>
+                <td class="mono">$8k – $30k</td>
+              </tr>
+              <tr>
+                <td>Cryptographic Infrastructure</td>
+                <td class="mono">$5k – $25k</td>
+                <td class="mono">$3k – $12k</td>
+              </tr>
+              <tr>
+                <td>Integration Engineering</td>
+                <td class="mono">$30k – $180k</td>
+                <td class="mono">$10k – $40k</td>
+              </tr>
+              <tr>
+                <td>Monitoring and Alerting</td>
+                <td class="mono">$8k – $30k</td>
+                <td class="mono">$5k – $20k</td>
+              </tr>
+              <tr>
+                <td>Training and Operational Readiness</td>
+                <td class="mono">$10k – $40k</td>
+                <td class="mono">$5k – $15k</td>
+              </tr>
+              <tr>
+                <td>Total Implementation Band</td>
+                <td class="band">$108k – $535k</td>
+                <td class="band">$41k – $167k</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span class="sh-num">8.1</span> Cryptographic Overhead</h3>
+        <p>Deterministic enforcement introduces cryptographic signing of decision artifacts, which imposes computational overhead at the enforcement gateway. In well-architected implementations, this overhead is expected to be sub-millisecond per decision for standard hardware signing operations — an estimate derived from the operational characteristics of common asymmetric signing algorithms at the key lengths appropriate for artifact integrity, not from measured deployment data. For high-throughput environments (millions of decisions per day), dedicated cryptographic hardware may be warranted, representing an additional infrastructure cost in the $10k–$60k range for initial procurement. This range is a structural estimate based on current hardware security module procurement patterns and should be verified against current market pricing before use in capital planning.</p>
+
+        <h3><span class="sh-num">8.2</span> Cost Introduced vs. Cost Expected to Be Mitigated</h3>
+        <p>Comparing the modeled implementation cost envelope to the baseline exposure model: for mid-band incident frequency as defined in Section 3.1, the baseline annual direct operational exposure is modeled at $485k to $2.4M. The annual operational cost of maintaining a conformant enforcement infrastructure is modeled at $41k–$167k. Within the stated modeling assumptions, the operational cost of enforcement infrastructure represents approximately 7–35% of the annual baseline direct cost exposure it is designed to address, at mid-band incident frequency, before accounting for any incident reduction effect. This ratio is presented as a cost-structure comparison — specifically, a comparison between the fixed cost of maintaining the infrastructure and the variable cost of operating without it — not a return-on-investment claim. Both figures are structural estimates with the assumption dependencies described in Sections 3.1 and 8; neither has been empirically validated against deployment experience.</p>
+
+        <div class="callout">
+          <p>The implementation cost envelope does not decrease as incident frequency increases — it is relatively fixed. The baseline exposure, however, scales directly with incident frequency. This asymmetry means that the cost differential between enforced and non-enforced environments <strong>widens as incident frequency rises.</strong></p>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Scenario Analysis</h2>
+
+        <p>The following three scenarios apply the cost model to defined organizational profiles. Each scenario presents a baseline risk envelope, an estimated post-enforcement adjustment, and structural observations. No return-on-investment projections or valuation claims are made.</p>
+
+        <p>As noted in Section 3, all scenario cost figures represent direct operational costs. They do not model catastrophic tail-risk events — including class-action proceedings, maximum-band regulatory penalties under GDPR or EU AI Act, or systemic remediation following high-profile incidents. The scenarios below should be read as direct-cost envelopes; organizations must assess tail-risk exposure through separate actuarial and legal processes.</p>
+
+        <h3><span class="sh-num">9.1</span> Scenario A — Mid-Size Enterprise</h3>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <span class="scenario-label">Profile</span>
+            <div class="scenario-title">Mid-Size Enterprise</div>
+            <div class="scenario-row"><span class="scenario-row-label">Scale</span>250–2,500 employees; 1–5 AI-deployed services</div>
+            <div class="scenario-row"><span class="scenario-row-label">Volume</span>500k – 5M AI actions/year</div>
+            <div class="scenario-row"><span class="scenario-row-label">Regulation</span>GDPR, sector-specific</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Baseline Risk Envelope</span>
+            <div class="scenario-title">Without Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$105k – $515k direct cost</div>
+            <div class="scenario-row"><span class="scenario-row-label">Incidents</span>Low-to-medium band (1–8/yr)</div>
+            <div class="scenario-row"><span class="scenario-row-label">Audit</span>60–180 hrs per cycle</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Post-Enforcement Estimate</span>
+            <div class="scenario-title">With Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$30k – $130k direct cost</div>
+            <div class="scenario-row"><span class="scenario-row-label">Impl. Cost</span>$108k – $535k initial</div>
+            <div class="scenario-row"><span class="scenario-row-label">Operational</span>$41k – $100k/yr</div>
+          </div>
+        </div>
+
+        <p><strong>Structural Observation:</strong> At this scale, enforcement infrastructure represents a meaningful proportion of the first-year total cost. The economic case strengthens from year two onward, when implementation costs are amortized and the operational cost-to-exposure differential becomes the dominant factor. Regulatory audit efficiency is the primary near-term benefit at this profile.</p>
+
+        <h3><span class="sh-num">9.2</span> Scenario B — Large Regulated Institution</h3>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <span class="scenario-label">Profile</span>
+            <div class="scenario-title">Large Regulated Institution</div>
+            <div class="scenario-row"><span class="scenario-row-label">Scale</span>5,000+ employees; 10–50 AI-deployed services</div>
+            <div class="scenario-row"><span class="scenario-row-label">Volume</span>10M – 200M AI actions/year</div>
+            <div class="scenario-row"><span class="scenario-row-label">Regulation</span>GDPR, EU AI Act, PSD2, DORA, or equivalent</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Baseline Risk Envelope</span>
+            <div class="scenario-title">Without Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$1.5M – $11.4M+ direct cost</div>
+            <div class="scenario-row"><span class="scenario-row-label">Incidents</span>Medium-to-high band (8–20+/yr)</div>
+            <div class="scenario-row"><span class="scenario-row-label">Audit</span>180–600 hrs per cycle across services</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Post-Enforcement Estimate</span>
+            <div class="scenario-title">With Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$300k – $2.5M direct cost</div>
+            <div class="scenario-row"><span class="scenario-row-label">Impl. Cost</span>$250k – $1.2M initial (multi-service)</div>
+            <div class="scenario-row"><span class="scenario-row-label">Operational</span>$100k – $350k/yr</div>
+          </div>
+        </div>
+
+        <p><strong>Structural Observation:</strong> At regulated institution scale, enforcement infrastructure cost is a significantly smaller proportion of baseline exposure. The primary benefit at this profile is regulatory defensibility: the ability to respond to supervisory inquiries and regulatory examinations with artifact-based evidence rather than reconstructed narratives. Multi-service deployments benefit from shared policy registry and artifact storage infrastructure, reducing per-service implementation cost at scale.</p>
+
+        <h3><span class="sh-num">9.3</span> Scenario C — AI-Native Platform at Scale</h3>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <span class="scenario-label">Profile</span>
+            <div class="scenario-title">AI-Native Platform</div>
+            <div class="scenario-row"><span class="scenario-row-label">Scale</span>Millions of end users; AI as core product function</div>
+            <div class="scenario-row"><span class="scenario-row-label">Volume</span>100M – 10B+ AI actions/year</div>
+            <div class="scenario-row"><span class="scenario-row-label">Regulation</span>GDPR, EU AI Act high-risk obligations, CCPA/CPRA</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Baseline Risk Envelope</span>
+            <div class="scenario-title">Without Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$5M – $50M+ direct cost band</div>
+            <div class="scenario-row"><span class="scenario-row-label">Incidents</span>High band; regulatory inquiry near-certain</div>
+            <div class="scenario-row"><span class="scenario-row-label">Multi-agent</span>Propagation multiplier structurally elevated</div>
+          </div>
+          <div class="scenario-card">
+            <span class="scenario-label">Post-Enforcement Estimate</span>
+            <div class="scenario-title">With Enforcement</div>
+            <div class="scenario-row"><span class="scenario-row-label">Annual</span>$1M – $10M direct cost band</div>
+            <div class="scenario-row"><span class="scenario-row-label">Impl. Cost</span>$500k – $3M initial (platform-grade)</div>
+            <div class="scenario-row"><span class="scenario-row-label">Operational</span>$200k – $800k/yr</div>
+          </div>
+        </div>
+
+        <p><strong>Structural Observation:</strong> At AI-native platform scale, enforcement infrastructure becomes a product compliance requirement rather than an optional risk mitigation layer. The EU AI Act's high-risk system classification requirements, the operational scale of consent management, and the structural propagation risk in multi-agent architectures combine to make non-enforced operation structurally untenable above certain incident thresholds.</p>
+
+        <p><strong>Infrastructure Density Note:</strong> At 100M–10B+ AI actions per year, artifact storage and cryptographic verification introduce scaling considerations distinct from lower-volume profiles. Cryptographic verification at scale benefits from shared registry infrastructure: because policy registry lookups and signing operations are performed against a single authoritative registry shared across all platform services, enforcement scaling cost increases sub-linearly relative to action volume. The marginal infrastructure cost per additional service or agent node is substantially lower than the initial deployment cost, as shared cryptographic infrastructure, policy registries, and artifact storage layers are amortized across the platform.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Residual Risk and Economic Non-Coverage</h2>
+
+        <p>Intellectual integrity requires explicit acknowledgment of what deterministic runtime consent enforcement does not address and what economic exposure it does not reduce. The following categories fall outside the scope of execution-layer enforcement architectures of this class.</p>
+
+        <h3><span class="sh-num">10.1</span> Model Performance Failures</h3>
+        <p>Deterministic enforcement governs whether an AI action was authorized. It does not govern whether the AI performed that action correctly, accurately, or safely. Model hallucinations, factual errors, biased outputs, and performance degradation are outside the scope of consent enforcement and represent distinct economic exposures that enforcement infrastructure does not address. Organizations should not interpret consent enforcement conformance as a statement about model quality, reliability, or safety.</p>
+
+        <h3><span class="sh-num">10.2</span> Business Strategy and Product Decisions</h3>
+        <p>Poor product strategy, incorrect market assumptions, or flawed business decisions made using AI-generated outputs are not addressable by consent enforcement. Deterministic enforcement architectures verify that AI actions are authorized at the execution layer; they do not govern whether authorized AI actions lead to sound business outcomes. The economic risk of bad strategy is unaffected by enforcement architecture.</p>
+
+        <h3><span class="sh-num">10.3</span> Ethical Design Costs</h3>
+        <p>Consent enforcement is not equivalent to ethical AI design. An AI system may be fully conformant with consent enforcement requirements while producing outputs or taking actions that raise ethical concerns. Ethical design — addressing fairness, bias, societal impact, and value alignment — is a separate discipline requiring separate investment. Runtime consent enforcement architectures do not reduce ethical design cost and should not be treated as a proxy for ethical compliance or responsible AI certification.</p>
+
+        <h3><span class="sh-num">10.4</span> Training Data and Intellectual Property Exposure</h3>
+        <p>Consent enforcement operates at the point of AI action execution. It does not address upstream questions about training data licensing, intellectual property in model outputs, or data provenance obligations. These represent distinct legal and economic exposures that require separate governance mechanisms.</p>
+
+        <h3><span class="sh-num">10.5</span> Product Liability Unrelated to Consent</h3>
+        <p>Where AI outputs cause physical harm, financial loss, or other product liability, the enforcement of consent at the time of action does not affect the product liability exposure itself. Consent documentation may be relevant in some liability contexts, but it does not constitute a defense against harm caused by AI system malfunction, incorrect output, or unsafe design.</p>
+
+        <ul class="prop-list">
+          <li>Model accuracy, reliability, and safety failures — not addressed by enforcement</li>
+          <li>Business and strategic decision quality — outside enforcement scope</li>
+          <li>Ethical design obligations — distinct discipline, separate cost</li>
+          <li>Training data licensing and IP provenance — upstream of enforcement layer</li>
+          <li>Product liability for AI-caused harm — not mitigated by consent record</li>
+          <li>Reputational damage from public-facing AI behavior — indirect effect only</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Long-Term Infrastructure Stabilization Model</h2>
+
+        <p>Beyond direct cost reduction in specific incident categories, deterministic enforcement introduces a longer-term economic property: cost stabilization. This section examines the mechanisms by which enforcement infrastructure reduces the volatility of compliance, audit, and legal costs over time.</p>
+
+        <h3><span class="sh-num">11.1</span> Reduced Compliance Cost Volatility</h3>
+        <p>In non-enforced environments, compliance cost is volatile: it scales with incident frequency, regulatory inquiry volume, and the labor intensity of any given audit — variables that are structurally difficult to forecast because they depend on both internal incident patterns and external regulatory attention cycles that organizations do not control. Compliance budgeting in AI-deployed organizations without enforcement infrastructure routinely requires contingency reserves that may or may not be consumed, depending on incident patterns and regulatory attention cycles.</p>
+
+        <p>To the extent that enforcement infrastructure is fully and continuously deployed, it converts a significant portion of variable compliance cost into fixed operational cost — the infrastructure budget — which is foreseeable and stable regardless of the incident frequency that materializes in any given year.</p>
+
+        <h3><span class="sh-num">11.2</span> Reduced Litigation Unpredictability</h3>
+        <p>Legal disputes arising from AI actions involve significant discovery and evidentiary preparation cost. In non-enforced environments, this cost is amplified by the need to reconstruct authorization states that were not recorded — a process that is adversarial in character, since opposing parties have different incentives regarding what the reconstruction reveals. In enforced environments, assuming no degradation of enforcement guarantees, the evidentiary basis — the artifact corpus — is already available and machine-verifiable, specifically by eliminating the reconstruction phases that would otherwise require manual correlation of incomplete log data across heterogeneous systems.</p>
+
+        <p>This structural reduction in litigation unpredictability has compounding effects: it reduces legal budget variance, decreases settlement pressure created by evidentiary uncertainty, and shortens resolution timelines in proceedings where the evidentiary dispute is the primary cost driver.</p>
+
+        <h3><span class="sh-num">11.3</span> Standardization Effect on Insurance Pricing</h3>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Forward-Looking Structural Observation — Non-Quantified — No Actuarial Basis</div>
+          <p>This subsection identifies a structural dynamic in the emerging AI liability insurance market. No actuarial basis exists for quantifying premium effects at this time, and no pricing projections are advanced here.</p>
+        </div>
+
+        <p>As AI-specific insurance products develop, underwriters are likely to differentiate organizations on the basis of demonstrable governance controls. The structural distinction between an organization that can produce machine-verifiable, artifact-based consent enforcement records and one that relies on policy documentation and process attestation is qualitatively significant from an underwriting perspective. The former reduces claims investigation cost and scope dispute, while the latter requires interpretive reconstruction under adversarial conditions. This analysis makes no claim about the direction or magnitude of any such differential; it notes only that the structural incentive exists for underwriters to recognize enforcement conformance as a relevant risk variable.</p>
+
+        <h3><span class="sh-num">11.4</span> Cost Predictability Benefits</h3>
+        <p>The compound effect of the stabilization properties described above is a shift in the economic character of AI compliance from a variable, incident-driven cost to a predictable, infrastructure-driven cost. This predictability has intrinsic institutional value: it enables reliable budget planning, reduces the reserve requirements that compliance uncertainty creates, and removes a class of organizational risk that currently occupies disproportionate leadership attention in AI-deployed organizations.</p>
+
+        <div class="inst-statement">
+          <p>Infrastructure that converts uncertain liability into foreseeable operational cost is economically valuable independent of any particular cost reduction it produces. Predictability is itself a stabilization property, and one that non-enforced environments structurally cannot provide.</p>
+        </div>
+      </div>
+
+      <!-- ECONOMIC INTERPRETATION -->
+      <div id="s-econ-interp" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Economic Interpretation</span>
+        <h2><a class="anchor-link" href="#s-econ-interp">#</a>Economic Interpretation</h2>
+
+        <p>The primary economic effect of deterministic enforcement is not the elimination of risk. It is the structural reduction of authorization ambiguity — the condition that makes risk expensive to investigate, scope, and close. This distinction matters because ambiguity and risk, while related, have different cost structures and different addressability.</p>
+
+        <div class="econ-interp-block">
+          <span class="econ-interp-label">Core Economic Mechanism</span>
+          <p>Risk is a function of probability and magnitude. Some portion of AI-related risk is irreducible regardless of governance architecture. Ambiguity, however, is an architectural property — it arises from the absence of machine-readable authorization state at execution time, and it is addressable through infrastructure design. The cost of ambiguity is not the cost of incidents that occurred; it is the cost of investigating all actions that might have been unauthorized, because the architecture cannot distinguish them from those that were not.</p>
+          <p>In non-enforced environments, every material incident requires forensic reconstruction: log correlation, schema normalization, analyst interpretation, and legal review of a population of ambiguous actions that includes both the problematic and the merely uninvestigated. This investigation overhead is not proportional to the actual violation; it is proportional to the ambiguity surface — the total set of actions where authorization cannot be immediately established.</p>
+          <p>Deterministic enforcement is expected to reduce the ambiguity surface to near-zero at the point of execution, under conditions of complete and uninterrupted enforcement coverage. Every action produces an immutable decision artifact; every artifact is queryable; every query is expected to return a deterministic result. The investigation labor that dominates audit cost in non-enforced environments is expected to become artifact retrieval under this architecture — a structurally faster and lower-cost operation, subject to the artifact store remaining intact and queryable.</p>
+        </div>
+
+        <p>This mechanism explains why the class of enforcement infrastructure specified in documents such as the QODIQA Core Standard v1.0 and operationalized through structured enforcement point frameworks is analytically expected to produce cost reduction across heterogeneous incident categories. The reduction does not depend on incident type. It depends on the universal structural property shared by all AI governance cost: the need to establish what the authorization state was at the time an action was taken. That property is structural and consistent across audit, incident response, legal review, and regulatory inquiry — and it is addressable, at the execution layer, in a way that no policy-layer control can replicate.</p>
+
+        <p>A secondary economic effect is the shift in governance cost structure from reactive to proactive. Non-enforced governance spends against incidents as they materialize, with cost scaling unpredictably against incident frequency and regulatory attention cycles that are outside the organization's control. Enforced governance, to the extent that deterministic evaluation is consistently applied, converts a significant portion of that variable cost into fixed infrastructure operational expense — foreseeable, budgetable, and stable regardless of incident patterns in a given year.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Economic Summary</div>
+          <p>Ambiguity drives investigation cost. Deterministic artifacts are expected to reduce authorization ambiguity at execution time, under conditions of complete coverage. Governance cost is expected to shift from reactive investigation labor toward proactive infrastructure cost. The modeled magnitude of this shift, at mid-band incident frequency and under full-conformance assumptions, materially exceeds the annual operational cost of maintaining conformant enforcement infrastructure. Neither claim has been empirically validated; both are advanced as structural propositions subject to the methodological constraints stated in the Methodological Positioning section of this paper.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Institutional Closing Statement</h2>
+
+        <p>This analysis has sought to demonstrate, through structured modeling and explicit assumption-bound reasoning, the economic consequence of a specific infrastructure gap: the absence of deterministic runtime consent enforcement in AI-deployed organizational environments.</p>
+
+        <p>The argument is not that deterministic enforcement architectures eliminate cost, reduce risk to zero, or guarantee outcomes. The argument is structural and narrower: <strong>systems that lack execution-time authorization artifacts structurally incur non-zero ambiguity cost. This cost cannot be eliminated through policy-layer controls alone, because policy-layer controls do not produce queryable execution-time records. The absence of deterministic enforcement implies persistent reconstruction overhead.</strong> The cost dynamics described throughout this paper — audit reconstruction overhead, incident scoping uncertainty, multi-agent propagation exposure, regulatory inquiry latency — share a common structural cause. In each case, the cost is amplified by the organization's inability to establish, at query time, what its authorization state was at execution time. This is not a contingent property of any particular organization's practices; it is a structural consequence of the architecture.</p>
+
+        <div class="callout">
+          <p>Deterministic runtime enforcement does not alter the behavior of AI systems — it records and enforces the authorization context within which they operate. The economic benefit is not behavioral. It is evidentiary. <strong>What cannot be proven cannot be defended. What cannot be defended must be resolved through the most expensive available mechanism: litigation, regulatory proceeding, or exhaustive reconstruction.</strong></p>
+        </div>
+
+        <h3><span class="sh-num">12.1</span> What This Analysis Reasons Toward</h3>
+        <p>This paper has modeled, through first-principles structural reasoning, the following propositions: that the baseline economic exposure of operating without deterministic enforcement is structured and directionally estimable from stated assumptions, specifically because the cost categories are mechanistically traceable to the absence of queryable execution-time records; that the expected cost reduction properties of enforcement infrastructure are traceable to specific causal mechanisms rather than asserted without grounding; that the modeled implementation cost of enforcement infrastructure is substantially lower than the annual baseline direct cost exposure it is designed to address at medium-to-high incident frequencies, within the stated modeling assumptions; and that the long-term cost stabilization effect of enforcement infrastructure is expected to reduce the volatility properties of AI compliance cost that currently create significant planning challenges for risk and finance leadership. None of these propositions has been empirically validated; all are advanced as structural arguments subject to the methodological constraints stated in the Methodological Positioning section of this paper.</p>
+
+        <h3><span class="sh-num">12.2</span> The Infrastructure Framing</h3>
+        <p>Deterministic runtime consent enforcement is not a revenue model, a product feature, or a compliance checkbox. It is an infrastructure stabilization layer — analogous to database transaction logging, cryptographic certificate infrastructure, or network access control in the degree to which it provides a foundational evidentiary property that higher-level governance functions depend upon. Formal specifications of this layer provide normative definition to the architectural properties that produce the economic effects described in this paper, but the economic logic is a property of the architectural class and holds for any implementation that fully satisfies those properties.</p>
+
+        <p>Organizations that invest in this class of infrastructure are not acquiring a competitive advantage; they are removing a structural vulnerability — the absence of execution-time authorization records — that will otherwise become more expensive as AI deployment scales, regulatory scrutiny intensifies, and multi-agent architectures mature. That vulnerability is not discretionary; it is a property of any AI governance architecture that does not produce queryable, immutable authorization records at execution time.</p>
+
+        <div class="inst-statement">
+          <p>Systems without execution-time authorization artifacts incur reconstruction cost at every audit and every incident, as a structural property of their architecture. That cost is not discretionary; it is the price of operating without a queryable authorization record. The question this analysis poses is not whether such infrastructure should be built. It is whether the cost of building it is smaller than the cost of not having it. The modeling in this paper reasons toward a single, bounded answer: within the stated assumptions, and at medium-to-high incident frequency, it is.</p>
+        </div>
+
+        <p>This analysis has been prepared for institutional review. It does not constitute investment advice, legal counsel, or a guarantee of any specific outcome. All modeling is assumption-bound, conservative, and subject to the limitations stated herein.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document is an independent technical and economic analysis. It is authored by an individual researcher and issued in association with the QODIQA documentation corpus as an analytical companion to the QODIQA Core Standard v1.0. It is version-controlled and subject to update as regulatory frameworks, incident datasets, and infrastructure cost benchmarks evolve. This version carries identifier QODIQA-EIP-001 and reflects conditions current as of the date of publication.</p>
+
+          <p>The economic modeling contained herein is structural in character, derived from first-principles reasoning about the operational properties of enforced and non-enforced AI governance environments. It does not represent actuarial measurement, empirical benchmarking, investment guidance, or legal advice. All figures are directional cost bands whose derivation assumptions are stated explicitly throughout the document. This analysis has not been externally validated through empirical deployment data and should be evaluated on the basis of its structural reasoning.</p>
+
+          <p>This paper is intended for review by:</p>
+          <ul class="audience-list">
+            <li>Risk officers and chief information security officers</li>
+            <li>Legal and compliance leadership</li>
+            <li>AI governance committees</li>
+            <li>Infrastructure architects and platform engineers</li>
+            <li>Institutional procurement review bodies</li>
+            <li>Regulatory and policy stakeholders</li>
+          </ul>
+
+          <p>It is not intended for general public distribution without institutional context.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+          <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Audit and Evidence Generation Model — Version 1.0</li>
+          <li>QODIQA — Audit Readiness and Evidence Pack — Version 1.0</li>
+          <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Conformance Verification Specification — Version 1.0</li>
+          <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+          <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Corpus Change Log and Version History — Version 1.0</li>
+          <li>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Executive Brief for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Extended Adversarial Threat Model — Version 1.0</li>
+          <li>QODIQA — Failure Handling and Recovery Specification — Version 1.0</li>
+          <li>QODIQA — Global Enforcement Invariants for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          <li>QODIQA — Implementation Conformance Checklist — Version 1.0</li>
+          <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Interoperability and Deployment Constraints — Version 1.0</li>
+          <li>QODIQA — Master Index and Readers Guide — Version 1.0</li>
+          <li>QODIQA — Non-Compliance Conditions and Failure Modes — Version 1.0</li>
+          <li>QODIQA — Positioning and Scope Limitation Statement — Version 1.0</li>
+          <li>QODIQA — Public Specification License — Version 1.0</li>
+          <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Reference Implementation Specification - Minimal Deterministic Enforcement Stack — Version 1.0</li>
+          <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Residual Risk and Assumption Disclosure Annex — Version 1.0</li>
+          <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — System Boundary and Trust Model Specification — Version 1.0</li>
+          <li>QODIQA — Terminology and Normative Definitions — Version 1.0</li>
+          <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+          <li>QODIQA — Use Case Dossiers for Runtime Consent Enforcement Deployments — Version 1.0</li>
+          <li>QODIQA — Worked Example End to End Scenario — Version 1.0</li>
+        </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-EIP-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement — Version 1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Author</span>
+            <span class="doc-id-val">Bogdan Duțescu — Independent Technical and Economic Analysis</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Independent Analytical White Paper</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Normative Status</span>
+            <span class="doc-id-val">Informational Analysis — Non-Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Relation to Standard</span>
+            <span class="doc-id-val">Non-normative analytical companion; QODIQA used as reference implementation</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+      <!-- SCOPE -->
+      <div id="s-scope" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-scope">#</a>Scope</h2>
+        <p>This document provides an independent economic and risk-surface analysis of the general class of deterministic runtime consent enforcement architectures. It uses the QODIQA Core Standard v1.0 as a reference specification for this architectural class, drawing on its definitional precision regarding decision artifacts, fail-closed enforcement semantics, and policy registry requirements. It models the structural cost implications of operating AI systems with and without enforcement infrastructure meeting these properties, across organizational profiles and incident frequency bands.</p>
+        <p>It does not define normative enforcement requirements and should be interpreted as an independent analytical companion to the QODIQA technical specifications. Organizations seeking normative implementation guidance should refer to the 68-Point Enforcement Framework v3.0 and the QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0. All modeling in this paper is structural, assumption-bound, first-principles in character, and explicitly non-actuarial. It has not been validated against empirical deployment data and should be treated as a structured analytical framework for institutional reasoning, not as an empirically grounded cost model.</p>
+      </div>
+
+      <!-- TERMINOLOGY -->
+      <div id="s-terminology" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-terminology">#</a>Terminology</h2>
+        <p>The following definitions apply to terms as used in this paper. For normative terminology applicable to the full QODIQA standard corpus, refer to the QODIQA — Terminology and Normative Definitions — Version 1.0.</p>
+        <ul class="term-list">
+          <li class="term-item">
+            <span class="term-name">Deterministic Enforcement</span>
+            <p class="term-def">A runtime authorization mechanism that evaluates consent state and applicable policy at the moment of AI action execution and produces a verifiable, immutable decision artifact recording the outcome. Distinguished from probabilistic or policy-level governance by its machine-verifiable output and fail-closed behavior.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Decision Artifact</span>
+            <p class="term-def">An immutable record produced at execution time containing the resolved consent state, applicable policy version, declared purpose, request context hash, and authorization outcome. Decision artifacts are the primary evidentiary unit in artifact-based audit and incident response workflows. In the QODIQA reference architecture, decision artifacts are cryptographically signed and stored in an append-only record that supports deterministic replay.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Ambiguity Surface</span>
+            <p class="term-def">The set of AI actions in a non-enforced environment where authorization state cannot be deterministically established at query time without forensic reconstruction. The ambiguity surface is the primary driver of audit reconstruction and incident scoping cost in the baseline exposure model.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Propagation Multiplier</span>
+            <p class="term-def">In multi-agent architectures, the number of downstream AI actions generated from a single upstream authorization failure when no deterministic enforcement gate is present at agent boundaries. The propagation multiplier scales incident scope, remediation cost, and notification obligations.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Fail-Closed Semantics</span>
+            <p class="term-def">An enforcement behavior in which the absence of a valid, resolvable consent record or policy version causes the action to be denied rather than permitted. Fail-closed enforcement is designed to ensure that ambiguous or unresolvable authorization states do not result in unauthorized AI action execution, by defaulting to denial rather than permitting execution under conditions of uncertainty.</p>
+          </li>
+          <li class="term-item">
+            <span class="term-name">Artifact-Based Replay</span>
+            <p class="term-def">An audit methodology in which historical AI actions are verified by retrieving and replaying their corresponding decision artifacts rather than reconstructing authorization state from logs. Artifact-based replay is the primary compliance efficiency mechanism introduced by deterministic enforcement infrastructure.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CONFORMANCE LANGUAGE -->
+      <div id="s-conformance" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-conformance">#</a>Conformance Language</h2>
+        <p>The key words <strong>MUST</strong>, <strong>MUST NOT</strong>, <strong>SHOULD</strong>, <strong>SHOULD NOT</strong>, and <strong>MAY</strong> in the QODIQA specification corpus indicate requirement levels for conformant implementations of the QODIQA enforcement architecture.</p>
+        <p>These terms describe normative enforcement expectations for systems claiming conformance with the QODIQA standard. In this document, such terms appear only in cross-references to normative specifications and do not themselves impose normative obligations. For normative requirement definitions, refer to the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0.</p>
+      </div>
+
+      <!-- NON-COVERAGE -->
+      <div id="s-non-coverage" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-non-coverage">#</a>Non-Coverage</h2>
+        <p>This paper explicitly does not model the following categories of economic exposure. These are noted here to clarify the analytical boundary of the cost modeling contained in the document and to prevent misinterpretation of the scope of benefit claimed.</p>
+        <ul class="non-coverage-list">
+          <li>Catastrophic regulatory penalty exposure — maximum-band GDPR, EU AI Act, or sector-specific fines are excluded from all cost tables</li>
+          <li>Class-action litigation dynamics — aggregate user or data subject claims are not modeled</li>
+          <li>Reputational recovery costs — public-facing brand remediation, communications counsel, and media management are outside the model</li>
+          <li>Sector-specific enforcement obligations — financial services, healthcare, and critical infrastructure obligations may differ materially from the general model</li>
+          <li>Model accuracy and AI safety failures — enforcement architecture does not address model performance, hallucination, or output quality</li>
+          <li>Training data provenance and intellectual property exposure — upstream legal obligations are not within the enforcement scope modeled</li>
+          <li>Insurance premium effects — no actuarial basis exists for quantifying AI liability insurance pricing at this time</li>
+        </ul>
+        <div class="key-prop">
+          <div class="key-prop-title">Analytical Boundary</div>
+          <p>The cost model covers direct operational costs of governance ambiguity. Tail-risk events, sector-specific obligations, and non-consent economic exposures require separate actuarial and legal analysis. The absence of tail-risk figures does not imply the absence of tail-risk exposure.</p>
+        </div>
+      </div>
+
+      <!-- CORPUS CONTEXT -->
+      <div id="s-corpus" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-corpus">#</a>QODIQA Standard Corpus</h2>
+        <p>This document is an analytical companion to the QODIQA standard corpus — a structured set of technical specifications, analytical papers, governance instruments, and implementation resources. The corpus provides the normative architectural definitions against which the economic properties analyzed in this paper are assessed. Documents in the corpus are cross-referenced and versioned under the QODIQA Change Log and Version Control Protocol.</p>
+        <div class="callout">
+          <p><strong>Scope Note</strong><br>
+          This paper draws on QODIQA corpus specifications as a reference architecture for the class of deterministic runtime consent enforcement systems under analysis. Where properties of QODIQA-conformant implementations are referenced, those properties are drawn from the QODIQA Core Standard and associated specifications. This document does not itself specify conformance obligations; it analyzes the economic implications of conformance as defined elsewhere in the corpus.</p>
+        </div>
+        <ul class="corpus-list">
+          <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Audit and Evidence Generation Model — Version 1.0</li>
+          <li>QODIQA — Audit Readiness and Evidence Pack — Version 1.0</li>
+          <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Conformance Verification Specification — Version 1.0</li>
+          <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+          <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Corpus Change Log and Version History — Version 1.0</li>
+          <li>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Executive Brief for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Extended Adversarial Threat Model — Version 1.0</li>
+          <li>QODIQA — Failure Handling and Recovery Specification — Version 1.0</li>
+          <li>QODIQA — Global Enforcement Invariants for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          <li>QODIQA — Implementation Conformance Checklist — Version 1.0</li>
+          <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Interoperability and Deployment Constraints — Version 1.0</li>
+          <li>QODIQA — Master Index and Readers Guide — Version 1.0</li>
+          <li>QODIQA — Non-Compliance Conditions and Failure Modes — Version 1.0</li>
+          <li>QODIQA — Positioning and Scope Limitation Statement — Version 1.0</li>
+          <li>QODIQA — Public Specification License — Version 1.0</li>
+          <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Reference Implementation Specification - Minimal Deterministic Enforcement Stack — Version 1.0</li>
+          <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — Residual Risk and Assumption Disclosure Annex — Version 1.0</li>
+          <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+          <li>QODIQA — System Boundary and Trust Model Specification — Version 1.0</li>
+          <li>QODIQA — Terminology and Normative Definitions — Version 1.0</li>
+          <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+          <li>QODIQA — Use Case Dossiers for Runtime Consent Enforcement Deployments — Version 1.0</li>
+          <li>QODIQA — Worked Example End to End Scenario — Version 1.0</li>
+        </ul>
+      </div>
+
+      <!-- INSTITUTIONAL DISCLAIMER -->
+      <div id="s-disclaimer" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-disclaimer">#</a>Institutional Disclaimer</h2>
+        <div class="inst-disclaimer-block">
+          <p>This document is an independent technical and economic analysis of deterministic runtime consent enforcement architectures and their structural implications for organizational cost and risk posture. It does not constitute regulatory guidance, legal advice, financial recommendation, or investment analysis of any kind. It is authored by an individual researcher; the conclusions and structural reasoning expressed herein represent the author's analytical positions, not those of any standards body, employer, or institutional entity.</p>
+        </div>
+        <p>All cost bands and modeling figures presented in this paper are structural estimates derived from first-principles reasoning about the operational mechanics of enforced and non-enforced AI governance environments. They are not actuarial measurements, empirical benchmarks, or guaranteed outcomes. No figures in this paper have been validated against empirical deployment data. Actual costs will vary materially based on organizational scale, incident frequency, regulatory jurisdiction, and implementation approach. The figures should not be used as a basis for investment decisions, capital planning, or regulatory positioning without independent actuarial, legal, and technical review.</p>
+        <p>This paper makes no claims regarding the regulatory compliance status of any organization implementing deterministic enforcement infrastructure conformant with the QODIQA specification or any other specification. Regulatory compliance determinations require qualified legal counsel familiar with the applicable jurisdiction, sector, and specific organizational context.</p>
+        <p>The author and QODIQA Standards and Research do not accept liability for decisions made on the basis of the economic modeling contained in this paper. The structural cost arguments presented are intended to support informed institutional reasoning, not to substitute for it. Organizations should conduct independent actuarial, legal, and technical review appropriate to their circumstances before making infrastructure investment decisions of any kind.</p>
+      </div>
+
+      <!-- RECOMMENDED CITATION -->
+      <div id="s-citation" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Institutional</span>
+        <h2><a class="anchor-link" href="#s-citation">#</a>Recommended Citation</h2>
+        <div class="citation-block">
+          <span class="citation-label">Cite this document as</span>Duțescu, Bogdan.<br>
+          <em>Economic Impact Analysis of Deterministic Runtime Consent Enforcement.</em><br>
+          QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement — Version 1.0.<br>
+          QODIQA Standard Corpus, April 2026.<br>
+          Document Identifier: QODIQA-EIP-001.<br>
+          <br>
+          <span style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.06em;">Persistent Reference: QODIQA-EIP-001</span>
+        </div>
+      </div>
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-EIP-001</p>
+      <p>Independent Analytical White Paper</p>
+      <p>Status: Informational Analysis — Non-Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a structural economic analysis and does not constitute legal advice or investment guidance. All modeling is assumption-bound, conservative, and subject to the limitations stated herein.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-EIP-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- IntersectionObserver ScrollSpy (deterministic, observer-only) ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s-methodology','s-governance-frameworks','s-findings',
+    's1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11',
+    's-econ-interp','s12','s-status','s-scope','s-terminology',
+    's-conformance','s-non-coverage','s-corpus','s-disclaimer','s-citation'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  /* Map each section to its document order index for stable tie-breaking */
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    /* Activate the topmost (lowest index) currently visible section */
+    if (visible.size > 0) {
+      let topId = null;
+      let topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  /* ---- Fallback scroll spy (position-based, for environments without IntersectionObserver) ---- */
+  function fallbackScrollSpy() {
+    let closest = null;
+    let minDistance = Infinity;
+
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5) {
+        const distance = Math.abs(rect.top);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = sec.id;
+        }
+      }
+    });
+    if (closest) setActive(closest);
+  }
+
+  if (!window.IntersectionObserver) {
+    window.addEventListener('scroll', fallbackScrollSpy, { passive: true });
+    fallbackScrollSpy();
+  }
+
+}());
+</script>
+</body>
+</html>

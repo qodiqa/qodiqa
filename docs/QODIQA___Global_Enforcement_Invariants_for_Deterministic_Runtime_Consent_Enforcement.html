@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Global Enforcement Invariants · v1.0</title>
+<meta name="description" content="QODIQA Global Enforcement Invariants v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Global Enforcement Invariants">
+<meta property="og:description" content="Globally binding enforcement invariants formalizing constraints implicit within the corpus for deterministic runtime consent enforcement in artificial intelligence systems.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   INVARIANT BLOCK
+   ============================================================ */
+.invariant-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 20px 24px;
+  margin: 16px 0 20px;
+}
+
+.invariant-id {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.invariant-title {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+
+.invariant-field-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 12px;
+  opacity: 0.80;
+}
+
+.invariant-field-label:first-of-type { margin-top: 0; }
+
+.invariant-statement {
+  font-family: var(--sans);
+  font-size: 0.940rem;
+  line-height: 1.68;
+  color: var(--ink);
+  margin-bottom: 0;
+  font-weight: 500;
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.invariant-condition {
+  font-family: var(--sans);
+  font-size: 0.915rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin-bottom: 0;
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.invariant-refs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invariant-refs li {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.invariant-refs li::before {
+  content: "→ ";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 24px 0 24px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Global Enforcement<br><span class="italic-part">Invariants</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Normative Extension &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Globally binding enforcement invariants formalizing constraints implicit within the corpus.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Scope</a>
+      <a class="nav-item" href="#s2">2. Relationship to Corpus</a>
+      <a class="nav-item" href="#s3">3. Invariant Model Overview</a>
+      <a class="nav-item" href="#s4">4. Global Enforcement Invariants</a>
+      <a class="nav-item sub" href="#s4-consent">4.1 Consent Enforcement</a>
+      <a class="nav-item sub" href="#s4-determinism">4.2 Determinism</a>
+      <a class="nav-item sub" href="#s4-execution">4.3 Execution Flow Integrity</a>
+      <a class="nav-item sub" href="#s4-audit">4.4 Audit Requirements</a>
+      <a class="nav-item sub" href="#s4-state">4.5 State Machine Integrity</a>
+      <a class="nav-item sub" href="#s4-failure">4.6 Failure Behavior</a>
+      <a class="nav-item sub" href="#s4-data">4.7 Data Integrity</a>
+      <a class="nav-item sub" href="#s4-policy">4.8 Policy Enforcement</a>
+      <a class="nav-item sub" href="#s4-ambiguity">4.9 Non-Ambiguity</a>
+      <a class="nav-item sub" href="#s4-implicit">4.10 Prohibition of Implicit Behavior</a>
+      <a class="nav-item" href="#s5">5. Invariant Interdependency</a>
+      <a class="nav-item" href="#s6">6. Non-Compliance Conditions</a>
+      <a class="nav-item" href="#s7">7. Cross-Document Traceability</a>
+      <a class="nav-item" href="#s8">8. Enforcement Implications</a>
+      <a class="nav-item" href="#s9">9. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document defines the Global Enforcement Invariants of the QODIQA specification corpus. It centralizes constraints that are globally binding across all QODIQA-conformant systems, formalizing enforcement obligations that are implicit within the Core Standard, Reference Architecture, Formal Enforcement Model, and Threat Model. Each invariant is absolute, exceptionless, binary, testable, and auditable. This document does not modify, override, or reinterpret any existing QODIQA specification. It defines globally enforced invariants that formalize constraints already implicit within the QODIQA corpus.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Scope</h2>
+
+        <p>This document centralizes enforcement invariants applicable across all QODIQA-conformant systems. Invariants defined herein are globally binding and override any implicit interpretation of QODIQA corpus documents.</p>
+
+        <div class="decision-block">
+          <strong>Non-Modification Clause</strong>
+          <p>This document does not modify, override, or reinterpret any existing QODIQA specification. It defines globally enforced invariants that formalize constraints already implicit within the QODIQA corpus.</p>
+        </div>
+
+        <p>No new behavior is introduced by this document. No new mechanisms, system components, or scope expansions are defined. All invariants contained herein are extracted, formalized, and centralized from constraints already present within the QODIQA specification corpus.</p>
+
+        <p>This document SHALL be treated as a normative extension layer. All QODIQA-conformant systems SHALL satisfy every invariant defined in Section 4 without exception.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Relationship to QODIQA Corpus</h2>
+
+        <p>This document consolidates invariant constraints across the following corpus instruments:</p>
+
+        <ul>
+          <li><strong>Core Standard</strong> (QODIQA-CORE-2026-001) — defines normative runtime consent enforcement requirements.</li>
+          <li><strong>Reference Architecture</strong> — defines the structural execution model and component boundaries.</li>
+          <li><strong>Formal Enforcement Model</strong> (QODIQA-SPEC-68P-V3-2026) — defines the 68-point enforcement framework and decision logic.</li>
+          <li><strong>Threat Model and Abuse Case Analysis</strong> — defines adversarial conditions and failure categories.</li>
+        </ul>
+
+        <p>Invariants defined herein are derived exclusively from constraints present within the above instruments. No invariant introduces behavior absent from the referenced corpus.</p>
+
+        <p>In all cases of apparent conflict between this document and a referenced corpus instrument, the more restrictive constraint SHALL govern.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Invariant Model Overview</h2>
+
+        <p>Invariants defined in this document satisfy the following properties:</p>
+
+        <ul>
+          <li>Invariants are globally binding across all execution contexts in which QODIQA enforcement applies.</li>
+          <li>Invariants override any implicit interpretation of corpus documents.</li>
+          <li>Invariants are mandatory. No invariant is advisory or conditional.</li>
+          <li>Invariants are binary. A system either satisfies an invariant or it does not. No partial satisfaction is recognized.</li>
+          <li>Invariants are testable. Each invariant admits a deterministic verification procedure.</li>
+          <li>Invariants are auditable. Conformance evidence SHALL be producible for each invariant from system artifacts alone.</li>
+        </ul>
+
+        <p>Each invariant is assigned a unique identifier of the form <code>GI-XX</code>. Identifiers are stable across corpus versions. Invariants SHALL NOT be renumbered.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Global Enforcement Invariants</h2>
+
+        <p>The following invariants are globally binding on all QODIQA-conformant systems. Violation of any single invariant constitutes a non-compliant system.</p>
+
+        <!-- 4.1 CONSENT ENFORCEMENT -->
+        <div id="s4-consent">
+          <h3>4.1 Consent Enforcement</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-01</span>
+            <div class="invariant-title">Runtime Consent Requirement</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT execute any inference operation without verified valid consent at runtime.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which inference occurs without runtime consent validation having been performed and affirmatively resolved.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 2.1</li>
+              <li>Formal Enforcement Model 7</li>
+              <li>Threat Model 4</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-02</span>
+            <div class="invariant-title">Consent Scope Binding</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT execute any operation whose scope exceeds the scope explicitly bound within the validated consent artifact.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any operation whose action type, data domain, purpose, or principal identifiers extend beyond those specified in the resolved consent artifact governing that execution.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 3.2</li>
+              <li>Formal Enforcement Model 12</li>
+              <li>Reference Architecture 5.1</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-03</span>
+            <div class="invariant-title">Consent Validity Window</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT honor a consent artifact whose validity window has expired or whose revocation timestamp predates the execution timestamp.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution authorized by a consent artifact whose <code>valid_until</code> field is in the past relative to the authoritative execution clock, or for which a valid revocation record exists.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 4.3</li>
+              <li>Formal Enforcement Model 15</li>
+              <li>Threat Model 6</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.2 DETERMINISM -->
+        <div id="s4-determinism">
+          <h3>4.2 Determinism</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-04</span>
+            <div class="invariant-title">Deterministic Evaluation Requirement</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL produce an identical enforcement decision for any identical combination of intent declaration, consent artifact, and policy set, irrespective of execution time, environment, or instance.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which the enforcement decision for a given input triple is not guaranteed to be identical across all invocations of the enforcement layer.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.1</li>
+              <li>Reference Architecture 3.4</li>
+              <li>Formal Enforcement Model 2</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-05</span>
+            <div class="invariant-title">Replay Invariant</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL produce an enforcement decision that, when replayed against the frozen input state recorded in the corresponding decision artifact, yields an identical outcome.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any enforcement decision for which replay against the recorded frozen input state produces a different outcome than the original decision.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 7.3</li>
+              <li>Formal Enforcement Model 19</li>
+              <li>Reference Architecture 6.2</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.3 EXECUTION FLOW INTEGRITY -->
+        <div id="s4-execution">
+          <h3>4.3 Execution Flow Integrity</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-06</span>
+            <div class="invariant-title">Mandatory Enforcement Layer Traversal</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT permit any inference operation to reach an execution endpoint without traversing the QODIQA enforcement layer in its entirety.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which inference reaches an endpoint via a route that bypasses, short-circuits, or partially traverses the enforcement layer.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 2.3</li>
+              <li>Reference Architecture 4.1</li>
+              <li>Threat Model 3.2</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-07</span>
+            <div class="invariant-title">Intent Declaration Precedence</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT initiate consent resolution or policy evaluation prior to receiving and validating a fully formed, structurally conformant intent declaration.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any consent resolution or policy evaluation initiated against an absent, malformed, or structurally non-conformant intent declaration.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 3.1</li>
+              <li>Reference Architecture 5.2</li>
+              <li>Formal Enforcement Model 8</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.4 AUDIT REQUIREMENTS -->
+        <div id="s4-audit">
+          <h3>4.4 Audit Requirements</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-08</span>
+            <div class="invariant-title">Mandatory Decision Artifact Production</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL produce a cryptographically signed, tamper-evident decision artifact for every enforcement decision, whether the outcome is PERMIT or DENY.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any enforcement decision for which no corresponding signed decision artifact is produced and durably recorded, including DENY decisions and error-path terminations.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 6.4</li>
+              <li>Formal Enforcement Model 22</li>
+              <li>Reference Architecture 6.1</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-09</span>
+            <div class="invariant-title">Frozen Context Capture</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL capture and bind the complete input state — intent declaration, resolved consent artifact, and applicable policy set — as an immutable frozen context within the decision artifact at the moment of enforcement evaluation.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any decision artifact that omits any element of the input triple, or that records input state that has been modified after enforcement evaluation was initiated.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 6.5</li>
+              <li>Reference Architecture 6.2</li>
+              <li>Formal Enforcement Model 20</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.5 STATE MACHINE INTEGRITY -->
+        <div id="s4-state">
+          <h3>4.5 State Machine Integrity</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-10</span>
+            <div class="invariant-title">Enforcement State Sequencing</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL execute enforcement states in the prescribed sequence: intent declaration validation, consent resolution, policy evaluation, decision production. No state SHALL be skipped, reordered, or repeated.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution in which enforcement states are executed out of prescribed sequence, any state is skipped, or any state is repeated without system restart.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Reference Architecture 4.3</li>
+              <li>Formal Enforcement Model 5</li>
+              <li>Core Standard 2.4</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-11</span>
+            <div class="invariant-title">Terminal State Finality</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT permit re-entry into any enforcement state after a terminal decision state — PERMIT or DENY — has been reached for a given execution request.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which enforcement states are re-entered or enforcement logic is re-applied to the same execution request after a terminal decision has been issued.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Reference Architecture 4.4</li>
+              <li>Formal Enforcement Model 6</li>
+              <li>Threat Model 5.1</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.6 FAILURE BEHAVIOR -->
+        <div id="s4-failure">
+          <h3>4.6 Failure Behavior</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-12</span>
+            <div class="invariant-title">Fail-Closed Default</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL default to DENY and terminate execution upon any failure, error, timeout, or indeterminate state encountered within the enforcement layer, irrespective of the failure source.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which an enforcement layer failure, error, or timeout results in any outcome other than DENY, or in which execution continues past the point of failure.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 4.6</li>
+              <li>Formal Enforcement Model 30</li>
+              <li>Threat Model 7</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-13</span>
+            <div class="invariant-title">Prohibition of Fallback Execution</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT implement any fallback execution path that permits inference to proceed when the enforcement layer is unavailable, degraded, or has returned a non-affirmative result.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">The existence of any code path, configuration option, or operational mode in which inference execution proceeds under conditions of enforcement layer unavailability or degradation.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 4.6</li>
+              <li>Reference Architecture 7.1</li>
+              <li>Threat Model 8</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.7 DATA INTEGRITY -->
+        <div id="s4-data">
+          <h3>4.7 Data Integrity</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-14</span>
+            <div class="invariant-title">Consent Artifact Immutability</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT permit modification of a consent artifact after it has been issued and recorded. Any consent modification SHALL require issuance of a new consent artifact with a distinct identifier and timestamp.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any system state in which a previously issued consent artifact can be modified in-place, or in which modified consent data is presented under an identifier belonging to a previously issued artifact.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.3</li>
+              <li>Reference Architecture 5.4</li>
+              <li>Formal Enforcement Model 11</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-15</span>
+            <div class="invariant-title">Decision Artifact Tamper Evidence</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL produce decision artifacts whose cryptographic integrity is verifiable by any party in possession of the applicable public verification key, at any time after artifact issuance.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any decision artifact for which cryptographic integrity verification fails, or for which the verification mechanism depends on mutable system state rather than the artifact's own content.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 6.6</li>
+              <li>Security and Cryptographic Profile 4</li>
+              <li>Reference Architecture 6.3</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.8 POLICY ENFORCEMENT -->
+        <div id="s4-policy">
+          <h3>4.8 Policy Enforcement</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-16</span>
+            <div class="invariant-title">Policy Immutability at Evaluation Time</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL evaluate all enforcement decisions against the policy set that was active and locked at the moment the intent declaration was received. Policy updates that occur after intent declaration receipt SHALL NOT affect the evaluation of that request.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any enforcement decision in which the policy set applied differs from the policy set that was active at intent declaration receipt time for that request.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.4</li>
+              <li>Formal Enforcement Model 17</li>
+              <li>Reference Architecture 5.3</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-17</span>
+            <div class="invariant-title">Prohibition of Policy Override</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT permit any runtime signal, operator instruction, user request, or external interface to override, suspend, or bypass an applicable policy constraint during enforcement evaluation.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">The existence of any mechanism — including administrative interfaces, debug modes, or API parameters — through which a policy constraint may be suspended or bypassed during a live enforcement evaluation.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.5</li>
+              <li>Formal Enforcement Model 31</li>
+              <li>Threat Model 9</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.9 NON-AMBIGUITY -->
+        <div id="s4-ambiguity">
+          <h3>4.9 Non-Ambiguity</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-18</span>
+            <div class="invariant-title">Binary Decision Requirement</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL produce exclusively binary enforcement decisions: PERMIT or DENY. The system SHALL NOT produce probabilistic, conditional, deferred, or advisory outcomes.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any enforcement outcome that is expressed as a probability, a condition to be resolved post-execution, a recommendation, or any value other than an unambiguous PERMIT or DENY.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.1</li>
+              <li>Formal Enforcement Model 3</li>
+              <li>Reference Architecture 4.5</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4.10 PROHIBITION OF IMPLICIT BEHAVIOR -->
+        <div id="s4-implicit">
+          <h3>4.10 Prohibition of Implicit Behavior</h3>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-19</span>
+            <div class="invariant-title">Prohibition of Implicit Consent</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT treat the absence of an explicit DENY signal, the passage of time without response, or any inferred behavioral indicator as equivalent to explicit consent. Consent MUST be affirmatively and explicitly represented in a resolved consent artifact.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any execution path in which consent is inferred, assumed, or defaulted to PERMIT in the absence of a validated, explicitly structured consent artifact.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 2.2</li>
+              <li>Formal Enforcement Model 9</li>
+              <li>Threat Model 4.1</li>
+            </ul>
+          </div>
+
+          <div class="invariant-block">
+            <span class="invariant-id">GI-20</span>
+            <div class="invariant-title">Prohibition of Interpretive Execution</div>
+            <span class="invariant-field-label">Statement</span>
+            <p class="invariant-statement">The system SHALL NOT apply semantic interpretation, probabilistic inference, or contextual inference to resolve ambiguity in consent artifacts, intent declarations, or policy constructs. All enforcement inputs MUST be machine-readable and unambiguously structured prior to enforcement evaluation.</p>
+            <span class="invariant-field-label">Non-Compliance Condition</span>
+            <p class="invariant-condition">Any enforcement decision in which the system applies reasoning, inference, or interpretation to resolve ambiguity in any enforcement input rather than issuing an immediate DENY for non-conformant inputs.</p>
+            <span class="invariant-field-label">References</span>
+            <ul class="invariant-refs">
+              <li>Core Standard 5.6</li>
+              <li>Formal Enforcement Model 4</li>
+              <li>Reference Architecture 3.1</li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /#s4 -->
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Invariant Interdependency</h2>
+
+        <p>Invariants defined in this document are mutually reinforcing. No invariant may be read in isolation. The following structural interdependencies apply:</p>
+
+        <ul>
+          <li>GI-01 through GI-03 establish the consent preconditions without which no enforcement evaluation may proceed. GI-06 and GI-07 establish the structural preconditions for consent resolution and policy evaluation respectively. These invariants are collectively prerequisite to all subsequent invariants.</li>
+          <li>GI-04 and GI-05 govern the deterministic and replayable character of all enforcement decisions. They apply to every PERMIT and DENY outcome produced under GI-01 through GI-03.</li>
+          <li>GI-08 and GI-09 govern artifact production obligations that arise upon resolution of any enforcement decision. They depend on the successful traversal of GI-06 and GI-07.</li>
+          <li>GI-10 and GI-11 govern the state machine through which all preceding invariants are executed. Violation of GI-10 or GI-11 constitutes a violation of the enforcement preconditions for all other invariants.</li>
+          <li>GI-12 and GI-13 govern failure conditions. They apply whenever any preceding invariant cannot be satisfied. Failure to apply GI-12 or GI-13 constitutes a systemic violation.</li>
+          <li>GI-14 through GI-17 govern data and policy integrity across the full enforcement lifecycle. They apply to all inputs consumed and outputs produced by the enforcement layer.</li>
+          <li>GI-18 through GI-20 govern the structural properties of all inputs and outputs. Violation of GI-18, GI-19, or GI-20 constitutes a structural precondition failure that renders all dependent invariants untestable.</li>
+        </ul>
+
+        <p>No invariant may be bypassed. Violation of one invariant constitutes a violation of the system as a whole.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Non-Compliance Conditions (Global)</h2>
+
+        <p>A system is NON-COMPLIANT with this document if any single invariant defined in Section 4 is violated.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Partial Compliance</div>
+          <p>No partial compliance with this document is recognized. A system that satisfies 19 of 20 invariants is a non-compliant system.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Degraded Compliance</div>
+          <p>No degraded compliance mode is recognized. A system operating in any mode — including maintenance, testing, debugging, or reduced-capability modes — SHALL satisfy all invariants or SHALL NOT execute inference operations.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Conditional Compliance</div>
+          <p>No conditional compliance is recognized. Invariant satisfaction MUST NOT depend on runtime configuration flags, deployment environment properties, or operator discretion.</p>
+        </div>
+
+        <p>Non-compliance determination is binary. A system either satisfies all invariants or it does not. No scoring, weighting, or tiered assessment of invariant satisfaction is defined or recognized by this document.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Cross-Document Traceability</h2>
+
+        <p>The following table maps each invariant to its primary corpus references.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1 — Invariant-to-Corpus Traceability Matrix</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Invariant</th>
+                <th>Core Standard</th>
+                <th>Formal Model</th>
+                <th>Threat Model</th>
+                <th>Reference Architecture</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>GI-01</td><td>2.1</td><td>7</td><td>4</td><td>—</td></tr>
+              <tr><td>GI-02</td><td>3.2</td><td>12</td><td>—</td><td>5.1</td></tr>
+              <tr><td>GI-03</td><td>4.3</td><td>15</td><td>6</td><td>—</td></tr>
+              <tr><td>GI-04</td><td>5.1</td><td>2</td><td>—</td><td>3.4</td></tr>
+              <tr><td>GI-05</td><td>7.3</td><td>19</td><td>—</td><td>6.2</td></tr>
+              <tr><td>GI-06</td><td>2.3</td><td>—</td><td>3.2</td><td>4.1</td></tr>
+              <tr><td>GI-07</td><td>3.1</td><td>8</td><td>—</td><td>5.2</td></tr>
+              <tr><td>GI-08</td><td>6.4</td><td>22</td><td>—</td><td>6.1</td></tr>
+              <tr><td>GI-09</td><td>6.5</td><td>20</td><td>—</td><td>6.2</td></tr>
+              <tr><td>GI-10</td><td>2.4</td><td>5</td><td>—</td><td>4.3</td></tr>
+              <tr><td>GI-11</td><td>—</td><td>6</td><td>5.1</td><td>4.4</td></tr>
+              <tr><td>GI-12</td><td>4.6</td><td>30</td><td>7</td><td>—</td></tr>
+              <tr><td>GI-13</td><td>4.6</td><td>—</td><td>8</td><td>7.1</td></tr>
+              <tr><td>GI-14</td><td>5.3</td><td>11</td><td>—</td><td>5.4</td></tr>
+              <tr><td>GI-15</td><td>6.6</td><td>—</td><td>—</td><td>6.3</td></tr>
+              <tr><td>GI-16</td><td>5.4</td><td>17</td><td>—</td><td>5.3</td></tr>
+              <tr><td>GI-17</td><td>5.5</td><td>31</td><td>9</td><td>—</td></tr>
+              <tr><td>GI-18</td><td>5.1</td><td>3</td><td>—</td><td>4.5</td></tr>
+              <tr><td>GI-19</td><td>2.2</td><td>9</td><td>4.1</td><td>—</td></tr>
+              <tr><td>GI-20</td><td>5.6</td><td>4</td><td>—</td><td>3.1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Enforcement Implications</h2>
+
+        <p>Systems subject to this document SHALL implement enforcement behavior consistent with the following obligations:</p>
+
+        <ul>
+          <li>The system MUST fail-closed. Every failure, timeout, indeterminate state, or unresolvable input within the enforcement layer MUST produce a DENY outcome and terminate the affected execution request.</li>
+          <li>An invariant violation MUST terminate execution of the affected request immediately. The system MUST NOT attempt to recover, retry, or continue execution past the point of invariant violation.</li>
+          <li>No fallback execution path is permitted. The system MUST NOT implement any execution route that allows inference to proceed when the enforcement layer has not affirmatively produced a PERMIT decision.</li>
+          <li>Enforcement layer unavailability MUST be treated as equivalent to a DENY decision. The system MUST NOT defer execution pending restoration of enforcement layer availability.</li>
+          <li>All enforcement decisions MUST be recorded as signed decision artifacts prior to the release of any execution result to any downstream system or caller.</li>
+          <li>The system MUST NOT expose any interface, parameter, mode, or configuration by which the enforcement layer may be disabled, suspended, or bypassed in production operation.</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Conclusion</h2>
+
+        <p>This document defines 20 globally binding enforcement invariants for QODIQA-conformant systems. Each invariant is absolute, exceptionless, binary, testable, and auditable. No new concepts, mechanisms, or scope expansions are introduced. All invariants formalize constraints already implicit within the QODIQA specification corpus.</p>
+
+        <p>Conformance to this document requires full satisfaction of all invariants defined in Section 4 across all execution contexts, operational modes, and deployment configurations.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative extension layer within the QODIQA specification corpus. It centralizes globally binding enforcement invariants that formalize constraints implicit across the corpus. It does not modify, override, or reinterpret any existing QODIQA specification.</p>
+
+          <p>This document SHALL be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-GEI-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Global Enforcement Invariants</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative Extension</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Scope</span>
+            <span class="doc-id-val">Global Constraint Layer</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Classification</span>
+            <span class="doc-id-val">Extension Layer</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Authority</span>
+            <span class="doc-id-val">QODIQA Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Role</span>
+            <span class="doc-id-val">Global Constraint Definition</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /#s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Global Enforcement Invariants</p>
+      <p>Version 1.0 &nbsp;&middot;&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-GEI-2026-001</p>
+      <p>Normative Specification</p>
+      <p>Status: Normative Extension</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a normative extension layer and does not constitute legal, regulatory, or operational advice. All constraints defined herein are intended for implementation conformance purposes only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-GEI-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative Extension &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- ScrollSpy (position-based, stable, no flicker) ---- */
+  var navItems = Array.from(document.querySelectorAll('.nav-item'));
+  var sectionIds = [
+    'cover','s-abstract','s1','s2','s3','s4',
+    's4-consent','s4-determinism','s4-execution','s4-audit',
+    's4-state','s4-failure','s4-data','s4-policy',
+    's4-ambiguity','s4-implicit','s5','s6','s7','s8','s9','s-status'
+  ];
+
+  var sections = sectionIds.reduce(function (acc, id) {
+    var el = document.getElementById(id);
+    if (el) acc.push(el);
+    return acc;
+  }, []);
+
+  function headerOffset() {
+    var mh = document.querySelector('.mobile-nav-header');
+    if (mh && getComputedStyle(mh).display !== 'none') return 60;
+    return 24;
+  }
+
+  var activeId = '';
+
+  function updateActive() {
+    var offset = headerOffset();
+    var best = '';
+    for (var i = 0; i < sections.length; i++) {
+      var top = sections[i].getBoundingClientRect().top;
+      if (top <= offset) {
+        best = sections[i].id;
+      }
+    }
+    if (best === activeId) return;
+    activeId = best;
+    navItems.forEach(function (item) {
+      var href = item.getAttribute('href');
+      item.classList.toggle('active', href === '#' + activeId);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  window.addEventListener('resize', updateActive, { passive: true });
+  updateActive();
+
+  /* ---- Smooth nav clicks ---- */
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+
+  navItems.forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      var href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        var target = document.getElementById(href.slice(1));
+        if (target) {
+          var offset = headerOffset();
+          var top = target.getBoundingClientRect().top + window.pageYOffset - offset + 2;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+        if (sidebar) sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  var btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', function () {
+      btt.classList.toggle('visible', window.pageYOffset > 600);
+    }, { passive: true });
+    btt.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ---- Mobile sidebar toggle ---- */
+  var toggle = document.getElementById('navToggle');
+  if (toggle && sidebar && overlay) {
+    toggle.addEventListener('click', function () {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

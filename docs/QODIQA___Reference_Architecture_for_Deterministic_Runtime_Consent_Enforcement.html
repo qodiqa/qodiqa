@@ -1,0 +1,2788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement · v1.0</title>
+<meta name="description" content="QODIQA Reference Architecture for Deterministic Runtime Consent Enforcement v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement">
+<meta property="og:description" content="Canonical vendor-neutral architectural topology for deterministic runtime consent enforcement.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --bg:         #F6F4F0;
+  --bg-raised:  #EFECEA;
+  --bg-sunken:  #E8E5E0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.83rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.80;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 18px 0 22px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 22px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 22px 0 28px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.48);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.key-prop p + p { margin-top: 0.75em; }
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 26px 0 22px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '\2192';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.contact-line {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #D0CCC6;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   PROP LIST
+   ============================================================ */
+.prop-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.prop-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prop-list li:last-child { border-bottom: none; }
+.prop-list li:nth-child(even) { background: #EAE7E2; }
+
+.prop-list li::before {
+  content: '\2022';
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 32px 0;
+}
+
+.inst-statement p {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1366px) {
+  #content { padding: 72px 64px 104px; }
+  footer   { padding: 40px 64px; }
+}
+
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 16px 0; width: 100%; overflow-x: auto; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+
+
+/* ============================================================
+   DECISION BLOCK — INLINE CONTENT RULES
+   ============================================================ */
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; padding: 0 16px 10px; }
+
+.decision-block > p:first-of-type { padding-top: 12px; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 2.6em;
+  margin: 6px 0 10px;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Reference Architecture<br>for <span class="italic-part">Deterministic Runtime Consent Enforcement</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-ARCH-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Canonical, vendor-neutral architectural topology for deterministic runtime consent enforcement.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Scope</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Relationship to Core Standard</a>
+      <a class="nav-item sub" href="#s1-2">1.2 Relationship to Playbook</a>
+      <a class="nav-item sub" href="#s1-3">1.3 Relationship to Security Profile</a>
+      <a class="nav-item sub" href="#s1-4">1.4 Non-Product Positioning</a>
+      <a class="nav-item" href="#s2">2. Architectural Principles</a>
+      <a class="nav-item" href="#s3">3. Canonical Component Model</a>
+      <a class="nav-item" href="#s4">4. Logical Data Flow Model</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Pre-Execution Gating Flow</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Decision Artifact Binding</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Write-Before-Execute Invariant</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Revocation Propagation Flow</a>
+      <a class="nav-item" href="#s5">5. Trust Boundary Definition</a>
+      <a class="nav-item sub" href="#s5-1">5.1 External Boundary</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Internal Trust Segments</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Cross-Region Boundary</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Registry Synchronization Boundary</a>
+      <a class="nav-item sub" href="#s5-5">5.5 Key Material Isolation Boundary</a>
+      <a class="nav-item" href="#s6">6. Deployment Topology Variants</a>
+      <a class="nav-item" href="#s7">7. Deterministic Decision Boundary Model</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Evaluation Isolation</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Frozen Context Binding</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Artifact Generation Atomicity</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Decision Independence from External Network</a>
+      <a class="nav-item" href="#s8">8. Scaling and Performance Model</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Horizontal Scaling of Enforcement Gateway</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Stateless Enforcement Node Properties</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Registry Caching with TTL</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Ledger Write Throughput Model</a>
+      <a class="nav-item sub" href="#s8-5">8.5 Artifact Hashing Cost Envelope</a>
+      <a class="nav-item" href="#s9">9. Failure and Degradation Model</a>
+      <a class="nav-item sub" href="#s9-1">9.1 Registry Unavailability</a>
+      <a class="nav-item sub" href="#s9-2">9.2 Policy Engine Failure</a>
+      <a class="nav-item sub" href="#s9-3">9.3 Audit Ledger Failure</a>
+      <a class="nav-item sub" href="#s9-4">9.4 Clock Drift Detection</a>
+      <a class="nav-item sub" href="#s9-5">9.5 Key Revocation Event</a>
+      <a class="nav-item sub" href="#s9-6">9.6 Partial System Partition</a>
+      <a class="nav-item" href="#s10">10. Interoperability and Extensibility Model</a>
+      <a class="nav-item sub" href="#s10-1">10.1 Version Binding</a>
+      <a class="nav-item sub" href="#s10-2">10.2 Backward Compatibility Handling</a>
+      <a class="nav-item sub" href="#s10-3">10.3 Profile Layering</a>
+      <a class="nav-item sub" href="#s10-4">10.4 Future Control Extension</a>
+      <a class="nav-item" href="#s11">11. Reference Invariants Summary</a>
+      <a class="nav-item" href="#s12">12. Non-Coverage Disclosure</a>
+      <a class="nav-item sub" href="#s12-1">12.1 Product APIs and Protocol Specifications</a>
+      <a class="nav-item sub" href="#s12-2">12.2 Specific Technology Stacks</a>
+      <a class="nav-item sub" href="#s12-3">12.3 Enterprise IAM and Identity Systems</a>
+      <a class="nav-item sub" href="#s12-4">12.4 AI Model Internals</a>
+      <a class="nav-item sub" href="#s12-5">12.5 Data Storage Encryption</a>
+      <a class="nav-item sub" href="#s12-6">12.6 Consent Grant Origination</a>
+      <a class="nav-item" href="#s13">13. Institutional Closing Statement</a>
+      <a class="nav-item sub" href="#s13-1">13.1 Corpus Alignment Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document defines the canonical, vendor-neutral architectural topology for deterministic runtime consent enforcement as specified in the QODIQA corpus. It translates the normative requirements of the Core Standard, the 68-Point Enforcement Framework, the Security and Cryptographic Profile, and the Implementation Playbook into a structurally coherent reference model of components, data flows, trust boundaries, failure modes, and scaling properties.</p>
+          <p>This document does not prescribe implementation technology, vendor choice, or product design. It establishes the logical architecture (the arrangement, isolation, and interaction of components) within which any conformant implementation must operate. <strong>The governing constraint is structural: the architecture is the enforcement boundary, and the enforcement boundary must be deterministic, fail-closed, and cryptographically anchored or it is not a conformant QODIQA architecture.</strong></p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>AI systems do not enforce consent. This architecture introduces a deterministic enforcement boundary before inference execution. Every request is evaluated, cryptographically bound, and audit-committed prior to execution. In the absence of a valid enforcement decision, execution does not occur.</p>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Scope</h2>
+
+        <p>The QODIQA corpus defines what must be enforced and how conformance is measured. This Reference Architecture defines the logical structure within which enforcement occurs. It is the structural complement to the normative corpus: where the Core Standard defines required behavior, this document defines the architectural form within which that behavior is realized.</p>
+
+        <p>A reference architecture is a vendor-neutral, technology-neutral canonical model. It defines the minimum structural elements, their responsibilities, their relationships, and the invariants that must hold across all of them, regardless of how any individual element is implemented. Implementations may vary in technology, topology, and scale; they may not vary in the structural properties this architecture specifies. AI systems operating without deterministic consent enforcement lack a verifiable enforcement boundary and cannot produce auditable guarantees of consent compliance.</p>
+
+        <h3 id="s1-1">1.1 Relationship to the Core Standard</h3>
+        <p>The Core Standard is normative over enforcement semantics (what decisions are made and when). This Reference Architecture is normative over the structural properties that make those decisions possible (how components are arranged, isolated, and connected). The Core Standard governs the decision function; this architecture governs the decision infrastructure.</p>
+
+        <h3 id="s1-2">1.2 Relationship to the Implementation Playbook</h3>
+        <p>The Implementation Playbook defines how to build a conformant deployment from this architecture. This document defines what must be built. The Playbook is operationally specific; this document is logically abstract. A deployment that satisfies the Playbook necessarily satisfies this architecture; a deployment that satisfies this architecture but not the Playbook may be architecturally valid but operationally non-conformant.</p>
+
+        <h3 id="s1-3">1.3 Relationship to the Security Profile</h3>
+        <p>The Security and Cryptographic Profile defines the cryptographic properties of the key hierarchy, artifact generation, and audit chain integrity. This architecture defines where those cryptographic properties are applied: at which component boundaries, in which directions, and with which isolation requirements. The Security Profile governs the cryptographic specification; this architecture governs the cryptographic topology.</p>
+
+        <h3 id="s1-4">1.4 Non-Product Positioning Statement</h3>
+
+        <div class="decision-block">
+          <strong>This Reference Architecture Is — and Is Not</strong>
+          <ul>
+            <li>A logical component model defining canonical responsibilities and boundaries</li>
+            <li>A structural reference against which implementations are assessed for architectural conformance</li>
+            <li>A technology-neutral specification applicable to any conforming implementation</li>
+            <li>A normative reference for component interaction, trust assumptions, and failure behavior</li>
+            <li>Not a product design, API specification, or deployment blueprint</li>
+            <li>Not a prescriptive technology stack or vendor reference</li>
+            <li>Not a commercial architecture, SaaS design, or infrastructure product</li>
+            <li>Not a replacement for enterprise IAM, data governance, or model management infrastructure</li>
+          </ul>
+          <p class="section-note" style="margin: 0; padding: 8px 0 0; border-top: 1px solid #D0CCC6;">This document is a logical architecture model published as part of the QODIQA technical standards corpus.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Architectural Principles</h2>
+
+        <p>Eight architectural principles govern the QODIQA reference architecture. Each is stated as a structural invariant: a property the architecture must satisfy at all times, not a design aspiration. An architecture that violates any of these principles is not a conformant QODIQA architecture, regardless of the correctness of individual components.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-01 — Deterministic Decision Boundary</div>
+          <p>The enforcement decision function is a pure function of its inputs: frozen context, token state at evaluation time, and frozen policy version. For identical inputs, the function must return an identical output on every invocation, across every Policy Engine instance, after every restart, and across all time. No implementation detail (execution order, cache population, thread scheduling, or network timing) may cause the decision function to return different results for identical inputs.</p>
+          <p><em>Structural requirement: evaluation isolation; no shared mutable state in decision path.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-02 — Fail-Closed Execution</div>
+          <p>The default state of the enforcement system is denial. Any condition that prevents the system from producing a verified, audit-committed enforcement decision (component unavailability, network partition, ledger write failure, signing key unavailability, timeout expiry) must result in denial of the request and must not result in inference execution. There is no degraded mode in which enforcement is relaxed. The absence of a successful enforcement decision is itself an enforcement outcome: deny.</p>
+          <p><em>Structural requirement: circuit breakers at all external component interfaces; AL write before inference release.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-03 — Release Separation of Consent State and Policy Logic</div>
+          <p>Consent state (the current validity of a specific consent grant) and policy logic (the rules that determine what a consent grant authorizes) must be managed by structurally separate components with independent storage, independent lifecycle, and independent deployment. A change to consent state must not require a policy redeployment. A change to policy logic must not alter existing consent state. The two domains must be logically decoupled and can only be combined at evaluation time within the Policy Engine.</p>
+          <p><em>Structural requirement: Consent Registry and Policy Engine are separate components; no shared persistent storage.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-04 — Cryptographic Anchoring</div>
+          <p>Every enforcement decision artifact must be cryptographically bound to the specific enforcement context that produced it. The artifact must be infeasible to generate without access to the current signing key and must be verifiable against the context without re-executing the enforcement decision. The cryptographic binding must make it structurally impossible for the inference system to execute on an artifact that was not produced by an authorized enforcement decision for the specific request context.</p>
+          <p><em>Structural requirement: HMAC-SHA256 artifact generation; three-tier key hierarchy; artifact verification at inference boundary.</em></p>
+          <p><em>Security implication: prevents artifact replay across contexts; an artifact issued for one enforcement context cannot authorize execution under any other.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-05 — Immutable Audit Trace</div>
+          <p>Every enforcement decision must produce a durable, tamper-evident audit record before the corresponding inference execution may proceed. The audit record is committed before the artifact is released; the artifact is released before inference execution begins. This sequence is mandatory and non-negotiable. An audit record that cannot be verified for integrity is equivalent to no audit record.</p>
+          <p><em>Structural requirement: write-before-execute invariant; append-only ledger; hash chain integrity.</em></p>
+          <p><em>Security implication: the write-before-execute invariant ensures no inference execution occurs without a prior durable audit record.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-06 — Replay Verifiability</div>
+          <p>Any enforcement decision recorded in the audit ledger must be independently reproducible from the archived frozen context and the corresponding frozen policy snapshot, without re-executing the original request. Replay verifiability enables post-hoc audit, determinism certification, and dispute resolution. The architecture must preserve all information required for deterministic replay for the duration of the declared retention period.</p>
+          <p><em>Structural requirement: frozen context archived in AL; policy snapshot archived and retrievable; determinism test protocol operable against historical records.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-07 — Zero Implicit Trust Between Components</div>
+          <p>No component in the enforcement architecture implicitly trusts any other component. All inter-component communication must be authenticated. All data received from another component must be verified before use. A component that has been compromised must not be able to cause another component to produce an incorrect enforcement outcome by sending it crafted data. Trust is established through cryptographic authentication at every interface, not through network position or service identity alone.</p>
+          <p><em>Structural requirement: mTLS on all enforcement-path interfaces; signed payloads; verification before use.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">AP-08 — Consent State Supersession</div>
+          <p>A revocation event, once committed to the Consent Registry, supersedes all prior consent grants for the affected consent_id. No cached state, in-flight decision, or previously issued artifact may authorize inference execution for a revoked consent after the revocation has propagated within the declared TTL. The architecture must ensure that revocation is structurally irreversible within the enforcement path: no component may restore a revoked grant without an explicit re-grant operation.</p>
+          <p><em>Structural requirement: linearizable revocation reads; bounded TTL propagation; conservative mode on propagation delay.</em></p>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Canonical Component Model</h2>
+
+        <p>The QODIQA reference architecture defines nine logically separate components. Each component has a distinct responsibility domain, a defined trust boundary, specified inputs and outputs, explicit security assumptions, and a defined failure behavior. No two components may share persistent state. Components may communicate only through defined interfaces; side channels are non-conformant.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 760 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:760px;display:block;margin:0 auto;" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif">
+            <defs>
+              <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#C4C0BA"/>
+              </marker>
+              <marker id="arrAccent" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="#7A6A50"/>
+              </marker>
+              <marker id="arrAccentSm" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#7A6A50"/>
+              </marker>
+            </defs>
+
+            <!-- ═══ EXTERNAL ZONE ═══ -->
+            <rect x="12" y="12" width="736" height="68" rx="4" fill="none" stroke="#C4C0BA" stroke-width="1" stroke-dasharray="5,3"/>
+            <text x="24" y="28" font-size="8" font-weight="600" fill="#9B9590" letter-spacing="0.14em" font-family="'SFMono-Regular',Consolas,monospace">EXTERNAL ZONE</text>
+            <!-- CS -->
+            <rect x="300" y="28" width="160" height="40" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="380" y="44" text-anchor="middle" font-size="9" font-weight="600" fill="#3A3F48">CS</text>
+            <text x="380" y="58" text-anchor="middle" font-size="8" fill="#6B7280">Calling System</text>
+
+            <!-- Arrow CS to EG — label right, clear of line -->
+            <line x1="380" y1="68" x2="380" y2="104" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#arr)"/>
+            <text x="392" y="90" font-size="7.5" fill="#9B9590" font-style="italic">mTLS · authenticated request</text>
+
+            <!-- ═══ ENFORCEMENT PERIMETER ═══ -->
+            <rect x="12" y="98" width="736" height="346" rx="4" fill="none" stroke="#B8B4AE" stroke-width="1.2"/>
+            <text x="24" y="114" font-size="8" font-weight="600" fill="#9B9590" letter-spacing="0.14em" font-family="'SFMono-Regular',Consolas,monospace">ENFORCEMENT PERIMETER</text>
+
+            <!-- Decision boundary label — sits cleanly inside perimeter above EG -->
+            <text x="380" y="130" text-anchor="middle" font-size="7" font-weight="600" fill="#7A6A50" letter-spacing="0.12em" font-family="'SFMono-Regular',Consolas,monospace" opacity="0.88">DETERMINISTIC DECISION BOUNDARY</text>
+
+            <!-- EG — strengthened border, wider for label clarity -->
+            <rect x="240" y="136" width="280" height="52" rx="3" fill="#1A1C20" stroke="#7A6A50" stroke-width="2.2"/>
+            <text x="380" y="158" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF" letter-spacing="0.02em">EG — Enforcement Gateway</text>
+            <text x="380" y="175" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.52)">sole entry point · orchestrates full enforcement flow</text>
+
+            <!-- Arrow EG to CR (diagonal left-down) -->
+            <line x1="254" y1="178" x2="150" y2="232" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#arr)"/>
+            <!-- CR label above arrow midpoint, well left -->
+            <text x="172" y="208" font-size="7.5" fill="#9B9590" text-anchor="middle">1. CR query</text>
+
+            <!-- Arrow EG to PE (straight down) -->
+            <line x1="380" y1="188" x2="380" y2="232" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#arr)"/>
+            <!-- PE label right of arrow -->
+            <text x="392" y="216" font-size="7.5" fill="#9B9590">2. evaluate</text>
+
+            <!-- Arrow EG to AE (diagonal right-down) -->
+            <line x1="506" y1="178" x2="596" y2="232" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#arr)"/>
+            <!-- AE label above arrow midpoint, well right -->
+            <text x="572" y="208" font-size="7.5" fill="#9B9590" text-anchor="middle">3. sign</text>
+
+            <!-- CR block -->
+            <rect x="60" y="232" width="160" height="46" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="140" y="251" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">CR</text>
+            <text x="140" y="267" text-anchor="middle" font-size="8" fill="#6B7280">Consent Registry</text>
+
+            <!-- PE block -->
+            <rect x="300" y="232" width="160" height="46" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="380" y="251" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">PE</text>
+            <text x="380" y="267" text-anchor="middle" font-size="8" fill="#6B7280">Policy Engine</text>
+
+            <!-- AE block -->
+            <rect x="540" y="232" width="160" height="46" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="620" y="251" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">AE</text>
+            <text x="620" y="267" text-anchor="middle" font-size="8" fill="#6B7280">Artifact Engine</text>
+
+            <!-- RS block — below CR, left column -->
+            <rect x="60" y="322" width="160" height="46" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="140" y="341" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">RS</text>
+            <text x="140" y="356" text-anchor="middle" font-size="8" fill="#6B7280">Revocation Service</text>
+
+            <!-- RS to CR arrow — straight up, no label needed -->
+            <line x1="140" y1="322" x2="140" y2="278" stroke="#C4C0BA" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- EG to AL: audit write arrow — starts below PE bottom, ends above AL top -->
+            <!-- Gap between component row bottom (y=278) and AL top (y=392): spacious 114px -->
+            <line x1="380" y1="390" x2="380" y2="358" stroke="#7A6A50" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrAccent)"/>
+            <!-- Label RIGHT of forward arrow, in the gap space -->
+            <text x="392" y="378" font-size="7.5" fill="#7A6A50" font-weight="600">4. audit write (blocking)</text>
+
+            <!-- ACK return arrow — parallel, left lane -->
+            <line x1="366" y1="356" x2="366" y2="390" stroke="#7A6A50" stroke-width="1" stroke-dasharray="2,3" marker-end="url(#arrAccentSm)"/>
+            <!-- ACK label left of return arrow -->
+            <text x="280" y="376" font-size="7.5" fill="#7A6A50" text-anchor="middle">ACK</text>
+
+            <!-- Bridge: invisible vertical arrow segment from EG bottom to audit write start -->
+            <!-- EG bottom is y=188, audit write top is y=390. Arrow goes through empty space. -->
+            <!-- Draw a faint connector line from center bottom of EG to top of audit segment -->
+            <line x1="380" y1="188" x2="380" y2="348" stroke="#7A6A50" stroke-width="1" stroke-dasharray="3,3" opacity="0.35"/>
+
+            <!-- AL block — fully clear of perimeter bottom, well below all arrow tips -->
+            <rect x="260" y="392" width="240" height="50" rx="3" fill="#1C1F25" stroke="#7A6A50" stroke-width="1.8"/>
+            <text x="380" y="413" text-anchor="middle" font-size="9" font-weight="700" fill="#FFFFFF">AL</text>
+            <text x="380" y="429" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.55)">Audit Ledger</text>
+
+            <!-- Write-before-execute — right of AL, no overlap -->
+            <text x="508" y="413" font-size="7" fill="#7A6A50" font-weight="600" font-style="italic" opacity="0.85">write-before-execute</text>
+            <text x="508" y="425" font-size="7" fill="#7A6A50" font-weight="600" font-style="italic" opacity="0.85">invariant</text>
+
+            <!-- ═══ KEY TRUST ANCHOR ═══ — starts safely below AL bottom (y=442) -->
+            <rect x="12" y="452" width="736" height="52" rx="4" fill="none" stroke="#C4C0BA" stroke-width="1" stroke-dasharray="5,3"/>
+            <text x="24" y="469" font-size="8" font-weight="600" fill="#9B9590" letter-spacing="0.14em" font-family="'SFMono-Regular',Consolas,monospace">KEY TRUST ANCHOR</text>
+            <!-- TA box right-aligned in anchor zone -->
+            <rect x="556" y="460" width="180" height="32" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="646" y="473" text-anchor="middle" font-size="9" font-weight="600" fill="#3A3F48">TA</text>
+            <text x="646" y="485" text-anchor="middle" font-size="7.5" fill="#6B7280">Trust Anchor / KMS</text>
+
+            <!-- TA to AE dashed arrow — exits bottom of anchor zone, goes to AE bottom -->
+            <line x1="612" y1="460" x2="600" y2="278" stroke="#C4C0BA" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+          </svg>
+          <p class="diagram-caption">Figure 3.1 — QODIQA canonical enforcement architecture. The Enforcement Gateway is the sole entry point and deterministic decision boundary; all downstream components operate within the trusted enforcement perimeter. The Audit Ledger write is blocking: no artifact is released until acknowledged.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">CS — Calling System</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Initiates inference requests; presents consent_id; provides frozen context hash; receives enforcement decision artifact; presents artifact to inference system boundary. Does not evaluate policy. Does not access Consent Registry directly.</td></tr>
+              <tr><td>Trust Boundary</td><td>External to the enforcement perimeter. Treated as untrusted by all internal components. Must authenticate to Enforcement Gateway via mTLS or equivalent. Cannot be assumed to have received an uncorrupted enforcement artifact.</td></tr>
+              <tr><td>Inputs</td><td>Inference request payload; consent_id; context parameters used to construct frozen context hash.</td></tr>
+              <tr><td>Outputs</td><td>Authenticated enforcement request to EG; artifact to inference system boundary (if PERMIT returned).</td></tr>
+              <tr><td>Security Assumptions</td><td>CS is not trusted with enforcement logic. A compromised CS may attempt to replay artifacts, fabricate consent_ids, or bypass the EG. The architecture must be secure against all three attack vectors at the EG layer.</td></tr>
+              <tr><td>Failure Behavior</td><td>CS failure has no effect on enforcement infrastructure. A CS that becomes unavailable cannot affect the enforcement state of any consent_id. Crashed or compromised CS instances must not be able to preserve or replay prior PERMIT decisions.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">EG — Enforcement Gateway</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Single structural entry point for all inference requests. Extracts and validates consent_id and context_hash. Orchestrates the enforcement flow: CR query → PE evaluation → AE artifact generation → AL write → artifact release. Enforces rate limits. Operates circuit breakers on all downstream components.</td></tr>
+              <tr><td>Trust Boundary</td><td>Internal enforcement perimeter. Trusted by PE, AE, CR, and AL to present authenticated, well-formed enforcement requests. Does not trust CS. Does not expose any internal component interface to CS. Is the sole structural chokepoint between the external domain and the enforcement infrastructure.</td></tr>
+              <tr><td>Inputs</td><td>Authenticated inference request from CS; CR revocation state (query response); PE decision (PERMIT or DENY); AE artifact (if PERMIT); AL write confirmation.</td></tr>
+              <tr><td>Outputs</td><td>CR query; PE evaluation request; AE signing request; AL write request; enforcement decision (PERMIT and artifact, or DENY) to CS.</td></tr>
+              <tr><td>Security Assumptions</td><td>EG is the only component that communicates with CS. All other components can assume they receive only EG-originated requests. EG operates in a trust-verified context. A compromised EG is a complete breach of the enforcement perimeter; redundant EG instances do not reduce single-instance trust requirements.</td></tr>
+              <tr><td>Failure Behavior</td><td>EG failure: all requests denied at the transport layer. No fallback path. EG restart must re-verify all component connectivity before resuming enforcement. EG must not resume after restart without a fresh CR read for any in-flight consent_id.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">PE — Policy Engine</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Evaluates the enforcement decision: given a frozen context and current token state, applies the frozen policy snapshot to produce a deterministic PERMIT or DENY. Holds a verified, immutable copy of the active policy snapshot. Does not query external state during evaluation. Does not write to any persistent store.</td></tr>
+              <tr><td>Trust Boundary</td><td>Internal enforcement perimeter; trusted only by EG. Does not trust data from any source other than the EG enforcement request (which carries the frozen context hash) and its own local policy snapshot (which is verified at load time). Stateless at evaluation time; all evaluation state is confined to the single request scope.</td></tr>
+              <tr><td>Inputs</td><td>Enforcement request from EG: (consent_id, context_hash, token_state, policy_version); verified local policy snapshot.</td></tr>
+              <tr><td>Outputs</td><td>Deterministic enforcement decision: PERMIT or DENY, with decision reason code and policy_version binding, returned to EG.</td></tr>
+              <tr><td>Security Assumptions</td><td>PE must not be reachable by any component other than EG. PE must not make network calls during evaluation. PE policy snapshot must be verified against the AL POLICY_FROZEN record at load time. A compromised PE that produces incorrect decisions is a structural breach; multiple PE instances do not eliminate this risk: each instance must independently verify its snapshot.</td></tr>
+              <tr><td>Failure Behavior</td><td>PE unavailability: EG circuit breaker opens; all subsequent requests denied with PE_UNAVAILABLE until PE recovers and snapshot re-verifies. PE must not enter a partially initialized state from which it accepts evaluation requests without a verified policy snapshot.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">CR — Consent Registry</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Authoritative store of consent grant state. Responds to EG queries with the current state of a specified consent_id: ACTIVE, REVOKED, EXPIRED, or NOT_FOUND. Accepts revocation writes from the Revocation Service. Provides linearizable reads for revocation state. Maintains replication consistency across all deployment domains within the declared TTL.</td></tr>
+              <tr><td>Trust Boundary</td><td>Internal enforcement perimeter. Accepts queries only from authenticated EG instances. Accepts revocation writes only from the authenticated Revocation Service. Rejects all other write attempts. Read responses are considered trusted by EG within the declared cache TTL.</td></tr>
+              <tr><td>Inputs</td><td>Consent_id query from EG; revocation event from RS.</td></tr>
+              <tr><td>Outputs</td><td>Consent state response to EG; replication events to peer CR instances (in replicated deployments).</td></tr>
+              <tr><td>Security Assumptions</td><td>CR holds the authoritative revocation state. A CR that serves stale or incorrect state is a safety failure. CR must use linearizable reads for revocation checks: eventually consistent reads are non-conformant for revocation state. A CR compromised to serve fabricated ACTIVE states is a complete consent enforcement breach.</td></tr>
+              <tr><td>Failure Behavior</td><td>CR unavailability: EG opens circuit breaker; all requests denied. Cached state may be served for the duration of the cache TTL, after which CR unavailability causes denial. No request may be PERMIT-ted based on cache state after TTL expiry without a fresh CR read.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">RS — Revocation Service</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Receives revocation events from authorized principals; propagates revocation state to the Consent Registry within the declared TTL; emits revocation notifications to all EG instances. Holds the sole credential authorized to write revocation flags to the CR. Provides durable delivery guarantee for revocation events.</td></tr>
+              <tr><td>Trust Boundary</td><td>Partially external (receives revocation requests from authorized principals, which may be external to the enforcement perimeter) and partially internal (writes to CR). The RS must authenticate all revocation event sources. The RS signing credential for CR writes must be isolated and not derivable from any other system credential.</td></tr>
+              <tr><td>Inputs</td><td>Authenticated revocation event from authorized principal; acknowledgment from CR on write commit.</td></tr>
+              <tr><td>Outputs</td><td>Signed revocation write to CR; revocation notification broadcast to EG instances (for cache invalidation); AL REVOCATION_COMMITTED record.</td></tr>
+              <tr><td>Security Assumptions</td><td>RS is the only authorized writer of revocation state. Any component that can write REVOKED flags to CR without RS mediation is a structural violation. RS must guarantee delivery of revocation events: loss of a revocation event is a consent enforcement failure.</td></tr>
+              <tr><td>Failure Behavior</td><td>RS unavailability: revocation events queue for delivery on RS recovery. EG instances enter conservative mode for affected consent_ids if RS delivery is delayed beyond TTL/2. A revocation event that cannot be delivered within TTL causes conservative denial for all in-flight requests for the affected consent_id.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">AE — Artifact Engine</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Generates the cryptographic enforcement artifact that binds a PERMIT decision to a specific enforcement context. Computes HMAC-SHA256 over (consent_id, context_hash, policy_version, decision, nonce) using the current active signing key. Provides artifact verification capability for the inference system. Key operations may be delegated to a hardware security module.</td></tr>
+              <tr><td>Trust Boundary</td><td>Internal enforcement perimeter; trusted only by EG. Receives signing requests only from authenticated EG instances carrying valid PERMIT decisions. Does not independently evaluate policy. Does not access CR or PE. The signing key must be accessible only to AE; no other component holds the signing key or a derivation thereof.</td></tr>
+              <tr><td>Inputs</td><td>Signing request from EG: (consent_id, context_hash, policy_version, decision=PERMIT, nonce); active signing key (from key store).</td></tr>
+              <tr><td>Outputs</td><td>HMAC-SHA256 enforcement artifact returned to EG; artifact verification result when queried by inference system.</td></tr>
+              <tr><td>Security Assumptions</td><td>AE is the cryptographic boundary of the enforcement decision. A compromised AE that produces artifacts for fabricated decisions represents a complete bypass of enforcement logic. AE must be isolated from all external network access. AE signing operations must be deterministic and reproducible under the same key and nonce. <em>Security implication: AE isolation from external networks is mandatory; any external access path to AE represents a complete bypass vector.</em></td></tr>
+              <tr><td>Failure Behavior</td><td>AE unavailability: EG cannot release PERMIT decisions; all PERMIT-eligible requests denied. No artifact generated means no inference execution. AE must not emit partial artifacts. A signing operation that fails must produce no artifact output visible to EG.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">AL — Audit Ledger</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Provides append-only, hash-chained, tamper-evident storage for all enforcement events. Records every enforcement decision (PERMIT and DENY), every policy lifecycle event, every key rotation event, every revocation event, and every system integrity event. Is the authoritative accountability record for all enforcement activity. Writes must be acknowledged before artifacts are released.</td></tr>
+              <tr><td>Trust Boundary</td><td>Internal enforcement perimeter. Accepts write operations only from authenticated EG and RS instances. Accepts read operations from authenticated assessors and audit processes. Rejects DELETE, UPDATE, and TRUNCATE operations at the storage interface. All write operations must extend the hash chain.</td></tr>
+              <tr><td>Inputs</td><td>Enforcement decision records from EG; revocation event records from RS; key rotation records from key management; policy lifecycle records from deployment process.</td></tr>
+              <tr><td>Outputs</td><td>Hash-chained records readable by audit processes; signed exports for external archival; chain integrity verification results.</td></tr>
+              <tr><td>Security Assumptions</td><td>AL integrity is a precondition for certification. A tampered AL makes it impossible to verify enforcement accountability. AL must be designed so that any modification, deletion, or reordering of records is detectable through chain verification without access to the original write clients.</td></tr>
+              <tr><td>Failure Behavior</td><td>AL unavailability: EG cannot commit audit records; PERMIT decisions not released; all requests denied. An AL write that fails must not be retried silently: EG must treat an unacknowledged write as a write failure and deny. Partial writes must be detectable and must not corrupt the existing chain.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">ML — Monitoring and Telemetry Layer</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Collects enforcement-path metrics, component health signals, revocation propagation measurements, and integrity heartbeat results. Dispatches alerts for Class I and Class 0 conditions. Provides the observability surface for operational monitoring and certification evidence. Is not in the enforcement decision path.</td></tr>
+              <tr><td>Trust Boundary</td><td>Partially internal (receives metrics from all enforcement components) and partially external (exports metrics to monitoring infrastructure). ML compromise does not affect enforcement decisions. ML must not be used as a data plane for enforcement decisions. ML availability is not a condition for enforcement operation.</td></tr>
+              <tr><td>Inputs</td><td>Metrics from EG, PE, CR, RS, AE, AL; component health probes; integrity heartbeat results.</td></tr>
+              <tr><td>Outputs</td><td>Alert dispatches (Class I and Class 0); metric time-series for dashboards and certification evidence; integrity heartbeat records.</td></tr>
+              <tr><td>Security Assumptions</td><td>ML is a read-only observer of the enforcement plane. It must not issue commands to any enforcement component. Metric data must not contain sensitive enforcement payloads. ML compromise may suppress alerts but must not affect enforcement outcomes.</td></tr>
+              <tr><td>Failure Behavior</td><td>ML failure has no effect on enforcement decisions. Enforcement continues in the absence of ML telemetry. Alert suppression due to ML failure is a monitoring gap, not an enforcement failure. Components must not block enforcement operations waiting for ML write acknowledgment.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">TA — Trust Anchor and Key Management Layer</span>
+          <table>
+            <thead><tr><th>Property</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Responsibilities</td><td>Manages the three-tier key hierarchy: root key (offline), intermediate key, AE signing key. Performs key provisioning to AE; manages key rotation lifecycle; maintains the key rotation audit trail in AL. Root key never leaves the offline trust anchor. Intermediate key rotation events trigger dual-key window management in AE.</td></tr>
+              <tr><td>Trust Boundary</td><td>The highest trust boundary in the enforcement architecture. The root key trust anchor is isolated from all operational systems. Key provisioning to AE occurs over an authenticated channel with explicit key delivery confirmation. No other component in the architecture holds key material at the root or intermediate level.</td></tr>
+              <tr><td>Inputs</td><td>Key rotation schedule; human authorization for root key operations; AE key provisioning requests.</td></tr>
+              <tr><td>Outputs</td><td>Provisioned AE signing key (to AE); key rotation records (to AL); key rotation notifications (to EG for artifact verification window management).</td></tr>
+              <tr><td>Security Assumptions</td><td>Compromise of the root key trust anchor represents a complete collapse of the enforcement architecture's cryptographic guarantees. Root key operations require out-of-band human authorization. Intermediate key compromise requires immediate rotation and notification of all artifact-verifying systems.</td></tr>
+              <tr><td>Failure Behavior</td><td>TA unavailability does not immediately affect enforcement (AE holds a valid current key). Key rotation cannot proceed during TA unavailability; if the current AE signing key expires during TA unavailability, AE enters conservative mode and enforcement becomes deny-only until key provisioning resumes.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Logical Data Flow Model</h2>
+
+        <p>The enforcement data flow is strictly sequential. No step may be executed concurrently with a step that depends on its output. No step may be skipped. No step may be reordered. The sequence is the enforcement invariant: any implementation that satisfies this sequence, regardless of the technology used to realize each component, satisfies the structural data flow requirement.</p>
+
+        <h3 id="s4-1">4.1 Pre-Execution Gating Flow</h3>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;margin:0 auto;" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif">
+            <defs>
+              <marker id="af1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#C4C0BA"/></marker>
+              <marker id="af2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#7A6A50"/></marker>
+            </defs>
+
+            <!-- External domain band -->
+            <rect x="20" y="12" width="520" height="58" rx="3" fill="none" stroke="#C4C0BA" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="280" y="30" text-anchor="middle" font-size="8" font-weight="600" fill="#9B9590" letter-spacing="0.12em" font-family="'SFMono-Regular',Consolas,monospace">EXTERNAL DOMAIN</text>
+            <rect x="175" y="36" width="210" height="26" rx="2" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="280" y="53" text-anchor="middle" font-size="8.5" fill="#3A3F48" font-weight="600">Calling System (CS)</text>
+
+            <!-- Arrow CS → EG -->
+            <line x1="280" y1="70" x2="280" y2="104" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#af1)"/>
+            <!-- label right of arrow, well clear -->
+            <text x="292" y="91" font-size="7.5" fill="#9B9590" font-style="italic">authenticated request</text>
+
+            <!-- EG block -->
+            <rect x="110" y="104" width="340" height="48" rx="3" fill="#1A1C20" stroke="#7A6A50" stroke-width="2"/>
+            <text x="280" y="124" text-anchor="middle" font-size="9.5" font-weight="700" fill="#FFF">EG — Enforcement Gateway</text>
+            <text x="280" y="140" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.50)">sole entry point · validates identity · extracts context</text>
+
+            <!-- Arrow EG → CR, label left of arrow -->
+            <line x1="280" y1="152" x2="280" y2="192" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#af1)"/>
+            <text x="166" y="176" font-size="7.5" fill="#9B9590" text-anchor="middle">1. CR query — consent_id</text>
+
+            <!-- CR block -->
+            <rect x="110" y="192" width="340" height="44" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="280" y="210" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">CR — Consent Registry</text>
+            <text x="280" y="226" text-anchor="middle" font-size="7.5" fill="#6B7280">linearizable read · returns ACTIVE | REVOKED</text>
+
+            <!-- Arrow CR → PE, label left -->
+            <line x1="280" y1="236" x2="280" y2="276" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#af1)"/>
+            <text x="166" y="260" font-size="7.5" fill="#9B9590" text-anchor="middle">2. evaluation request</text>
+
+            <!-- PE block -->
+            <rect x="110" y="276" width="340" height="44" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="280" y="294" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">PE — Policy Engine</text>
+            <text x="280" y="310" text-anchor="middle" font-size="7.5" fill="#6B7280">pure function · frozen snapshot · PERMIT | DENY</text>
+
+            <!-- Arrow PE → AE, label left -->
+            <line x1="280" y1="320" x2="280" y2="360" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#af1)"/>
+            <text x="166" y="344" font-size="7.5" fill="#9B9590" text-anchor="middle">3. signing request (PERMIT only)</text>
+
+            <!-- AE block -->
+            <rect x="110" y="360" width="340" height="44" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="280" y="378" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">AE — Artifact Engine</text>
+            <text x="280" y="394" text-anchor="middle" font-size="7.5" fill="#6B7280">HMAC-SHA256 · signed enforcement artifact</text>
+
+            <!-- Arrow AE → AL, gold, label left -->
+            <line x1="280" y1="404" x2="280" y2="444" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#af2)"/>
+            <text x="166" y="428" font-size="7.5" fill="#7A6A50" font-weight="600" text-anchor="middle">4. audit write — BLOCKING</text>
+
+            <!-- AL block -->
+            <rect x="110" y="444" width="340" height="44" rx="3" fill="#1C1F25" stroke="#7A6A50" stroke-width="1.8"/>
+            <text x="280" y="462" text-anchor="middle" font-size="9" font-weight="700" fill="#FFF">AL — Audit Ledger</text>
+            <text x="280" y="478" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.50)">append-only · hash chain extended · ACK required</text>
+
+            <!-- Arrow AL → Inference, label left -->
+            <line x1="280" y1="488" x2="280" y2="522" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#af1)"/>
+            <text x="166" y="509" font-size="7.5" fill="#9B9590" text-anchor="middle">5. artifact released (PERMIT + ACK)</text>
+
+            <!-- Inference execution band -->
+            <rect x="20" y="522" width="520" height="26" rx="3" fill="none" stroke="#C4C0BA" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="280" y="539" text-anchor="middle" font-size="7.5" font-weight="600" fill="#9B9590" letter-spacing="0.12em" font-family="'SFMono-Regular',Consolas,monospace">INFERENCE EXECUTION</text>
+          </svg>
+          <p class="diagram-caption">Figure 4.1 — Pre-execution gating flow. Steps are strictly sequential; no step may be skipped or reordered. The AL write at step 4 is blocking — the artifact is not released until the write is acknowledged.</p>
+        </div>
+
+        <h3 id="s4-2">4.2 Decision Artifact Binding</h3>
+
+        <p>The enforcement artifact is the cryptographic binding between the enforcement decision and the inference execution it authorizes. The artifact is computed over a fixed set of fields that unambiguously identify the enforcement decision: the consent_id that was evaluated, the context_hash that was evaluated against, the policy version that governed the evaluation, the decision outcome, and a single-use nonce that prevents artifact replay. Any execution that does not present a valid artifact for its exact context is structurally unauthorized.</p>
+
+        <div class="key-prop">
+          <p><strong>Artifact Binding Invariant:</strong> An enforcement artifact is valid if and only if <code>HMAC-SHA256(K, consent_id || context_hash || policy_version || decision || nonce)</code> verifies correctly and the nonce has not been previously consumed. The artifact is not valid for any other consent_id, context, policy version, or decision outcome.</p>
+        </div>
+
+        <h3 id="s4-3">4.3 Write-Before-Execute Invariant</h3>
+
+        <p>The write-before-execute invariant is the strongest sequencing constraint in the architecture. It states: no inference execution may begin until the EG has received an acknowledged write from the AL for the enforcement decision authorizing that execution. This invariant has no exceptions. A network failure between the AL write and the artifact release means the artifact is not released. A timeout between the AL write and the acknowledgment means the artifact is not released. An AL that acknowledges without actually writing is a structural integrity failure.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Step</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>W-01</strong> — PE Decision Complete</td><td>PE returns PERMIT or DENY to EG. Decision is in EG memory only; no external record exists yet. No artifact is generated. No inference execution is possible.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s4-4">4.4 Revocation Propagation Flow</h3>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 520 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;margin:0 auto;" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif">
+            <defs>
+              <marker id="rv1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#C4C0BA"/></marker>
+              <marker id="rv2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#7A6A50"/></marker>
+            </defs>
+
+            <!-- Authorized principal -->
+            <rect x="155" y="10" width="190" height="36" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="250" y="24" text-anchor="middle" font-size="8.5" font-weight="600" fill="#3A3F48">Authorized Principal</text>
+            <text x="250" y="38" text-anchor="middle" font-size="7.5" fill="#6B7280">revocation request</text>
+
+            <!-- Arrow Principal to RS — label placed RIGHT of arrow, fully clear -->
+            <line x1="250" y1="46" x2="250" y2="86" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#rv1)"/>
+            <text x="262" y="58" font-size="7.5" fill="#9B9590">{ consent_id, reason,</text>
+            <text x="262" y="70" font-size="7.5" fill="#9B9590">authorized_by }</text>
+
+            <!-- RS block -->
+            <rect x="110" y="86" width="280" height="42" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="250" y="103" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">RS — Revocation Service</text>
+            <text x="250" y="118" text-anchor="middle" font-size="7.5" fill="#6B7280">authenticates principal · commits revocation to CR</text>
+
+            <!-- RS to AL concurrent arrow (right branch) — label above the arrow -->
+            <text x="395" y="133" font-size="7" fill="#7A6A50" font-style="italic" text-anchor="middle">REVOCATION_COMMITTED</text>
+            <line x1="390" y1="107" x2="455" y2="146" stroke="#7A6A50" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#rv2)"/>
+
+            <!-- AL side block (right) -->
+            <rect x="420" y="146" width="86" height="34" rx="2" fill="#1C1F25" stroke="#7A6A50" stroke-width="1"/>
+            <text x="463" y="160" text-anchor="middle" font-size="8" font-weight="600" fill="#FFF">AL</text>
+            <text x="463" y="172" text-anchor="middle" font-size="6.5" fill="rgba(255,255,255,0.50)">Audit Ledger</text>
+
+            <!-- Arrow RS to CR — label RIGHT of arrow, well clear -->
+            <line x1="250" y1="128" x2="250" y2="168" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#rv1)"/>
+            <text x="262" y="153" font-size="7.5" fill="#9B9590">propagation within TTL</text>
+
+            <!-- CR block -->
+            <rect x="110" y="168" width="280" height="42" rx="3" fill="#EDEAE5" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="250" y="186" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">CR — Consent Registry</text>
+            <text x="250" y="200" text-anchor="middle" font-size="7.5" fill="#6B7280">consent_id updated to REVOKED · replication within TTL</text>
+
+            <!-- Arrow CR to EG — label RIGHT of arrow, well clear -->
+            <line x1="250" y1="210" x2="250" y2="248" stroke="#C4C0BA" stroke-width="1.2" marker-end="url(#rv1)"/>
+            <text x="262" y="234" font-size="7.5" fill="#9B9590">cache invalidation notification</text>
+
+            <!-- EG block -->
+            <rect x="110" y="248" width="280" height="44" rx="3" fill="#1A1C20" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="250" y="266" text-anchor="middle" font-size="9" font-weight="700" fill="#FFF">EG — Enforcement Gateways</text>
+            <text x="250" y="281" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.50)">cache invalidated · subsequent CR reads return REVOKED</text>
+
+            <!-- DENY annotation box — placed below EG with gap -->
+            <rect x="110" y="306" width="280" height="32" rx="2" fill="none" stroke="#7A6A50" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="250" y="318" text-anchor="middle" font-size="7.5" fill="#7A6A50" font-weight="600">all requests for consent_id → DENY</text>
+            <text x="250" y="331" text-anchor="middle" font-size="7" fill="#7A6A50">Invariant: no PERMIT after T_revocation + TTL</text>
+
+            <!-- Conservative mode note — below DENY box with clear gap -->
+            <text x="250" y="360" text-anchor="middle" font-size="7.5" fill="#9B9590" font-style="italic">Conservative mode activates if invalidation not received</text>
+            <text x="250" y="374" text-anchor="middle" font-size="7.5" fill="#9B9590" font-style="italic">by TTL/2</text>
+          </svg>
+          <p class="diagram-caption">Figure 4.4 — Revocation propagation flow. The RS commits revocation to CR and records the event in AL concurrently. Cache invalidation notifications are dispatched to all EG instances; conservative denial activates if propagation lags beyond TTL/2.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Trust Boundary Definition</h2>
+
+        <p>Trust boundaries are structural properties of the architecture, not configuration choices. A boundary defines where trust transitions: where one domain ends and another begins, and what authentication or verification must occur at the crossing. Every component interface is a boundary crossing; no crossing is implicit.</p>
+
+        <h3 id="s5-1">5.1 External Boundary</h3>
+
+        <p>The external boundary separates the Calling System (and all external agents) from the enforcement perimeter. The sole authorized crossing point is the Enforcement Gateway. No other enforcement component (PE, CR, RS, AE, AL) has a network interface accessible from outside the enforcement perimeter. Any architecture in which PE, CR, or AL is reachable from the external domain is non-conformant regardless of access control configuration.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 660 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:660px;display:block;margin:0 auto;" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif">
+            <defs>
+              <marker id="tb1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#C4C0BA"/></marker>
+              <marker id="tb2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#7A6A50"/></marker>
+            </defs>
+
+            <!-- EXTERNAL ZONE -->
+            <rect x="10" y="10" width="640" height="76" rx="4" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.2"/>
+            <text x="26" y="28" font-size="8" font-weight="700" fill="#9B9590" letter-spacing="0.16em" font-family="'SFMono-Regular',Consolas,monospace">EXTERNAL ZONE — UNTRUSTED</text>
+            <text x="26" y="42" font-size="8" fill="#B0ABA4">Calling System · Agents · Applications</text>
+            <text x="26" y="56" font-size="7.5" fill="#B0ABA4">No enforcement logic. No direct registry access. Treated as untrusted by all internal components.</text>
+            <!-- CS box -->
+            <rect x="480" y="30" width="152" height="44" rx="3" fill="#FFFFFF" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="556" y="49" text-anchor="middle" font-size="9" font-weight="600" fill="#3A3F48">CS</text>
+            <text x="556" y="63" text-anchor="middle" font-size="7.5" fill="#6B7280">Calling System</text>
+
+            <!-- Crossing arrow -->
+            <line x1="330" y1="86" x2="330" y2="124" stroke="#7A6A50" stroke-width="1.4" marker-end="url(#tb2)"/>
+            <text x="338" y="106" font-size="7.5" fill="#7A6A50" font-weight="600">mTLS · rate limit · sole authorized crossing</text>
+
+            <!-- ENFORCEMENT PERIMETER -->
+            <rect x="10" y="124" width="640" height="182" rx="4" fill="#EDEAE5" stroke="#3A3F48" stroke-width="1.4"/>
+            <text x="26" y="142" font-size="8" font-weight="700" fill="#5A6070" letter-spacing="0.16em" font-family="'SFMono-Regular',Consolas,monospace">ENFORCEMENT PERIMETER — TRUSTED INTERNAL</text>
+            <text x="480" y="142" text-anchor="end" font-size="7.5" fill="#9B9590" font-style="italic" font-family="'SFMono-Regular',Consolas,monospace">mTLS · signed payloads on all links</text>
+
+            <!-- EG (center, larger) -->
+            <rect x="230" y="152" width="200" height="44" rx="3" fill="#1A1C20" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="330" y="170" text-anchor="middle" font-size="9" font-weight="700" fill="#FFF">EG — Enforcement Gateway</text>
+            <text x="330" y="185" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.50)">sole chokepoint · orchestrates full flow</text>
+
+            <!-- PE -->
+            <rect x="30" y="218" width="120" height="38" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.1"/>
+            <text x="90" y="234" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">PE</text>
+            <text x="90" y="248" text-anchor="middle" font-size="7.5" fill="#6B7280">Policy Engine</text>
+
+            <!-- CR -->
+            <rect x="170" y="218" width="120" height="38" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.1"/>
+            <text x="230" y="234" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">CR</text>
+            <text x="230" y="248" text-anchor="middle" font-size="7.5" fill="#6B7280">Consent Registry</text>
+
+            <!-- AE -->
+            <rect x="370" y="218" width="120" height="38" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.1"/>
+            <text x="430" y="234" text-anchor="middle" font-size="9" font-weight="600" fill="#2C2F36">AE</text>
+            <text x="430" y="248" text-anchor="middle" font-size="7.5" fill="#6B7280">Artifact Engine</text>
+
+            <!-- AL -->
+            <rect x="510" y="218" width="120" height="38" rx="3" fill="#1C1F25" stroke="#7A6A50" stroke-width="1.2"/>
+            <text x="570" y="234" text-anchor="middle" font-size="9" font-weight="600" fill="#FFF">AL</text>
+            <text x="570" y="248" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,0.50)">Audit Ledger</text>
+
+            <!-- RS -->
+            <rect x="170" y="272" width="120" height="26" rx="3" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1"/>
+            <text x="230" y="285" text-anchor="middle" font-size="8.5" font-weight="600" fill="#2C2F36">RS</text>
+            <text x="230" y="295" text-anchor="middle" font-size="7" fill="#6B7280">Revocation Service</text>
+
+            <!-- Connector lines EG to components -->
+            <line x1="230" y1="174" x2="150" y2="218" stroke="#C4C0BA" stroke-width="1" marker-end="url(#tb1)"/>
+            <line x1="280" y1="196" x2="260" y2="218" stroke="#C4C0BA" stroke-width="1" marker-end="url(#tb1)"/>
+            <line x1="380" y1="196" x2="460" y2="218" stroke="#C4C0BA" stroke-width="1" marker-end="url(#tb1)"/>
+            <line x1="430" y1="196" x2="550" y2="218" stroke="#C4C0BA" stroke-width="1" marker-end="url(#tb1)"/>
+
+            <!-- Crossing arrow to TA -->
+            <line x1="330" y1="306" x2="330" y2="342" stroke="#7A6A50" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#tb2)"/>
+            <text x="338" y="328" font-size="7.5" fill="#7A6A50" font-style="italic">isolated credential channel · AE key provisioning only</text>
+
+            <!-- KEY TRUST ANCHOR -->
+            <rect x="10" y="342" width="640" height="50" rx="4" fill="#F6F4F0" stroke="#C4C0BA" stroke-width="1.2" stroke-dasharray="5,3"/>
+            <text x="26" y="360" font-size="8" font-weight="700" fill="#9B9590" letter-spacing="0.16em" font-family="'SFMono-Regular',Consolas,monospace">KEY TRUST ANCHOR — HIGHEST ISOLATION</text>
+            <text x="26" y="376" font-size="7.5" fill="#B0ABA4">Root key: offline / air-gapped  ·  Intermediate key: HSM-backed  ·  Key provisioning: out-of-band authorization required</text>
+          </svg>
+          <p class="diagram-caption">Figure 5.1 — Trust boundary zones. The Enforcement Gateway is the sole authorized crossing point between the external and internal zones. All inter-component communication within the perimeter uses mTLS with signed payloads.</p>
+        </div>
+
+        <h3 id="s5-2">5.2 Internal Trust Segments</h3>
+
+        <p>Within the enforcement perimeter, trust is not uniform. Inter-component trust is directional and purpose-bounded. EG trusts CR to return accurate consent state but does not trust CR to make enforcement decisions. PE trusts the EG to provide an authentic enforcement request but does not trust the EG to interpret policy. AL trusts EG to write accurately but does not trust EG to determine what constitutes a complete enforcement record. These directional trust properties must be enforced by design, not by convention.</p>
+
+        <div class="table-wrap">
+          <span class="table-caption">Table 5.1 — Internal Component Trust Matrix</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Source Component</th>
+                <th>Target Component</th>
+                <th>Trust Granted</th>
+                <th>Trust Withheld</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>EG</td><td>CR</td><td>Consent state response accuracy within TTL</td><td>Enforcement decision authority; policy interpretation</td></tr>
+              <tr><td>EG</td><td>PE</td><td>Decision output for the provided input tuple</td><td>Context construction; consent state verification</td></tr>
+              <tr><td>EG</td><td>AE</td><td>Artifact generation for EG-provided PERMIT decision</td><td>Independent policy evaluation; consent verification</td></tr>
+              <tr><td>EG</td><td>AL</td><td>Write durability and hash-chain integrity</td><td>Decision correctness determination; audit record interpretation</td></tr>
+              <tr><td>PE</td><td>EG</td><td>Authenticity of the enforcement request; context_hash accuracy</td><td>Policy evaluation; decision outcome; audit record</td></tr>
+              <tr><td>AE</td><td>TA</td><td>Key provisioning correctness; key hierarchy integrity</td><td>Enforcement decision; consent state; policy evaluation</td></tr>
+              <tr><td>CR</td><td>RS</td><td>Authorization to write revocation flags</td><td>Enforcement decisions; policy evaluation; audit records</td></tr>
+              <tr><td>ML</td><td>All</td><td>Metric data accuracy (read-only, non-authoritative)</td><td>No enforcement authority; no write authority on any component</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s5-3">5.3 Cross-Region Boundary</h3>
+
+        <p>In multi-region deployments, each region constitutes a distinct enforcement domain. Enforcement decisions are made locally within each region; cross-region communication is limited to consent state synchronization and revocation propagation. A region must be able to enforce correctly, including fail-closed, while cross-region communication is unavailable. Loss of cross-region connectivity triggers conservative mode for affected consent_ids until synchronization is confirmed.</p>
+
+        <h3 id="s5-4">5.4 Registry Synchronization Boundary</h3>
+
+        <p>The Registry Synchronization Boundary is the interface between CR instances in a replicated deployment. Writes committed at one CR instance must propagate to all CR instances within the declared TTL. The synchronization protocol must preserve linearizability for revocation writes: once a revocation is committed at any CR instance, that instance must not serve a non-revoked state for the affected consent_id, and all other instances must converge to the revoked state within TTL.</p>
+
+        <h3 id="s5-5">5.5 Key Material Isolation Boundary</h3>
+
+        <p>Key material boundaries define where cryptographic credentials are permitted to exist. The root key must exist only within the offline Trust Anchor. The intermediate key must exist only within HSM-backed storage, never in software or on a general-purpose filesystem. The AE signing key must exist only within the AE signing context, provisioned by the TA over an authenticated channel. No other component may possess, derive, or observe any key material at any tier of the hierarchy. Violation of this boundary nullifies the cryptographic guarantees of the entire enforcement architecture.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Deployment Topology Variants</h2>
+
+        <p>The canonical component model supports five reference topology variants. Each variant satisfies the architectural principles and component model defined in this document. The variants differ in how components are distributed, replicated, and isolated across failure domains, not in what the components do or what invariants they must satisfy. All variants enforce identical invariants; topology determines resilience, latency, and failure containment, not enforcement semantics.</p>
+
+        <div class="decision-block">
+          <strong>DT-01 — Centralized Control Plane</strong>
+          <p><strong>Topology Properties</strong></p>
+          <ul>
+            <li>All components deployed within a single datacenter or availability zone</li>
+            <li>Single EG cluster; single PE cluster; single CR instance; single AL partition</li>
+            <li>RS operates as an internal service within the enforcement perimeter</li>
+            <li>TA root key stored offline in same physical facility</li>
+            <li>ML collocated with enforcement components</li>
+            <li>Simplest deployment topology; lowest operational complexity</li>
+          </ul>
+          <p><strong>Characteristics</strong></p>
+          <ul>
+            <li>Revocation propagation: single-instance CR → near-zero propagation delay for local EG instances</li>
+            <li>Failure containment: datacenter boundary; total failure on datacenter loss</li>
+            <li>Latency: lowest enforcement latency; all components on low-latency network fabric</li>
+            <li>AL durability: single-region; requires external replication for durability guarantees</li>
+            <li>Suitable for: single-domain deployments, development and pre-production environments, low-criticality enforcement workloads</li>
+          </ul>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Max Certification Level</td><td>CL-01 (Declared or Verified)</td></tr>
+              <tr><td>Failure Domain</td><td>Single datacenter</td></tr>
+              <tr><td>Revocation TTL</td><td>Declared; 300s minimum</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-block">
+          <strong>DT-02 — Federated Multi-Domain Architecture</strong>
+          <p><strong>Topology Properties</strong></p>
+          <ul>
+            <li>Multiple enforcement domains, each with independent EG, PE, and local CR replica</li>
+            <li>Shared Consent Registry with per-domain replicas synchronized via RS</li>
+            <li>Single authoritative AL with domain-specific write partitions</li>
+            <li>RS operates as a shared propagation broker across domains</li>
+            <li>Cross-domain revocation propagation bound by inter-domain TTL</li>
+            <li>Each domain independently fail-closed; domain failure does not affect other domains</li>
+          </ul>
+          <p><strong>Characteristics</strong></p>
+          <ul>
+            <li>Revocation propagation: within-domain immediate; cross-domain within inter-domain TTL</li>
+            <li>Failure containment: per-domain; domain isolation is a design requirement, not an option</li>
+            <li>Data flow: CS in Domain A communicates only with EG in Domain A; no cross-domain enforcement path</li>
+            <li>Conservative mode: domain enters conservative mode if cross-domain sync exceeds TTL/2</li>
+            <li>Suitable for: multi-tenant enforcement infrastructure, federated AI governance, regulatory boundary enforcement</li>
+          </ul>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Max Certification Level</td><td>CL-02 (Verified)</td></tr>
+              <tr><td>Failure Domain</td><td>Per enforcement domain</td></tr>
+              <tr><td>Revocation TTL</td><td>Declared per domain; 60s intra-domain</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-block">
+          <strong>DT-03 — On-Premises Enterprise Deployment</strong>
+          <p><strong>Topology Properties</strong></p>
+          <ul>
+            <li>All enforcement components deployed within the enterprise network boundary</li>
+            <li>No enforcement component reachable from external networks</li>
+            <li>EG is the sole interface between enterprise AI workloads and enforcement infrastructure</li>
+            <li>TA root key in on-premises HSM or offline secure element</li>
+            <li>AL stored in enterprise-controlled immutable storage</li>
+            <li>ML integrated with enterprise monitoring infrastructure; no external telemetry</li>
+          </ul>
+          <p><strong>Characteristics</strong></p>
+          <ul>
+            <li>Revocation propagation: within enterprise network; bounded by internal network latency</li>
+            <li>Failure containment: enterprise network boundary; air-gap protects against external interference</li>
+            <li>Key material: fully on-premises; no cloud key management services required</li>
+            <li>AL durability: enterprise storage; backup and replication per enterprise policy</li>
+            <li>Suitable for: regulated industries, government, financial services, high-confidentiality AI workloads</li>
+          </ul>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Max Certification Level</td><td>CL-03 (Certified) if SLA evidence available</td></tr>
+              <tr><td>Failure Domain</td><td>Enterprise network</td></tr>
+              <tr><td>Revocation TTL</td><td>Operator-declared; 60s recommended</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-block">
+          <strong>DT-04 — Edge Enforcement Model</strong>
+          <p><strong>Topology Properties</strong></p>
+          <ul>
+            <li>EG and PE deployed at network edge, co-located with inference workloads</li>
+            <li>CR replica at edge; synchronizes with central CR within declared TTL</li>
+            <li>AL writes forwarded to central AL over authenticated channel; local buffering only</li>
+            <li>AE at edge with signing key provisioned from central TA; rotation via secure channel</li>
+            <li>RS at central location; propagation to edge CR via RS propagation channel</li>
+            <li>Enforcement decision made at edge without requiring WAN round-trip for CR query</li>
+          </ul>
+          <p><strong>Characteristics</strong></p>
+          <ul>
+            <li>Revocation propagation: central RS → edge CR within TTL; edge must enter conservative mode if sync lapses</li>
+            <li>Failure containment: edge enforcement isolated from central failure; central failure does not affect edge decisions for cached consent state within TTL</li>
+            <li>AL durability: central AL; edge buffers locally until write is confirmed; enforcement blocked if buffer exceeds threshold without central acknowledgment</li>
+            <li>Latency: lowest enforcement latency; WAN latency not in enforcement critical path</li>
+            <li>Suitable for: latency-sensitive AI workloads, geographically distributed inference, air-gap tolerant deployments</li>
+          </ul>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Max Certification Level</td><td>CL-02; CL-03 requires central AL durability evidence</td></tr>
+              <tr><td>Failure Domain</td><td>Edge site (enforcement); central (audit durability)</td></tr>
+              <tr><td>Revocation TTL</td><td>Declared; must account for WAN sync latency</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision-block">
+          <strong>DT-05 — Multi-Region Active-Active</strong>
+          <p><strong>Topology Properties</strong></p>
+          <ul>
+            <li>Full enforcement stack (EG, PE, CR replica, AE, AL partition) deployed in each region</li>
+            <li>All regions simultaneously active; no primary/secondary distinction</li>
+            <li>Revocation propagates to all regions within inter-region TTL via RS</li>
+            <li>Cross-region consensus required for revocation commitment; divergence triggers conservative mode</li>
+            <li>AL partitioned by region; cross-region chain verification for export integrity</li>
+            <li>TA root key offline; intermediate keys per-region or shared via secure channel</li>
+          </ul>
+          <p><strong>Characteristics</strong></p>
+          <ul>
+            <li>Revocation propagation: within-region immediate; cross-region bounded by TTL (maximum 15s for CL-04)</li>
+            <li>Failure containment: regional; full regional failure handled by other regions; no enforcement continuity in failed region</li>
+            <li>Consensus: cross-region revocation commits require quorum; unilateral revocation in one region is not propagated without quorum confirmation</li>
+            <li>Clock skew: cross-region timestamp comparisons subject to skew tolerance; requests within skew window for TTL boundary are denied conservatively</li>
+            <li>Suitable for: global-scale AI governance, high-availability enforcement infrastructure, regulated multi-jurisdictional deployments</li>
+          </ul>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Max Certification Level</td><td>CL-04 (High-Assurance; accredited ACB required)</td></tr>
+              <tr><td>Failure Domain</td><td>Per region; cross-region consensus boundary</td></tr>
+              <tr><td>Revocation TTL</td><td>15s cross-region (CL-04); 60s (CL-03)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Deterministic Decision Boundary Model</h2>
+
+        <p>The deterministic decision boundary is the structural isolation that makes QODIQA enforcement verifiable. It is not a quality property of the evaluation logic; it is an architectural constraint on what the evaluation function is permitted to access. The decision function must be a pure function: it produces output from inputs, and nothing else. Any access to state not present in the input tuple corrupts the determinism guarantee.</p>
+
+        <h3 id="s7-1">7.1 Evaluation Isolation</h3>
+
+        <p>The Policy Engine evaluation function is isolated from all external state at the moment of evaluation. The evaluation is presented with exactly three inputs: the frozen context (including token state as read from CR before the evaluation begins), the frozen policy snapshot (loaded and verified at PE startup), and a representation of the declared policy version. No other information may enter the evaluation function. In particular, the evaluation function must not: make network calls of any kind; read from any mutable shared store; access a real-time clock; generate or consume randomness; or depend on the thread-local state of the evaluation process beyond the input tuple.</p>
+
+        <div class="key-prop">
+          <p><strong>Evaluation Isolation Invariant:</strong> Let <code>f</code> be the PE evaluation function, <code>C</code> be the frozen context, and <code>P</code> be the frozen policy snapshot. The invariant is: <code>f(C, P)</code> is a pure total function. For all <code>C1, C2</code> such that <code>C1 = C2</code>, and all snapshots <code>P1, P2</code> such that <code>P1 = P2</code>: <code>f(C1, P1) = f(C2, P2)</code>. No implementation artifact (execution order, cache state, memory layout, or timing) may cause this equality to fail.</p>
+        </div>
+
+        <h3 id="s7-2">7.2 Frozen Context Binding</h3>
+
+        <p>The frozen context is the canonical, version-tagged serialization of all enforcement-relevant attributes of a request at the moment of EG evaluation. Once the EG has computed the frozen context and its hash, neither the context nor the hash may be modified before delivery to PE. The context_hash delivered to PE by EG is the caller's commitment to a specific context; the PE evaluates that commitment, not the raw request.</p>
+
+        <span class="code-label">STRUCTURE: Frozen Context — Canonical Structure</span>
+<pre><code>// Frozen context: all fields that govern the enforcement decision
+// Must be canonically serialized before hashing
+// Version prefix ensures hash namespace isolation across schema revisions
+
+frozen_context = {
+  "version":        "qodiqa-ctx-v1",
+  "consent_id":     "&lt;opaque string&gt;",
+  "policy_version": "&lt;declared frozen policy version&gt;",
+  "caller_id":      "&lt;authenticated caller identifier&gt;",
+  "token_state":    "ACTIVE" | "REVOKED" | "EXPIRED" | "NOT_FOUND",
+  "token_scope":    ["scope_a", "scope_b"],  // canonical-sorted
+  "issued_at":      1700000000,              // integer seconds
+  "expires_at":     1700003600,              // integer seconds; no float
+  "nonce":          "&lt;unique per request; not included in context_hash&gt;"
+}
+
+// Canonicalization invariants (from Playbook §8.1)
+CS-INV-01: Keys sorted lexicographically by UTF-8 byte sequence
+CS-INV-02: No whitespace in serialized output
+CS-INV-03: UTF-8 encoding, no BOM, no surrogates
+CS-INV-04: context_hash = "sha256:qodiqa-ctx-v1:" + hex(SHA256(serialize(context)))
+CS-INV-05: Semantic equivalence implies hash equality
+CS-INV-06: No floating-point values permitted</code></pre>
+
+        <h3 id="s7-3">7.3 Artifact Generation Atomicity</h3>
+
+        <p>Artifact generation is an atomic operation from the perspective of the EG. The AE either produces a complete, valid artifact or it produces nothing. There is no partial artifact state observable to EG. If the AE signing operation fails for any reason (key unavailable, hardware fault, signing algorithm rejection of malformed input) the AE returns an error, EG receives no artifact, and the enforcement flow terminates with a DENY decision. EG must not retry signing with a different nonce in response to a signing failure; a new enforcement evaluation must be initiated from the beginning by CS.</p>
+
+        <h3 id="s7-4">7.4 Decision Independence from External Network</h3>
+
+        <p>At the moment of PE evaluation, the enforcement decision must not depend on any external network call. The token state has already been read from CR by EG and included in the enforcement request. The policy snapshot is already loaded in PE local memory. No additional network access is required or permitted. An implementation that makes external calls during PE evaluation is structurally non-conformant regardless of whether those calls succeed.</p>
+
+        <ul class="prop-list">
+          <li>The enforcement decision must not depend on any call to an external service during evaluation</li>
+          <li>The enforcement decision must not depend on the current wall clock time; token expiry is checked against the clock before context freezing, not during evaluation</li>
+          <li>The enforcement decision must not depend on randomness or entropy from any source</li>
+          <li>The enforcement decision must not depend on mutable shared state accessible from multiple PE evaluation threads simultaneously</li>
+          <li>The enforcement decision must produce the same result regardless of how many parallel evaluations are in progress in the PE at the same moment</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Scaling and Performance Model</h2>
+
+        <p>The reference architecture is designed for horizontal scalability of stateless components and vertical or replicated scalability of stateful components. Scalability must not relax enforcement invariants. An architecture that achieves higher throughput by skipping enforcement steps, relaxing audit write guarantees, or introducing eventual consistency into the revocation check path is not a conformant scale-out architecture; it is a non-conformant architecture with increased throughput.</p>
+
+        <h3 id="s8-1">8.1 Horizontal Scaling of Enforcement Gateway</h3>
+
+        <p>EG instances are structurally stateless at the enforcement decision level. Each EG instance independently maintains its local revocation cache (bounded by the declared TTL), its circuit breaker state (per downstream component), and its rate limit counters (per consent_id, per instance). Because rate limit counters are per-instance, distributed rate limiting is not a structural requirement; per-instance rate limits are a conformant implementation. Multiple EG instances behind a load balancer constitute a horizontally scalable enforcement perimeter with linear throughput scaling.</p>
+
+        <span class="code-label">MODEL: EG Horizontal Scaling — Invariants</span>
+<pre><code>// EG is stateless at the enforcement decision level
+// Each instance independently correct; no coordination required
+
+throughput(EG, n_instances) = n x throughput(EG, 1)   // linear
+
+// Cache invalidation cost: bounded
+// On revocation notification: O(1) per EG instance
+// Total cost per revocation: O(n_EG_instances)
+// Must complete within TTL; provision EG pool size accordingly
+
+// Saturation behavior:
+// EG throughput ceiling = min(EG capacity, CR read capacity, AL write capacity)
+// Saturation triggers fail-closed, NOT graceful degradation
+// Provision all components at ≤ 70% of single-instance ceiling
+
+// Enforcement latency model (no-cache, upper bound):
+L_enforcement ≤ L_CR + L_PE + L_AE + L_AL + L_EG_overhead
+             ≤ 30  + 10  + 5   + 20  + 3   = 68ms</code></pre>
+
+        <h3 id="s8-2">8.2 Stateless Enforcement Node Properties</h3>
+
+        <p>EG and PE are structurally stateless enforcement nodes. Statelessness means: no enforcement decision depends on the history of prior decisions on the same instance; adding or removing an instance does not change the enforcement outcome for any specific request; and an instance restart does not require state recovery (beyond snapshot re-verification for PE and fresh CR connectivity for EG). These properties are architectural requirements, not implementation preferences.</p>
+
+        <h3 id="s8-3">8.3 Registry Caching with TTL</h3>
+
+        <p>EG instances may cache CR query results for the duration of the declared TTL. Caching is a latency optimization, not a semantic change. The cache TTL is identical to the revocation propagation TTL: a consent_id may be served from cache until the cache entry expires, after which a fresh CR query is required. Cache invalidation on revocation notification must complete within the TTL. An EG instance that cannot invalidate a cache entry for a revoked consent_id within TTL must enter conservative mode and deny all requests for that consent_id until CR confirms revocation.</p>
+
+        <h3 id="s8-4">8.4 Ledger Write Throughput Model</h3>
+
+        <p>The AL is the throughput ceiling of the enforcement system. Every PERMIT and every DENY requires an AL write. The AL write throughput must exceed the enforcement decision rate; otherwise, the enforcement path saturates at the AL and the circuit breaker opens, causing system-wide denial. The AL must be provisioned for the expected peak decision rate with a minimum 40% headroom. AL partitioning by consent_id or by EG instance is a valid scaling strategy; the hash chain must remain verifiable across partition boundaries via the partition-level chain structure defined in the Implementation Playbook.</p>
+
+        <h3 id="s8-5">8.5 Artifact Hashing Cost Envelope</h3>
+
+        <p>The HMAC-SHA256 computation for artifact generation is <code>O(n)</code> in the byte length of the serialized context. For typical enforcement contexts of 200–500 bytes, this operation completes in microseconds on general-purpose hardware. The cost is bounded and deterministic; it does not depend on the complexity of the policy evaluation or the number of concurrent evaluations. AE throughput scales linearly with the number of AE instances, subject to the signing key being accessible to each instance independently.</p>
+
+        <div class="table-wrap">
+          <span class="table-caption">Table 8.1 — Scaling Properties by Component</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Scaling Axis</th>
+                <th>State Model</th>
+                <th>Throughput Scaling</th>
+                <th>Saturation Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>EG</td><td>Horizontal (instances)</td><td>Stateless per decision</td><td>Linear</td><td>Circuit breaker → deny-all</td></tr>
+              <tr><td>PE</td><td>Horizontal (instances)</td><td>Stateless; snapshot pinned</td><td>Linear</td><td>EG circuit breaker → deny</td></tr>
+              <tr><td>CR</td><td>Read: horizontal (replicas); Write: vertical</td><td>Stateful; linearizable writes</td><td>Read: near-linear; Write: bounded</td><td>EG circuit breaker → deny-all</td></tr>
+              <tr><td>RS</td><td>Vertical; message broker replicas</td><td>Stateful; durable delivery</td><td>Event-driven; not in hot enforcement path</td><td>Queue overflow → revocation delayed; conservative mode</td></tr>
+              <tr><td>AE</td><td>Horizontal (instances)</td><td>Stateless; key-bound</td><td>Linear per key</td><td>EG circuit breaker → deny PERMIT</td></tr>
+              <tr><td>AL</td><td>Horizontal (partitions)</td><td>Stateful; append-only</td><td>Partition-linear</td><td>EG circuit breaker → deny-all</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Failure and Degradation Model</h2>
+
+        <p>The QODIQA reference architecture does not have a graceful degradation mode. Degradation is not a permitted operational state. The architecture has two modes: full enforcement (all components operational, all invariants satisfied) and fail-closed (some components unavailable, all requests denied). Any intermediate state (partial enforcement, selective bypass, or probabilistic enforcement) is structurally non-conformant. Every failure condition described below resolves to one of these two modes.</p>
+
+        <div class="key-prop">
+          <p><strong>Degradation Invariant:</strong> There is no failure condition in the QODIQA reference architecture that results in enforcement being weakened, bypassed, or probabilistically applied. All ambiguity resolves to denial. The only permitted operational states are: full enforcement (PERMIT or DENY decisions for all requests) and fail-closed enforcement (DENY decisions for all requests due to component unavailability). There is no third state.</p>
+        </div>
+
+        <h3 id="s9-1">9.1 Registry Unavailability</h3>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Step</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>F-01a</strong> — CR Query Timeout</td><td>EG issues CR query; response not received within timeout ceiling. EG increments CR failure counter. If counter exceeds circuit breaker threshold within window W: circuit OPEN. All subsequent requests: DENY with CR_UNAVAILABLE. No inference execution. AL receives DENY records.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s9-2">9.2 Policy Engine Failure</h3>
+
+        <p>PE failure is architecturally equivalent to CR failure from the EG perspective: no PE decision can be obtained → no PERMIT can be issued → all requests DENY. PE failure is surfaced by EG as PE_UNAVAILABLE and recorded in AL. PE recovery requires: (a) process restart; (b) snapshot re-load; (c) snapshot hash verification against AL POLICY_FROZEN record; (d) EG circuit breaker probe success. PE may not resume evaluation before all four steps complete. A PE that bypasses snapshot verification during recovery is non-conformant regardless of whether it happens to load the correct snapshot.</p>
+
+        <h3 id="s9-3">9.3 Audit Ledger Failure</h3>
+
+        <p>AL failure has the most severe impact in the architecture: a PERMIT-eligible request that receives a PERMIT decision from PE and a valid artifact from AE cannot be released because the AL write cannot be committed. The request is denied. The artifact is discarded. The request must be retried by CS from the beginning after AL recovery. Under no circumstances may EG release an artifact without an AL write acknowledgment. An AL that acknowledges writes without durably committing them (acknowledging before fsync, for example) is a silent data integrity failure and is structurally non-conformant at all certification levels.</p>
+
+        <h3 id="s9-4">9.4 Clock Drift Detection</h3>
+
+        <p>Clock drift affects TTL calculations, token expiry checks, and cross-region timestamp comparisons. The reference architecture defines a maximum clock skew tolerance of 30 seconds between any two enforcement components. If clock skew between an EG instance and its time reference exceeds the tolerance: the EG instance must enter conservative mode, deny all requests where token expiry falls within the skew window, and alert ML with a CLOCK_SKEW_EXCEEDED condition. EG instances must not make enforcement decisions based on timestamps they cannot verify for consistency.</p>
+
+        <h3 id="s9-5">9.5 Key Revocation Event</h3>
+
+        <p>A key revocation event (distinct from a consent token revocation event) is the retirement of an AE signing key. Key revocation triggers the dual-key window protocol: both the outgoing and incoming keys are valid for artifact verification during the window duration. After the window closes, the outgoing key is retired from all verification contexts. An artifact presented to the inference system after the window closes that was signed by the retired key is no longer valid, regardless of when the original enforcement decision was made. Deployments must ensure that no artifact with a validity period extending beyond the window duration is issued.</p>
+
+        <h3 id="s9-6">9.6 Partial System Partition</h3>
+
+        <p>A partial system partition is a network condition in which some enforcement components can reach each other but others cannot. Partial partitions are among the most operationally complex failure conditions because they can produce inconsistent behavior across EG instances. The reference architecture handles all partition scenarios through the same mechanism: if a required component is unreachable from EG, the circuit breaker opens for that component at that EG instance, and all requests handled by that EG instance are denied until connectivity is restored. EG instances that can reach all components continue to enforce normally. The partition does not affect enforcement correctness at any individual EG instance; it affects enforcement availability for requests routed to affected EG instances.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Interoperability and Extensibility Model</h2>
+
+        <p>The reference architecture is designed for structural stability. Interoperability means that different conformant implementations of the same component can be substituted without affecting enforcement semantics. Extensibility means that new control profiles or audit record types can be added to the architecture without violating existing invariants. Neither interoperability nor extensibility permits relaxation of enforcement invariants or introduction of probabilistic enforcement. This architecture is deployment-agnostic and may be positioned in front of any AI inference system without modification to model internals.</p>
+
+        <h3 id="s10-1">10.1 Version Binding</h3>
+
+        <p>Every enforcement interaction is bound to an explicit version: the context schema version (embedded in the context_hash prefix), the policy version (referenced in every enforcement request), and the artifact schema version (embedded in the artifact structure). Version binding ensures that a receiver can unambiguously determine the schema under which a context, decision, or artifact was produced. Mixed-version deployments (where different EG instances run different corpus versions) are non-conformant; all instances within a single deployment must run the same corpus version. Version binding is compatible with real-time inference APIs, batch processing systems, streaming inference pipelines, and edge deployments; the binding mechanism is transport-independent.</p>
+
+        <h3 id="s10-2">10.2 Backward Compatibility Handling</h3>
+
+        <p>Backward compatibility is defined at the interface level. A new version of the corpus that changes the frozen context schema is a breaking change; all components that produce or consume frozen contexts must be updated together. A new version that adds new AL record types is non-breaking; existing components that do not produce the new record types continue to be conformant unless the new record type is declared normatively required. No corpus version may relax enforcement semantics as a backward compatibility measure. The enforcement boundary defined by this architecture applies equivalently to synchronous real-time inference APIs, asynchronous batch processing systems, and streaming inference pipelines; backward compatibility obligations hold across all deployment paradigms.</p>
+
+        <h3 id="s10-3">10.3 Profile Layering</h3>
+
+        <p>The reference architecture supports two compliance profiles: Core Profile and Full Framework Profile. The Core Profile requires only the controls specified in the Core Standard and the component model defined in this document. The Full Framework Profile additionally requires all 68 controls from the 68-Point Enforcement Framework. Both profiles satisfy all invariants in this architecture; the Full Framework Profile adds additional control surface area above the structural minimum. A deployment may declare conformance at the Core Profile or Full Framework Profile; the claimed profile must be disclosed in the conformance claim.</p>
+
+        <div class="table-wrap">
+          <span class="table-caption">Table 10.1 — Profile Layering — Component Requirements</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Core Profile</th>
+                <th>Full Framework Profile</th>
+                <th>Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>EG</td><td>Required; single instance minimum</td><td>Required; 2 or more instances, independent failure domains</td><td>Redundancy and failure domain isolation</td></tr>
+              <tr><td>PE</td><td>Required; single instance; snapshot verified</td><td>Required; 2 or more instances; cross-instance snapshot hash agreement verified</td><td>Policy drift detection across instances</td></tr>
+              <tr><td>CR</td><td>Required; linearizable revocation reads</td><td>Required; replicated; cross-domain sync within TTL 60s</td><td>Replication and TTL tightening</td></tr>
+              <tr><td>RS</td><td>Required; durable delivery to CR</td><td>Required; durable; cross-domain; conservative mode on lag</td><td>Cross-domain propagation and conservative mode</td></tr>
+              <tr><td>AE</td><td>Required; HMAC-SHA256; key from hierarchy</td><td>Required; HSM-backed; attestation on restart</td><td>Hardware-backed key operations</td></tr>
+              <tr><td>AL</td><td>Required; append-only; weekly chain verify</td><td>Required; per-write chain verify; daily external export</td><td>Verification frequency and durability cadence</td></tr>
+              <tr><td>ML</td><td>Required; core metrics; Class I alerts</td><td>Required; full drift matrix; Class 0 alerts; heartbeat</td><td>Observability completeness</td></tr>
+              <tr><td>TA</td><td>Required; root key offline; hierarchy documented</td><td>Required; intermediate key HSM-backed; rotation log in AL</td><td>Intermediate key protection and rotation evidence</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="s10-4">10.4 Future Control Extension</h3>
+
+        <p>New control profiles may be defined as annexes to the QODIQA corpus in future revisions. Any new control profile must be additive to the existing architecture: it may require additional component behavior, additional audit record types, or additional test procedures, but it may not modify the enforcement semantics of existing components, relax existing invariants, or introduce probabilistic enforcement. A new control profile that contradicts any invariant in this reference architecture is architecturally incompatible with the QODIQA corpus and cannot be adopted without a corpus version revision.</p>
+      </div>
+
+      <!-- SECTION 11 -->
+      <div id="s11" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 11</span>
+        <h2><a class="anchor-link" href="#s11">#</a>Reference Invariants Summary</h2>
+
+        <p>The following invariants constitute the structural commitments of the QODIQA reference architecture. Each invariant is stated as an unconditional property that any conformant implementation must satisfy. These invariants align with and extend the global system invariants defined in the Implementation Playbook and are the canonical reference for architectural conformance assessment.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-A — Deterministic Replay Invariant</div>
+          <p><strong>Statement:</strong> For all frozen contexts <code>C</code> and frozen policy snapshots <code>P</code>: <code>evaluate(C, P) = replay(C, P)</code>. The enforcement function is a pure total function. Identical inputs produce identical outputs on every invocation, on every PE instance, after every restart, and across every time interval, subject only to the constraint that the frozen context and frozen policy snapshot are identical.</p>
+          <p>This invariant is violated if: the PE makes any external network call during evaluation; the PE reads from any mutable shared state during evaluation; the PE uses real-time clock values in the evaluation; or any implementation artifact causes different PE instances to produce different decisions for the same input.</p>
+          <p><em>Corpus reference: Playbook INV-07; Certification Framework §6; AP-01.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-B — Fail-Closed Invariant</div>
+          <p><strong>Statement:</strong> For all enforcement requests <code>R</code>: if any component required to complete the enforcement flow (CR, PE, AE, AL) is unavailable or returns an error, then <code>outcome(R) = DENY</code>. There exists no operational state of the enforcement architecture in which a request receives a PERMIT outcome without all required components having successfully participated in the enforcement flow for that specific request.</p>
+          <p>This invariant is violated if: a PERMIT is issued when CR is unavailable; a PERMIT is issued without an AL write acknowledgment; a PERMIT is issued when AE cannot generate an artifact; or any enforcement component failure results in an outcome other than DENY.</p>
+          <p><em>Corpus reference: Playbook INV-02; Certification Framework §5.3; AP-02.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-C — Artifact Immutability Invariant</div>
+          <p><strong>Statement:</strong> For all enforcement artifacts <code>A</code> produced by the AE: <code>A</code> is cryptographically bound to exactly one enforcement context (consent_id, context_hash, policy_version, decision, nonce). <code>A</code> cannot authorize inference execution for any context other than the one for which it was produced. <code>A</code> is valid for exactly one use (nonce consumed on first verification). <code>A</code> is invalid after the current AE signing key is retired.</p>
+          <p>This invariant is violated if: an artifact verifies successfully for a different context_hash than the one used to produce it; a nonce can be reused to authorize a second inference execution with the same artifact; or a retired key continues to be accepted for artifact verification.</p>
+          <p><em>Corpus reference: Playbook INV-04; Certification Framework §6.4; AP-04.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-D — Revocation Supersession Invariant</div>
+          <p><strong>Statement:</strong> For all consent_ids <code>C</code> and all revocation events <code>V</code> committed at time <code>T_rev</code>: for all enforcement requests for <code>C</code> arriving after <code>T_rev + TTL</code> at any EG instance, <code>outcome = DENY</code>. No cached state, in-flight artifact, or previously issued decision permits inference execution for <code>C</code> after <code>T_rev + TTL</code> at any EG instance in the deployment.</p>
+          <p>This invariant is violated if: any EG instance issues a PERMIT for <code>C</code> after <code>T_rev + TTL</code>; any artifact issued before <code>T_rev</code> remains valid for verification after <code>T_rev + TTL</code>; or conservative mode is not activated when propagation lag exceeds <code>TTL/2</code>.</p>
+          <p><em>Corpus reference: Playbook INV-03; Certification Framework §8; AP-08.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-E — Policy Version Binding Invariant</div>
+          <p><strong>Statement:</strong> For all enforcement decisions <code>D</code>: <code>D</code> is produced by evaluating the frozen context against the declared frozen policy snapshot at the declared policy version. No enforcement decision is produced by evaluating against a policy snapshot that has not been frozen (hash committed to AL), by evaluating against a policy version that does not match the declared policy_version field in the enforcement request, or by evaluating against a modified version of a previously frozen snapshot.</p>
+          <p>This invariant is violated if: PE evaluates against a policy snapshot that has not been verified against a POLICY_FROZEN AL record at load time; PE accepts evaluation requests for a policy version that does not correspond to the loaded snapshot; or any mechanism allows modification of the loaded policy snapshot after it has been verified.</p>
+          <p><em>Corpus reference: Playbook INV-06; Certification Framework §6.3; AP-03.</em></p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">INV-F — Audit Completeness Invariant</div>
+          <p><strong>Statement:</strong> For all enforcement requests <code>R</code> that produce a decision: there exists a record <code>r</code> in AL such that <code>r.consent_id = R.consent_id</code>, <code>r.context_hash = R.context_hash</code>, <code>r.decision = outcome(R)</code>, and <code>r.committed_at &lt; inference_execution_time(R)</code>. There is no inference execution without a prior durable AL record. The absence of an AL record for a request that reached PE is an audit completeness failure, more severe than a chain integrity failure.</p>
+          <p>This invariant is violated if: inference execution begins before the corresponding AL record is acknowledged; an AL record is lost due to storage failure without detection; or any enforcement decision is produced without a corresponding AL record within the declared retention period.</p>
+          <p><em>Corpus reference: Playbook INV-01, INV-05; Certification Framework §7; AP-05.</em></p>
+        </div>
+      </div>
+
+      <!-- SECTION 12 -->
+      <div id="s12" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 12</span>
+        <h2><a class="anchor-link" href="#s12">#</a>Non-Coverage Disclosure</h2>
+
+        <p>This Reference Architecture defines the canonical component model, data flows, trust boundaries, and invariants for QODIQA consent enforcement. It does not define everything relevant to a production AI infrastructure deployment. The following domains are explicitly outside the scope of this document and must not be inferred from its contents.</p>
+
+        <h3 id="s12-1">12.1 Product APIs and Protocol Specifications</h3>
+
+        <p>This document does not define product APIs, wire protocols, message formats beyond what is needed to specify the enforcement flow, or inter-component communication standards. API specification is outside the scope of a reference architecture. Conformant implementations may use any API design, message encoding, or transport protocol that satisfies the structural requirements of this document.</p>
+
+        <h3 id="s12-2">12.2 Specific Technology Stacks</h3>
+
+        <p>This document does not mandate, recommend, or imply the suitability of any specific technology stack, programming language, database system, message broker, or infrastructure platform for any component. References to architectural properties (linearizability, append-only, distributed consensus) describe requirements, not implementations. Any technology that satisfies the structural requirement is equally valid.</p>
+
+        <h3 id="s12-3">12.3 Enterprise IAM and Identity Systems</h3>
+
+        <p>This document does not replace, extend, or integrate with enterprise identity and access management systems. The Calling System authenticates to the Enforcement Gateway; the mechanism by which the calling system's identity is established is outside the scope of this architecture. QODIQA enforces consent at the inference boundary, not authentication at organizational or user-identity boundaries. Enterprise IAM and QODIQA serve complementary but structurally distinct functions.</p>
+
+        <h3 id="s12-4">12.4 AI Model Internals</h3>
+
+        <p>This document does not govern the internal architecture, training process, serving infrastructure, or behavioral properties of AI inference systems. QODIQA enforcement operates at the boundary between the request and the inference system; it does not inspect, modify, or constrain what happens within the inference system. The inference system is treated as a black box that accepts or rejects execution requests based on artifact validity.</p>
+
+        <h3 id="s12-5">12.5 Data Storage Encryption</h3>
+
+        <p>This document does not define encryption standards for data at rest in any enforcement component. Storage encryption for the Consent Registry, Audit Ledger, or any other component is a deployment-specific security control that must be satisfied according to the applicable regulatory and organizational requirements. This architecture specifies the tamper-evidence properties of the Audit Ledger through hash-chaining; storage encryption is orthogonal to hash-chain integrity and is not specified here.</p>
+
+        <h3 id="s12-6">12.6 Consent Grant Origination</h3>
+
+        <p>This document does not govern the process by which consent grants are created, the user experience through which data principals express consent, or the legal basis on which consent is established. QODIQA enforcement begins at the point of inference-time enforcement; the processes upstream of consent grant creation (consent collection, consent validity determination, consent storage in authoritative systems of record) are outside the scope of this architecture. The Consent Registry as defined here stores the enforcement-relevant state of consent grants; it is not a system of record for consent governance.</p>
+
+        <div class="decision-block">
+          <strong>Non-Coverage Summary — What This Architecture Does Not Define</strong>
+          <ul>
+            <li>Product APIs, wire protocols, or specific inter-component message formats</li>
+            <li>Specific technology stack, database, or infrastructure platform choices</li>
+            <li>Enterprise IAM, user authentication, or organizational identity management</li>
+            <li>AI model internals, training infrastructure, or inference system architecture</li>
+            <li>Data storage encryption standards for any enforcement component</li>
+            <li>Consent grant origination, data principal UX, or legal basis for consent</li>
+            <li>Network infrastructure, physical security, or datacenter design</li>
+            <li>Billing, access control to enforcement configuration, or operational tooling</li>
+          </ul>
+          <p style="padding: 0 0 10px; font-size: 0.830rem; color: var(--muted); font-style: italic;">This architecture defines the logical component model only. All implementation choices not constrained by the invariants in this document are at the discretion of the implementing organization.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 13 -->
+      <div id="s13" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 13</span>
+        <h2><a class="anchor-link" href="#s13">#</a>Institutional Closing Statement</h2>
+
+        <p>QODIQA is a runtime control plane. It does not govern what AI systems may do in the abstract; it governs what inference executions may occur in specific operational contexts, against specific consent states, evaluated by specific frozen policy versions, at specific instants in time. The architecture defined in this document is the structural form through which that governance is exercised. It is not a description of intent; it is a specification of a runtime boundary.</p>
+
+        <div class="inst-statement">
+          <p>The enforcement architecture is the consent boundary. Not a policy document about the consent boundary. Not a monitoring system that observes the consent boundary. The architecture itself is the boundary. When the EG denies a request, when the AL records the denial, when the circuit breaker opens under component failure, these are the consent boundary operating correctly. The boundary does not exist outside the architecture that implements it.</p>
+        </div>
+
+        <p>Determinism is structural in this architecture, not aspirational. The architectural constraint that the PE evaluation function be pure (no network calls, no shared mutable state, no real-time clock, no randomness) is not a performance optimization. It is the mechanism by which enforcement decisions become auditable, replayable, and certifiable. An enforcement system that makes probabilistic or state-dependent decisions cannot be audited; it cannot be replayed; it cannot be certified. Determinism is the precondition for accountability.</p>
+
+        <div class="key-prop">
+          <p><strong>Infrastructure precedes policy interpretation.</strong> A consent policy is not enforceable by declaration. It is enforceable only when there exists an infrastructure (a runtime control plane) that gates inference execution against the policy, records every decision with cryptographic evidence, and fails closed when any component required for verified enforcement is unavailable. <strong>This reference architecture is the specification of that infrastructure.</strong> Where it is implemented correctly, consent enforcement is structural. Where it is not, consent governance remains advisory.</p>
+        </div>
+
+        <h3 id="s13-1">13.1 Corpus Alignment Statement</h3>
+
+        <p>This Reference Architecture (QODIQA-ARCH-2026-001 v1.0) is normatively complementary to and must be read in conjunction with the following corpus documents: QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0; QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0. This document is authoritative for the canonical component model, trust boundary definitions, and architectural invariants. For normative enforcement semantics, defer to the Core Standard. For operational deployment guidance, defer to the Implementation Playbook. For certification procedures, defer to the Certification Framework.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Reference Architecture of the QODIQA specification corpus. It defines the canonical, vendor-neutral architectural topology for deterministic runtime consent enforcement. It is issued as a Reference Architecture Specification and is not a product specification, an implementation guide, or a commercial deployment blueprint. It is a logical architectural model against which conformant implementations may be assessed for structural conformance.</p>
+
+          <p>The governing constraint is structural: the architecture is the enforcement boundary, and the enforcement boundary must be deterministic, fail-closed, and cryptographically anchored or it is not a conformant QODIQA architecture.</p>
+
+          <p>The material contained herein is intended for:</p>
+
+          <ul class="audience-list">
+            <li>Principal architects designing QODIQA-conformant enforcement infrastructure</li>
+            <li>Distributed systems engineers implementing canonical enforcement components</li>
+            <li>Security architects defining trust boundaries and isolation properties for AI inference infrastructure</li>
+            <li>Standards body members and regulatory reviewers evaluating the architectural basis of QODIQA enforcement</li>
+            <li>Independent assessors and certification bodies conducting architectural conformance evaluation</li>
+            <li>Technical governance leads responsible for AI consent enforcement infrastructure decisions</li>
+          </ul>
+
+          <p>All architectural principles described in this document are production-oriented, deterministically anchored, and designed for integration within large-scale AI ecosystems.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-ARCH-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Reference Architecture for Deterministic Runtime Consent Enforcement</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Canonical Topology and Component Interaction Model for QODIQA Enforcement Infrastructure</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Reference Architecture Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative — Reference Architecture Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-ARCH-2026-001</p>
+      <p>Reference Architecture Specification</p>
+      <p>Status: Institutional Distribution</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a logical architectural reference model and does not constitute legal advice. All architectural principles described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-ARCH-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================================================================
+     SCROLLSPY — IntersectionObserver + scroll fallback
+     Active rule: topmost section whose top has crossed the trigger.
+     No flicker: guard on currentActiveId prevents redundant updates.
+  ================================================================ */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract',
+    's1','s1-1','s1-2','s1-3','s1-4',
+    's2',
+    's3',
+    's4','s4-1','s4-2','s4-3','s4-4',
+    's5','s5-1','s5-2','s5-3','s5-4','s5-5',
+    's6',
+    's7','s7-1','s7-2','s7-3','s7-4',
+    's8','s8-1','s8-2','s8-3','s8-4','s8-5',
+    's9','s9-1','s9-2','s9-3','s9-4','s9-5','s9-6',
+    's10','s10-1','s10-2','s10-3','s10-4',
+    's11',
+    's12','s12-1','s12-2','s12-3','s12-4','s12-5','s12-6',
+    's13','s13-1',
+    's-status'
+  ];
+
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  let currentActiveId = null;
+
+  function setActive(id) {
+    if (id === currentActiveId) return; /* guard — prevents flicker */
+    currentActiveId = id;
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+    /* Scroll active nav item into sidebar view */
+    const activeLink = document.querySelector('.nav-item.active');
+    const sidebar = document.getElementById('sidebar');
+    if (activeLink && sidebar) {
+      const linkTop = activeLink.offsetTop;
+      const linkBottom = linkTop + activeLink.offsetHeight;
+      const sTop = sidebar.scrollTop;
+      const sBottom = sTop + sidebar.clientHeight;
+      if (linkTop < sTop + 40 || linkBottom > sBottom - 40) {
+        sidebar.scrollTo({ top: linkTop - sidebar.clientHeight / 2, behavior: 'smooth' });
+      }
+    }
+  }
+
+  /* Primary: IntersectionObserver */
+  const visible = new Set();
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) visible.add(entry.target.id);
+      else visible.delete(entry.target.id);
+    });
+    if (visible.size > 0) {
+      let topId = null, topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx !== undefined && idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-15% 0px -70% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* Fallback: scroll-position spy — edge cases + rapid scroll + zoom */
+  function scrollPositionSpy() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    const vh = window.innerHeight;
+
+    /* At document bottom: activate last section */
+    if (scrollY + vh >= document.body.scrollHeight - 8) {
+      const last = sections[sections.length - 1];
+      if (last) { setActive(last.id); return; }
+    }
+
+    /* At document top: activate first section */
+    if (scrollY < 10) {
+      if (sections[0]) { setActive(sections[0].id); return; }
+    }
+
+    /* Find last section whose top is above 30% viewport trigger */
+    const trigger = scrollY + vh * 0.30;
+    let active = null;
+    for (let i = 0; i < sections.length; i++) {
+      const top = sections[i].getBoundingClientRect().top + scrollY;
+      if (top <= trigger) active = sections[i].id;
+      else break;
+    }
+    if (active) setActive(active);
+  }
+
+  scrollPositionSpy();
+  window.addEventListener('scroll', scrollPositionSpy, { passive: true });
+
+  /* Re-evaluate on resize and zoom */
+  let resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(scrollPositionSpy, 80);
+  }, { passive: true });
+
+  /* ================================================================
+     NAV CLICK — smooth scroll
+  ================================================================ */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const isMobile = window.innerWidth <= 768;
+          const offset = isMobile ? 60 : 24;
+          const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+          if (isMobile) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+          }
+        }
+      }
+    });
+  });
+
+  /* ================================================================
+     BACK TO TOP
+  ================================================================ */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', function () {
+    btt.classList.toggle('visible', (window.scrollY || window.pageYOffset) > 600);
+  }, { passive: true });
+  btt.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ================================================================
+     MOBILE SIDEBAR TOGGLE
+  ================================================================ */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

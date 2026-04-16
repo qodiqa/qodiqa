@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA: Master Index: Reader's Guide · v1.0</title>
+<meta name="description" content="QODIQA Master Index and Reader's Guide v1.0. Navigation reference, corpus hierarchy, reading paths, and consolidated glossary for the standard corpus.">
+<meta property="og:title" content="QODIQA: Master Index: Reader's Guide">
+<meta property="og:description" content="Navigation reference and reading path guide for the QODIQA Deterministic Runtime Consent Enforcement standard corpus.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS — exact Whitepaper
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER — exact Whitepaper
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR — exact Whitepaper
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; border-radius: 2px; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; font-weight: 600; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT — exact Whitepaper
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE — exact Whitepaper
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS — exact Whitepaper
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT — exact Whitepaper
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS — exact Whitepaper
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK — exact Whitepaper
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   TABLES — Whitepaper + density upgrade
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.865rem;
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.52;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+.td-norm {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #E8C87A;
+  background: #2A2210 !important;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.td-info {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #88C4A4;
+  background: #102018 !important;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* ============================================================
+   KEY PROPERTY BLOCKS — exact Whitepaper
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   CALLOUT — exact Whitepaper
+   ============================================================ */
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   DECISION BLOCK — exact Whitepaper
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 10px 15px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: left;
+  hyphens: none;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+  min-width: 12px;
+}
+
+/* ============================================================
+   SECTION NOTE — exact Whitepaper
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK — exact Whitepaper
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: left;
+  hyphens: none;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+/* ============================================================
+   INSTITUTIONAL STATEMENT
+   ============================================================ */
+.inst-statement {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0;
+  margin: 32px 0;
+}
+
+.inst-lead {
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  display: block;
+  font-style: normal;
+}
+
+.inst-body {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+  margin-bottom: 16px;
+  text-align: justify;
+  hyphens: auto;
+  display: block;
+  font-style: italic;
+}
+
+.inst-close {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin: 0;
+  display: block;
+  font-style: normal;
+}
+
+/* ============================================================
+   CONTACT BLOCK — exact Whitepaper
+   ============================================================ */
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a { color: var(--accent); text-decoration: none; }
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK — exact Whitepaper
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+/* ============================================================
+   HIERARCHY BLOCKS — document index component
+   ============================================================ */
+.hierarchy-block {
+  border: 1px solid var(--ink-2);
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.hierarchy-tier {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.hierarchy-tier:last-child { border-bottom: none; }
+
+.hierarchy-tier-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ht-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.ht-desc {
+  font-family: var(--sans);
+  font-size: 0.71rem;
+  color: rgba(255,255,255,0.40);
+  letter-spacing: 0.01em;
+}
+
+.hierarchy-tier-body { background: var(--bg); }
+
+.hierarchy-doc {
+  display: grid;
+  grid-template-columns: 200px 1fr 76px;
+  gap: 12px;
+  padding: 8px 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  align-items: baseline;
+}
+
+.hierarchy-doc:last-child { border-bottom: none; }
+.hierarchy-doc:nth-child(even) { background: #ECEAE5; }
+
+.hd-id {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.hd-title {
+  font-size: 0.865rem;
+  color: var(--text);
+  line-height: 1.48;
+  font-weight: 500;
+  overflow-wrap: break-word;
+}
+
+.hd-type {
+  font-family: var(--mono);
+  font-size: 0.59rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   READING PATH GRID
+   ============================================================ */
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--ink-2);
+  margin: 16px 0 24px;
+  border: 1px solid var(--ink-2);
+}
+
+.path-card {
+  background: var(--bg);
+  padding: 20px 20px;
+}
+
+.path-badge {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(122,106,80,0.06);
+  border: 1px solid rgba(122,106,80,0.20);
+  display: inline-block;
+  padding: 3px 10px;
+  margin-bottom: 10px;
+}
+
+.path-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.22;
+}
+
+.path-desc {
+  font-size: 0.840rem;
+  color: var(--text-3);
+  line-height: 1.62;
+  margin-bottom: 14px;
+  text-align: left;
+  hyphens: none;
+}
+
+.path-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+
+.path-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.830rem;
+  line-height: 1.52;
+  color: var(--text-2);
+  padding: 2px 0;
+  text-align: left;
+  hyphens: none;
+  margin-bottom: 4px;
+}
+
+.path-step-num {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 3px;
+  min-width: 18px;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   GLOSSARY BLOCK
+   ============================================================ */
+.glossary-block {
+  border: 1px solid #C4C0BA;
+  margin: 16px 0 24px;
+  overflow: hidden;
+}
+
+.glossary-item {
+  padding: 10px 18px;
+  border-bottom: 1px solid #D4D0CA;
+  line-height: 1.62;
+  color: var(--text);
+}
+
+.glossary-item:last-child { border-bottom: none; }
+.glossary-item:nth-child(even) { background: #ECEAE5; }
+
+.glossary-term {
+  font-family: var(--mono);
+  font-size: 0.71rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.glossary-def {
+  font-size: 0.870rem;
+  color: var(--text-2);
+  line-height: 1.62;
+  text-align: justify;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.glossary-ref {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+  display: block;
+  opacity: 0.80;
+}
+
+/* ============================================================
+   CORPUS LIST
+   ============================================================ */
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+/* ============================================================
+   BACK TO TOP — exact Whitepaper
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER — exact Whitepaper
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+  hyphens: none;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT — exact Whitepaper
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint,
+  .mobile-nav-header { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE — exact Whitepaper
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  .path-grid { grid-template-columns: 1fr; }
+
+  .hierarchy-doc { grid-template-columns: 1fr; gap: 2px; }
+  .hd-type { text-align: left; }
+
+  .footer-block p { hyphens: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COVER
+     ============================================================ -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Master Index<br><span class="italic-part">Reader's Guide</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-IDX-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Navigation reference, corpus hierarchy, reading paths by audience, and consolidated glossary for the standard corpus.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s0">Preamble</a>
+      <a class="nav-item" href="#s1">1. Purpose of this Document</a>
+      <a class="nav-item" href="#s2">2. Corpus Overview</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Corpus Statistics</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Normative Hierarchy</a>
+      <a class="nav-item" href="#s3">3. Complete Document Index</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Tier I: Foundational</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Tier II: Normative Technical</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Tier III: Operational</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Tier IV: Governance and Legal</a>
+      <a class="nav-item sub" href="#s3-5">3.5 Tier V: Informative</a>
+      <a class="nav-item" href="#s4">4. Reading Paths</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Implementation Engineer</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Compliance and Audit</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Regulatory and Legal</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Executive and Strategic</a>
+      <a class="nav-item" href="#s5">5. Cross-Reference Map</a>
+      <a class="nav-item" href="#s6">6. Consolidated Glossary</a>
+      <a class="nav-item" href="#s7">7. Corpus Amendment History</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      QODIQA-IDX-2026-001<br>
+      Version 1.0 · April 2026<br>
+      Navigation Reference
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <section id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>The QODIQA standard corpus comprises twenty-nine documents spanning five normative tiers. Each document addresses a defined aspect of deterministic runtime consent enforcement for artificial intelligence systems. The corpus is internally coherent and cross-referenced throughout, but it does not contain a navigational instrument that orients a new reader, defines the reading order appropriate to a given role, or provides a consolidated reference for terms used across documents.</p>
+          <p>This document, the Master Index and Reader's Guide, fills that structural gap. It provides a complete inventory of all corpus documents with their normative status and tier classification, four role-specific reading paths, a cross-reference map of document dependencies, and a consolidated glossary of all defined terms drawn from their authoritative definitions across the corpus.</p>
+        </div>
+      </section>
+
+      <!-- PREAMBLE -->
+      <section id="s0" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Preamble</span>
+        <h2><a class="anchor-link" href="#s0">#</a>How to Use this Document</h2>
+        <p>This document is a navigational instrument, not a normative specification. It does not introduce new requirements, does not modify any existing normative statement in the corpus, and does not supersede any document it references. Its sole function is to make the corpus accessible.</p>
+        <div class="callout">
+          <p>If you are reading the QODIQA corpus for the first time, begin with Section 4 (Reading Paths). Identify the path that corresponds to your role and follow it. Return to Section 3 (Complete Document Index) when you need to locate a specific document, and to Section 6 (Consolidated Glossary) when you encounter an undefined term.</p>
+        </div>
+        <p>Readers who are already familiar with the corpus and are seeking a specific document or term may proceed directly to Section 3 or Section 6 respectively.</p>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="s1" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose of this Document</h2>
+        <p>A technical corpus of twenty-nine documents presents a navigational challenge that is distinct from the challenge of understanding any single document within it. Individual documents are self-contained. The corpus as a whole is not. Dependencies between documents are declared through cross-references but are not visualized. The normative hierarchy is implied by document type but is not summarized in any single location. Terms are defined where they first appear but are not consolidated. Reading paths appropriate to specific professional roles are not described.</p>
+        <p>These omissions do not impair the correctness of the corpus, but they impose a non-trivial orientation cost on any new reader. An implementation engineer who begins with the wrong document will acquire correct but poorly-sequenced knowledge. A regulator who encounters an undefined term must search across twenty-nine documents to locate its authoritative definition. An executive seeking a strategic overview has no indicated starting point.</p>
+        <div class="key-prop">
+          <div class="key-prop-title">Scope of this Document</div>
+          <p>This document provides: (i) a complete inventory of all corpus documents with normative tier and status classification; (ii) a visual hierarchy of document dependencies; (iii) four role-differentiated reading paths; (iv) a cross-reference map identifying which documents must be read before which; and (v) a consolidated glossary of all defined terms drawn from their authoritative source documents. It does not introduce any normative requirement and does not modify any existing document in the corpus.</p>
+        </div>
+        <p>This document is issued as a companion instrument to the corpus and should be made available wherever the corpus is distributed. It is classified as informative and carries document identifier QODIQA-IDX-2026-001.</p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="s2" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Corpus Overview</h2>
+
+        <section id="s2-1">
+          <h3>2.1 Corpus Statistics</h3>
+          <p>The QODIQA standard corpus at Version 1.0 (April 2026) consists of twenty-nine documents. These documents are distributed across five normative tiers, from foundational conceptual documents through governance and legal instruments. The corpus is versioned as a unit under the QODIQA Governance Charter; individual documents carry their own version numbers but are released and amended as part of the corpus as a whole.</p>
+          <div class="table-wrapper">
+            <span class="table-caption">Table 1. Corpus composition by tier</span>
+            <table>
+              <thead>
+                <tr><th>Tier</th><th>Classification</th><th>Document Count</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Tier I</td><td>Foundational</td><td>2</td><td class="td-norm">Normative</td></tr>
+                <tr><td>Tier II</td><td>Normative Technical</td><td>8</td><td class="td-norm">Normative</td></tr>
+                <tr><td>Tier III</td><td>Operational</td><td>7</td><td class="td-norm">Normative</td></tr>
+                <tr><td>Tier IV</td><td>Governance and Legal</td><td>5</td><td class="td-norm">Normative</td></tr>
+                <tr><td>Tier V</td><td>Informative</td><td>7</td><td class="td-info">Informative</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="s2-2">
+          <h3>2.2 Normative Hierarchy</h3>
+          <p>The corpus establishes a strict normative hierarchy. In the event of apparent conflict between documents, the following precedence order applies: Tier I documents take precedence over all others; within Tier II, the Core Standard (QODIQA-CORE-2026-001) takes precedence over all other Tier II documents; Tier IV governance documents take precedence over Tier III operational documents on matters of governance and process. Informative documents (Tier V) carry no normative force and cannot override any normative statement.</p>
+          <div class="decision-block">
+            <div class="decision-block-head">Conflict Resolution Precedence: Normative Order</div>
+            <div class="decision-block-body">
+              <div class="decision-item"><span class="di-icon">1</span><span>QODIQA Technical Whitepaper (QODIQA-WP-2026-001): conceptual foundation</span></div>
+              <div class="decision-item"><span class="di-icon">2</span><span>QODIQA Core Standard (QODIQA-CORE-2026-001): primary normative instrument</span></div>
+              <div class="decision-item"><span class="di-icon">3</span><span>68-Point Enforcement Framework (QODIQA-68P-2026-001): detailed control specification</span></div>
+              <div class="decision-item"><span class="di-icon">4</span><span>Tier II technical specifications: architecture, security, conformance</span></div>
+              <div class="decision-item"><span class="di-icon">5</span><span>Tier III operational documents: implementation, deployment, failure handling</span></div>
+              <div class="decision-item"><span class="di-icon">6</span><span>Tier IV governance instruments: charter, license, change log</span></div>
+              <div class="decision-item"><span class="di-icon">7</span><span>Tier V informative documents: no normative force</span></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="s3" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Complete Document Index</h2>
+        <p>The following index lists all twenty-nine documents in the QODIQA corpus, organized by tier. Each entry includes the document identifier, full title, normative status, and a brief functional description. Documents are listed in the recommended reading order within each tier.</p>
+
+        <section id="s3-1">
+          <h3>3.1 Tier I: Foundational Documents</h3>
+          <p>Tier I documents establish the conceptual and definitional foundation of the QODIQA framework. All other corpus documents presuppose familiarity with these two documents. They should be read first by any reader approaching the corpus for the first time.</p>
+          <div class="hierarchy-block">
+            <div class="hierarchy-tier">
+              <div class="hierarchy-tier-head">
+                <span class="ht-label">Tier I</span>
+                <span class="ht-desc">Foundational: read first</span>
+              </div>
+              <div class="hierarchy-tier-body">
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-WP-2026-001</div>
+                  <div class="hd-title">Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-CORE-2026-001</div>
+                  <div class="hd-title">Core Standard for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="s3-2">
+          <h3>3.2 Tier II: Normative Technical Specifications</h3>
+          <p>Tier II documents specify the technical architecture, control framework, security profile, conformance requirements, and threat model of the QODIQA enforcement system. These documents expand the normative requirements established in the Core Standard into implementable technical detail. Readers undertaking implementation should read all Tier II documents after completing Tier I.</p>
+          <div class="hierarchy-block">
+            <div class="hierarchy-tier">
+              <div class="hierarchy-tier-head">
+                <span class="ht-label">Tier II</span>
+                <span class="ht-desc">Normative Technical Specifications</span>
+              </div>
+              <div class="hierarchy-tier-body">
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-68P-2026-001</div>
+                  <div class="hd-title">68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-ARCH-2026-001</div>
+                  <div class="hd-title">Reference Architecture for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-SEC-2026-001</div>
+                  <div class="hd-title">Security and Cryptographic Profile for Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-CTS-2026-001</div>
+                  <div class="hd-title">Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-CVS-2026-001</div>
+                  <div class="hd-title">Conformance Verification Specification</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-TM-2026-001</div>
+                  <div class="hd-title">Threat Model and Abuse Case Specification</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-ETM-2026-001</div>
+                  <div class="hd-title">Extended Adversarial Threat Model</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-GEI-2026-001</div>
+                  <div class="hd-title">Global Enforcement Invariants for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="s3-3">
+          <h3>3.3 Tier III: Operational Documents</h3>
+          <p>Tier III documents provide the operational guidance required to implement, deploy, and maintain a QODIQA-conformant system. They address implementation patterns, failure handling, reference stack specification, system boundaries, deployment constraints, and non-compliance conditions. These documents are intended for engineering, operations, and assurance teams undertaking active implementation.</p>
+          <div class="hierarchy-block">
+            <div class="hierarchy-tier">
+              <div class="hierarchy-tier-head">
+                <span class="ht-label">Tier III</span>
+                <span class="ht-desc">Operational: implementation and deployment guidance</span>
+              </div>
+              <div class="hierarchy-tier-body">
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-IMPL-2026-001</div>
+                  <div class="hd-title">Implementation Playbook for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-RIS-2026-001</div>
+                  <div class="hd-title">Reference Implementation Specification - Minimal Deterministic Enforcement Stack</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-FHS-2026-001</div>
+                  <div class="hd-title">Failure Handling and Recovery Specification</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-NCC-2026-001</div>
+                  <div class="hd-title">Non-Compliance Conditions and Failure Modes</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-SBT-2026-001</div>
+                  <div class="hd-title">System Boundary and Trust Model Specification</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-IDC-2026-001</div>
+                  <div class="hd-title">Interoperability and Deployment Constraints</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-TERM-2026-001</div>
+                  <div class="hd-title">Terminology and Normative Definitions</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="s3-4">
+          <h3>3.4 Tier IV: Governance and Legal Instruments</h3>
+          <p>Tier IV documents establish the institutional governance of the corpus, define certification boundaries, specify the legal terms under which the corpus is distributed, and provide the residual risk disclosure required of all conformant implementations. These documents are primarily addressed to legal, compliance, and institutional governance functions, but all implementors are required to acknowledge the Residual Risk Annex as a condition of claiming conformance.</p>
+          <div class="hierarchy-block">
+            <div class="hierarchy-tier">
+              <div class="hierarchy-tier-head">
+                <span class="ht-label">Tier IV</span>
+                <span class="ht-desc">Governance and Legal: institutional instruments</span>
+              </div>
+              <div class="hierarchy-tier-body">
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-GC-2026-001</div>
+                  <div class="hd-title">Governance Charter for the QODIQA Standard Corpus</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-CF-2026-001</div>
+                  <div class="hd-title">Certification Framework for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-RISK-2026-001</div>
+                  <div class="hd-title">Residual Risk and Assumption Disclosure Annex</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-PSL-2026-001</div>
+                  <div class="hd-title">Public Specification License</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-POS-2026-001</div>
+                  <div class="hd-title">Positioning and Scope Limitation Statement</div>
+                  <div class="hd-type">Normative</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="s3-5">
+          <h3>3.5 Tier V: Informative Documents</h3>
+          <p>Tier V documents provide contextual, analytical, and process support for the corpus. They do not introduce normative requirements and carry no binding force. They are intended to support evaluation, adoption, and stakeholder communication. Readers may engage with these documents selectively based on their role and purpose.</p>
+          <div class="hierarchy-block">
+            <div class="hierarchy-tier">
+              <div class="hierarchy-tier-head">
+                <span class="ht-label">Tier V</span>
+                <span class="ht-desc">Informative: no normative force</span>
+              </div>
+              <div class="hierarchy-tier-body">
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-EB-2026-001</div>
+                  <div class="hd-title">Executive Brief for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-EIA-2026-001</div>
+                  <div class="hd-title">Economic Impact Analysis of Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-RAM-2026-001</div>
+                  <div class="hd-title">Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-AEM-2026-001</div>
+                  <div class="hd-title">Audit and Evidence Generation Model</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-ARP-2026-001</div>
+                  <div class="hd-title">Audit Readiness and Evidence Pack</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-UCD-2026-001</div>
+                  <div class="hd-title">Use Case Dossiers for Runtime Consent Enforcement Deployments</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+                <div class="hierarchy-doc">
+                  <div class="hd-id">QODIQA-CCL-2026-001</div>
+                  <div class="hd-title">Corpus Change Log and Version History</div>
+                  <div class="hd-type">Informative</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="s4" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Reading Paths by Audience</h2>
+        <p>The following four reading paths are designed for distinct professional roles. Each path identifies the minimum set of documents required to achieve functional understanding for that role, presented in the recommended reading order. Documents are listed by identifier; full titles are provided in Section 3.</p>
+        <p>These paths are not exhaustive. A reader who has completed a path for their primary role may benefit from reading additional documents outside that path, particularly from adjacent tiers. The paths are entry points, not boundaries.</p>
+
+        <div class="path-grid">
+          <div class="path-card" id="s4-1">
+            <span class="path-badge">Path A</span>
+            <div class="path-title">Implementation Engineer</div>
+            <p class="path-desc">For engineers building a QODIQA-conformant enforcement layer. Prioritizes architectural specification, control requirements, cryptographic profile, failure behavior, and the reference implementation.</p>
+            <ol class="path-steps">
+              <li><span class="path-step-num">01</span><span>QODIQA-WP-2026-001: conceptual foundations and the Authorization/Consent distinction</span></li>
+              <li><span class="path-step-num">02</span><span>QODIQA-CORE-2026-001: twelve control points, decision semantics, conformance profiles</span></li>
+              <li><span class="path-step-num">03</span><span>QODIQA-68P-2026-001: full control framework, governance domains, cryptographic layer</span></li>
+              <li><span class="path-step-num">04</span><span>QODIQA-ARCH-2026-001: reference architecture, component model, trust boundaries</span></li>
+              <li><span class="path-step-num">05</span><span>QODIQA-SEC-2026-001: cryptographic requirements, key management, signature verification</span></li>
+              <li><span class="path-step-num">06</span><span>QODIQA-GEI-2026-001: enforcement invariants that must hold across all deployments</span></li>
+              <li><span class="path-step-num">07</span><span>QODIQA-SBT-2026-001: system boundary definition and trust model</span></li>
+              <li><span class="path-step-num">08</span><span>QODIQA-IDC-2026-001: integration surfaces, anti-bypass controls, deployment constraints</span></li>
+              <li><span class="path-step-num">09</span><span>QODIQA-RIS-2026-001: minimal reference implementation specification</span></li>
+              <li><span class="path-step-num">10</span><span>QODIQA-IMPL-2026-001: 30/60-day integration playbook</span></li>
+              <li><span class="path-step-num">11</span><span>QODIQA-FHS-2026-001: failure handling, recovery, and fail-closed guarantees</span></li>
+              <li><span class="path-step-num">12</span><span>QODIQA-NCC-2026-001: non-compliance conditions and prohibited system behaviors</span></li>
+              <li><span class="path-step-num">13</span><span>QODIQA-TM-2026-001: threat model and bypass scenario analysis</span></li>
+              <li><span class="path-step-num">14</span><span>QODIQA-RISK-2026-001: residual risk disclosure, required acknowledgement</span></li>
+            </ol>
+          </div>
+
+          <div class="path-card" id="s4-2">
+            <span class="path-badge">Path B</span>
+            <div class="path-title">Compliance and Audit</div>
+            <p class="path-desc">For compliance officers, internal auditors, and assurance teams evaluating whether a QODIQA implementation meets conformance requirements and produces adequate evidence artifacts.</p>
+            <ol class="path-steps">
+              <li><span class="path-step-num">01</span><span>QODIQA-WP-2026-001: conceptual model, consent gap analysis</span></li>
+              <li><span class="path-step-num">02</span><span>QODIQA-CORE-2026-001: conformance profiles (CORE-MIN / CORE-VER / CORE-ENT)</span></li>
+              <li><span class="path-step-num">03</span><span>QODIQA-CF-2026-001: certification framework, what certification validates and does not validate</span></li>
+              <li><span class="path-step-num">04</span><span>QODIQA-CTS-2026-001: conformance test suite, test matrix, evidence packaging requirements</span></li>
+              <li><span class="path-step-num">05</span><span>QODIQA-CVS-2026-001: conformance verification procedures</span></li>
+              <li><span class="path-step-num">06</span><span>QODIQA-NCC-2026-001: hard and soft non-compliance conditions, severity levels</span></li>
+              <li><span class="path-step-num">07</span><span>QODIQA-AEM-2026-001: audit and evidence generation model</span></li>
+              <li><span class="path-step-num">08</span><span>QODIQA-ARP-2026-001: audit readiness and evidence pack structure</span></li>
+              <li><span class="path-step-num">09</span><span>QODIQA-RISK-2026-001: residual risk register, assumption disclosures</span></li>
+              <li><span class="path-step-num">10</span><span>QODIQA-GC-2026-001: governance charter, amendment process, authority structure</span></li>
+            </ol>
+          </div>
+
+          <div class="path-card" id="s4-3">
+            <span class="path-badge">Path C</span>
+            <div class="path-title">Regulatory and Legal</div>
+            <p class="path-desc">For regulatory reviewers, legal counsel, and policy advisors evaluating the QODIQA framework against applicable legal and regulatory requirements, or assessing institutional liability exposure.</p>
+            <ol class="path-steps">
+              <li><span class="path-step-num">01</span><span>QODIQA-POS-2026-001: scope limitation, explicit non-claims, what QODIQA does not provide</span></li>
+              <li><span class="path-step-num">02</span><span>QODIQA-WP-2026-001: conceptual foundations, consent gap analysis</span></li>
+              <li><span class="path-step-num">03</span><span>QODIQA-CORE-2026-001: normative requirements, conformance definition</span></li>
+              <li><span class="path-step-num">04</span><span>QODIQA-RAM-2026-001: GDPR, EU AI Act, NIST RMF, ISO 27001, ISO 42001 alignment matrix</span></li>
+              <li><span class="path-step-num">05</span><span>QODIQA-RISK-2026-001: residual risk disclosure, no-guarantee clause, non-coverage declarations</span></li>
+              <li><span class="path-step-num">06</span><span>QODIQA-PSL-2026-001: public specification license terms</span></li>
+              <li><span class="path-step-num">07</span><span>QODIQA-CF-2026-001: certification boundary, what certification does and does not establish</span></li>
+              <li><span class="path-step-num">08</span><span>QODIQA-GC-2026-001: governance authority, amendment procedure, corpus integrity</span></li>
+            </ol>
+          </div>
+
+          <div class="path-card" id="s4-4">
+            <span class="path-badge">Path D</span>
+            <div class="path-title">Executive and Strategic</div>
+            <p class="path-desc">For executives, board-level stakeholders, and strategic decision-makers evaluating QODIQA as an institutional infrastructure investment. Prioritizes problem framing, economic rationale, and strategic positioning.</p>
+            <ol class="path-steps">
+              <li><span class="path-step-num">01</span><span>QODIQA-EB-2026-001: executive brief, strategic case, adoption rationale</span></li>
+              <li><span class="path-step-num">02</span><span>QODIQA-WP-2026-001: Section 1 (Executive Summary) and Section 3 (The Consent Gap)</span></li>
+              <li><span class="path-step-num">03</span><span>QODIQA-EIA-2026-001: economic impact analysis, risk surface quantification, scenario modeling</span></li>
+              <li><span class="path-step-num">04</span><span>QODIQA-POS-2026-001: scope limitations, non-claims, what QODIQA does not guarantee</span></li>
+              <li><span class="path-step-num">05</span><span>QODIQA-RAM-2026-001: regulatory alignment summary, compliance coverage density</span></li>
+              <li><span class="path-step-num">06</span><span>QODIQA-UCD-2026-001: use case dossiers for sector-specific deployment scenarios</span></li>
+              <li><span class="path-step-num">07</span><span>QODIQA-RISK-2026-001: Section 0 (Executive Disclosure), residual risk register summary</span></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="s5" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Cross-Reference Map</h2>
+        <p>The following table identifies the primary dependency relationships between documents in the corpus. Column "Requires" lists documents that must be read before the listed document can be fully understood. Column "Referenced by" identifies documents that cite the listed document as a normative or informative source. This map is not exhaustive of all cross-references in the corpus; it identifies structural dependencies only.</p>
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2. Primary document dependencies</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:170px">Document</th>
+                <th>Requires (read before)</th>
+                <th>Referenced by</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>QODIQA-WP-2026-001 (Technical Whitepaper)</td>
+                <td>None (entry point)</td>
+                <td>All corpus documents</td>
+              </tr>
+              <tr>
+                <td>QODIQA-CORE-2026-001 (Core Standard)</td>
+                <td>QODIQA-WP-2026-001</td>
+                <td>All Tier II, III, IV documents</td>
+              </tr>
+              <tr>
+                <td>QODIQA-68P-2026-001 (68-Point Framework)</td>
+                <td>QODIQA-WP-2026-001, QODIQA-CORE-2026-001</td>
+                <td>ARCH, SEC, CTS, CVS, GEI, IMPL, RIS, CF</td>
+              </tr>
+              <tr>
+                <td>QODIQA-ARCH-2026-001 (Reference Architecture)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-68P-2026-001</td>
+                <td>RIS, IMPL, IDC, SBT, FHS</td>
+              </tr>
+              <tr>
+                <td>QODIQA-SEC-2026-001 (Security and Crypto Profile)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-68P-2026-001</td>
+                <td>RIS, IMPL, TM, ETM, IDC</td>
+              </tr>
+              <tr>
+                <td>QODIQA-TM-2026-001 (Threat Model)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-ARCH-2026-001, QODIQA-SEC-2026-001</td>
+                <td>ETM, NCC, FHS, RISK</td>
+              </tr>
+              <tr>
+                <td>QODIQA-CTS-2026-001 (Conformance Test Suite)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-68P-2026-001, QODIQA-ARCH-2026-001</td>
+                <td>CVS, CF, AEM, ARP</td>
+              </tr>
+              <tr>
+                <td>QODIQA-RISK-2026-001 (Residual Risk Annex)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-TM-2026-001</td>
+                <td>CF (required acknowledgement clause)</td>
+              </tr>
+              <tr>
+                <td>QODIQA-CF-2026-001 (Certification Framework)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-CTS-2026-001, QODIQA-RISK-2026-001</td>
+                <td>GC, ARP</td>
+              </tr>
+              <tr>
+                <td>QODIQA-RAM-2026-001 (Regulatory Alignment Matrix)</td>
+                <td>QODIQA-CORE-2026-001, QODIQA-68P-2026-001</td>
+                <td>EB (informative), EIA (informative)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="s6" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Consolidated Glossary</h2>
+        <p>The following glossary consolidates all defined terms used across the QODIQA corpus. Each definition is drawn from its authoritative source document, identified in the reference field. Where a term is defined in multiple documents, the definition from the highest-tier document is used. Terms are listed alphabetically.</p>
+        <p>This glossary is informative. In the event of apparent conflict between a definition here and the definition in the source document, the source document governs.</p>
+
+        <div class="glossary-block">
+          <div class="glossary-item">
+            <span class="glossary-term">Audit Log</span>
+            <div class="glossary-def">A tamper-evident, hash-chained sequence of Audit Records produced by the Audit Layer for every enforcement decision. The Audit Log must be written before execution proceeds on any ALLOW path and must be written on all DENY paths. Write failure triggers DENY.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.2</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Audit Record</span>
+            <div class="glossary-def">A single immutable entry in the Audit Log corresponding to one enforcement decision. An Audit Record contains the frozen evaluation context, the decision outcome, the policy version applied, and a cryptographic reference to the Decision Artifact.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.2</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Authorization</span>
+            <div class="glossary-def">Standing technical permission granted to an actor or system to access a resource or perform a class of operations. Expressed through roles, access control lists, API keys, or service identities. Generally static, coarse-grained, and context-independent. Authorization answers: <em>Is this actor permitted to perform this class of operation?</em> Authorization does not satisfy the Consent requirement and must not be used as a proxy for Consent evaluation.</div>
+            <div class="glossary-ref">Source: QODIQA-WP-2026-001, Section 3.3; QODIQA-CORE-2026-001, Section 3.1</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Calling System</span>
+            <div class="glossary-def">An application, service, or agent that requests an AI action by submitting a DecisionRequest to the Enforcement Gateway. The Calling System is responsible for providing a complete, explicit intent declaration. It must not submit partial, inferred, or defaulted intent fields.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 2.3</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Conformance</span>
+            <div class="glossary-def">The state of a system that satisfies all MUST-level requirements of the declared Conformance Profile. A system claiming Conformance must declare exactly one profile (CORE-MIN, CORE-VER, or CORE-ENT) and must satisfy all requirements of that profile. Declaration of a higher profile without satisfaction of its requirements constitutes non-Conformance.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 2.4</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Consent</span>
+            <div class="glossary-def">Contextual, conditional legitimacy for a specific AI action under explicitly declared purpose, scope, time constraints, jurisdictional binding, and current Revocation state. Consent answers: <em>Is this specific action legitimate under present conditions?</em> Consent is granular, time-bounded, and revocable. It is distinct from Authorization and must be evaluated independently of it.</div>
+            <div class="glossary-ref">Source: QODIQA-WP-2026-001, Section 3.3; QODIQA-CORE-2026-001, Section 3.1</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Consent Registry</span>
+            <div class="glossary-def">The authoritative system component that stores and resolves current Consent state, including grants, expiry timestamps, and Revocation status. The Consent Registry is the single source of truth for Consent state at enforcement time. Registry unavailability must trigger DENY; no system may default to ALLOW when the Registry is unreachable.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.2</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Consent Token</span>
+            <div class="glossary-def">A cryptographically signed, machine-readable data structure that encodes a Consent grant for a specific purpose, scope, data category set, jurisdictional binding, and time window. A Consent Token must be verified for cryptographic integrity and checked against the Consent Registry for current validity before any enforcement decision proceeds.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, QCC-02; QODIQA-68P-2026-001</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Decision Artifact</span>
+            <div class="glossary-def">An immutable, cryptographically signed record of an enforcement decision, containing the frozen evaluation context, the policy version applied, the Consent state at evaluation time, and the resulting ALLOW or DENY outcome. Decision Artifacts are the primary evidence instrument for independent Replay Verification. Artifact generation failure must trigger DENY.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.3; QODIQA-WP-2026-001, Section 6.6</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">DecisionRequest</span>
+            <div class="glossary-def">The explicit, machine-readable input contract submitted by the Calling System to the Enforcement Gateway. A DecisionRequest must contain all required fields: actor identity, requested action, purpose, data categories, and jurisdictional context: with no missing, inferred, or defaulted values. Unknown or missing fields must result in DENY without evaluation.</div>
+            <div class="glossary-ref">Source: QODIQA-WP-2026-001, Section 6.2; QODIQA-CORE-2026-001, QCC-01</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Enforcement Gateway</span>
+            <div class="glossary-def">The system component that intercepts all AI-bound requests on the critical path and implements the six-stage enforcement lifecycle. The Enforcement Gateway must be positioned on the critical path between the Calling System and the AI System; any architectural configuration that permits bypass of the Enforcement Gateway constitutes non-Conformance.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.2</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Fail-Closed</span>
+            <div class="glossary-def">The required failure mode of a Conformant QODIQA implementation. A system fails closed when it issues DENY on any missing, malformed, unavailable, or unresolvable input, rather than defaulting to ALLOW or attempting partial evaluation. No partial execution occurs on any DENY path. Fail-closed behavior is mandatory and cannot be disabled or bypassed.</div>
+            <div class="glossary-ref">Source: QODIQA-WP-2026-001, Section 4.6; QODIQA-CORE-2026-001, Section 4.3</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Frozen Evaluation Context</span>
+            <div class="glossary-def">The immutable snapshot of all inputs and state present at enforcement decision time, including the DecisionRequest, the resolved Consent state, the policy version, and the evaluation timestamp. The Frozen Evaluation Context is the basis for Decision Artifact generation and Replay Verification. No element of the Frozen Evaluation Context may be modified after the enforcement decision is made.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 6.1; QODIQA-WP-2026-001, Section 6.5</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Intent Declaration</span>
+            <div class="glossary-def">The explicit, machine-readable specification of who is acting, for what purpose, on what data, and under which constraints, provided as a mandatory component of every DecisionRequest. Intent must be declared, not inferred. The enforcement system must refuse to evaluate any request for which intent has not been explicitly declared.</div>
+            <div class="glossary-ref">Source: QODIQA-WP-2026-001, Section 5.2; QODIQA-CORE-2026-001, QCC-01</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Policy Engine</span>
+            <div class="glossary-def">The system component that executes deterministic policy evaluation as a pure function over a Frozen Evaluation Context. The Policy Engine must be free of side effects and must not make external calls during evaluation. Given identical inputs and the same policy version, the Policy Engine must always produce identical outputs.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 4.2</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Purpose Binding</span>
+            <div class="glossary-def">The enforcement requirement that a Consent grant be evaluated for its validity with respect to the specific declared purpose of an AI action. An action performed for a purpose not explicitly covered by the applicable Consent Token must be denied. Inference, approximation, or generalization of purpose is prohibited.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, QCC-03</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Replay Verification</span>
+            <div class="glossary-def">The capability to reproduce a prior enforcement decision from its Frozen Evaluation Context and confirm that the same decision would be reached under the same inputs and policy version. Replay Verification is the primary mechanism for independent audit of QODIQA enforcement behavior. All Conformant implementations must produce Decision Artifacts sufficient to support Replay Verification.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 6.3; QODIQA-WP-2026-001, Section 7.3</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Revocation</span>
+            <div class="glossary-def">The withdrawal of a previously granted Consent, effective immediately upon issuance of the Revocation event. Revocation must propagate to all enforcement nodes within the required propagation window. Any Revocation event cancels all prior grants and supersedes any cached state or prior ALLOW decision. Revocation cannot be deferred, buffered, or ignored by any component of a Conformant implementation.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, QCC-06, R-01</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Runtime</span>
+            <div class="glossary-def">The moment of AI system invocation, the execution boundary at which a model or inference system is called to perform an action. Runtime is the only boundary where purpose, actor identity, jurisdiction, and Revocation state are simultaneously present, evaluable, and current. QODIQA enforcement operates exclusively at this boundary.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, Section 1.3; QODIQA-WP-2026-001, Section 1</div>
+          </div>
+          <div class="glossary-item">
+            <span class="glossary-term">Scope Binding</span>
+            <div class="glossary-def">The enforcement requirement that a Consent grant be evaluated for its validity with respect to the specific data categories and action scope of a request. Where multiple applicable Consent grants exist, the most restrictive scope governs (Conflict Resolution Rule R-02). Inference or assumption of broader scope is prohibited.</div>
+            <div class="glossary-ref">Source: QODIQA-CORE-2026-001, QCC-04, R-02</div>
+          </div>
+        </div>
+
+        <p class="section-note">This glossary contains the twenty most frequently referenced terms across the corpus. Terms used exclusively within a single document are defined in that document and are not reproduced here. For a complete term inventory of any individual document, refer to the Terminology and Normative Definitions section within that document, or to QODIQA-TERM-2026-001.</p>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="s7" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Corpus Amendment History</h2>
+        <p>This section records the amendment history of the Master Index itself. For the amendment history of the full corpus, refer to QODIQA-CCL-2026-001 (Corpus Change Log and Version History).</p>
+        <div class="table-wrapper">
+          <span class="table-caption">Table 3. Master Index revision history</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:88px">Version</th>
+                <th style="width:108px">Date</th>
+                <th>Change Description</th>
+                <th style="width:96px">Author</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1.0</td>
+                <td>April 2026</td>
+                <td>Initial issue. Full document index across five tiers, four reading paths, cross-reference map, and consolidated glossary for corpus Version 1.0.</td>
+                <td>QODIQA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- DOCUMENT STATUS -->
+      <section id="s-status" class="doc-section">
+        <span class="section-divider"></span>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status</h2>
+
+        <div class="doc-status-block">
+          <p>This document is issued as a companion navigational instrument to the QODIQA standard corpus at Version 1.0. It is classified as informative. It introduces no normative requirements and does not modify any existing document in the corpus. In the event of conflict between any statement in this document and any normative statement in a Tier I through Tier IV document, the normative statement governs without exception.</p>
+          <p>This document is intended for the following audiences:</p>
+          <ul class="audience-list">
+            <li>Engineers and architects beginning implementation of a QODIQA-conformant system</li>
+            <li>Compliance and audit functions evaluating an existing or proposed implementation</li>
+            <li>Regulatory, legal, and policy review bodies assessing the QODIQA corpus</li>
+            <li>Executives and strategic decision-makers evaluating QODIQA as an institutional investment</li>
+            <li>Any reader approaching the QODIQA corpus for the first time</li>
+          </ul>
+          <p>This document should be updated whenever a new document is added to the corpus, an existing document is substantially revised, or a new defined term is introduced. Updates are subject to the amendment process defined in QODIQA-GC-2026-001.</p>
+        </div>
+
+        <div class="inst-statement">
+          <span class="inst-lead">Institutional Closing Statement</span>
+          <span class="inst-body">The QODIQA corpus addresses a structural gap in artificial intelligence governance: the absence of deterministic enforcement of consent at the moment of model invocation. This Master Index is issued in the recognition that a corpus, however rigorous, is only as accessible as its navigational instruments allow. A standard that cannot be found cannot be adopted. A term that cannot be located cannot be consistently applied. A reading path that must be inferred imposes a cost that reduces the probability of correct implementation. This document exists to eliminate that cost.</span>
+          <span class="inst-close">QODIQA. Deterministic Runtime Consent Enforcement · April 2026</span>
+        </div>
+
+        <div class="contact-block">
+          <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+          <p class="contact-name">Bogdan Duțescu</p>
+          <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+          <p class="contact-detail">0040.724.218.572</p>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-IDX-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Master Index: Reader's Guide</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Navigation Reference and Consolidated Glossary for the QODIQA Standard Corpus</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Informative: Navigation Instrument</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Informative, Companion Document to QODIQA Corpus v1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter (QODIQA-GC-2026-001)</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Normative Force</span>
+            <span class="doc-id-val">None. This document introduces no requirements and does not modify any normative instrument in the corpus.</span>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA: Master Index: Reader's Guide</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-IDX-2026-001</p>
+      <p>Informative: Navigation Instrument</p>
+      <p>Companion to Corpus Version 1.0</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document is an informative navigational instrument. It introduces no normative requirements. In the event of conflict with any normative corpus document, the normative document governs without exception.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-IDX-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s0','s1',
+    's2','s2-1','s2-2',
+    's3','s3-1','s3-2','s3-3','s3-4','s3-5',
+    's4','s4-1','s4-2','s4-3','s4-4',
+    's5','s6','s7','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  let currentActive = null;
+  let rafPending = false;
+  let isNavigating = false;
+  let navigationTimer = null;
+
+  function setActive(id) {
+    if (id === currentActive) return;
+    currentActive = id;
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  function getActiveByScroll() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const docH = document.documentElement.scrollHeight;
+
+    if (scrollY + vh >= docH - 8) {
+      return sections[sections.length - 1].id;
+    }
+
+    const triggerLine = scrollY + vh * 0.25;
+    let best = sections[0];
+    for (let i = 0; i < sections.length; i++) {
+      const top = sections[i].getBoundingClientRect().top + scrollY;
+      if (top <= triggerLine) {
+        best = sections[i];
+      } else {
+        break;
+      }
+    }
+    return best.id;
+  }
+
+  function updateScrollSpy() {
+    if (isNavigating) return;
+    const id = getActiveByScroll();
+    if (id) setActive(id);
+    rafPending = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(updateScrollSpy);
+    }
+  }, { passive: true });
+
+  const intersectionRatios = new Map();
+
+  const observer = new IntersectionObserver(entries => {
+    if (isNavigating) return;
+    entries.forEach(entry => {
+      intersectionRatios.set(entry.target.id, entry.intersectionRatio);
+    });
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(updateScrollSpy);
+    }
+  }, {
+    root: null,
+    rootMargin: '-15% 0px -55% 0px',
+    threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const targetId = href.slice(1);
+          isNavigating = true;
+          setActive(targetId);
+          clearTimeout(navigationTimer);
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+          navigationTimer = setTimeout(() => { isNavigating = false; updateScrollSpy(); }, 800);
+        }
+      }
+    });
+  });
+
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const navToggle = document.getElementById('navToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active', sidebar.classList.contains('open'));
+    });
+  }
+})();
+</script>
+</body>
+</html>

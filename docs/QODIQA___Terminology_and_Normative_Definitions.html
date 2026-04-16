@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Terminology and Normative Definitions · v1.0</title>
+<meta name="description" content="QODIQA Terminology and Normative Definitions v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Terminology and Normative Definitions">
+<meta property="og:description" content="The canonical set of terms and normative definitions governing the framework for deterministic runtime consent enforcement.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+.abstract-block p + p { margin-top: 1em; }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper, .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* Binding/informative column styling */
+td.binding    { font-weight: 600; color: var(--ink-2); }
+td.informative { font-style: italic; color: var(--text-3); }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 0;
+  margin: 13px 0;
+  overflow: hidden;
+}
+
+.decision-block-head {
+  background: #1C1F25;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.decision-block-body { padding: 12px 16px; }
+
+.decision-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 0.905rem;
+  line-height: 1.60;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.decision-item:last-child { border-bottom: none; }
+
+.di-icon {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.65;
+}
+
+.decision-block-foot {
+  background: #E8E5E0;
+  padding: 9px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--muted);
+  border-top: 1px solid #D0CCC6;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.callout {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 15px 20px;
+  margin: 16px 0;
+}
+
+.callout p {
+  font-size: 0.920rem;
+  margin: 0;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+  font-style: normal;
+  color: var(--text);
+}
+
+/* ============================================================
+   DEFINITION BLOCKS
+   ============================================================ */
+.def-block {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 0;
+  margin: 14px 0 18px;
+  overflow: hidden;
+}
+
+.def-block + .def-block {
+  margin-top: 10px;
+}
+
+.def-header {
+  background: #1C1F25;
+  padding: 10px 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.def-term {
+  font-family: var(--sans);
+  font-size: 0.840rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+  letter-spacing: 0.01em;
+}
+
+.def-term-id {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: rgba(122,106,80,0.80);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.def-body {
+  padding: 14px 18px;
+}
+
+.def-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+.def-text {
+  font-size: 0.930rem;
+  line-height: 1.70;
+  color: var(--ink-2);
+  margin-bottom: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.def-note {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.def-note-label {
+  font-family: var(--mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+  opacity: 0.75;
+}
+
+.def-note-text {
+  font-size: 0.840rem;
+  line-height: 1.62;
+  color: var(--text-3);
+  font-style: italic;
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   PROHIBITED INTERPRETATION BLOCKS
+   ============================================================ */
+.prohibited-banner {
+  background: #191C21;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-left: 3px solid var(--accent);
+  padding: 9px 16px;
+  margin-bottom: 16px;
+}
+
+.prohibited-banner-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.75);
+}
+
+.prohibited-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  border: 1px solid #C4C0BA;
+  background: #F8F5F0;
+}
+
+.prohibited-list li {
+  padding: 12px 18px;
+  border-bottom: 1px solid #DDD9D3;
+  font-size: 0.875rem;
+  line-height: 1.60;
+  color: var(--text);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  margin-bottom: 0;
+  text-align: left;
+  hyphens: none;
+}
+
+.prohibited-list li:last-child { border-bottom: none; }
+
+.prohibited-list li .pi-term {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.prohibited-list li .pi-desc {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  line-height: 1.60;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.fn-item {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.fn-marker {
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+  font-family: var(--mono);
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.audience-list li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  font-size: 0.900rem;
+  color: var(--text-3);
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.audience-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.75em;
+  top: 7px;
+  opacity: 0.65;
+}
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper, .table-wrap { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  .prohibited-list li { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   ENHANCEMENT ADDITIONS — NON-DESTRUCTIVE
+   ============================================================ */
+
+/* Micro-anchor type label */
+.def-type-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.55);
+  border: 1px solid rgba(122,106,80,0.18);
+  padding: 1px 6px;
+  margin-bottom: 8px;
+  vertical-align: middle;
+}
+
+/* Cross-reference tag */
+.def-xref {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-top: 9px;
+  opacity: 0.70;
+  font-style: italic;
+}
+
+/* Taxonomy classification list */
+.taxonomy-group {
+  margin: 12px 0 18px;
+  border: 1px solid #C4C0BA;
+}
+
+.taxonomy-group-head {
+  background: #1C1F25;
+  padding: 8px 15px;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(180,165,140,0.80);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.taxonomy-group-body {
+  padding: 10px 18px;
+  background: var(--bg);
+}
+
+.taxonomy-group-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.taxonomy-group-body ul li {
+  font-size: 0.875rem;
+  color: var(--text);
+  padding: 3px 0 3px 18px;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  margin-bottom: 0;
+  line-height: 1.55;
+}
+
+.taxonomy-group-body ul li:last-child { border-bottom: none; }
+
+.taxonomy-group-body ul li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  opacity: 0.55;
+  top: 5px;
+}
+
+.taxonomy-term-id {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  color: var(--accent);
+  opacity: 0.80;
+  margin-left: 6px;
+  letter-spacing: 0.10em;
+}
+
+/* Conceptual flow diagram */
+.enforcement-flow {
+  margin: 26px 0 10px;
+  padding: 22px 20px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+}
+
+.enforcement-flow-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 18px;
+  opacity: 0.80;
+}
+
+.flow-nodes {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+.flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.flow-node-box {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.78);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 8px 14px;
+  border: 1px solid rgba(122,106,80,0.25);
+  white-space: nowrap;
+}
+
+.flow-node-id {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  color: rgba(122,106,80,0.65);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.flow-arrow {
+  font-family: var(--mono);
+  font-size: 0.80rem;
+  color: rgba(122,106,80,0.45);
+  padding: 0 6px;
+  margin-top: -4px;
+  flex-shrink: 0;
+}
+
+.enforcement-flow-caption {
+  font-family: var(--sans);
+  font-size: 0.70rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 14px;
+  line-height: 1.55;
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Terminology and<br><span class="italic-part">Normative Definitions</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-TND-2026-001 &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">The canonical set of terms and normative definitions governing the framework for deterministic runtime consent enforcement.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-scope">Scope Statement</a>
+      <a class="nav-item" href="#s0">0. Scope of Terminology Control</a>
+      <a class="nav-item sub" href="#s0-1">0.1 Canonical Authority</a>
+      <a class="nav-item sub" href="#s0-2">0.2 Undefined Terms</a>
+      <a class="nav-item sub" href="#s0-3">0.3 Precedence</a>
+      <a class="nav-item" href="#s1">1. Normative Language Conventions</a>
+      <a class="nav-item sub" href="#s1-1">1.1 Semantic Drift Prevention</a>
+      <a class="nav-item" href="#s-taxonomy">Taxonomy of Terms</a>
+      <a class="nav-item" href="#s2">2. Core Conceptual Definitions</a>
+      <a class="nav-item" href="#s3">3. Architectural Component Definitions</a>
+      <a class="nav-item" href="#s4">4. Security and Integrity Terms</a>
+      <a class="nav-item" href="#s5">5. Regulatory and Governance Terms</a>
+      <a class="nav-item" href="#s6">6. Prohibited Interpretations</a>
+      <a class="nav-item" href="#s7">7. Semantic Integrity Requirements</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Non-Redefinition</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Non-Substitution</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Terminological Adherence</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Drift Detection</a>
+      <a class="nav-item sub" href="#s7-5">7.5 Adversarial Resistance</a>
+      <a class="nav-item" href="#s8">8. Change Control of Terminology</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Amendment Process</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Breaking Semantic Change</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Versioning Interaction</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Deprecated Terms</a>
+      <a class="nav-item sub" href="#s8-5">8.5 Governance Charter Alignment</a>
+      <a class="nav-item" href="#s-conclusion">Semantic Authority Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>
+      All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- SCOPE STATEMENT -->
+      <div id="s-scope" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Scope</span>
+          <p>This specification defines the canonical set of terms and normative definitions governing the QODIQA framework for deterministic runtime consent enforcement. All terms defined herein are normative. They override informal, colloquial, or derivative usages wherever such usages conflict with this specification. Any interpretive ambiguity arising within the QODIQA corpus across all constituent documents <strong>SHALL defer to this specification as the authoritative semantic reference.</strong></p>
+          <p>This document introduces no new conceptual scope beyond that already established in the QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0, the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0, the QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0, the QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0, the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0, and the QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0. Its sole function is to bound, fix, and protect the meaning of terms already in use across those documents. <strong>Undefined terms carry no normative standing</strong> within the QODIQA framework.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 0 -->
+      <div id="s0" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 0</span>
+        <h2><a class="anchor-link" href="#s0">#</a>Scope of Terminology Control</h2>
+
+        <p>This specification serves as the canonical semantic authority for the QODIQA framework. It defines the meaning, boundaries, and binding status of all terms used across QODIQA normative documents. No corpus document may introduce, redefine, or substitute a term defined herein without a versioned amendment to this specification processed in accordance with Section 8.</p>
+
+        <p>The scope of this specification is limited to terms directly operative within the domain of deterministic runtime consent enforcement. Terms belonging to general computing, regulatory law, or adjacent technical fields are adopted by reference only where their meaning is unambiguous and their scope does not conflict with definitions stated herein.</p>
+
+        <div class="callout">
+          <p>Terms defined in this specification <strong>override informal usage</strong> in all QODIQA documents, communications, and derivative materials. Where a term appears in a QODIQA document without a normative definition in this specification, that term carries no binding meaning and SHALL NOT be interpreted as introducing a normative requirement.</p>
+        </div>
+
+        <h3 id="s0-1">0.1 Canonical Authority</h3>
+        <p>This document constitutes the sole lexical control instrument for the QODIQA framework. Derivative documents including implementation playbooks, use-case dossiers, and certification frameworks are bound by the definitions contained herein and MAY NOT introduce alternative definitions for the same terms.</p>
+
+        <h3 id="s0-2">0.2 Undefined Terms</h3>
+        <p>A term not defined in this specification has no normative standing within the QODIQA framework. Implementers and certifying bodies SHALL NOT attribute normative meaning to undefined terms. When operational necessity requires a term not yet defined, a formal amendment request SHALL be submitted through the change control process defined in Section 8.</p>
+
+        <h3 id="s0-3">0.3 Precedence</h3>
+        <p>In the event of conflict between a definition in this specification and any language in a derivative QODIQA document, this specification takes precedence. Derivative documents SHALL be updated to align with this specification upon any versioned amendment. Conflict resolution is not discretionary; it is mandatory.</p>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Normative Language Conventions</h2>
+
+        <p>The following terms, when appearing in any QODIQA normative document in uppercase form, SHALL be interpreted strictly as defined below. These conventions follow the model established in RFC 2119 but are restated here with binding force specific to the QODIQA framework. The absence of a normative keyword in a statement does not imply permissiveness; it implies that the statement is informative and carries no binding requirement.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1 — Normative Keyword Definitions</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Binding Status</th>
+                <th>Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SHALL</td>
+                <td class="binding">Mandatory</td>
+                <td>The requirement is unconditionally binding. Non-conformance constitutes a violation.</td>
+              </tr>
+              <tr>
+                <td>MUST</td>
+                <td class="binding">Mandatory</td>
+                <td>Equivalent to SHALL. Both forms carry identical binding force and are interchangeable within this corpus.</td>
+              </tr>
+              <tr>
+                <td>SHALL NOT</td>
+                <td class="binding">Mandatory Prohibition</td>
+                <td>The action or condition is unconditionally prohibited. Any occurrence constitutes a violation.</td>
+              </tr>
+              <tr>
+                <td>MUST NOT</td>
+                <td class="binding">Mandatory Prohibition</td>
+                <td>Equivalent to SHALL NOT. Identical binding force.</td>
+              </tr>
+              <tr>
+                <td>PROHIBITED</td>
+                <td class="binding">Absolute Prohibition</td>
+                <td>Stronger than SHALL NOT. Used where a violation would constitute a fundamental non-conformance that invalidates certification status or audit integrity. Context-independence is assumed.</td>
+              </tr>
+              <tr>
+                <td>MAY</td>
+                <td class="informative">Permissive</td>
+                <td>The action or condition is permitted but not required. Implementers are free to include or omit the described behavior without affecting conformance status.</td>
+              </tr>
+              <tr>
+                <td>SHOULD</td>
+                <td class="informative">Recommended</td>
+                <td>The action or condition is recommended where technically feasible. Deviation from a SHOULD-qualified requirement does not constitute non-conformance but SHALL be documented in conformance disclosures.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <p>Informative content within normative documents is explicitly marked with the prefix <strong>"Informative Note:"</strong> and does not constitute a requirement. Absence of this prefix implies normative status for all definitional and requirement statements.</p>
+        </div>
+
+        <h3 id="s1-1">1.1 Semantic Drift Prevention</h3>
+        <p>Normative keywords SHALL NOT be used in lowercase form within normative documents when the intent is to invoke binding requirements. Use of lowercase "shall," "must," or "must not" in normative sections is treated as informal language and carries no binding force. Document authors are responsible for consistent application of uppercase normative keywords.</p>
+      </div>
+
+      <!-- TAXONOMY OF TERMS -->
+      <div id="s-taxonomy" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Taxonomy</span>
+        <h2><a class="anchor-link" href="#s-taxonomy">#</a>Taxonomy of Terms</h2>
+
+        <p>The terms defined in this specification are classified into six functional categories. This taxonomy is provided to support audit readability, cross-document navigation, and certification scoping. Classification does not alter the normative status or definition of any term; it is a structural aid only.</p>
+
+        <p>Each term appears in exactly one category. Categories are defined by the functional role the term plays within the QODIQA enforcement architecture. Terms that span multiple functional roles are classified by their primary role as operative within enforcement evaluation. This classification is exhaustive for all terms defined within this specification.</p>
+
+        <p>The classification labels used across definition blocks (Foundational, State, Process, Artifact, Architectural, Control) constitute the canonical term type system for this specification.</p>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">Foundational Terms</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Deterministic Runtime Consent Enforcement <span class="taxonomy-term-id">DRCE</span></li>
+              <li>Deterministic System <span class="taxonomy-term-id">DS</span></li>
+              <li>Consent <span class="taxonomy-term-id">C</span></li>
+              <li>Runtime <span class="taxonomy-term-id">RT</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">State Definitions</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Fail-Closed State <span class="taxonomy-term-id">FCS</span></li>
+              <li>Non-Execution State <span class="taxonomy-term-id">NES</span></li>
+              <li>Revocation State <span class="taxonomy-term-id">RS</span></li>
+              <li>Integrity Failure Condition <span class="taxonomy-term-id">IFC</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">Process Definitions</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Consent Validation <span class="taxonomy-term-id">CV</span></li>
+              <li>Enforcement Action <span class="taxonomy-term-id">ENF</span></li>
+              <li>Integrity Verification <span class="taxonomy-term-id">IV</span></li>
+              <li>Tamper Detection <span class="taxonomy-term-id">TD</span></li>
+              <li>Artifact Signing <span class="taxonomy-term-id">AS</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">Artifact Definitions</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Consent Artifact <span class="taxonomy-term-id">CA</span></li>
+              <li>Audit Artifact <span class="taxonomy-term-id">AA</span></li>
+              <li>Immutable Record <span class="taxonomy-term-id">IR</span></li>
+              <li>Append-Only Record <span class="taxonomy-term-id">AOR</span></li>
+              <li>Cryptographic Integrity Anchor <span class="taxonomy-term-id">CIA</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">Architectural Components</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Enforcement Gateway <span class="taxonomy-term-id">EG</span></li>
+              <li>Policy Engine <span class="taxonomy-term-id">PE</span></li>
+              <li>Consent Registry <span class="taxonomy-term-id">CR</span></li>
+              <li>Enforcement Layer <span class="taxonomy-term-id">EL</span></li>
+              <li>Policy Evaluation Module <span class="taxonomy-term-id">PEM</span></li>
+              <li>Registry Interface <span class="taxonomy-term-id">RI</span></li>
+              <li>Conformance Validation Layer <span class="taxonomy-term-id">CVL</span></li>
+              <li>Immutable Log <span class="taxonomy-term-id">IL</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="taxonomy-group">
+          <div class="taxonomy-group-head">Control Constructs</div>
+          <div class="taxonomy-group-body">
+            <ul>
+              <li>Decision Boundary <span class="taxonomy-term-id">DB</span></li>
+              <li>Inference Boundary <span class="taxonomy-term-id">IB</span></li>
+              <li>Blocking Event <span class="taxonomy-term-id">BE</span></li>
+              <li>Execution Authorization <span class="taxonomy-term-id">EA</span></li>
+              <li>Control Surface <span class="taxonomy-term-id">CS</span></li>
+              <li>Trust Boundary <span class="taxonomy-term-id">TB</span></li>
+              <li>Deterministic Evaluation Path <span class="taxonomy-term-id">DEP</span></li>
+              <li>Key Management Boundary <span class="taxonomy-term-id">KMB</span></li>
+              <li>Runtime Invocation <span class="taxonomy-term-id">RVI</span></li>
+              <li>External Dependency <span class="taxonomy-term-id">XD</span></li>
+              <li>Certification Level <span class="taxonomy-term-id">CL</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Core Conceptual Definitions — Foundational Layer</h2>
+
+        <p>The following definitions constitute the foundational semantic layer of the QODIQA framework. All subsequent architectural, security, and governance definitions in this specification depend on the meanings established here. Each definition is single-scope and technically anchored.</p>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Deterministic Runtime Consent Enforcement</span><span class="def-term-id">DRCE</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Foundational</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A system property whereby every AI execution request is evaluated against explicitly declared consent state and applicable policy rules at the moment of invocation, producing a bounded output — allow, deny, or allow with stated restrictions — that is reproducible given identical inputs. The evaluation process introduces no probabilistic inference, no contextual assumption, and no default-to-permit behavior.</p>
+            <div class="def-note">
+              <span class="def-note-label">Explicit Non-Inclusions</span>
+              <p class="def-note-text">This definition does not include: probabilistic inference of enforcement outcomes; contextual assumption of consent from behavioral or usage signals; default-to-permit behavior in the absence of an explicit consent record; model-derived or AI-generated authorization decisions; and post-hoc enforcement applied after execution has occurred.</p>
+            </div>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Deterministic System</span><span class="def-term-id">DS</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Foundational</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A system in which, given a fixed set of inputs and a fixed rule set at a fixed version, the evaluation process always yields the same output with no variance. Determinism within the QODIQA framework applies specifically to the enforcement evaluation path and does not constrain the behavior of AI models or downstream services operating outside that path.</p>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Runtime</span><span class="def-term-id">RT</span></div>
+          <div class="def-body">
+            <span class="def-type-label">State</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The temporal and computational interval during which an AI execution request is processed, from the point of request submission to the point at which an authorized or denied execution outcome is produced. All consent evaluation and enforcement operations within the QODIQA framework occur within this interval.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Consent</span><span class="def-term-id">C</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">An explicit, machine-readable authorization record granted by an identified principal, scoped to a defined action type, bounded by a declared purpose, constrained by temporal validity limits, and subject to revocation. Consent within the QODIQA framework is not inferred, assumed, or derived from behavioral signals. It exists as a discrete, addressable record in the Consent Registry.</p>
+            <div class="def-note">
+              <span class="def-note-label">Informative Note</span>
+              <p class="def-note-text">This definition deliberately excludes implied consent, browsewrap consent, and terms-of-service acceptance. Those forms carry no normative standing within QODIQA enforcement logic.</p>
+            </div>
+            <div class="def-note">
+              <span class="def-note-label">Explicit Non-Inclusions</span>
+              <p class="def-note-text">The following do not constitute Consent within this specification: inferred consent derived from behavioral patterns or usage history; assumed consent based on prior interactions; contextual consent derived from conversational or environmental signals; consent implied by silence or inaction; and any authorization not recorded as a discrete Consent Artifact in the Consent Registry.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Consent Artifact</span><span class="def-term-id">CA</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A cryptographically signed, immutable record representing a discrete consent state at a specific point in time. A Consent Artifact contains, at minimum: the identity of the consenting principal, the scope of the consented action, the declared purpose, the temporal validity window, and an integrity anchor. Consent Artifacts are the unit of consent evaluated by the Policy Engine.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Consent Registry</span><span class="def-term-id">CR</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The authoritative, append-only data store in which all Consent Artifacts are recorded, indexed, and made retrievable for enforcement evaluation. The Consent Registry is the sole source of consent truth within the QODIQA framework. Consent not recorded in the Consent Registry does not exist for enforcement purposes.</p>
+            <span class="def-xref">(Reference: QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Enforcement Gateway</span><span class="def-term-id">EG</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The system component through which all AI execution requests must pass before reaching the execution layer. The Enforcement Gateway is responsible for receiving execution requests, triggering consent validation, invoking policy evaluation, and returning a deterministic enforcement decision. No execution request may bypass the Enforcement Gateway.</p>
+            <span class="def-xref">(Reference: QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Decision Boundary</span><span class="def-term-id">DB</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The complete set of conditions, constraints, and input parameters that fully determine the output of a single enforcement evaluation. A Decision Boundary is closed: no inputs outside its declared scope affect the evaluation outcome. Extension of the Decision Boundary requires a versioned policy amendment.</p>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Policy Engine</span><span class="def-term-id">PE</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The component responsible for evaluating declared execution intent against applicable policy rules and resolved consent state, producing a deterministic enforcement decision. The Policy Engine operates on explicitly declared inputs only. It does not access raw data, perform semantic interpretation of content, or apply probabilistic risk scoring.</p>
+            <div class="def-note">
+              <span class="def-note-label">Explicit Non-Inclusions</span>
+              <p class="def-note-text">The Policy Engine does not perform: semantic analysis or natural language interpretation of content; probabilistic risk scoring or threat modeling; contextual inference from behavioral or environmental signals; model-derived reasoning about intent; and any function that introduces variance into enforcement output for identical inputs.</p>
+            </div>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Blocking Event</span><span class="def-term-id">BE</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A condition arising during enforcement evaluation that causes the Policy Engine to halt processing and return a deny decision. Blocking Events include, without limitation: absent consent, expired consent, consent scope mismatch, policy rule violation, and integrity verification failure. All Blocking Events are recorded as Audit Artifacts.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Fail-Closed State</span><span class="def-term-id">FCS</span></div>
+          <div class="def-body">
+            <span class="def-type-label">State</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The system condition in which, when required inputs for enforcement evaluation are absent, incomplete, or unresolvable, the default output is a deny decision. No execution proceeds in the absence of a complete and valid enforcement evaluation. Fail-Closed State is a mandatory property of all QODIQA-conformant enforcement implementations.</p>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Non-Execution State</span><span class="def-term-id">NES</span></div>
+          <div class="def-body">
+            <span class="def-type-label">State</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The state in which an AI execution request has been received by the Enforcement Gateway but has not been authorized. A system in Non-Execution State has neither permitted nor committed to any downstream action. The Non-Execution State is the initial and default state for all requests entering the Enforcement Gateway.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Execution Authorization</span><span class="def-term-id">EA</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A deterministic, time-stamped enforcement decision produced by the Policy Engine that permits a specified execution request to proceed under stated conditions. Execution Authorization is not granted by default and is not presumed by the absence of a deny decision. It must be explicitly produced as an output of a completed enforcement evaluation.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Inference Boundary</span><span class="def-term-id">IB</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The declared limit of the scope of execution authorized for a given AI invocation. The Inference Boundary constrains what the AI system may produce, access, or affect as a result of an authorized execution. Outputs or effects falling outside the declared Inference Boundary constitute a boundary violation and SHALL be treated as a Blocking Event in subsequent evaluations.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Consent Validation</span><span class="def-term-id">CV</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Process</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The process by which the enforcement system verifies that a Consent Artifact exists in the Consent Registry, is cryptographically intact, is temporally valid at the moment of evaluation, and is scoped to cover the action declared in the execution request. Consent Validation precedes Policy Evaluation in all enforcement flows.</p>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Enforcement Action</span><span class="def-term-id">ENF</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Process</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">An operation performed by the Enforcement Gateway as a result of a completed enforcement evaluation. Enforcement Actions include: granting Execution Authorization, returning a deny decision, returning a conditional authorization with stated restrictions, and recording an Audit Artifact. An Enforcement Action is distinct from and independent of any downstream AI operation.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Audit Artifact</span><span class="def-term-id">AA</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A tamper-evident, cryptographically anchored record generated at the completion of every enforcement evaluation, capturing the complete set of inputs, the resolved consent state, the applicable policy version, and the resulting Enforcement Action. Audit Artifacts are appended to the Immutable Log and are the primary mechanism through which enforcement decisions are made verifiable and reproducible.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0; QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Immutable Record</span><span class="def-term-id">IR</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A data record whose content, once written, cannot be altered, deleted, or overridden by any system operation or administrative action. Within the QODIQA framework, Immutable Records include Consent Artifacts, Audit Artifacts, and policy version snapshots. Immutability is enforced through append-only storage architecture and cryptographic integrity anchoring.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Cryptographic Integrity Anchor</span><span class="def-term-id">CIA</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A cryptographic value — specifically a digital signature or a hash chain element — bound to a specific record and used to verify that the record's content has not been altered since its creation. Cryptographic Integrity Anchors are required for all Consent Artifacts and Audit Artifacts within QODIQA-conformant implementations.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <!-- CONCEPTUAL FLOW DIAGRAM -->
+        <div class="enforcement-flow">
+          <span class="enforcement-flow-label">Figure 1 — Enforcement Evaluation Flow</span>
+          <div class="flow-nodes">
+            <div class="flow-node">
+              <div class="flow-node-box">Consent</div>
+              <span class="flow-node-id">C</span>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node">
+              <div class="flow-node-box">Consent Validation</div>
+              <span class="flow-node-id">CV</span>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node">
+              <div class="flow-node-box">Policy Evaluation</div>
+              <span class="flow-node-id">PE</span>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node">
+              <div class="flow-node-box">Enforcement Decision</div>
+              <span class="flow-node-id">ENF</span>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node">
+              <div class="flow-node-box">Audit Artifact</div>
+              <span class="flow-node-id">AA</span>
+            </div>
+          </div>
+          <p class="enforcement-flow-caption">All enforcement evaluations traverse this sequence in full. No step is optional under normal operating conditions. Each node corresponds to a term defined in this specification.</p>
+          <p class="enforcement-flow-caption" style="margin-top:8px;opacity:0.80;">This flow defines the normative sequence of enforcement evaluation but does not prescribe implementation topology.</p>
+        </div>
+
+        <!-- TERM DEPENDENCY MAPPING TABLE -->
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2 — Term Dependency Relationships</span>
+          <table style="table-layout:fixed;">
+            <thead>
+              <tr>
+                <th style="text-align:left;width:34%;">Term</th>
+                <th style="text-align:left;width:44%;">Depends On</th>
+                <th style="text-align:left;width:22%;">Dependency Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;">Deterministic Runtime Consent Enforcement (DRCE)</td>
+                <td style="text-align:left;">Consent (C), Policy Engine (PE), Enforcement Gateway (EG)</td>
+                <td style="text-align:left;">Structural</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Consent (C)</td>
+                <td style="text-align:left;">Consent Registry (CR)</td>
+                <td style="text-align:left;">Structural</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Consent Artifact (CA)</td>
+                <td style="text-align:left;">Consent (C), Cryptographic Integrity Anchor (CIA)</td>
+                <td style="text-align:left;">Input / Structural</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Consent Validation (CV)</td>
+                <td style="text-align:left;">Consent Artifact (CA), Consent Registry (CR)</td>
+                <td style="text-align:left;">Input</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Policy Engine (PE)</td>
+                <td style="text-align:left;">Consent Validation (CV), Decision Boundary (DB)</td>
+                <td style="text-align:left;">Input / Constraint</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Decision Boundary (DB)</td>
+                <td style="text-align:left;">Policy Engine (PE)</td>
+                <td style="text-align:left;">Constraint</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Enforcement Gateway (EG)</td>
+                <td style="text-align:left;">Policy Engine (PE), Consent Validation (CV)</td>
+                <td style="text-align:left;">Structural</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Enforcement Action (ENF)</td>
+                <td style="text-align:left;">Enforcement Gateway (EG), Policy Engine (PE)</td>
+                <td style="text-align:left;">Output</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Audit Artifact (AA)</td>
+                <td style="text-align:left;">Enforcement Action (ENF), Cryptographic Integrity Anchor (CIA)</td>
+                <td style="text-align:left;">Output / Structural</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Architectural Component Definitions</h2>
+
+        <p>The following definitions specify the named components, layers, and boundaries referenced in QODIQA architectural documents. Each definition bounds the functional scope of the named component within the enforcement stack.</p>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Enforcement Layer</span><span class="def-term-id">EL</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The logical tier of the QODIQA reference architecture comprising the Enforcement Gateway, Policy Engine, and Consent Validation components. The Enforcement Layer is the sole site of enforcement decision-making. No other architectural layer produces or modifies enforcement decisions.</p>
+            <span class="def-xref">(Reference: QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Registry Interface</span><span class="def-term-id">RI</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The defined programmatic interface through which the Enforcement Layer queries the Consent Registry. The Registry Interface is the exclusive access path to Consent Artifact data for enforcement evaluation purposes. Direct registry access by components outside the Enforcement Layer is PROHIBITED.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Policy Evaluation Module</span><span class="def-term-id">PEM</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The bounded component within the Policy Engine responsible for applying a specific versioned policy rule set against resolved consent state and declared execution intent. The Policy Evaluation Module receives only the inputs required for evaluation and returns only a binary or ternary enforcement decision. It retains no state between evaluations.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Conformance Validation Layer</span><span class="def-term-id">CVL</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The system or procedural layer responsible for verifying that an implementation satisfies the requirements of the QODIQA Conformance Test Suite and Certification Framework. The Conformance Validation Layer operates independently of the Enforcement Layer and does not participate in runtime enforcement decisions.</p>
+            <span class="def-xref">(Reference: QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Certification Level</span><span class="def-term-id">CL</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A defined tier of conformance achievement, as specified in the QODIQA Certification Framework, indicating the scope of control points satisfied by an implementation. Certification Levels are ordinal, cumulative, and verifiable. Attainment of a higher Certification Level requires satisfaction of all requirements at lower levels plus additional level-specific requirements.</p>
+            <span class="def-xref">(Reference: QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Deterministic Evaluation Path</span><span class="def-term-id">DEP</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The complete sequence of processing steps — from request receipt at the Enforcement Gateway through consent validation, policy evaluation, and Audit Artifact generation — that produces an enforcement decision. The Deterministic Evaluation Path is fully defined, has no optional branches under normal operating conditions, and must be traversed in its entirety for each request.</p>
+            <span class="def-xref">(Reference: QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Control Surface</span><span class="def-term-id">CS</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The complete set of defined control points at which enforcement decisions are made or enforcement conditions are checked within a QODIQA implementation. The Control Surface is enumerated in the QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0 and constitutes the measurable scope of enforcement coverage.</p>
+            <span class="def-xref">(Reference: QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Trust Boundary</span><span class="def-term-id">TB</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A declared demarcation between system components or operational domains across which data, requests, or credentials must be explicitly validated before being accepted as input to enforcement evaluation. Trust is not transitive across Trust Boundaries. Each boundary crossing requires independent verification.</p>
+            <span class="def-xref">(Reference: QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">External Dependency</span><span class="def-term-id">XD</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">Any system, service, or data source not contained within the QODIQA Enforcement Layer upon which the enforcement evaluation process relies. External Dependencies are subject to availability failure and MUST be treated as potential sources of Blocking Events. A QODIQA-conformant implementation documents all External Dependencies and specifies failure behavior for each.</p>
+            <span class="def-xref">(Reference: QODIQA — Residual Risk and Assumption Disclosure Annex — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Runtime Invocation</span><span class="def-term-id">RVI</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A single, discrete request submitted to the Enforcement Gateway for evaluation, associated with one declared intent, one identified principal, and one target action scope. Each Runtime Invocation is evaluated independently. The outcome of a prior Runtime Invocation does not affect the evaluation of a subsequent one, except where applicable policy rules explicitly reference prior enforcement history.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Security and Integrity Terms</h2>
+
+        <p>The following definitions specify terms governing the cryptographic, integrity, and security properties required of QODIQA-conformant implementations. These definitions are aligned with and bounded by the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0.</p>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Cryptographic Binding</span><span class="def-term-id">CB</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The association between a record — such as a Consent Artifact or Audit Artifact — and a cryptographic value such that any modification to the record's content renders the cryptographic value invalid. Cryptographic Binding is achieved through digital signature or keyed hash mechanisms as specified in the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Integrity Verification</span><span class="def-term-id">IV</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Process</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The process of confirming that a record's content matches its Cryptographic Binding, establishing that the record has not been altered since its creation. Integrity Verification is a mandatory step in Consent Validation and MUST be performed for every Consent Artifact retrieved from the Consent Registry during an enforcement evaluation.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Tamper Detection</span><span class="def-term-id">TD</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Process</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The capability of a system component to identify that a record's content does not match its Cryptographic Binding. Detection of tamper constitutes an Integrity Failure Condition and SHALL trigger a Blocking Event. Tamper Detection is distinct from tamper prevention; it is a detection and response property, not a prevention property.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Artifact Signing</span><span class="def-term-id">AS</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Process</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The cryptographic operation by which a Cryptographic Integrity Anchor is computed and attached to a record at the time of its creation. Artifact Signing uses private key operations as specified in the QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0 and is performed exactly once per record, at creation time. Re-signing of existing records is PROHIBITED.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Key Management Boundary</span><span class="def-term-id">KMB</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Control</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The defined operational and architectural perimeter within which cryptographic key material used for Artifact Signing is generated, stored, and used. Key material SHALL NOT cross the Key Management Boundary in plaintext form. Access to key material is restricted to the signing operation and is not available to enforcement evaluation logic.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Immutable Log</span><span class="def-term-id">IL</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Architectural</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The append-only, cryptographically chained sequence of Audit Artifacts produced by the Enforcement Layer. Entries in the Immutable Log cannot be altered or deleted after being written. The Immutable Log is the primary evidence source for enforcement audits and reproducibility verification.</p>
+            <span class="def-xref">(Reference: QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0; QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Append-Only Record</span><span class="def-term-id">AOR</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Artifact</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A record for which the only permitted write operation is creation. No update, deletion, or modification operation is permitted after creation. All Consent Artifacts and Audit Artifacts within the QODIQA framework are Append-Only Records. Revocation of a Consent Artifact is achieved through the creation of a new Revocation State record, not through modification of the original.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Revocation State</span><span class="def-term-id">RS</span></div>
+          <div class="def-body">
+            <span class="def-type-label">State</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A record in the Consent Registry asserting that a specific Consent Artifact is no longer valid as of a declared timestamp. A Revocation State record does not alter the original Consent Artifact. Consent Validation MUST check for the existence of a Revocation State record for any Consent Artifact retrieved during an enforcement evaluation. A revoked Consent Artifact SHALL NOT authorize execution.</p>
+            <span class="def-xref">(Reference: QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Integrity Failure Condition</span><span class="def-term-id">IFC</span></div>
+          <div class="def-body">
+            <span class="def-type-label">State</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A system state in which the result of Integrity Verification for a record is negative — indicating that the record's content does not match its Cryptographic Binding. An Integrity Failure Condition is an immediate Blocking Event. The affected record SHALL NOT be used as input to enforcement evaluation. The condition SHALL be recorded in the Immutable Log.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Regulatory and Governance Terms</h2>
+
+        <p>The following definitions specify terms used in the context of conformance assessment, certification, regulatory alignment, and document governance within the QODIQA framework. A critical distinction is maintained between conformance, which is a technical property, and compliance, which is a legal or regulatory property.</p>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Conformance</span><span class="def-term-id">CON</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The verifiable state of an implementation in which all mandatory requirements of the applicable QODIQA specification set — as assessed through the Conformance Test Suite — are satisfied. Conformance is a technical determination. It does not imply, guarantee, or substitute for regulatory compliance with any external legal framework.</p>
+            <span class="def-xref">(Reference: QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Certification</span><span class="def-term-id">CERT</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The formal recognition issued by an authorized certifying body upon verified attainment of a specified Certification Level. Certification is based on documented evidence of Conformance and does not extend beyond the scope, version, and configuration of the implementation assessed. Certification SHALL NOT be claimed for configurations, versions, or deployment contexts not covered by the assessment.</p>
+            <span class="def-xref">(Reference: QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Compliance</span><span class="def-term-id">COMP</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The state of an organization or system in which applicable legal, regulatory, or contractual obligations are satisfied. Compliance is a legal determination, not a technical one. QODIQA Conformance and Certification are evidence inputs that MAY be relevant to a compliance determination but do not constitute compliance with any regulatory framework. Organizations remain solely responsible for their own compliance assessments.</p>
+            <div class="def-note">
+              <span class="def-note-label">Informative Note</span>
+              <p class="def-note-text">The distinction between Conformance and Compliance is intentional and significant. QODIQA specifications assert technical properties only. Claims of regulatory compliance — with GDPR, the EU AI Act, NIST AI RMF, or any other framework — must be made by qualified legal and compliance professionals, not derived from QODIQA conformance status alone.</p>
+            </div>
+            <span class="def-xref">(Reference: QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement — Version 1.0; QODIQA — Positioning and Scope Limitation Statement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Non-Coverage Disclosure</span><span class="def-term-id">NCD</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A formal statement accompanying a conformance or certification claim identifying the specific control points, domains, or requirements that fall outside the scope of the assessed implementation. Non-Coverage Disclosures are mandatory for partial-scope implementations. Their absence is treated as a claim of full-scope coverage.</p>
+            <span class="def-xref">(Reference: QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Scope Limitation</span><span class="def-term-id">SL</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A declared boundary on the applicability of a QODIQA specification, certification claim, or conformance assessment. Scope Limitations identify the deployment contexts, data categories, jurisdictions, or operational conditions to which an assessed claim applies. Claims made outside a declared Scope Limitation are unverified.</p>
+            <span class="def-xref">(Reference: QODIQA — Positioning and Scope Limitation Statement — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Amendment</span><span class="def-term-id">AMD</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A versioned modification to a QODIQA specification document, processed through the change control procedure defined in Section 8. An Amendment that alters a normative definition in this specification constitutes a new version of this document. Amendments are recorded as Immutable Records and are appended to the document revision history.</p>
+            <span class="def-xref">(Reference: QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Canonical Version</span><span class="def-term-id">CV</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The current, authoritatively published version of a QODIQA specification document as recognized by the QODIQA Governance Charter. The Canonical Version is the only version against which conformance assessments and certification claims are valid. Prior versions are superseded upon publication of a Canonical Version but remain accessible as archived references.</p>
+            <span class="def-xref">(Reference: QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0)</span>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Breaking Change</span><span class="def-term-id">BC</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">A modification to a QODIQA specification that alters the meaning, scope, or binding status of a normative requirement such that implementations previously assessed as conformant may no longer satisfy the amended requirement without modification. Breaking Changes require a major version increment and mandatory re-assessment of affected certified implementations.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Normative Revision</span><span class="def-term-id">NR</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">Any Amendment to a QODIQA specification document that alters, adds, or removes normative requirements. Normative Revisions are distinguished from editorial revisions, which correct typographical or formatting errors without changing meaning. Normative Revisions require a version increment according to the versioning scheme defined in Section 8.</p>
+          </div>
+        </div>
+
+        <div class="def-block">
+          <div class="def-header"><span class="def-term">Interpretive Drift</span><span class="def-term-id">ID</span></div>
+          <div class="def-body">
+            <span class="def-type-label">Governance</span>
+            <span class="def-label">Normative Definition</span>
+            <p class="def-text">The condition in which the practical application of a term diverges from its definition in this specification, whether through informal restatement, paraphrase, omission, or contextual substitution. Interpretive Drift constitutes semantic non-conformance. Its detection obligates the responsible party to align usage with this specification through documented correction.</p>
+            <span class="def-xref">(Reference: Section 7 — Semantic Integrity Requirements)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Prohibited Interpretations</h2>
+
+        <p>This section enumerates interpretations of QODIQA terms that are explicitly prohibited. These prohibitions are necessary because the terms defined in this specification are used in adjacent domains — AI governance, regulatory compliance, cryptography, and legal practice — where they carry meanings that differ materially from their definitions within the QODIQA framework. Adopting such adjacent meanings within QODIQA normative contexts constitutes Interpretive Drift and SHALL be treated as a non-conformance condition.</p>
+
+        <div class="prohibited-banner">
+          <span class="prohibited-banner-label">Prohibited Interpretation Registry · Normative</span>
+        </div>
+
+        <ul class="prohibited-list">
+          <li>
+            <span class="pi-term">Deterministic</span>
+            <span class="pi-desc">SHALL NOT be interpreted as referring to probabilistic optimization, best-effort approximation, or any process in which the same inputs may produce varying outputs. Within QODIQA, determinism is an unconditional property of enforcement evaluation, not a performance characteristic.</span>
+          </li>
+          <li>
+            <span class="pi-term">Enforcement</span>
+            <span class="pi-desc">SHALL NOT be interpreted as advisory notification, logging without action, retrospective flagging, or any process that permits execution to proceed without a completed enforcement evaluation. Enforcement is a gate, not an observer.</span>
+          </li>
+          <li>
+            <span class="pi-term">Consent</span>
+            <span class="pi-desc">SHALL NOT be interpreted as inferred consent, assumed consent, behavioral consent, contextual consent derived from usage patterns, or any form of consent not recorded as an explicit Consent Artifact in the Consent Registry. Consent exists as a discrete record or it does not exist.</span>
+          </li>
+          <li>
+            <span class="pi-term">Conformance</span>
+            <span class="pi-desc">SHALL NOT be interpreted as regulatory compliance, legal certification, a guarantee of lawful operation under any jurisdiction, or equivalence to certification under any external standard. Conformance is a bounded technical determination scoped to the QODIQA specification set.</span>
+          </li>
+          <li>
+            <span class="pi-term">Fail-Closed</span>
+            <span class="pi-desc">SHALL NOT be interpreted as a recoverable error state, a degraded-mode fallback, or any condition in which execution may proceed with reduced enforcement. Fail-Closed is an unconditional deny in the absence of a complete, valid enforcement evaluation.</span>
+          </li>
+          <li>
+            <span class="pi-term">Immutable</span>
+            <span class="pi-desc">SHALL NOT be interpreted as difficult to modify, access-controlled, or administratively restricted. Immutability is a structural property enforced architecturally. A record that can be modified under any administrative or emergency condition is not Immutable within this specification.</span>
+          </li>
+          <li>
+            <span class="pi-term">Policy Engine</span>
+            <span class="pi-desc">SHALL NOT be interpreted as a system capable of semantic analysis, risk scoring, natural language policy interpretation, or probabilistic judgment. The Policy Engine evaluates declared inputs against explicit rules. It does not reason.</span>
+          </li>
+          <li>
+            <span class="pi-term">Certification Level</span>
+            <span class="pi-desc">SHALL NOT be interpreted as a measure of security strength, data protection adequacy, or readiness for any specific regulatory context. Certification Levels measure scope of coverage against QODIQA control points exclusively.</span>
+          </li>
+          <li>
+            <span class="pi-term">Audit Artifact</span>
+            <span class="pi-desc">SHALL NOT be interpreted as a log entry, a notification record, or a monitoring event. An Audit Artifact is a structured, cryptographically anchored enforcement record that enables independent reproduction of an enforcement decision. Unstructured log entries do not satisfy this definition.</span>
+          </li>
+          <li>
+            <span class="pi-term">Trust Boundary</span>
+            <span class="pi-desc">SHALL NOT be interpreted as a firewall perimeter, a network security zone, or a general access control boundary. Within QODIQA, Trust Boundaries govern the conditions under which data and requests are accepted as valid inputs to enforcement evaluation.</span>
+          </li>
+        </ul>
+
+        <div class="footnotes">
+          <div class="fn-item"><span class="fn-marker">1</span>This list is not exhaustive. Additional prohibited interpretations MAY be added through Amendment. The absence of a term from this list does not imply that its informal usage is permitted; all terms defined in this specification are subject to the semantic control requirements of Section 7.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Semantic Integrity Requirements</h2>
+
+        <p>This section establishes the requirements that govern how terms defined in this specification are used across the QODIQA corpus. These requirements elevate this document from a reference glossary to an active enforcement instrument. Failure to comply with the requirements in this section constitutes semantic non-conformance.</p>
+
+        <h3 id="s7-1">7.1 Non-Redefinition Requirement</h3>
+        <p>Terms defined in this specification SHALL NOT be redefined, re-scoped, or assigned alternative meanings in any derivative QODIQA document, including but not limited to implementation guides, use-case dossiers, training materials, or marketing communications. Any document that requires a different meaning for a defined term must introduce a new term rather than reusing a defined one.</p>
+
+        <h3 id="s7-2">7.2 Non-Substitution Requirement</h3>
+        <p>Alternative terminology SHALL NOT substitute for canonical definitions within normative QODIQA documents. For example, a document MUST NOT use "authorization record" to mean Consent Artifact, or "decision log" to mean Audit Artifact, unless those alternative terms are explicitly cross-referenced to the canonical definition in this specification and that cross-reference is normatively declared.</p>
+
+        <div class="callout">
+          <p>Semantic drift — whether by omission, paraphrase, or contextual substitution — <strong>constitutes non-conformance</strong>. Certification bodies SHALL treat documented instances of semantic drift as findings requiring remediation before a conformance assessment can be closed.</p>
+        </div>
+
+        <h3 id="s7-3">7.3 Terminological Adherence as Certification Condition</h3>
+        <p>Certification at any level under the QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0 requires that all normative documentation produced by the implementing organization uses terms defined in this specification in accordance with their definitions herein. Terminological adherence is a certification condition, not merely a stylistic preference. Certification bodies SHALL verify terminological adherence as part of documentation review.</p>
+
+        <h3 id="s7-4">7.4 Semantic Drift Detection and Remediation</h3>
+        <p>Where semantic drift is detected in a QODIQA corpus document — whether through internal review, external assessment, or certification audit — the responsible document owner SHALL initiate a documented correction process within thirty days of detection. The correction process SHALL produce either an amendment to the affected document or, where the affected usage was valid but required a new term, an Amendment request to this specification processed under Section 8.</p>
+
+        <h3 id="s7-5">7.5 Adversarial Interpretive Resistance</h3>
+        <p>Definitions in this specification are drafted to withstand adversarial interpretive analysis — that is, readings that extract permissions or narrow obligations by exploiting ambiguity, silence, or term boundaries. Where an adversarial reading of a definition is identified, it SHALL be addressed either by Amendment to the affected definition or by addition to the Prohibited Interpretations registry in Section 6.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Change Control of Terminology</h2>
+
+        <p>This section defines the processes and constraints governing modifications to the terms and definitions in this specification. Terminology is a normative asset. Changes to it affect the semantic foundation of the entire QODIQA corpus. Accordingly, change control for this document is stricter than for operational or architectural specifications.</p>
+
+        <h3 id="s8-1">8.1 Amendment Process</h3>
+        <p>An Amendment to this specification is initiated through a formal Amendment Request submitted to the QODIQA Governance Charter authority. The Amendment Request SHALL identify the term to be added, modified, or deprecated; the proposed new or revised definition; the rationale; and the impact on conformance assessments and certification claims that reference the affected term. All Amendment Requests are tracked and resolved before publication of an amended version.</p>
+
+        <h3 id="s8-2">8.2 Breaking Semantic Change</h3>
+        <p>A change to a definition constitutes a Breaking Semantic Change if it narrows or expands the scope of a term such that implementations or documents previously conformant under the prior definition may no longer be conformant under the new one, or vice versa. Breaking Semantic Changes require a major version increment of this specification, mandatory notification to all current certificate holders, and a defined re-assessment window not to exceed twelve months from publication.</p>
+
+        <h3 id="s8-3">8.3 Versioning Interaction</h3>
+        <p>This specification uses a two-part version identifier: major.minor. A major version increment is triggered by any Breaking Semantic Change. A minor version increment is triggered by the addition of new terms, clarifying amendments that do not change scope, or additions to the Prohibited Interpretations registry. Editorial amendments that correct typographical errors without changing meaning are published as errata and do not trigger version increments.</p>
+
+        <div class="callout">
+          <p>Conformance assessments and certification claims are valid only against a <strong>specified version</strong> of this specification. Claims referencing "QODIQA Terminology" without a version identifier are considered unverifiable and SHALL NOT be accepted by certifying bodies.</p>
+        </div>
+
+        <h3 id="s8-4">8.4 Deprecated Terms</h3>
+        <p>A term may be deprecated when it is superseded by a new term with a more precise definition or when its use domain has been restructured. A deprecated term retains its definition in this specification, marked with a deprecation notice identifying the superseding term and the version in which deprecation took effect. Deprecated terms SHALL NOT be used in new QODIQA normative documents produced after the deprecation date. Existing documents using deprecated terms are not required to be updated but SHALL include a conformance note referencing the superseding term.</p>
+
+        <h3 id="s8-5">8.5 Governance Charter Alignment</h3>
+        <p>All change control processes defined in this section operate under and are constrained by the QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0. Where this section and the Governance Charter conflict, the Governance Charter takes precedence. Changes to the Governance Charter that affect terminology change control processes require a corresponding Amendment to this specification to maintain alignment.</p>
+      </div>
+
+      <!-- CONCLUSION -->
+      <div id="s-conclusion" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Conclusion</span>
+        <h2><a class="anchor-link" href="#s-conclusion">#</a>Semantic Authority Statement</h2>
+
+        <p>This specification establishes the terminological foundation upon which the enforceability of the entire QODIQA framework depends. The definitions contained herein are not descriptions of intent; they are bounded, operational definitions with direct consequences for conformance assessment, certification validity, and the defensibility of enforcement claims.</p>
+
+        <div class="callout">
+          <p>Any QODIQA corpus document, certification claim, or conformance assertion that uses terms defined herein in a manner inconsistent with this specification is semantically non-conformant. <strong>Semantic non-conformance weakens certification defensibility and SHALL be treated as a remediable finding.</strong></p>
+        </div>
+
+        <p>The Prohibited Interpretations in Section 6 and the Semantic Integrity Requirements in Section 7 exist because the domain in which QODIQA operates is subject to motivated misreading — whether through regulatory minimization, competitive reframing, or inadvertent drift. This specification eliminates the lexical surface area that such readings require.</p>
+
+        <p>Implementers, certifying bodies, regulatory reviewers, and derivative document authors are bound by the definitions in this specification as of the version stated on the cover. Version-specific conformance is not optional. It is a prerequisite for any valid claim against the QODIQA framework.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Classification</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Canonical Version of the QODIQA Terminology and Normative Definitions Specification, Version 1.0. It is published under the authority of the QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0 and is effective upon publication. It is issued as a Normative Specification and constitutes the sole lexical control instrument for the QODIQA framework.</p>
+
+          <p>This document is intended for the following audiences:</p>
+
+          <ul class="audience-list">
+            <li>QODIQA corpus document authors and maintainers</li>
+            <li>Conformance assessment and certification bodies</li>
+            <li>Legal and regulatory reviewers conducting QODIQA-related assessments</li>
+            <li>System integrators implementing QODIQA-conformant architectures</li>
+            <li>Standards bodies and interoperability working groups referencing QODIQA</li>
+          </ul>
+
+          <p>This document is classified as a Public Release and MAY be distributed without restriction. Derivative documents that paraphrase, excerpt, or reference definitions from this specification SHALL identify the source version from which definitions are drawn.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper — Version 1.0</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement — Version 1.0</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus — Version 1.0</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:22px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-TND-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Terminology and Normative Definitions</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Canonical Lexical Control Instrument for the QODIQA Framework</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Normative Specification</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative — Canonical Lexical Reference</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Terminology and Normative Definitions</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-TND-2026-001</p>
+      <p>Normative Specification</p>
+      <p>Status: Public Release</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>All definitions in this specification are normative. This document constitutes the sole lexical control instrument for the QODIQA framework. Published under the QODIQA — Public Specification License — Version 1.0.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-TND-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-scope','s0','s0-1','s0-2','s0-3',
+    's1','s1-1',
+    's-taxonomy',
+    's2','s3','s4','s5','s6',
+    's7','s7-1','s7-2','s7-3','s7-4','s7-5',
+    's8','s8-1','s8-2','s8-3','s8-4','s8-5',
+    's-conclusion','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  /* ---- Position-based ScrollSpy (reliable across all section sizes) ---- */
+  function positionScrollSpy() {
+    const scrollY = window.scrollY;
+    const viewportH = window.innerHeight;
+    const triggerLine = scrollY + viewportH * 0.28;
+
+    let bestId = null;
+    let bestTop = -Infinity;
+
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top + scrollY;
+      if (top <= triggerLine && top > bestTop) {
+        bestTop = top;
+        bestId = sec.id;
+      }
+    });
+
+    if (bestId) setActive(bestId);
+  }
+
+  /* Run on scroll and on load */
+  window.addEventListener('scroll', positionScrollSpy, { passive: true });
+  positionScrollSpy();
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+          /* Update active state immediately on click */
+          setActive(href.slice(1));
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle && sidebar && overlay) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Audit Readiness and Evidence Pack · v1.0</title>
+<meta name="description" content="QODIQA Audit Readiness and Evidence Pack v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Audit Readiness and Evidence Pack">
+<meta property="og:description" content="Structured audit readiness documentation and evidence pack for QODIQA deterministic runtime consent enforcement in artificial intelligence systems.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+.diagram-wrap {
+  margin: 24px 0 24px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Audit Readiness and<br><span class="italic-part">Evidence Pack</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Evidence Pack &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Structured audit evidence, compliance mapping, and verification artifacts for the consent enforcement standard corpus.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Purpose and Scope</a>
+      <a class="nav-item" href="#s2">2. Audit Readiness Framework</a>
+      <a class="nav-item sub" href="#s2-1">2.1 Readiness Dimensions</a>
+      <a class="nav-item sub" href="#s2-2">2.2 Evidence Categories</a>
+      <a class="nav-item sub" href="#s2-3">2.3 Readiness Maturity Levels</a>
+      <a class="nav-item" href="#s3">3. Evidence Architecture</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Decision Artifact Evidence</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Consent State Evidence</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Policy Version Evidence</a>
+      <a class="nav-item sub" href="#s3-4">3.4 Replay Verification Evidence</a>
+      <a class="nav-item" href="#s4">4. Regulatory Compliance Mapping</a>
+      <a class="nav-item sub" href="#s4-1">4.1 GDPR Mapping</a>
+      <a class="nav-item sub" href="#s4-2">4.2 EU AI Act Mapping</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Sectoral Obligations</a>
+      <a class="nav-item" href="#s5">5. Audit Trail Requirements</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Structural Requirements</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Retention Policy</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Integrity Verification</a>
+      <a class="nav-item" href="#s6">6. Verification Procedures</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Pre-Audit Checklist</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Decision Replay Protocol</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Policy Immutability Check</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Consent Coverage Analysis</a>
+      <a class="nav-item" href="#s7">7. Evidence Pack Structure</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Required Documents</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Artifact Inventory</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Submission Format</a>
+      <a class="nav-item" href="#s8">8. Operational Readiness</a>
+      <a class="nav-item sub" href="#s8-1">8.1 Continuous Readiness</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Incident Evidence</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Denial Records</a>
+      <a class="nav-item" href="#s9">9. Limitations and Scope</a>
+      <a class="nav-item" href="#s10">10. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document constitutes the Audit Readiness and Evidence Pack for the QODIQA deterministic runtime consent enforcement framework. It defines the evidence architecture, compliance mapping, audit trail requirements, and verification procedures that enable organizations deploying QODIQA to demonstrate lawful and technically defensible AI operation to regulators, auditors, and institutional counterparties. Unlike documentation-centric compliance models, QODIQA generates audit evidence as a structural property of execution: each decision produces a stable, reproducible artifact that can be independently verified without reliance on narrative reconstruction or interpretive logs. This pack formalizes how that evidence is organized, preserved, and presented in the context of regulatory obligations arising from data protection law, AI regulation, and sector-specific compliance frameworks. The document further specifies maturity levels for audit readiness, pre-audit verification protocols, and the canonical structure of a QODIQA evidence submission.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Purpose and Scope</h2>
+
+        <p>The QODIQA Audit Readiness and Evidence Pack is a normative component of the QODIQA standard corpus. Its purpose is to translate the determinism, auditability, and proof guarantees established in the QODIQA Technical Whitepaper into a concrete operational framework for audit preparation, evidence collection, and compliance demonstration.</p>
+
+        <p>Regulatory environments governing AI systems increasingly require that organizations be able to demonstrate not merely that governance policies exist, but that they are enforced at execution time in a verifiable, reproducible manner. This requirement cannot be satisfied through documentation alone. It demands a form of evidence that is structural: evidence that emerges from the system itself rather than from post hoc reconstruction.</p>
+
+        <p>QODIQA is designed so that audit evidence is a byproduct of correct operation. Every decision the system produces is a stable artifact with a deterministic identifier, a frozen evaluation context, and a traceable policy version. This document specifies how those artifacts are organized, retained, and presented in a format suitable for regulatory, contractual, and internal audit purposes.</p>
+
+        <p>The scope of this document covers: the dimensions of audit readiness applicable to QODIQA deployments; the structure and classification of evidence generated by the framework; the mapping of QODIQA system properties to obligations arising under applicable regulatory instruments; the procedural requirements for audit trail maintenance and integrity verification; the pre-audit verification checklist and decision replay protocol; the canonical structure of an evidence pack submission; and the operational practices that sustain continuous audit readiness.</p>
+
+        <p>This document does not address legal interpretation of regulatory obligations, implementation-specific deployment configurations, or upstream consent capture systems. Those domains are addressed in separate corpus documents as referenced in the Document Status section.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Audit Readiness Framework</h2>
+
+        <p>Audit readiness is not a state achieved immediately before an audit. It is a continuous operational property, maintained through the same mechanisms that ensure correct system behavior during normal operation. For QODIQA deployments, audit readiness and operational correctness are structurally equivalent: a system that enforces consent deterministically and produces stable decision artifacts is, by design, audit-ready.</p>
+
+        <p>The following sections define the dimensions of audit readiness, the categories of evidence that QODIQA generates, and the maturity levels against which organizations may assess their current posture.</p>
+      </div>
+
+      <div id="s2-1" class="doc-section">
+        <h3>2.1 Readiness Dimensions</h3>
+        <p>Audit readiness for a QODIQA deployment is assessed across four dimensions. Each dimension corresponds to a structural property of the system rather than a procedural requirement.</p>
+
+        <p><strong>Decision traceability</strong> is the ability to locate, identify, and retrieve any past decision artifact given a reference identifier, time range, actor identifier, or action type. This dimension is satisfied when the decision artifact store is queryable, retained according to policy, and structurally complete for each decision.</p>
+
+        <p><strong>Consent state verifiability</strong> is the ability to demonstrate, for any past decision, that the consent state resolved at evaluation time was valid, scoped, and current. This dimension is satisfied when consent references captured in frozen evaluation contexts can be matched against consent state records with confirmed validity at the relevant timestamp.</p>
+
+        <p><strong>Policy immutability</strong> is the ability to demonstrate that the policy version applied in any past decision has not been altered since that decision was recorded. This dimension is satisfied when policies are versioned with cryptographic integrity protection and version history is retained without modification.</p>
+
+        <p><strong>Replay correctness</strong> is the ability to re-evaluate any past decision using its frozen context and obtain an identical outcome. This dimension is the strongest evidence of determinism and is satisfied when the replay protocol consistently produces results matching the recorded decision identity.</p>
+      </div>
+
+      <div id="s2-2" class="doc-section">
+        <h3>2.2 Evidence Categories</h3>
+        <p>Evidence produced by a QODIQA deployment falls into four categories, each corresponding to a readiness dimension.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1. QODIQA Evidence Categories and Corresponding Readiness Dimensions</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Evidence Category</th>
+                <th>Primary Source</th>
+                <th>Readiness Dimension</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Decision artifacts</td><td>Decision Artifact Generator</td><td>Decision traceability</td></tr>
+              <tr><td>Consent state records</td><td>Consent Resolver</td><td>Consent state verifiability</td></tr>
+              <tr><td>Policy version snapshots</td><td>Policy Engine</td><td>Policy immutability</td></tr>
+              <tr><td>Replay verification outputs</td><td>Verification protocol execution</td><td>Replay correctness</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>All four categories must be present and complete for an evidence pack to be considered audit-ready. Partial evidence packs, in which one or more categories are absent or incomplete, do not satisfy the structural auditability requirements of QODIQA and must not be presented to regulators or auditors as complete submissions.</p>
+      </div>
+
+      <div id="s2-3" class="doc-section">
+        <h3>2.3 Readiness Maturity Levels</h3>
+        <p>The following maturity levels provide a structured assessment model for organizations evaluating their current audit readiness posture. Each level is defined by the capabilities present, not by the volume of evidence or time in operation.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Level 1 — Partial</div>
+          <p>Decision artifacts are produced and retained. Consent state records exist but are not structurally linked to decision artifacts. Policy versioning is present but cryptographic integrity is not enforced. Replay has not been validated.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Level 2 — Structured</div>
+          <p>All four evidence categories are produced. Frozen evaluation contexts reference consent records and policy versions. Replay protocol has been executed and validated for a representative sample of decisions. Integrity checks are performed periodically.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Level 3 — Continuous</div>
+          <p>All evidence categories are produced and retained with automated integrity verification. Replay correctness is continuously monitored. Evidence packs can be assembled on demand for any time period within retention scope. Denial records are preserved with the same fidelity as allow decisions.</p>
+        </div>
+
+        <p>Level 3 represents the target state for organizations operating QODIQA in regulated environments. Levels 1 and 2 are recognized as transitional states during deployment and maturation phases.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Maturity level assessment is self-reported and subject to validation during formal audit procedures. Organizations should not represent a maturity level to external parties without having performed the verification protocols described in Section 6.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Evidence Architecture</h2>
+
+        <p>The evidence architecture of QODIQA is not an overlay applied to the system after the fact. It is a direct consequence of the architectural constraints that make the system deterministic. Because every decision is derived from an immutable, canonical set of inputs, the evidence required to verify that decision is produced at evaluation time and requires no subsequent reconstruction.</p>
+
+        <p>The following sections describe the structure and content of each evidence category in technical detail.</p>
+      </div>
+
+      <div id="s3-1" class="doc-section">
+        <h3>3.1 Decision Artifact Evidence</h3>
+        <p>A decision artifact is the primary evidence unit of a QODIQA deployment. It is produced by the Decision Artifact Generator at the conclusion of every evaluation, regardless of outcome. Each artifact contains the following elements.</p>
+
+        <span class="code-label">Decision artifact structure</span>
+        <pre><code>DecisionArtifact = {
+    "decision_id":        str,      # SHA-256 derived, 24-char hex
+    "timestamp_utc":      datetime, # Evaluation time, frozen
+    "outcome":            str,      # ALLOW | DENY | ALLOW_WITH_RESTRICTIONS
+    "restrictions":       list,     # If ALLOW_WITH_RESTRICTIONS
+    "context_ref":        str,      # Reference to frozen EvaluationContext
+    "consent_ref":        str,      # Reference to resolved ConsentState
+    "policy_version":     str,      # Exact policy version applied
+    "ruleset_version":    str       # Exact ruleset version applied
+}</code></pre>
+
+        <p>The <code>decision_id</code> field is deterministically derived from the canonical representation of the evaluation context and outcome. Given the same inputs, the identifier is always identical. This property enables independent verification: any auditor with access to the frozen context and outcome can recompute the identifier and confirm its authenticity without trust in the originating system.</p>
+
+        <div class="decision-block">
+          <strong>Evidence completeness requirement</strong>
+          <ul>
+            <li>All fields must be present and non-null</li>
+            <li>Artifacts must be retained for the full retention period</li>
+            <li>Artifacts must not be modified after creation</li>
+            <li>DENY outcomes must be retained with the same completeness as ALLOW outcomes</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s3-2" class="doc-section">
+        <h3>3.2 Consent State Evidence</h3>
+        <p>Consent state evidence demonstrates that the consent resolved at evaluation time was valid, current, and appropriately scoped. The frozen evaluation context captures a reference to the resolved consent record, not the record itself, ensuring that the decision artifact remains stable even if the consent state subsequently changes.</p>
+
+        <p>For audit purposes, organizations must be able to produce the consent state record identified by the reference in the frozen context and demonstrate that it was in a valid, non-revoked state at the evaluation timestamp. This requires that consent stores retain historical consent state, including timestamps of revocation, expiry, and scope modifications, for the full audit retention period.</p>
+
+        <span class="code-label">Consent state record (audit-relevant fields)</span>
+        <pre><code>ConsentStateRecord = {
+    "consent_id":     str,
+    "subject_id":     str,
+    "purpose":        str,
+    "scopes":         list[str],
+    "valid_from":     datetime,
+    "valid_until":    datetime,
+    "revoked":        bool,
+    "revoked_at":     datetime | None,
+    "created_at":     datetime,
+    "record_version": int
+}</code></pre>
+
+        <p>The audit claim that must be substantiable from this evidence is: at the time of evaluation, the referenced consent record existed, was not revoked, had not expired, and covered the purpose and scopes declared in the execution request.</p>
+      </div>
+
+      <div id="s3-3" class="doc-section">
+        <h3>3.3 Policy Version Evidence</h3>
+        <p>Policy version evidence demonstrates that the rule set applied during evaluation has not been altered since the decision was recorded. Because QODIQA policies are immutable and versioned, this evidence takes the form of a policy version snapshot retained alongside its cryptographic digest.</p>
+
+        <span class="code-label">Policy version snapshot structure</span>
+        <pre><code>PolicyVersionSnapshot = {
+    "version":          str,
+    "effective_from":   datetime,
+    "effective_until":  datetime | None,
+    "rules_digest":     str,     # SHA-256 of canonical rule representation
+    "rules_ref":        str,     # Content-addressed reference
+    "authored_by":      str,
+    "approved_by":      str,
+    "approved_at":      datetime
+}</code></pre>
+
+        <p>Policy version snapshots must be retained without modification. Any change to a policy ruleset produces a new version with a new digest. The digest of a version applied in a past decision can be recomputed from the retained rules content and compared to the recorded value, providing cryptographic proof of immutability.</p>
+      </div>
+
+      <div id="s3-4" class="doc-section">
+        <h3>3.4 Replay Verification Evidence</h3>
+        <p>Replay verification evidence is produced by executing the decision replay protocol against a decision artifact and its associated frozen context. It demonstrates that the system's evaluation function is deterministic: the same inputs produce the same outcome, independent of when or where the evaluation is performed.</p>
+
+        <span class="code-label">Replay verification record</span>
+        <pre><code>ReplayVerificationRecord = {
+    "original_decision_id":  str,
+    "replay_decision_id":    str,
+    "match":                 bool,
+    "replay_timestamp_utc":  datetime,
+    "replay_environment":    str,
+    "performed_by":          str
+}</code></pre>
+
+        <p>A replay verification record where <code>match == true</code> and both decision identifiers are equal constitutes positive proof of determinism for that decision. Systematic replay verification across a representative sample of decisions provides confidence in the correctness of the evaluation function across time and environment.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Replay verification records themselves become part of the evidence pack and should be retained alongside the decision artifacts they reference.</div>
+          <div class="footnote" data-num="²">A mismatch in replay verification indicates either a system integrity issue or an evidence corruption event. Both must be treated as critical findings and investigated prior to any audit submission.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Regulatory Compliance Mapping</h2>
+
+        <p>The QODIQA framework is designed to be regulation-agnostic at the enforcement layer. It does not interpret law or encode regulatory obligations directly. However, its structural properties map onto obligations arising under data protection law, AI regulation, and sector-specific compliance frameworks in ways that can be demonstrated through the evidence architecture described in Section 3.</p>
+
+        <p>The following mappings are illustrative rather than exhaustive. Organizations operating in regulated environments must conduct their own legal and compliance analysis to confirm applicability. Translations from QODIQA system properties to regulatory obligations are presented as structural correspondences, not legal opinions.</p>
+      </div>
+
+      <div id="s4-1" class="doc-section">
+        <h3>4.1 General Data Protection Regulation (GDPR) Mapping</h3>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 2. QODIQA Properties Mapped to GDPR Obligations</span>
+          <table>
+            <thead>
+              <tr>
+                <th>GDPR Obligation</th>
+                <th>Relevant Article</th>
+                <th>QODIQA System Property</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Lawfulness of processing</td><td>Art. 6</td><td>Explicit consent resolution prior to execution</td></tr>
+              <tr><td>Purpose limitation</td><td>Art. 5(1)(b)</td><td>Purpose binding in intent declaration and consent scope</td></tr>
+              <tr><td>Data minimisation</td><td>Art. 5(1)(c)</td><td>Data type declaration in closed intent contract</td></tr>
+              <tr><td>Storage limitation</td><td>Art. 5(1)(e)</td><td>Time-bounded consent validity, retention restrictions in ALLOW_WITH_RESTRICTIONS</td></tr>
+              <tr><td>Accountability</td><td>Art. 5(2)</td><td>Decision artifacts as verifiable proof of authorized processing</td></tr>
+              <tr><td>Records of processing</td><td>Art. 30</td><td>Decision artifact store with actor, purpose, and outcome</td></tr>
+              <tr><td>Right of access</td><td>Art. 15</td><td>Decision traceability by subject identifier</td></tr>
+              <tr><td>Right to erasure</td><td>Art. 17</td><td>Consent revocation reflected immediately; future decisions denied</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="s4-2" class="doc-section">
+        <h3>4.2 EU AI Act Mapping</h3>
+        <p>The EU AI Act establishes obligations for providers and deployers of high-risk AI systems, including requirements for transparency, human oversight, technical documentation, and record-keeping. QODIQA's enforcement architecture maps onto several of these obligations.</p>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 3. QODIQA Properties Mapped to EU AI Act Obligations</span>
+          <table>
+            <thead>
+              <tr>
+                <th>EU AI Act Requirement</th>
+                <th>QODIQA System Property</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Technical documentation (Art. 11)</td><td>Policy version snapshots with authorship and approval chain</td></tr>
+              <tr><td>Record-keeping (Art. 12)</td><td>Decision artifact store with frozen evaluation context</td></tr>
+              <tr><td>Transparency to deployers (Art. 13)</td><td>Deterministic outcomes with explicit restriction declarations</td></tr>
+              <tr><td>Human oversight measures (Art. 14)</td><td>Separation of human responsibility and mechanical enforcement</td></tr>
+              <tr><td>Accuracy and robustness (Art. 15)</td><td>Fail-closed semantics; no partial evaluation or best-effort decisions</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="s4-3" class="doc-section">
+        <h3>4.3 Sectoral Obligations</h3>
+        <p>Sector-specific regulatory frameworks in financial services, healthcare, and critical infrastructure impose additional obligations that intersect with the QODIQA evidence architecture. While comprehensive mapping across all sectoral instruments is outside the scope of this document, three structural properties are broadly applicable.</p>
+
+        <p><strong>Immutable audit trails</strong> are required by financial services regulators and healthcare data protection authorities in most jurisdictions. QODIQA's decision artifacts satisfy this requirement structurally: they are produced at evaluation time, are not modifiable after creation, and carry cryptographic identifiers derived from their content.</p>
+
+        <p><strong>Automated decision records</strong> are required under algorithmic accountability frameworks applicable in financial credit, insurance, and employment contexts. QODIQA's decision artifacts contain the information required to explain the factual basis of an automated decision, namely the declared intent, resolved consent state, and policy version applied, without exposing raw data or model internals.</p>
+
+        <p><strong>Incident evidence preservation</strong> is required under breach notification and incident reporting frameworks. QODIQA denial records, produced when execution is refused due to consent failure or policy mismatch, constitute pre-existing evidence of enforcement activity that may be relevant to incident investigation and regulatory notification.</p>
+
+        <p class="section-note">Organizations deploying QODIQA in regulated sectors should conduct a gap analysis between the evidence categories described in this document and the specific evidence requirements of applicable sectoral instruments, retaining the results as part of their compliance documentation.</p>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Audit Trail Requirements</h2>
+
+        <p>An audit trail in the context of QODIQA is not a passive log. It is a structured, integrity-protected sequence of decision artifacts, consent state records, and policy version snapshots that collectively constitute verifiable proof of authorized AI execution over a defined period. The following sections specify the structural, retention, and integrity requirements that an audit trail must satisfy.</p>
+      </div>
+
+      <div id="s5-1" class="doc-section">
+        <h3>5.1 Structural Requirements</h3>
+        <p>Every decision produced by a QODIQA deployment must generate a corresponding entry in the audit trail. There are no excluded decision types. Denials, approvals, and approvals with restrictions must all be recorded with equal completeness. Selective retention of only allow decisions is a structural failure that invalidates the audit trail.</p>
+
+        <p>Each audit trail entry must contain, at minimum: the complete decision artifact, the reference to the frozen evaluation context, a reference to the consent state record valid at evaluation time, and the policy version identifier with its associated digest.</p>
+
+        <p>Audit trail entries must be written atomically with the decision. A decision that is communicated to a downstream system without a corresponding audit trail entry is an enforcement failure. Systems must be designed so that audit trail write failures result in decision denial, not silent continuation.</p>
+      </div>
+
+      <div id="s5-2" class="doc-section">
+        <h3>5.2 Retention Policy</h3>
+        <p>Audit trail retention periods must be defined prior to deployment and reviewed against applicable regulatory requirements. Where regulatory retention periods differ across applicable instruments, the longest applicable period governs.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Minimum Retention Requirements</div>
+          <p>Decision artifacts and associated frozen contexts must be retained for a minimum period consistent with the longest applicable regulatory obligation. Policy version snapshots must be retained for the lifetime of the deployment plus the maximum applicable audit trail retention period. Consent state records, including modification history, must be retained for the same period as decision artifacts that reference them.</p>
+        </div>
+
+        <p>Retention policy must be documented, version-controlled, and included in the evidence pack submitted for audit. Changes to retention policy must be recorded with effective dates and must not result in early deletion of evidence that falls within the retention period of the superseded policy.</p>
+      </div>
+
+      <div id="s5-3" class="doc-section">
+        <h3>5.3 Integrity Verification</h3>
+        <p>The integrity of the audit trail must be verifiable through cryptographic means. Reliance on access controls or procedural safeguards alone is insufficient: evidence that cannot be independently verified for integrity cannot be relied upon to prove that it has not been altered.</p>
+
+        <p>Integrity verification is performed at two levels. At the artifact level, the <code>decision_id</code> field of each artifact is a deterministic function of its content. Recomputing this identifier and comparing it to the recorded value confirms that the artifact has not been modified. At the trail level, a hash chain or equivalent mechanism links audit trail entries in sequence, enabling detection of deletions or insertions that would not be detectable through individual artifact verification alone.</p>
+
+        <p>Integrity verification must be performed at regular intervals, not solely in anticipation of an audit. Organizations operating at maturity level 3 perform continuous automated integrity verification and produce periodic integrity attestation records as part of their evidence pack.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Integrity verification failures must be treated as critical findings, logged, and investigated. The investigation record and its outcome must be retained as part of the audit trail for the period in which the failure occurred.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Verification Procedures</h2>
+
+        <p>The verification procedures defined in this section are executed as part of audit preparation and ongoing operational assurance. They are not substitutes for external audit; they are the internal controls that make external audit defensible.</p>
+      </div>
+
+      <div id="s6-1" class="doc-section">
+        <h3>6.1 Pre-Audit Checklist</h3>
+        <p>The following checklist must be completed and documented prior to any audit submission. Each item corresponds to a structural requirement described in this document.</p>
+
+        <div class="decision-block">
+          <strong>Evidence completeness</strong>
+          <ul>
+            <li>All decision artifacts for the audit period are present and complete</li>
+            <li>Denial records are present with equal completeness to allow records</li>
+            <li>Frozen evaluation contexts are retrievable for all decision artifacts</li>
+            <li>Consent state records exist for all consent references in decision artifacts</li>
+            <li>Policy version snapshots exist for all policy versions referenced in decision artifacts</li>
+            <li>Replay verification records exist for at least the required sample coverage</li>
+          </ul>
+        </div>
+
+        <div class="decision-block">
+          <strong>Integrity verification</strong>
+          <ul>
+            <li>Decision artifact identifiers have been recomputed and match recorded values</li>
+            <li>Policy version digests have been recomputed and match recorded values</li>
+            <li>Audit trail sequence integrity has been verified for the audit period</li>
+            <li>No integrity failures are outstanding without resolved investigation records</li>
+          </ul>
+        </div>
+
+        <div class="decision-block">
+          <strong>Retention compliance</strong>
+          <ul>
+            <li>Retention policy is documented and version-controlled</li>
+            <li>No evidence within the retention window has been deleted or modified</li>
+            <li>Retention periods have been verified against current regulatory requirements</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s6-2" class="doc-section">
+        <h3>6.2 Decision Replay Protocol</h3>
+        <p>The decision replay protocol is the primary verification procedure for demonstrating determinism. It is executed by re-evaluating a selection of past decisions using their frozen evaluation contexts and confirming that the computed decision identifiers match the recorded values.</p>
+
+        <span class="code-label">Replay protocol execution</span>
+        <pre><code>def replay_decision(artifact: DecisionArtifact) -> ReplayVerificationRecord:
+    context = load_frozen_context(artifact.context_ref)
+    policy  = load_policy_version(artifact.policy_version)
+
+    replayed_outcome = evaluate(context, policy)
+    replayed_id = decision_id(context, replayed_outcome)
+
+    return ReplayVerificationRecord(
+        original_decision_id = artifact.decision_id,
+        replay_decision_id   = replayed_id,
+        match                = replayed_id == artifact.decision_id,
+        replay_timestamp_utc = utcnow(),
+        replay_environment   = current_environment(),
+        performed_by         = current_operator()
+    )</code></pre>
+
+        <p>The protocol must be executed against a sample that is representative of the decision population for the audit period. The sample must include decisions with each outcome type (ALLOW, DENY, ALLOW_WITH_RESTRICTIONS), decisions from different policy versions, and decisions involving different actors and purposes. All replay verification records must be retained and included in the evidence pack.</p>
+      </div>
+
+      <div id="s6-3" class="doc-section">
+        <h3>6.3 Policy Immutability Check</h3>
+        <p>The policy immutability check verifies that no policy version applied during the audit period has been modified after its effective date. The check is performed by recomputing the rules digest for each policy version and comparing it to the digest recorded in the policy version snapshot.</p>
+
+        <span class="code-label">Immutability verification</span>
+        <pre><code>def verify_policy_version(snapshot: PolicyVersionSnapshot) -> bool:
+    rules    = load_rules_content(snapshot.rules_ref)
+    computed = sha256(canonicalize(rules))
+    return computed == snapshot.rules_digest</code></pre>
+
+        <p>Any version for which the computed digest does not match the recorded value must be flagged as a potential integrity failure and investigated before the audit submission proceeds.</p>
+      </div>
+
+      <div id="s6-4" class="doc-section">
+        <h3>6.4 Consent Coverage Analysis</h3>
+        <p>Consent coverage analysis verifies that every allow decision in the audit period is traceable to a valid, non-revoked consent state that was in effect at the evaluation timestamp. The analysis is performed by joining decision artifacts with consent state records on the consent reference and checking temporal validity.</p>
+
+        <p>The output of consent coverage analysis is a coverage report indicating, for each allow decision, whether a valid consent state reference exists, whether the consent was in scope for the declared purpose, and whether the consent was unrevoked at the evaluation timestamp. Decisions for which coverage cannot be confirmed must be investigated and documented in the audit trail.</p>
+
+        <p class="section-note">Consent coverage analysis is a verification procedure, not an enforcement mechanism. Its purpose is to surface gaps in the evidence record that may indicate upstream consent capture or consent store issues. It does not retroactively alter decision outcomes.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Evidence Pack Structure</h2>
+
+        <p>A QODIQA evidence pack is a structured, self-contained collection of evidence materials organized for presentation to a regulator, auditor, or institutional counterparty. The pack must be complete, internally consistent, and accompanied by an index that maps each item to the regulatory obligation or audit objective it satisfies.</p>
+      </div>
+
+      <div id="s7-1" class="doc-section">
+        <h3>7.1 Required Documents</h3>
+        <p>Every evidence pack must include the following mandatory documents. Additional documents may be included at the discretion of the submitting organization, but the mandatory set is the minimum required for a submission to be considered complete.</p>
+
+        <div class="decision-block">
+          <strong>Mandatory evidence pack documents</strong>
+          <ul>
+            <li>Evidence pack index with regulatory or audit objective mapping</li>
+            <li>Decision artifact export for the audit period (complete, all outcome types)</li>
+            <li>Consent state record export for all referenced consent identifiers</li>
+            <li>Policy version snapshot set for all versions referenced in the audit period</li>
+            <li>Replay verification records for the required sample</li>
+            <li>Pre-audit checklist with completion status and signatory</li>
+            <li>Audit trail integrity attestation with verification methodology</li>
+            <li>Retention policy documentation current as of the audit period</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s7-2" class="doc-section">
+        <h3>7.2 Artifact Inventory</h3>
+        <p>The evidence pack must include a machine-readable artifact inventory that lists every decision artifact in the export with its identifier, timestamp, outcome, and policy version. The inventory enables auditors to confirm that the export is complete and to locate specific decisions for verification.</p>
+
+        <span class="code-label">Artifact inventory entry</span>
+        <pre><code>ArtifactInventoryEntry = {
+    "decision_id":    str,
+    "timestamp_utc":  str,   # ISO 8601
+    "outcome":        str,
+    "actor_id":       str,
+    "purpose":        str,
+    "policy_version": str
+}</code></pre>
+
+        <p>The inventory must be signed with a digest computed over the complete set of decision identifiers in the export, enabling verification that no entries have been added, removed, or modified after the inventory was generated.</p>
+      </div>
+
+      <div id="s7-3" class="doc-section">
+        <h3>7.3 Submission Format</h3>
+        <p>Evidence packs must be submitted in a format that preserves the integrity of all included artifacts and enables independent verification without proprietary tooling. The canonical submission format is a structured archive containing JSON-encoded artifacts, human-readable index documents, and a top-level manifest that identifies the archive contents and their cryptographic digests.</p>
+
+        <p>Where a regulator or auditor specifies an alternative submission format, the organization must confirm that the alternative format preserves the structural completeness and integrity properties required by this document before adopting it. Conversion to an alternative format must not result in loss of any mandatory fields or integrity references.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Evidence packs should be transmitted over secure channels with end-to-end integrity protection. The transmission method should be documented in the evidence pack index.</div>
+          <div class="footnote" data-num="²">Organizations retaining copies of submitted evidence packs should ensure that copies are subject to the same integrity protection and retention requirements as the originals.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Operational Readiness</h2>
+
+        <p>Operational readiness for audit is a continuous state maintained through normal system operation, not a preparation effort triggered by an impending audit. The following sections address the operational practices that sustain continuous audit readiness and the specific handling requirements for incidents and denial records.</p>
+      </div>
+
+      <div id="s8-1" class="doc-section">
+        <h3>8.1 Continuous Readiness Practices</h3>
+        <p>Continuous audit readiness requires that the evidence generation, retention, and integrity verification procedures described in this document are embedded in operational workflows rather than treated as exceptional audit-time activities.</p>
+
+        <p>Organizations should maintain a running audit readiness dashboard that tracks the completeness of the four evidence categories, the currency of integrity verification, the sample coverage of replay verification, and the remaining time before the earliest evidence retention deadline. Any shortfall against these metrics should trigger an operational response before it becomes an audit finding.</p>
+
+        <p>Periodic internal audit exercises, in which a simulated evidence pack is assembled for a historical period and subjected to the verification procedures in Section 6, provide confidence that the full end-to-end audit process functions correctly before it is required in a regulatory context.</p>
+      </div>
+
+      <div id="s8-2" class="doc-section">
+        <h3>8.2 Incident Evidence Handling</h3>
+        <p>When an incident occurs that may be subject to regulatory investigation, the evidence materials relevant to the incident period must be preserved with additional protections to prevent alteration or deletion. This may require creating a preserved snapshot of the audit trail segment corresponding to the incident period before any operational changes are made to systems that generated the relevant decisions.</p>
+
+        <p>The incident evidence record should include the preserved snapshot, a chronological summary of decisions made during the incident period, denial records if the incident involved enforcement failures or attempted bypasses, and any integrity verification records covering the incident period.</p>
+      </div>
+
+      <div id="s8-3" class="doc-section">
+        <h3>8.3 Denial Record Preservation</h3>
+        <p>Denial records are among the most operationally significant evidence materials in a QODIQA deployment. They demonstrate that the enforcement layer was active and functioning correctly, and they provide evidence that consent violations or policy mismatches were detected and blocked rather than silently permitted.</p>
+
+        <p>Denial records must be preserved with the same completeness and integrity as allow records. They must include the full decision artifact, including the frozen evaluation context that shows which consent or policy condition caused the denial. In regulated contexts, denial records may be requested by regulators as evidence of effective consent enforcement, independent of whether any incident occurred.</p>
+
+        <p class="section-note">The preservation of denial records is not merely a compliance obligation; it is a demonstration of the value of the enforcement layer. An organization that cannot produce denial records cannot demonstrate that its consent enforcement was active during any given period.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Limitations and Scope</h2>
+
+        <p>The evidence architecture and procedures described in this document are subject to constraints that arise from the deliberate design boundaries of the QODIQA framework. These constraints are not temporary gaps; they are structural choices that preserve the determinism and defensibility of the system.</p>
+
+        <h3>9.1 Evidence Does Not Substitute for Legal Analysis</h3>
+        <p>The regulatory compliance mappings in Section 4 are structural correspondences, not legal opinions. Organizations must conduct their own legal analysis to confirm that QODIQA evidence satisfies the specific requirements of applicable instruments in their jurisdiction and sector. The evidence pack structure defined in this document is a starting point, not a substitute for legal advice.</p>
+
+        <h3>9.2 Upstream Consent Capture Is Out of Scope</h3>
+        <p>QODIQA enforces consent at the execution layer; it does not capture consent from data subjects. The validity of the consent captured upstream and stored in the consent store is a separate concern that falls outside the scope of this document. Evidence of upstream consent capture mechanisms must be maintained separately and cross-referenced in the evidence pack where relevant.</p>
+
+        <h3>9.3 Content and Semantic Evidence Is Not Produced</h3>
+        <p>QODIQA does not inspect data content or produce evidence relating to the substance of data processed by AI systems. Evidence of data minimization, content appropriateness, or model behavior must be produced by other components of the AI governance stack and included in the evidence pack as supplementary materials where regulatory requirements demand it.</p>
+
+        <h3>9.4 Evidence Covers Enforcement, Not Outcome</h3>
+        <p>The evidence produced by QODIQA demonstrates that enforcement was correctly applied at the execution layer. It does not constitute evidence that the AI system's output was appropriate, accurate, or free from harm. Outcome-level governance evidence remains the responsibility of model governance and operational monitoring systems operating downstream of QODIQA.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Conclusion</h2>
+
+        <p>The shift from documentation-centric compliance to execution-layer enforcement changes the nature of audit evidence. In conventional governance models, an audit reconstructs what happened from logs, records, and testimony. In a QODIQA deployment, an audit verifies what happened against stable, cryptographically identified artifacts that were produced at the moment of execution and have not changed since.</p>
+
+        <p>This distinction is not cosmetic. It changes the burden of proof from plausibility to reproducibility. An organization that can replay any past decision and obtain an identical result, trace that result to an immutable policy version and a time-bounded consent state, and present this evidence in a structured, integrity-protected pack is in a fundamentally different position from one that can only offer logs and assertions.</p>
+
+        <p>The audit readiness and evidence architecture described in this document is a consequence of the QODIQA design rather than an addition to it. Organizations that deploy QODIQA correctly, and maintain the operational practices described here, are continuously audit-ready. Evidence packs are assembled from materials that already exist, verified by procedures that are already embedded in operational workflows, and submitted in formats that preserve the structural properties that make them verifiable.</p>
+
+        <p>As regulatory scrutiny of AI systems intensifies, the ability to demonstrate authorized, purposeful, and temporally bounded AI execution will become a baseline expectation. QODIQA provides the infrastructure through which that demonstration moves from aspiration to proof.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is a normative component of the QODIQA specification corpus. It defines the audit readiness framework, evidence architecture, compliance mapping, and verification procedures applicable to organizations deploying QODIQA as a runtime consent enforcement layer for artificial intelligence systems.</p>
+
+          <p>This document derives its structural authority from the properties established in the QODIQA Technical Whitepaper and should be read in conjunction with that document. The evidence categories, verification procedures, and evidence pack structure defined here are direct translations of the determinism, auditability, and proof guarantees described in the whitepaper into operational and procedural form.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-ARP-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Audit Readiness and Evidence Pack</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Evidence Pack</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Audit Readiness and Evidence Pack</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-ARP-2026-001</p>
+      <p>Evidence Pack</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a structural audit readiness framework and does not constitute legal, regulatory, or operational advice. All evidence architecture and verification procedures described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-ARP-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s2','s2-1','s2-2','s2-3',
+    's3','s3-1','s3-2','s3-3','s3-4',
+    's4','s4-1','s4-2','s4-3',
+    's5','s5-1','s5-2','s5-3',
+    's6','s6-1','s6-2','s6-3','s6-4',
+    's7','s7-1','s7-2','s7-3',
+    's8','s8-1','s8-2','s8-3',
+    's9','s10','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    if (visible.size > 0) {
+      let topId = null;
+      let topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  function fallbackScrollSpy() {
+    let closest = null;
+    let minDistance = Infinity;
+
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5) {
+        const distance = Math.abs(rect.top);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = sec.id;
+        }
+      }
+    });
+    if (closest) setActive(closest);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    window.addEventListener('scroll', fallbackScrollSpy, { passive: true });
+    fallbackScrollSpy();
+  }
+
+})();
+</script>
+</body>
+</html>

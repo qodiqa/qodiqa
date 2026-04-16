@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Corpus Change Log and Version History · v1.0</title>
+<meta name="description" content="QODIQA Corpus Change Log and Version History v1.0 — Canonical historical record of all versioned publications, amendments, and governance evolution across the QODIQA specification corpus. April 2026.">
+<meta property="og:title" content="QODIQA — Corpus Change Log and Version History">
+<meta property="og:description" content="The canonical historical record of all versioned publications, amendments, and governance evolution across the QODIQA specification corpus.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #1A1C20;
+  --ink-2:     #2C2F36;
+  --ink-3:     #3A3F48;
+  --accent:    #7A6A50;
+  --muted:     #6B7280;
+  --rule:      #D6D2CC;
+  --bg:        #F6F4F0;
+  --text:      #1A1C20;
+  --text-2:    #3A3F48;
+  --text-3:    #5A6070;
+  --sidebar-w: 252px;
+  --col:       720px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+html { font-size: 16px; }
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* COVER */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+#cover p, #cover .cover-info-subtitle, #cover .cover-info-date, #cover .cover-info-tagline {
+  text-align: center; hyphens: none; margin-left: auto; margin-right: auto;
+}
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+.sidebar-nav { flex: 1; padding: 12px 0 32px; }
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+.nav-item:hover { color: #C4BEB2; background: rgba(255,255,255,0.04); border-left-color: rgba(122,106,80,0.32); }
+.nav-item.active { color: #E2D8C8; border-left-color: #A8966E; background: rgba(122,106,80,0.14); font-weight: 600; }
+.nav-item.sub { padding-left: 32px; font-size: 0.69rem; color: #6E7880; }
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+.mobile-nav-header { display: none; }
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px; height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.48); z-index: 99; }
+
+/* CONTENT */
+#content { flex: 1; min-width: 0; padding: 80px 72px 108px; }
+.content-inner { max-width: var(--col); margin: 0 auto; }
+
+/* SECTIONS */
+.doc-section { margin-top: 32px; }
+.doc-section:first-child { margin-top: 0; }
+.doc-section:has(.section-divider) { margin-top: 48px; }
+.section-divider { display: block; width: 100%; height: 1px; background: var(--rule); margin-bottom: 24px; opacity: 0.45; }
+
+/* HEADINGS */
+h1, h2, h3, h4 { font-family: var(--serif); color: var(--ink); font-kerning: normal; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+h2:hover .anchor-link { opacity: 0.7; }
+h3 { font-size: 1.00rem; font-weight: 600; line-height: 1.28; letter-spacing: -0.005em; color: var(--ink-2); margin-top: 24px; margin-bottom: 12px; }
+
+/* TEXT */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2; widows: 2;
+}
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+ul, ol { padding-left: 1.35em; margin-bottom: 0.85em; }
+li { font-size: 0.965rem; line-height: 1.65; margin-bottom: 4px; color: var(--text); text-align: justify; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+
+/* ABSTRACT */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+.abstract-block p { font-size: 0.930rem; line-height: 1.78; color: var(--ink-2); font-style: italic; margin-bottom: 0.75em; }
+.abstract-block p:last-child { margin-bottom: 0; }
+
+/* TABLES */
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 24px 0 0; border: 1px solid #C4C0BA; max-width: 100%; }
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+th:last-child { border-right: none; }
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+td:last-child { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td { border-bottom: none; }
+
+/* KEY PROP */
+.key-prop { background: #F2F0EB; border: 1px solid #D2CEC8; border-left: 3px solid var(--accent); padding: 14px 20px; margin: 12px 0 16px; }
+.key-prop-title { font-family: var(--mono); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; opacity: 0.80; }
+.key-prop p { margin: 0; font-size: 0.920rem; line-height: 1.65; }
+
+/* DECISION BLOCK */
+.decision-block { background: #EEEBE6; border: 1px solid #D2CEC8; border-left: 3px solid var(--ink-3); padding: 12px 20px; margin: 12px 0; }
+.decision-block strong { font-family: var(--mono); font-size: 0.60rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 7px; }
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+.decision-block ul { list-style: disc; padding-left: 1.3em; margin: 6px 0 0; }
+.decision-block ul li { font-size: 0.905rem; padding: 2px 0; margin-bottom: 3px; line-height: 1.58; }
+
+/* STATUS BADGES */
+.status-valid {
+  display: inline-block;
+  background: rgba(40,100,50,0.10);
+  border: 1px solid rgba(40,100,50,0.30);
+  color: #1E5E28;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  vertical-align: middle;
+}
+.status-locked {
+  display: inline-block;
+  background: rgba(40,55,100,0.10);
+  border: 1px solid rgba(40,55,100,0.30);
+  color: #243060;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  vertical-align: middle;
+}
+.status-prohibited {
+  display: inline-block;
+  background: rgba(130,25,25,0.08);
+  border: 1px solid rgba(130,25,25,0.25);
+  color: #701515;
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  vertical-align: middle;
+}
+
+/* SECTION NOTE */
+.section-note {
+  font-size: 0.755rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 0;
+  margin-bottom: 36px;
+  line-height: 1.62;
+}
+
+/* VARIANT NOTE — below table, institutional clarification */
+.variant-note {
+  background: #F4F2EE;
+  border: 1px solid #D8D4CE;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 18px;
+  margin-top: 10px;
+  margin-bottom: 14px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink-3);
+  line-height: 1.60;
+}
+.variant-note-label {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.60rem;
+}
+
+/* DOC STATUS BLOCK */
+.doc-status-block { background: #EDEAE5; border: 1px solid #D2CEC8; border-left: 3px solid var(--accent); padding: 26px 30px; margin: 16px 0; }
+.doc-status-block p { text-align: justify; hyphens: auto; }
+.corpus-list { list-style: none; padding: 0; margin: 10px 0 14px; border-top: 1px solid #D4D0CC; border-bottom: 1px solid #D4D0CC; }
+.corpus-list li { font-size: 0.880rem; color: var(--text-2); line-height: 1.55; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.05); text-align: left; hyphens: none; }
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block { margin-top: 0; padding-top: 20px; text-align: center; }
+.contact-block p { text-align: center; font-size: 0.875rem; color: var(--text-3); margin-bottom: 10px; hyphens: none; }
+.contact-name { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 4px !important; }
+.contact-detail { font-size: 0.840rem !important; color: var(--muted) !important; margin-bottom: 2px !important; }
+.contact-detail a { color: var(--accent); text-decoration: none; }
+.contact-detail a:hover { text-decoration: underline; }
+
+/* IDENTITY BLOCK */
+.doc-identity-block { margin-top: 32px; padding: 20px 24px; background: #EDEAE5; border: 1px solid #D2CEC8; border-left: 2px solid var(--ink-3); font-family: var(--mono); }
+.doc-identity-row { display: flex; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.05); line-height: 1.5; }
+.doc-identity-row:last-child { border-bottom: none; }
+.doc-id-key { flex: 0 0 200px; color: var(--muted); font-size: 0.64rem; letter-spacing: 0.09em; text-transform: uppercase; }
+.doc-id-val { color: var(--text); font-size: 0.760rem; line-height: 1.6; }
+
+/* GOVERNANCE BLOCK */
+.governance-block { background: #0A0C0F; border: 1px solid rgba(122,106,80,0.22); border-left: 3px solid rgba(122,106,80,0.55); padding: 26px 30px; margin: 28px 0; }
+.governance-label { font-family: var(--mono); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(122,106,80,0.75); display: block; margin-bottom: 16px; }
+.governance-block p { color: rgba(255,255,255,0.68); font-size: 0.920rem; line-height: 1.74; margin-bottom: 0.85em; text-align: justify; hyphens: auto; }
+.governance-block p:last-child { margin-bottom: 0; }
+
+/* BACK TO TOP */
+#back-to-top { position: fixed; bottom: 28px; right: 28px; width: 36px; height: 36px; border-radius: 50%; background: #0A0C0F; border: 1px solid rgba(122,106,80,0.30); cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s, background 0.12s; z-index: 50; }
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* FOOTER */
+footer { background: #0A0C0F; color: rgba(255,255,255,0.50); padding: 44px 80px; margin-left: var(--sidebar-w); border-top: 1px solid rgba(122,106,80,0.18); }
+.footer-inner { max-width: calc(var(--col) + 160px); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 40px; align-items: start; }
+.footer-block .f-label { font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(122,106,80,0.70); font-family: var(--mono); font-weight: 600; margin-bottom: 10px; display: block; }
+.footer-block p { font-size: 0.760rem; color: rgba(255,255,255,0.50); line-height: 1.65; margin: 0 0 3px; text-align: left; }
+.footer-divider { grid-column: 1 / -1; height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
+.footer-bottom { grid-column: 1 / -1; color: rgba(255,255,255,0.28); font-family: var(--mono); font-size: 0.620rem; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.02em; }
+
+/* PRINT */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer { margin-left: 0; }
+  #content { padding: 36px 48px; }
+  body { font-size: 11pt; }
+  h2   { font-size: 16pt; }
+  #cover { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) { #content { padding: 64px 52px 96px; } footer { padding: 36px 52px; } }
+@media (max-width: 1024px) { #content { padding: 52px 36px 80px; } footer { padding: 32px 36px; } .footer-inner { gap: 28px; } }
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; position: relative; flex-shrink: 0; }
+  .mobile-nav-header { display: flex; align-items: center; gap: 12px; position: fixed; top: 0; left: 0; width: 100%; height: 52px; padding: 0 16px; background: #0A0C0F; border-bottom: 1px solid rgba(122,106,80,0.15); z-index: 210; }
+  .mobile-contents-label { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+  #sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); transition: transform 0.25s ease; z-index: 150; will-change: transform; }
+  #sidebar.open   { transform: translateX(0); }
+  .overlay.active { display: block; }
+  #content { padding: 68px 18px 52px; }
+  footer { margin-left: 0; padding: 28px 18px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+  .table-wrapper { margin: 16px 0 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+  .cover-info-block { margin-top: 48px; }
+  .governance-block { padding: 18px 20px; }
+}
+</style>
+</head>
+<body>
+
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Corpus Change Log<br>and <span class="italic-part">Version History</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA-CCL &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">The canonical historical record of all versioned publications, amendments, and governance evolution across the specification corpus.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Initial Corpus Release</a>
+      <a class="nav-item sub" href="#s1-table">1.1 Document Registry</a>
+      <a class="nav-item" href="#s2">2. Synchronization State</a>
+      <a class="nav-item" href="#s3">3. Version Baseline Lock</a>
+      <a class="nav-item" href="#s4">4. Change Log Entry</a>
+      <a class="nav-item sub" href="#s4-master">4.1 Master Entry</a>
+      <a class="nav-item" href="#s5">5. Governance Implication</a>
+      <a class="nav-item" href="#s6">6. Prohibited States</a>
+      <a class="nav-item" href="#s7">7. Forward Compatibility</a>
+      <a class="nav-item" href="#s-governance">Governance Statement</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      QODIQA-CCL v1.0<br>April 2026<br>Governance Record
+    </div>
+  </nav>
+
+  <main id="content" aria-label="Document body">
+    <div class="content-inner">
+
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>This document constitutes the Corpus Change Log and Version History for the QODIQA specification corpus. It establishes, with forensic precision and without ambiguity, the formal publication state of the entire QODIQA standard at the moment of its initial synchronized release in April 2026. All twenty-eight documents comprising the QODIQA corpus are published simultaneously at Version 1.0, under the governance authority of the QODIQA Governance Charter.</p>
+          <p>No prior version of any corpus document exists. No pre-release, working draft, or provisional iteration of any corpus document is recognized as part of the formal publication record. This document constitutes the genesis state of the QODIQA governance record, the baseline reference point against which all future amendments, revisions, withdrawals, and governance actions will be measured, and the permanent audit anchor for the QODIQA corpus.</p>
+        </div>
+      </div>
+
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Initial Corpus Release</h2>
+
+        <p>The QODIQA specification corpus is formally published in its complete and final form as of April 2026. The corpus comprises twenty-eight documents, each released simultaneously, each carrying a Version 1.0 designation, and each classified as Public Release. The synchronized release of all corpus documents is a deliberate and non-negotiable governance requirement: it eliminates the class of conformance failures that arise when implementing parties apply normative requirements drawn from one corpus document against companion specifications that are not yet published, are published at a different version, or are otherwise unavailable at the time of implementation. The initial release date and the Version 1.0 designation constitute a single, indivisible, immutable publication event for the corpus as a whole.</p>
+
+        <p>Table 1.1, designated below, is the normative document registry of the QODIQA corpus at the time of this initial release. It is the authoritative reference for corpus composition and version state at the v1.0 baseline. This registry is itself part of the governance record and may not be amended except through a formal governance action under the procedures defined in the QODIQA Governance Charter.</p>
+
+        <div id="s1-table" class="table-wrapper">
+          <span class="table-caption">Table 1.1 — QODIQA Corpus Document Registry — Initial Release, April 2026 — 28 Documents</span>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:4%">#</th>
+                <th style="width:50%">Document Title</th>
+                <th style="width:13%">Document Code</th>
+                <th style="width:7%">Version</th>
+                <th style="width:13%">Publication Status</th>
+                <th style="width:13%">Classification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>01</td><td>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</td><td><code>QODIQA-WP</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>02</td><td>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-CS</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>03</td><td>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-EF</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>04</td><td>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-CF</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>05</td><td>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-IP</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>06</td><td>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-RA</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>07</td><td>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</td><td><code>QODIQA-SC</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>08</td><td>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-CT</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>09</td><td>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-RM</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>10</td><td>QODIQA — Governance Charter for the QODIQA Standard Corpus</td><td><code>QODIQA-GC</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>11</td><td>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement</td><td><code>QODIQA-EI</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>12</td><td>QODIQA — Threat Model and Abuse Case Specification</td><td><code>QODIQA-TM</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>13</td><td>QODIQA — Interoperability and Deployment Constraints</td><td><code>QODIQA-ID</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>14</td><td>QODIQA — Terminology and Normative Definitions</td><td><code>QODIQA-TD</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>15</td><td>QODIQA — Public Specification License</td><td><code>QODIQA-PL</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>16</td><td>QODIQA — Positioning and Scope Limitation Statement</td><td><code>QODIQA-PS</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>17</td><td>QODIQA — Residual Risk and Assumption Disclosure Annex</td><td><code>QODIQA-RR</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>18</td><td>QODIQA — Use Case Dossiers for Runtime Consent Enforcement Deployments</td><td><code>QODIQA-UC</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>19</td><td>QODIQA — Non-Compliance Conditions and Failure Modes</td><td><code>QODIQA-NC</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>20</td><td>QODIQA — Conformance Verification Specification</td><td><code>QODIQA-CV</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>21</td><td>QODIQA — Audit and Evidence Generation Model</td><td><code>QODIQA-AE</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>22</td><td>QODIQA — System Boundary and Trust Model Specification</td><td><code>QODIQA-SB</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>23</td><td>QODIQA — Failure Handling and Recovery Specification</td><td><code>QODIQA-FH</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>24</td><td>QODIQA — Extended Adversarial Threat Model</td><td><code>QODIQA-AT</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>25</td><td>QODIQA — Interoperability and Deployment Constraints</td><td><code>QODIQA-ID-B</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>26</td><td>QODIQA — Terminology and Normative Definitions</td><td><code>QODIQA-TD-B</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>27</td><td>QODIQA — Positioning and Scope Limitation Statement</td><td><code>QODIQA-PS-B</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+              <tr><td>28</td><td>QODIQA — Residual Risk and Assumption Disclosure Annex</td><td><code>QODIQA-RR-B</code></td><td style="text-align:center">1.0</td><td style="text-align:center">Initial Release</td><td style="text-align:center">Public Release</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="variant-note">
+          <span class="variant-note-label">Registry Classification Note — Variant Entries (suffix -B)</span>
+          Entries 25-28 are classified as Variant Editions of the primary registry entries at positions 13, 14, 16, and 17 respectively. Each variant entry carries an independent document code bearing the suffix <code>-B</code>, constituting a separate and distinct publication identity within the corpus. The <code>-B</code> suffix designates a parallel canonical registration, not a revision, supplement, or amendment. All 28 registry entries are assigned equal normative standing at Version 1.0.
+        </div>
+
+        <p class="section-note">Table 1.1 is the normative registry of the QODIQA corpus at initial publication. All 28 entries are present as provided in the authoritative corpus document list. This table may not be amended outside a formal governance action recorded in this change log.</p>
+      </div>
+
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Corpus Synchronization State</h2>
+
+        <p>All twenty-eight documents constituting the QODIQA corpus were released simultaneously in April 2026. No document in the corpus was held in a draft, provisional, pilot, or pre-release state at the time of publication. No staging dependency conflict exists between any two documents in the corpus. Every cross-document reference contained within any corpus document resolves correctly against a simultaneously published companion document. The corpus is therefore internally consistent in full at the v1.0 baseline.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Synchronization Verdict</div>
+          <p>The corpus synchronization state is confirmed as <span class="status-valid">VALID</span>. All inter-document references resolve correctly within the v1.0 publication boundary. No DEGRADED, PARTIAL, or INCONSISTENT state condition has been identified, logged, or recorded against any corpus document. The corpus is complete, synchronized, and normatively operative as of the April 2026 publication date.</p>
+        </div>
+
+        <p>The synchronized release model eliminates a well-documented class of governance failures. When a standard corpus is released in stages, implementing parties may inadvertently apply normative requirements from a published document against companion specifications that have not yet been released, that are available only in draft form, or that exist at a different version than that referenced by the applying document. This creates conformance ambiguity, certification risk, and audit fragility. The QODIQA corpus avoids this class of failure entirely by requiring that all twenty-eight documents reach publication readiness simultaneously, and by treating the entire corpus as a single indivisible publication unit for version control purposes.</p>
+
+        <div class="decision-block">
+          <strong>Synchronization Properties at v1.0</strong>
+          <ul>
+            <li>All 28 corpus documents carry identical publication date: April 2026.</li>
+            <li>All 28 corpus documents carry identical version designation: 1.0.</li>
+            <li>All cross-document references resolve within the published v1.0 corpus boundary.</li>
+            <li>No dependency on any external, unpublished, pending, or draft document exists.</li>
+            <li>No DEGRADED corpus state condition has been identified or logged at the time of this record.</li>
+            <li>The corpus synchronization state is declared VALID and entered into the governance record without qualification.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>Version Baseline Lock</h2>
+
+        <p>All twenty-eight documents in the QODIQA corpus are locked at Version 1.0 as of the date of this record. This baseline lock is the normative starting state for all governance, amendment, certification, conformance assessment, and regulatory alignment activities conducted under or against the QODIQA standard. It is not a provisional or advisory designation. It is a binding governance fact, entered into the formal record without condition or qualification.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Baseline Lock Status</div>
+          <p>Version Baseline: <span class="status-locked">LOCKED AT v1.0</span>. No document in the corpus may be amended, re-versioned, corrected, supplemented, or withdrawn without formal initiation of the governance workflow defined in the QODIQA Governance Charter (QODIQA-GC v1.0). Any action taken against a corpus document outside of this workflow is without normative effect and shall not be recognized as part of the governance record.</p>
+        </div>
+
+        <p>The baseline lock carries the following normative consequences. Any substantive modification to the content of any corpus document, including but not limited to normative requirements, definitions, architecture specifications, test conditions, conformance thresholds, or scope boundaries, shall trigger a full version increment under the governance procedures defined in QODIQA-GC. Corrections of a purely typographical or formatting nature that do not alter normative meaning may be processed under an errata procedure defined in QODIQA-GC, but shall still be recorded in this Corpus Change Log with a corresponding entry conforming to the format defined in Section 4. Silent modifications, undocumented revisions, and out-of-band amendments are categorically prohibited under Section 6 of this document, and any apparent change to a corpus document for which no corresponding change log entry exists shall be treated as unauthorized and shall not be recognized as normatively operative.</p>
+
+        <p>The v1.0 lock constitutes a permanent and irrevocable audit anchor. All certification decisions, regulatory alignment submissions, conformance assessments, procurement qualifications, and implementation plans conducted against the QODIQA corpus must explicitly state which version of the corpus they reference. Reference to the QODIQA corpus without version qualification shall be interpreted as reference to the most recently published locked baseline, with this v1.0 release serving as the initial and foundational anchor point.</p>
+      </div>
+
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Change Log Entry</h2>
+
+        <p>This section contains the canonical master entry for the genesis publication event of the QODIQA corpus. This entry is immutable. It may not be modified, superseded, annotated, or deleted by any subsequent governance action. All future change log entries shall follow the structured format defined below, carrying sequential reference numbers beginning at QODIQA-CCL-ENTRY-002.</p>
+
+        <div id="s4-master" class="doc-identity-block" style="margin-top:20px;">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Entry Type</span>
+            <span class="doc-id-val">INITIAL CORPUS PUBLICATION — GENESIS EVENT</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Entry Reference</span>
+            <span class="doc-id-val">QODIQA-CCL-ENTRY-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Corpus Version</span>
+            <span class="doc-id-val">1.0 — all 28 corpus documents</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Documents Affected</span>
+            <span class="doc-id-val">All 28 corpus documents: QODIQA-WP, QODIQA-CS, QODIQA-EF, QODIQA-CF, QODIQA-IP, QODIQA-RA, QODIQA-SC, QODIQA-CT, QODIQA-RM, QODIQA-GC, QODIQA-EI, QODIQA-TM, QODIQA-ID, QODIQA-TD, QODIQA-PL, QODIQA-PS, QODIQA-RR, QODIQA-UC, QODIQA-NC, QODIQA-CV, QODIQA-AE, QODIQA-SB, QODIQA-FH, QODIQA-AT, QODIQA-ID-B, QODIQA-TD-B, QODIQA-PS-B, QODIQA-RR-B.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Change Type</span>
+            <span class="doc-id-val">Genesis Publication. This is not an amendment to any prior version. No prior version of any affected document exists in the governance record.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Rationale</span>
+            <span class="doc-id-val">Initial formal and synchronized release of the complete QODIQA specification corpus as a publicly available, internally consistent, normatively operative standard for deterministic runtime consent enforcement in artificial intelligence systems.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Prior Version</span>
+            <span class="doc-id-val">None. This entry records the genesis state of the corpus. No prior formal publication exists for any corpus document.</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governance Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter (QODIQA-GC v1.0)</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Classification</span>
+            <span class="doc-id-val">Public Release</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Entry Status</span>
+            <span class="doc-id-val">CANONICAL AND IMMUTABLE. This entry may not be amended, annotated, superseded, or deleted by any future governance action. It constitutes the permanent opening record of the QODIQA Corpus Change Log.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>Governance Implication</h2>
+
+        <p>The publication of the QODIQA corpus at Version 1.0 represents a precise and consequential transition in the status and function of the QODIQA standard. Prior to this publication, QODIQA existed exclusively as a framework under development: a body of conceptual and technical work without formal standing in any governance, regulatory, or contractual context. With this publication, the corpus transitions completely and irrevocably from the pre-normative development phase into its status as an enforceable specification standard.</p>
+
+        <p>This transition carries concrete and immediate governance implications. The normative requirements distributed across the corpus documents, in particular those contained in the Core Standard (QODIQA-CS), the 68-Point Enforcement Framework (QODIQA-EF), the Certification Framework (QODIQA-CF), and the Conformance Verification Specification (QODIQA-CV), now constitute formally binding constraints against which implementing parties, certification bodies, and assurance programs may conduct assessments. The definitions established in the Terminology and Normative Definitions (QODIQA-TD) are now the authoritative terminological reference for all QODIQA-related documentation, technical correspondence, regulatory submissions, and contractual instruments.</p>
+
+        <p>The governance procedures established in the Governance Charter (QODIQA-GC) become operative upon publication. From this date, all amendments to any corpus document are subject to the controls and procedures defined in that charter. The Corpus Change Log, of which this document is the initial and foundational entry, becomes the authoritative audit trail for all governance events affecting the corpus.</p>
+
+        <div class="decision-block">
+          <strong>Governance Transition Summary</strong>
+          <ul>
+            <li><strong>Pre-publication state:</strong> Conceptual and pre-normative framework, internal only, without formal governance standing.</li>
+            <li><strong>Post-publication state:</strong> Enforceable specification standard, publicly available, normatively operative, open for certification and regulatory reference.</li>
+            <li><strong>Governance operability date:</strong> April 2026.</li>
+            <li><strong>Certification operability date:</strong> April 2026.</li>
+            <li><strong>Audit trail opening date:</strong> April 2026, with this document as the initial entry.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>Prohibited States</h2>
+
+        <p>The following states are categorically and permanently prohibited for any document within the QODIQA corpus following the publication of this record. These prohibitions apply without exception, without waiver, and without the possibility of suspension except through a formal revision of this document conducted under the governance procedures of QODIQA-GC.</p>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Prohibited State 1 — Pre-v1 History</div>
+          <p><span class="status-prohibited">PROHIBITED</span> The QODIQA corpus has no formal history prior to Version 1.0. No document, record, draft, working paper, or prior publication may be cited as a prior version of any corpus document within any formal, regulatory, legal, or governance context. Claims of pre-v1 corpus history are factually incorrect as a matter of governance record and must not be recognized by any party operating under or against the QODIQA standard.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Prohibited State 2 — Undocumented Changes</div>
+          <p><span class="status-prohibited">PROHIBITED</span> No modification of any kind may be made to any corpus document without a corresponding entry in this Corpus Change Log, recorded in the format defined in Section 4. A modification for which no corresponding change log entry exists is invalid as a matter of governance record. The absence of a change log entry renders any apparent modification void, without normative effect, and unrecognized by the governance record, regardless of where the modified document is published or distributed.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Prohibited State 3 — Silent Updates</div>
+          <p><span class="status-prohibited">PROHIBITED</span> Silent updates of any kind, including corrections of typographical errors, formatting adjustments, cross-reference corrections, and numbering changes, are prohibited if applied without corresponding disclosure to the QODIQA governance authority and without a corresponding entry in this change log. The determination of whether a change is substantive or editorial is made exclusively by the governance authority defined in QODIQA-GC, not by the party proposing or applying the change.</p>
+        </div>
+
+        <div class="key-prop">
+          <div class="key-prop-title">Prohibited State 4 — Out-of-Band Versioning</div>
+          <p><span class="status-prohibited">PROHIBITED</span> No corpus document may carry any version designation, revision marker, draft label, working copy indicator, or equivalent annotation other than the version designation assigned through the formal governance workflow defined in QODIQA-GC and recorded in this change log. Informal versioning practices are not permitted as substitutes for formal version control and shall not be treated as normatively operative by any party.</p>
+        </div>
+      </div>
+
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Forward Compatibility</h2>
+
+        <p>This document is designed and required to serve as the permanent and unbroken historical record of the QODIQA corpus across its entire governance lifetime, without limit of time. All future change log entries, regardless of the nature, scope, or number of corpus documents they affect, shall be appended to this document in strict chronological order. The document therefore functions simultaneously as a historical record and as a governance instrument. Its integrity is a direct precondition for the integrity of the corpus itself.</p>
+
+        <p>Future entries shall follow the structured identity block format established in Section 4. Each entry shall carry a unique sequential reference number in the format QODIQA-CCL-ENTRY-NNN, where NNN is a zero-padded three-digit integer. The master entry recorded in this initial release carries reference QODIQA-CCL-ENTRY-001. The next governance event affecting any corpus document shall carry reference QODIQA-CCL-ENTRY-002, and the sequence shall continue without gap, without duplication, and without reuse of previously assigned reference numbers.</p>
+
+        <p>This document is itself subject to the same version control and governance controls as all other corpus documents. Any modification to the structure, format, procedural rules, or content of this Corpus Change Log requires a formal governance action under QODIQA-GC and a corresponding entry within the change log itself.</p>
+
+        <div class="decision-block">
+          <strong>Forward Compatibility Rules</strong>
+          <ul>
+            <li>All future entries are appended chronologically. No retroactive insertion is permitted.</li>
+            <li>Entry numbering is strictly sequential with no gaps, reuse, or duplication.</li>
+            <li>The genesis entry QODIQA-CCL-ENTRY-001 is immutable and may not be altered by any future governance action.</li>
+            <li>This document constitutes the permanent audit anchor for the QODIQA corpus. All version history derives from this record.</li>
+            <li>Any certification body, regulatory authority, or implementing party referencing the QODIQA corpus shall treat this document as the sole authoritative version history.</li>
+            <li>Modifications to this change log document are themselves subject to change log entry requirements.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="s-governance" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Governance Statement</span>
+        <h2><a class="anchor-link" href="#s-governance">#</a>Governance Statement</h2>
+
+        <div class="governance-block">
+          <span class="governance-label">Canonical Governance Declaration — QODIQA-CCL v1.0 — April 2026</span>
+          <p>The QODIQA Corpus Change Log and Version History, in the form of this document at Version 1.0, constitutes the immutable starting point of the QODIQA governance record. It establishes, without ambiguity and without the possibility of reinterpretation by any party or under any circumstances, the complete and final publication state of the QODIQA specification corpus at the moment of its initial formal release in April 2026.</p>
+          <p>Every corpus document listed in Section 1, Table 1.1 of this record is published at Version 1.0. No document in that table has a prior published version. No document in that table is in a partial, draft, provisional, or experimental state. The corpus is complete, internally consistent, and normatively operative as of the date recorded herein. The corpus synchronization state is VALID. The version baseline is LOCKED AT v1.0.</p>
+          <p>This record does not invite interpretation. It does not leave open questions regarding the publication state of any corpus document. It does not accommodate competing accounts of corpus history. The publication state documented here is a matter of governance fact, established through the formal publication process and recorded in the change log maintained under the authority of the QODIQA Governance Charter. Any assertion that conflicts with the contents of this document is without basis in the governance record and must be disregarded entirely by all parties operating in any governance, certification, regulatory, legal, or procurement context that references the QODIQA standard.</p>
+          <p>Future governance bodies, certification authorities, regulatory reviewers, procurement officers, legal counsel, and implementing organizations are directed to treat this document as the foundational layer of the QODIQA audit trail, the layer from which all subsequent governance history derives its authority, its sequence, and its meaning. No governance history predates this record. No governance history can supersede this record except through the formal amendment process that this record itself establishes and governs.</p>
+        </div>
+      </div>
+
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the Corpus Change Log and Version History of the QODIQA specification corpus. It is a governance-class record, not a technical specification. Its function is to provide a forensic-grade, audit-ready account of the complete publication and amendment history of all corpus documents, beginning with the initial synchronized release at Version 1.0 in April 2026 and extending forward across the full governance lifetime of the corpus.</p>
+
+          <p>This document forms part of the QODIQA corpus and should be read in conjunction with all constituent corpus documents. The complete list of corpus documents at the v1.0 baseline is as follows:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Consent as Infrastructure for Artificial Intelligence Technical Whitepaper</li>
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Implementation Playbook for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Conformance Test Suite Specification for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Regulatory Alignment Matrix for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+            <li>QODIQA — Economic Impact Analysis of Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Interoperability and Deployment Constraints</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Public Specification License</li>
+            <li>QODIQA — Positioning and Scope Limitation Statement</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+            <li>QODIQA — Use Case Dossiers for Runtime Consent Enforcement Deployments</li>
+            <li>QODIQA — Non-Compliance Conditions and Failure Modes</li>
+            <li>QODIQA — Conformance Verification Specification</li>
+            <li>QODIQA — Audit and Evidence Generation Model</li>
+            <li>QODIQA — System Boundary and Trust Model Specification</li>
+            <li>QODIQA — Failure Handling and Recovery Specification</li>
+            <li>QODIQA — Extended Adversarial Threat Model</li>
+            <li>QODIQA — Interoperability and Deployment Constraints</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Positioning and Scope Limitation Statement</li>
+            <li>QODIQA — Residual Risk and Assumption Disclosure Annex</li>
+          </ul>
+
+          <p>Version 1.0 of this document represents the initial formal release of the Corpus Change Log as part of the QODIQA standard corpus. This document is canonical, its genesis entry is immutable, and it constitutes the authoritative starting point and permanent audit anchor for all governance proceedings, certification activities, regulatory reviews, and dispute resolution processes conducted against the QODIQA standard.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-CCL</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Corpus Change Log and Version History</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Governance Record</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Canonical</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter (QODIQA-GC v1.0)</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Corpus Documents</span>
+            <span class="doc-id-val">28 documents, all registered at v1.0, April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Genesis Entry</span>
+            <span class="doc-id-val">QODIQA-CCL-ENTRY-001 — Immutable</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Corpus Change Log and Version History</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-CCL</p>
+      <p>Governance Record</p>
+      <p>Status: Canonical</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document constitutes the canonical governance record for the QODIQA specification corpus. It is the authoritative and permanent starting point for all audit, regulatory review, and governance proceedings conducted against the QODIQA standard. It does not constitute legal or regulatory advice.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-CCL &nbsp;·&nbsp; Version 1.0 — Canonical &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- ScrollSpy — single authoritative position-based system ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract',
+    's1','s1-table',
+    's2','s3',
+    's4','s4-master',
+    's5','s6','s7',
+    's-governance','s-status'
+  ];
+
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  let currentActive = null;
+  let rafPending    = false;
+
+  function setActive(id) {
+    if (id === currentActive) return;
+    currentActive = id;
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  /* Core: find the section whose top edge is closest to — but not below —
+     the 33% viewport reference line. Falls back to the last section whose
+     top has entered the viewport if none is above the line yet. */
+  function updateSpy() {
+    const refY  = window.innerHeight * 0.33;
+    let best    = null;
+    let bestTop = -Infinity;
+
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      if (top <= refY && top > bestTop) {
+        bestTop = top;
+        best    = sec.id;
+      }
+    });
+
+    /* If no section has crossed the line yet, activate the first one */
+    if (!best && sections.length) best = sections[0].id;
+
+    if (best) setActive(best);
+  }
+
+  function onScroll() {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => { rafPending = false; updateSpy(); });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  /* Run immediately after DOM is ready */
+  updateSpy();
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - offset,
+            behavior: 'smooth'
+          });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  const overlayEl = document.getElementById('overlay');
+  if (overlayEl) {
+    overlayEl.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlayEl.classList.remove('active');
+    });
+  }
+
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QODIQA — Consent as Infrastructure for Artificial Intelligence: Technical Whitepaper · v1.0</title>
+<meta name="description" content="QODIQA Consent as Infrastructure for Artificial Intelligence: Technical Whitepaper v1.0 — Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems. April 2026.">
+<meta property="og:title" content="QODIQA — Consent as Infrastructure for Artificial Intelligence: Technical Whitepaper">
+<meta property="og:description" content="A conceptual and technical framework for implementing machine-readable, deterministic runtime consent enforcement in artificial intelligence systems.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --ink:        #1A1C20;
+  --ink-2:      #2C2F36;
+  --ink-3:      #3A3F48;
+  --accent:     #7A6A50;
+  --muted:      #6B7280;
+  --rule:       #D6D2CC;
+  --border:     #D4D0CA;
+  --bg:         #F6F4F0;
+  --text:       #1A1C20;
+  --text-2:     #3A3F48;
+  --text-3:     #5A6070;
+  --sidebar-w:  252px;
+  --col:        800px;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono:  'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --lh:    1.70;
+  --lh-h:  1.22;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: var(--lh);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   COVER
+   ============================================================ */
+#cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0A0C0F;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(122,106,80,0.09) 0%, transparent 65%),
+    linear-gradient(180deg, #0A0C0F 0%, #0C0F13 50%, #0A0C0F 100%),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 52px 52px, 52px 52px;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 48px;
+  text-align: center;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(10,12,15,0.65) 100%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(122,106,80,0.45) 50%, transparent 100%);
+}
+
+
+.cover-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cover-title { font-family: var(--serif); text-align: center; width: 100%; }
+
+.cover-title .qodiqa-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(3.4rem, 7.8vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(122,106,80,0.10), 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.cover-title .title-main {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.70rem, 3.7vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.20;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: -0.010em;
+}
+
+.cover-title .title-main .italic-part {
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.58);
+}
+
+.cover-info-block {
+  width: 100%;
+  max-width: 520px;
+  margin: 64px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-info-divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(122,106,80,0.55), transparent);
+  margin: 0 auto 32px;
+}
+
+.cover-info-subtitle {
+  font-family: var(--serif);
+  font-size: 0.70rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.50);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cover-info-date {
+  font-family: var(--serif);
+  font-size: 0.76rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.36);
+  letter-spacing: 0.14em;
+  margin-bottom: 24px;
+}
+
+.cover-info-badge {
+  display: inline-block;
+  border: 1px solid rgba(122,106,80,0.38);
+  border-top: 1px solid rgba(122,106,80,0.55);
+  padding: 7px 28px 6px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  background: rgba(122,106,80,0.06);
+  margin-bottom: 32px;
+}
+
+.cover-info-tagline {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.50);
+  max-width: 440px;
+  line-height: 1.82;
+  font-style: italic;
+}
+
+#cover p,
+#cover .cover-info-subtitle,
+#cover .cover-info-date,
+#cover .cover-info-tagline {
+  text-align: center;
+  hyphens: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.15);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: #0A0C0F;
+  border-right: 1px solid rgba(255,255,255,0.055);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #2A2F38 transparent;
+}
+
+#sidebar::-webkit-scrollbar       { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #2A2F38; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.60);
+  display: block;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0 32px;
+}
+
+.nav-item {
+  display: block;
+  padding: 4px 20px 4px 18px;
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: #A0A8B2;
+  text-decoration: none;
+  line-height: 1.45;
+  border-left: 2px solid transparent;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.nav-item:hover {
+  color: #C4BEB2;
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(122,106,80,0.32);
+}
+
+.nav-item.active {
+  color: #E2D8C8;
+  border-left-color: #A8966E;
+  background: rgba(122,106,80,0.14);
+  font-weight: 600;
+}
+
+.nav-item.sub {
+  padding-left: 32px;
+  font-size: 0.69rem;
+  color: #6E7880;
+}
+
+.nav-item.sub:hover  { color: #9A9490; }
+.nav-item.sub.active { color: #BEB4A8; }
+
+.sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.62rem;
+  color: #3A4050;
+  line-height: 1.5;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-header { display: none; }
+
+.nav-toggle {
+  display: none;
+  background: #0A0C0F;
+  color: #FFF;
+  border: 1px solid rgba(255,255,255,0.10);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 99;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+#content {
+  flex: 1;
+  min-width: 0;
+  padding: 80px 80px 108px;
+}
+
+.content-inner {
+  max-width: var(--col);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.doc-section {
+  margin-top: 32px;
+  padding-top: 0;
+}
+
+.doc-section:first-child { margin-top: 0; }
+
+.doc-section:has(.section-divider) { margin-top: 48px; }
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  margin-bottom: 24px;
+  opacity: 0.45;
+}
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-kerning: normal;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.80;
+}
+
+h2 {
+  font-size: clamp(1.28rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  line-height: var(--lh-h);
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+h2 .anchor-link {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: opacity 0.12s;
+}
+
+h2:hover .anchor-link { opacity: 0.7; }
+
+h3 {
+  font-size: 1.00rem;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.doc-section > h3:first-child { margin-top: 0; }
+
+/* ============================================================
+   BODY TEXT
+   ============================================================ */
+p {
+  font-size: 0.965rem;
+  line-height: var(--lh);
+  color: var(--text);
+  margin-bottom: 1.0em;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+  orphans: 2;
+  widows: 2;
+}
+
+em     { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+ul, ol {
+  padding-left: 1.35em;
+  margin-bottom: 0.85em;
+}
+
+li {
+  font-size: 0.965rem;
+  line-height: 1.65;
+  margin-bottom: 4px;
+  color: var(--text);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   ABSTRACT BLOCK
+   ============================================================ */
+.abstract-block {
+  background: #F1EFEA;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  margin: 0 0 40px;
+}
+
+.abstract-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.80;
+}
+
+.abstract-block p {
+  font-size: 0.930rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================
+   CODE
+   ============================================================ */
+pre {
+  background: #191C21;
+  color: #BEB9B0;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 16px 0 24px;
+  border-left: 2px solid rgba(122,106,80,0.45);
+  font-size: 0.800rem;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.840em;
+  background: rgba(122,106,80,0.10);
+  padding: 1px 5px;
+  color: var(--accent);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 1em;
+}
+
+.code-label {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.70;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 24px 0 32px;
+  border: 1px solid #C4C0BA;
+  max-width: 100%;
+}
+
+.table-caption {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  padding: 9px 15px;
+  background: #191C21;
+  color: rgba(255,255,255,0.50);
+  display: block;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1C1F25;
+  color: rgba(255,255,255,0.65);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 11px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+
+th:last-child { border-right: none; }
+
+td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #D4D0CA;
+  border-right: 1px solid #DEDAD5;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+td:last-child  { border-right: none; }
+td:first-child { font-weight: 500; color: var(--ink-2); text-align: center; }
+
+tr:nth-child(even) td { background: #EAE7E2; }
+tr:last-child td      { border-bottom: none; }
+
+/* ============================================================
+   KEY PROPERTY BLOCKS
+   ============================================================ */
+.key-prop {
+  background: #F2F0EB;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px;
+  margin: 12px 0 16px;
+}
+
+.key-prop-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+  opacity: 0.80;
+}
+
+.key-prop p {
+  margin: 0;
+  font-size: 0.920rem;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   DECISION / CALLOUT BLOCKS
+   ============================================================ */
+.decision-block {
+  background: #EEEBE6;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--ink-3);
+  padding: 12px 20px;
+  margin: 12px 0;
+}
+
+.decision-block strong {
+  font-family: var(--mono);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.decision-block p { font-size: 0.905rem; margin: 0; line-height: 1.60; }
+
+.decision-block ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  margin: 6px 0 0;
+}
+
+.decision-block ul li {
+  font-size: 0.905rem;
+  padding: 2px 0;
+  margin-bottom: 3px;
+  line-height: 1.58;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram-wrap {
+  margin: 24px 0 24px;
+  padding: 36px 24px 24px;
+  background: #F2EFEA;
+  border: 1px solid #D2CEC8;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.diagram-caption {
+  font-family: var(--sans);
+  font-size: 0.73rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.55;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FOOTNOTES
+   ============================================================ */
+.footnotes {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #D0CCC6;
+}
+
+.footnote {
+  font-size: 0.760rem;
+  color: var(--text-3);
+  line-height: 1.58;
+  margin-bottom: 4px;
+  padding-left: 17px;
+  position: relative;
+  font-family: var(--sans);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.footnote::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* ============================================================
+   SECTION NOTE
+   ============================================================ */
+.section-note {
+  font-size: 0.770rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid #D0CCC6;
+  padding-top: 12px;
+  margin-top: 32px;
+  line-height: 1.62;
+}
+
+/* ============================================================
+   DOCUMENT STATUS BLOCK
+   ============================================================ */
+.doc-status-block {
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 3px solid var(--accent);
+  padding: 26px 30px;
+  margin: 16px 0;
+}
+
+.doc-status-block p { text-align: justify; hyphens: auto; }
+
+.corpus-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+  border-top: 1px solid #D4D0CC;
+  border-bottom: 1px solid #D4D0CC;
+}
+
+.corpus-list li {
+  font-size: 0.890rem;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-align: left;
+  hyphens: none;
+}
+
+.corpus-list li:last-child { border-bottom: none; }
+
+.contact-block {
+  margin-top: 0;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contact-block p {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-bottom: 10px;
+  hyphens: none;
+}
+
+.contact-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px !important;
+}
+
+.contact-detail {
+  font-size: 0.840rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 2px !important;
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-detail a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT IDENTITY BLOCK
+   ============================================================ */
+.doc-identity-block {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: #EDEAE5;
+  border: 1px solid #D2CEC8;
+  border-left: 2px solid var(--ink-3);
+  font-family: var(--mono);
+}
+
+.doc-identity-row {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+
+.doc-identity-row:last-child { border-bottom: none; }
+
+.doc-id-key {
+  flex: 0 0 200px;
+  color: var(--muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.doc-id-val {
+  color: var(--text);
+  font-size: 0.760rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0A0C0F;
+  border: 1px solid rgba(122,106,80,0.30);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s, background 0.12s;
+  z-index: 50;
+}
+
+#back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#back-to-top:hover   { background: #131620; border-color: rgba(122,106,80,0.50); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #0A0C0F;
+  color: rgba(255,255,255,0.50);
+  padding: 44px 80px;
+  margin-left: var(--sidebar-w);
+  border-top: 1px solid rgba(122,106,80,0.18);
+}
+
+.footer-inner {
+  max-width: calc(var(--col) + 160px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-block .f-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(122,106,80,0.70);
+  font-family: var(--mono);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.footer-block p {
+  font-size: 0.760rem;
+  color: rgba(255,255,255,0.50);
+  line-height: 1.65;
+  margin: 0 0 3px;
+  text-align: left;
+}
+
+.footer-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 4px 0;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,0.28);
+  font-family: var(--mono);
+  font-size: 0.620rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  #sidebar, #back-to-top, .nav-toggle, .overlay, .cover-scroll-hint { display: none !important; }
+  footer     { margin-left: 0; }
+  #content   { padding: 36px 48px; }
+  pre        { white-space: pre-wrap; }
+  body       { font-size: 11pt; }
+  h2         { font-size: 16pt; }
+  #cover     { min-height: auto; padding: 80px 40px; page-break-after: always; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  #content { padding: 64px 56px 96px; }
+  footer   { padding: 36px 56px; }
+}
+
+@media (max-width: 1024px) {
+  #content { padding: 52px 40px 80px; }
+  footer   { padding: 32px 40px; }
+  .footer-inner { gap: 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: #0A0C0F;
+    border-bottom: 1px solid rgba(122,106,80,0.15);
+    z-index: 210;
+  }
+
+  .mobile-contents-label {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    will-change: transform;
+  }
+
+  #sidebar.open { transform: translateX(0); }
+  .overlay.active { display: block; }
+
+  #content { padding: 68px 20px 52px; }
+
+  footer { margin-left: 0; padding: 28px 20px; }
+  .footer-inner  { grid-template-columns: 1fr; gap: 22px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  .table-wrapper { margin: 16px 0; width: 100%; }
+  h2 .anchor-link { display: none; }
+
+  .doc-identity-row { flex-direction: column; gap: 2px; }
+  .doc-id-key { flex: none; }
+
+  pre { font-size: 0.760rem; padding: 14px 16px; }
+  .cover-info-block { margin-top: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section id="cover">
+  <div class="cover-inner">
+    <h1 class="cover-title">
+      <span class="qodiqa-brand">QODIQA</span>
+      <span class="title-main">Consent as Infrastructure<br>for <span class="italic-part">Artificial Intelligence</span></span>
+    </h1>
+    <div class="cover-info-block">
+      <div class="cover-info-divider"></div>
+      <p class="cover-info-subtitle">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</p>
+      <p class="cover-info-date">April 2026</p>
+      <div class="cover-info-badge">QODIQA Technical Whitepaper &nbsp;·&nbsp; Version 1.0</div>
+      <p class="cover-info-tagline">Conceptual and technical framework for machine-readable, deterministically enforceable consent in artificial intelligence systems.</p>
+    </div>
+  </div>
+  <div class="cover-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+      <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="7" y1="5" x2="7" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MOBILE NAV HEADER -->
+<header class="mobile-nav-header">
+  <button class="nav-toggle" id="navToggle" aria-label="Open navigation">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="white">
+      <rect width="18" height="2"/><rect y="6" width="18" height="2"/><rect y="12" width="18" height="2"/>
+    </svg>
+  </button>
+  <span class="mobile-contents-label">Contents</span>
+</header>
+<div class="overlay" id="overlay"></div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar" aria-label="Document navigation">
+    <div class="sidebar-header">
+      <span class="sidebar-nav-label">Contents</span>
+    </div>
+    <div class="sidebar-nav">
+      <a class="nav-item" href="#cover">Cover</a>
+      <a class="nav-item" href="#s-abstract">Abstract</a>
+      <a class="nav-item" href="#s1">1. Executive Summary</a>
+      <a class="nav-item" href="#s2">2. Introduction</a>
+      <a class="nav-item" href="#s3">3. The Consent Gap</a>
+      <a class="nav-item sub" href="#s3-1">3.1 Decision-Making Without Mandate</a>
+      <a class="nav-item sub" href="#s3-2">3.2 Implicit Consent Failure Modes</a>
+      <a class="nav-item sub" href="#s3-3">3.3 Authorization vs. Consent</a>
+      <a class="nav-item" href="#s4">4. Requirements</a>
+      <a class="nav-item sub" href="#s4-1">4.1 Explicitness</a>
+      <a class="nav-item sub" href="#s4-2">4.2 Contextual Binding</a>
+      <a class="nav-item sub" href="#s4-3">4.3 Time-Bounded Validity</a>
+      <a class="nav-item sub" href="#s4-4">4.4 Deterministic Evaluation</a>
+      <a class="nav-item sub" href="#s4-5">4.5 Separation of Responsibility</a>
+      <a class="nav-item sub" href="#s4-6">4.6 Fail-Closed Semantics</a>
+      <a class="nav-item sub" href="#s4-7">4.7 Auditability</a>
+      <a class="nav-item" href="#s5">5. The QODIQA Framework</a>
+      <a class="nav-item sub" href="#s5-1">5.1 Architectural Positioning</a>
+      <a class="nav-item sub" href="#s5-2">5.2 Input Contract</a>
+      <a class="nav-item sub" href="#s5-3">5.3 Consent Resolution</a>
+      <a class="nav-item sub" href="#s5-4">5.4 Policy Evaluation</a>
+      <a class="nav-item sub" href="#s5-5">5.5 Decision Outcomes</a>
+      <a class="nav-item sub" href="#s5-6">5.6 Failure Semantics</a>
+      <a class="nav-item sub" href="#s5-7">5.7 Scope and Boundaries</a>
+      <a class="nav-item" href="#s6">6. System Architecture</a>
+      <a class="nav-item sub" href="#s6-1">6.1 Architectural Overview</a>
+      <a class="nav-item sub" href="#s6-2">6.2 Intent Declaration</a>
+      <a class="nav-item sub" href="#s6-3">6.3 Consent Resolution</a>
+      <a class="nav-item sub" href="#s6-4">6.4 Policy Evaluation</a>
+      <a class="nav-item sub" href="#s6-5">6.5 Frozen Context</a>
+      <a class="nav-item sub" href="#s6-6">6.6 Decision Artifacts</a>
+      <a class="nav-item sub" href="#s6-7">6.7 Failure Semantics</a>
+      <a class="nav-item sub" href="#s6-8">6.8 Novelty</a>
+      <a class="nav-item" href="#s7">7. Determinism &amp; Proof</a>
+      <a class="nav-item sub" href="#s7-1">7.1 Determinism</a>
+      <a class="nav-item sub" href="#s7-2">7.2 Stable Artifacts</a>
+      <a class="nav-item sub" href="#s7-3">7.3 Replay Invariant</a>
+      <a class="nav-item sub" href="#s7-4">7.4 Auditability</a>
+      <a class="nav-item sub" href="#s7-5">7.5 Proof Over Explanation</a>
+      <a class="nav-item sub" href="#s7-6">7.6 Intentional Limits</a>
+      <a class="nav-item" href="#s8">8. Integration &amp; Operations</a>
+      <a class="nav-item sub" href="#s8-2">8.2 Latency Constraints</a>
+      <a class="nav-item sub" href="#s8-3">8.3 Fail-Closed Behavior</a>
+      <a class="nav-item sub" href="#s8-4">8.4 Adoption</a>
+      <a class="nav-item sub" href="#s8-5">8.5 Resistance to Bypass</a>
+      <a class="nav-item sub" href="#s8-6">8.6 Transparency</a>
+      <a class="nav-item" href="#s9">9. Limitations &amp; Trade-offs</a>
+      <a class="nav-item" href="#s10">10. Conclusion</a>
+      <a class="nav-item" href="#s-status">Document Status</a>
+    </div>
+    <div class="sidebar-footer">
+      &copy; 2026 QODIQA<br>All rights reserved.
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="content">
+    <div class="content-inner">
+
+      <!-- ABSTRACT -->
+      <div id="s-abstract" class="doc-section">
+        <div class="abstract-block">
+          <span class="abstract-label">Abstract</span>
+          <p>Artificial intelligence systems increasingly operate as autonomous or semi-autonomous decision-making entities within economic, institutional, and social environments. While significant effort has been directed toward AI governance, regulation, and model oversight, the question of how consent is explicitly represented, validated, and enforced at runtime remains largely unresolved. In most contemporary systems, consent is implicit, static, or externalized to legal and policy frameworks that are not interpretable by machines and cannot be enforced during execution. This paper introduces QODIQA, a consent layer designed to formalize consent as a first-class, machine-readable primitive within AI-native systems. The proposed framework defines consent in terms of intent, scope, purpose, duration, revocability, and traceability, enabling AI systems to evaluate authorization conditions prior to executing actions. By embedding consent directly into system architecture rather than treating it as a post hoc or compliance-driven construct, QODIQA enables real-time enforcement, auditable decision flows, and verifiable accountability. The paper outlines the conceptual foundations, system architecture, and integration model of the QODIQA framework, and examines its implications for AI governance, risk reduction, and human agency in increasingly autonomous computational environments.</p>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div id="s1" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 1</span>
+        <h2><a class="anchor-link" href="#s1">#</a>Executive Summary</h2>
+
+        <p>Artificial intelligence systems have moved beyond experimentation and are now embedded in the core execution paths of modern organizations. They generate outputs, trigger actions, and influence decisions with legal, financial, and societal consequences. While model capabilities have advanced rapidly, the mechanisms used to authorize, constrain, and justify AI behavior have remained largely static.</p>
+
+        <p>In most environments, consent and authorization exist outside the system that executes decisions: captured in policies, encoded inconsistently across services, or enforced only after the fact. This mismatch has created a growing structural risk.</p>
+
+        <p>Today's AI governance efforts focus primarily on documentation, compliance processes, and retrospective accountability. These approaches are necessary but insufficient. Risk does not materialize in policy documents or audit reports; it materializes at the moment an AI system acts. Yet most organizations cannot deterministically demonstrate that a specific AI action was authorized for a specific purpose, using specific data, under a valid consent state, at the exact time the action occurred. This inability is not a tooling problem. It is an infrastructure gap.</p>
+
+        <p>QODIQA addresses this gap by introducing an AI consent and decision enforcement layer that operates before execution. Rather than interpreting law, inferring intent, or applying probabilistic judgment, QODIQA formalizes consent as a machine-readable, enforceable primitive. Every AI action is evaluated at runtime against explicit intent, resolved consent state, and an immutable policy context. The result is a deterministic outcome: allow, deny, or allow with explicit restrictions, which downstream systems can rely on without ambiguity.</p>
+
+        <p>The defining property of QODIQA is determinism. Decisions are treated as artifacts, not transient responses. Given the same declared request, the same policy version, and the same evaluation rules, the system will always produce the same decision. This behavior is enforced through closed request contracts, immutable and versioned policies, frozen evaluation contexts, and fail-closed semantics. If required inputs are missing, inconsistent, or unavailable, the system refuses to decide. This deliberate rigidity removes entire classes of governance failures caused by defaults, inference, and best-effort behavior.</p>
+
+        <p>By separating consent resolution from policy evaluation, QODIQA preserves human responsibility while ensuring mechanical enforcement. Consent is resolved explicitly as state: scoped, purpose-bound, time-limited, and revocable, before any policy logic is applied. Policies do not reason about consent; they declare the conditions they require.</p>
+
+        <p>This separation simplifies reasoning, prevents silent drift, and ensures that changes to consent or policy cannot retroactively alter past decisions. A critical consequence of this architecture is verifiability. Every decision can be replayed, independently validated, and traced back to a stable, immutable set of inputs. Audits move beyond interpretive narratives and become reproducible checks against deterministic decision artifacts. Accountability shifts from explanation to proof.</p>
+
+        <p>QODIQA is intentionally minimal. It is not a user interface, a compliance dashboard, or a model-level governance tool. It does not inspect raw data, perform semantic analysis, or assess risk probabilistically. Its scope ends at enforcement. More advanced reasoning, analytics, and reporting can exist downstream, but the core layer remains focused on a single responsibility: ensuring that AI execution is authorized, reproducible, and defensible by design.</p>
+
+        <p>As AI systems continue to scale in autonomy and reach, governance mechanisms that rely on documentation, manual review, or post hoc mitigation will become increasingly inadequate. Embedding consent enforcement directly into the execution path represents a structural shift: from policy-centric oversight to runtime control. By making authorization a prerequisite for execution, QODIQA transforms AI governance from an external obligation into an intrinsic property of the system itself.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div id="s2" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 2</span>
+        <h2><a class="anchor-link" href="#s2">#</a>Introduction</h2>
+
+        <p>Artificial intelligence has transitioned from a specialized capability to a general-purpose infrastructure embedded across modern software systems. AI models now operate inside customer support platforms, financial systems, healthcare workflows, internal decision tools, and public-sector services. In these environments, AI is no longer experimental or advisory; it executes actions, transforms data, and produces outcomes with real-world consequences.</p>
+
+        <p>This shift has exposed a fundamental asymmetry. While AI capabilities have become increasingly powerful and accessible, the mechanisms used to control their behavior remain fragmented, informal, and largely external to execution. Authorization is often implied rather than enforced. Consent is captured once and assumed to persist indefinitely. Policies are written for humans, not machines, and enforcement is deferred to manual review or post hoc remediation.</p>
+
+        <p>Much of the current discourse around AI governance focuses on regulation, ethical frameworks, and organizational processes. These efforts are necessary, but they operate at a different layer of abstraction. Regulation defines obligations, policies describe intent, and governance frameworks assign responsibility. None of these, by themselves, ensure that an AI system will act only within authorized boundaries at runtime. The gap between declared rules and executed behavior is where risk accumulates.</p>
+
+        <p>In practice, this gap manifests in predictable ways. AI features are delayed or constrained due to uncertainty around data usage. Engineering teams reimplement governance logic inconsistently across services. Legal and compliance functions rely on documentation rather than verifiable guarantees. When incidents occur, organizations struggle to reconstruct what happened, which rules applied, and whether consent was valid at the moment of execution. These failures are not primarily the result of poor intent, but of missing infrastructure.</p>
+
+        <p>This paper approaches AI governance from a system design perspective. Rather than asking how policies should be written or how models should behave, it asks how consent, intent, and authorization can be represented and enforced in a form that machines can reliably execute. Addressing this requires moving governance mechanisms closer to the execution path, where decisions are made and risk is realized.</p>
+
+        <p>The remainder of this paper examines the structural limitations of existing AI governance approaches, defines the properties required for enforceable consent in AI-native systems, and introduces a framework for embedding consent enforcement directly into runtime decision flows.</p>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div id="s3" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 3</span>
+        <h2><a class="anchor-link" href="#s3">#</a>The Consent Gap in Artificial Intelligence</h2>
+
+        <p>Artificial intelligence systems increasingly operate as autonomous or semi-autonomous actors within complex organizational environments. They request access to data, perform transformations, generate outputs, and trigger downstream actions.</p>
+
+        <p>Yet the mechanisms that govern whether these actions are legitimately authorized remain largely implicit. Consent is often assumed, inherited, or approximated, rather than explicitly evaluated at the moment an AI action occurs. This creates a structural gap between intention and execution.</p>
+
+        <p>In most AI-enabled systems, authorization is treated as a static prerequisite rather than a dynamic condition. Access permissions are granted in advance, consent is captured once, and policies are assumed to apply uniformly across time, context, and use cases.</p>
+
+        <p>However, AI execution is inherently contextual. The same data, processed by the same model, can be legitimate for one purpose and invalid for another. When consent is not evaluated in relation to who is acting, why the action is performed, what data is involved, and when the action occurs, control degrades into assumption.</p>
+
+        <p>This gap widens as AI systems scale. Large organizations operate multiple teams, services, models, and data sources, each evolving independently. Governance rules may exist, but their enforcement is fragmented across application code, middleware, and manual review processes.</p>
+
+        <p>Engineers are forced to reimplement authorization logic repeatedly. Legal and compliance teams rely on documentation and process controls that cannot be enforced programmatically. Over time, the system's actual behavior diverges from its declared constraints.</p>
+
+        <p>A common response to this problem is increased oversight: additional policies, review gates, approval workflows, or logging requirements. While these measures may improve visibility, they do not address the core issue. Oversight mechanisms observe behavior after execution; they do not constrain it at runtime. Logging explains what happened, but it does not prevent unauthorized actions. Reviews assign responsibility, but they do not provide machine-verifiable guarantees.</p>
+
+        <p>The limitations of implicit consent become most visible during failure. When an incident occurs, organizations attempt to reconstruct the chain of decisions that led to an outcome. They ask whether consent was valid, which policy applied, and whether the action should have been allowed. In many cases, these questions cannot be answered deterministically.</p>
+
+        <p>Policies may have changed, consent may have expired, or enforcement logic may have differed across services. The system cannot prove what rules were in effect at the moment of execution, only what rules exist now.</p>
+
+        <p>This inability to prove authorization is not an edge case; it is a systemic property of current AI architectures. Consent is treated as metadata rather than as an executable constraint. Authorization is enforced indirectly, if at all. As AI systems gain autonomy and operate at higher velocity, these assumptions become increasingly fragile.</p>
+
+        <p>The consent gap, therefore, is not a failure of intent or regulation. It is a failure of system design. Without a mechanism to evaluate consent explicitly and enforce it deterministically at runtime, AI systems will continue to act beyond the boundaries that organizations believe they have defined.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;min-width:480px;">
+            <text x="170" y="26" text-anchor="middle" font-family="IBM Plex Serif,serif" font-size="14" font-weight="600" fill="#22252B">Implicit Consent</text>
+            <text x="170" y="44" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#7A8090">(Common Model)</text>
+            <rect x="112" y="60" width="116" height="34" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+            <text x="170" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Request</text>
+            <line x1="170" y1="94" x2="170" y2="112" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arr)"/>
+            <rect x="100" y="112" width="140" height="34" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+            <text x="170" y="134" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Application Logic</text>
+            <line x1="170" y1="146" x2="170" y2="164" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arr)"/>
+            <rect x="93" y="164" width="154" height="34" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+            <text x="170" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Static Permissions (roles/ACLs)</text>
+            <line x1="170" y1="198" x2="170" y2="216" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arr)"/>
+            <rect x="112" y="216" width="116" height="34" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+            <text x="170" y="237" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">AI Execution</text>
+            <line x1="170" y1="250" x2="170" y2="268" stroke="#B8B0A8" stroke-width="1.2" marker-end="url(#arr)"/>
+            <rect x="112" y="268" width="116" height="30" rx="2" fill="none" stroke="#B8B0A8" stroke-width="1.2"/>
+            <text x="170" y="288" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Output</text>
+            <text x="10" y="170" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">· consent assumed</text>
+            <text x="10" y="183" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">· purpose implicit</text>
+            <text x="10" y="196" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#7A8090">· time ignored</text>
+            <line x1="340" y1="24" x2="340" y2="310" stroke="#B8B2A8" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="570" y="26" text-anchor="middle" font-family="IBM Plex Serif,serif" font-size="14" font-weight="600" fill="#22252B">Explicit Consent</text>
+            <text x="570" y="44" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#7A8090">(Enforced Model)</text>
+            <rect x="512" y="60" width="116" height="34" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="570" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Request</text>
+            <line x1="570" y1="94" x2="570" y2="112" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrB)"/>
+            <rect x="490" y="112" width="160" height="34" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="570" y="127" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#22252B">Declared Intent</text>
+            <text x="570" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#7A8090">(who / what / purpose)</text>
+            <line x1="570" y1="146" x2="570" y2="164" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrB)"/>
+            <rect x="490" y="164" width="160" height="34" rx="2" fill="rgba(46,90,172,0.05)" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="570" y="179" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#22252B">Consent Resolution</text>
+            <text x="570" y="193" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#7A8090">(explicit state)</text>
+            <line x1="570" y1="198" x2="570" y2="216" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrB)"/>
+            <rect x="490" y="216" width="160" height="34" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="570" y="238" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#22252B">Policy Evaluation</text>
+            <line x1="570" y1="250" x2="570" y2="268" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrB)"/>
+            <rect x="490" y="268" width="160" height="30" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="570" y="284" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#22252B">AI Execution (or Rejection)</text>
+            <text x="358" y="170" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#7A8090">· consent explicitly validated</text>
+            <text x="358" y="182" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#7A8090">· purpose explicitly defined</text>
+            <text x="358" y="194" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#7A8090">· time delimited (transient)</text>
+            <text x="170" y="312" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-style="italic" fill="#8A8680">Authorization inferred, not evaluated</text>
+            <text x="570" y="312" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-style="italic" fill="#7A6A50">Authorization requires positive confirmation</text>
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#A8A4A0"/>
+              </marker>
+              <marker id="arrB" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#7A6A50"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="diagram-caption">Figure 1. Comparison of implicit consent (common model) and explicit consent (enforced model) in AI execution flows.</div>
+        </div>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Implicit consent refers to authorization derived from inherited permissions, prior access grants, or assumed legitimacy, without explicit validation at the moment of execution.</div>
+          <div class="footnote" data-num="²">Declared intent denotes an explicit, machine-readable specification of who is acting, for what purpose, and under which constraints, provided as part of the execution request.</div>
+          <div class="footnote" data-num="³">Consent resolution represents the evaluation of consent as explicit state: scoped, purpose-bound, time-limited, and revocable, prior to policy evaluation.</div>
+          <div class="footnote" data-num="⁴">Policy evaluation is performed against an immutable snapshot of applicable rules, ensuring that authorization decisions are deterministic and reproducible.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3.1 -->
+      <div id="s3-1" class="doc-section">
+        <h3>3.1 Decision-Making Without Explicit Mandate</h3>
+
+        <p>In many contemporary AI systems, decisions are executed without an explicit, verifiable mandate tied to the moment of action. Authorization is inferred from prior access grants, inherited permissions, or generalized system roles rather than evaluated as a concrete condition of execution. Once an AI component is permitted to operate within a system, its subsequent actions are often treated as implicitly authorized, regardless of changes in context, purpose, or consent state.</p>
+
+        <p>This pattern is not accidental. It is a consequence of how authorization has historically been modeled in software systems. Traditional access control mechanisms were designed for static actors and predictable operations. AI systems, by contrast, act dynamically. They reuse data across purposes, chain multiple operations, and adapt behavior based on upstream inputs. When authorization is not explicitly revalidated for each action, control shifts from deliberate permission to assumed legitimacy.</p>
+
+        <p>The absence of an explicit mandate creates ambiguity at multiple levels. From an engineering perspective, it becomes unclear which conditions must hold true for an action to be allowed. From a governance perspective, responsibility diffuses across teams and systems, making it difficult to determine who authorized what and under which constraints. From a legal and compliance perspective, the system cannot demonstrate that consent was valid for the specific action performed, only that some form of access existed at some point in time.</p>
+
+        <p>In practice, this leads to fragile control boundaries. AI systems may operate correctly under expected conditions, yet silently exceed their intended scope when inputs change or new use cases emerge. Because authorization is not evaluated as part of the execution path, violations are often discovered only after the fact, through audits, incident reviews, or external scrutiny. At that point, remediation is limited to explanation rather than prevention.</p>
+
+        <p>Attempts to compensate for this gap typically involve adding more process around AI usage: approval workflows, documentation requirements, or manual reviews. While these measures may reduce risk in isolated cases, they do not scale with system complexity or execution speed. As AI systems operate continuously and autonomously, control mechanisms that rely on human intervention or retrospective analysis become increasingly ineffective.</p>
+
+        <p>Decision-making without an explicit mandate is therefore not merely a compliance issue; it is a structural flaw. Without a mechanism that binds authorization directly to execution, AI systems are left to operate on assumptions rather than guarantees. As autonomy increases, these assumptions become harder to justify and impossible to prove.</p>
+      </div>
+
+      <!-- SECTION 3.2 -->
+      <div id="s3-2" class="doc-section">
+        <h3>3.2 Implicit Consent and Its Failure Modes</h3>
+
+        <p>Implicit consent arises when authorization is assumed rather than evaluated. In AI-enabled systems, this typically occurs when access to data or system capabilities is granted once and then reused across multiple actions, purposes, or timeframes without revalidation. The system treats prior approval as a standing mandate, even as execution contexts change.</p>
+
+        <p>This approach may appear efficient, but it introduces several failure modes that become increasingly severe as AI systems scale. The first failure mode is <strong>purpose drift</strong>. Data collected or authorized for a specific use, such as customer support or internal analytics, is later reused for a different purpose, such as model training or behavioral inference. Because consent is not evaluated at the level of individual actions, the system lacks a mechanism to distinguish legitimate reuse from unauthorized expansion.</p>
+
+        <p>A second failure mode is <strong>temporal decay</strong>. Consent is rarely perpetual. It may expire, be revoked, or become invalid due to changes in regulation, contractual terms, or user preferences. In systems built on implicit consent, there is no reliable way to ensure that execution reflects the current validity of consent. AI actions continue to operate on outdated assumptions, and violations are detected only retrospectively, if at all.</p>
+
+        <p>A third failure mode emerges from <strong>context collapse</strong>. AI systems often serve multiple actors, applications, and data domains simultaneously. When consent is implicit, the system cannot reliably differentiate between actions initiated by different entities or for different objectives. Authorization becomes coarse-grained, and nuanced constraints, such as jurisdictional boundaries or data category restrictions, are flattened into generalized permissions.</p>
+
+        <p>These failure modes are compounded by system complexity. As organizations introduce additional models, services, and integrations, implicit consent logic fragments across codebases and teams. Each implementation encodes slightly different assumptions about what is allowed. Over time, this leads to inconsistent enforcement, unintended behavior, and an erosion of trust in governance controls.</p>
+
+        <p>Importantly, these failures are difficult to observe in real time. Logging and monitoring may capture that an action occurred, but not whether it should have been allowed under the precise conditions present at execution. When incidents are investigated, teams must reconstruct intent and authorization from partial evidence, often relying on interpretation rather than proof.</p>
+
+        <p>Implicit consent is therefore not merely an implementation shortcut; it is a structural liability. It substitutes assumption for verification and convenience for control. As AI systems become more autonomous and interconnected, this liability grows in proportion to their impact.</p>
+      </div>
+
+      <!-- SECTION 3.3 -->
+      <div id="s3-3" class="doc-section">
+        <h3>3.3 The Difference Between Authorization and Consent</h3>
+
+        <p>In discussions about AI governance, the terms <em>authorization</em> and <em>consent</em> are often used interchangeably. In practice, they represent distinct concepts that operate at different levels of a system. Conflating them leads to ambiguous enforcement, inconsistent controls, and an overreliance on assumptions rather than guarantees.</p>
+
+        <p><strong>Authorization</strong> refers to the technical permission granted to an actor or system to perform a class of actions. It is typically expressed through roles, access control lists, API keys, or service identities. Authorization answers the question: is this actor allowed to perform this type of operation within the system? It is generally static, coarse-grained, and optimized for system access rather than contextual validity.</p>
+
+        <p><strong>Consent</strong>, by contrast, is contextual and conditional. It answers a different question: is this specific action legitimate under the current purpose, scope, time, and constraints? Consent is not a standing permission. It is a state that can be granted, limited, revoked, or expired, and its validity depends on the circumstances of execution. In AI systems, consent must be evaluated in relation to what data is being used, for what purpose, and at the exact moment an action occurs.</p>
+
+        <p>Many AI systems rely on authorization as a proxy for consent. Once an application or service is authorized to access data or invoke a model, subsequent actions are assumed to be legitimate. This assumption breaks down as soon as context changes. The same authorization may cover multiple purposes, jurisdictions, or data categories, while consent may apply only to a narrow subset. When authorization is treated as sufficient, consent effectively disappears from the execution path.</p>
+
+        <p>This distinction becomes critical in AI-driven workflows because execution is dynamic. AI systems reuse data, chain operations, and adapt behavior across contexts. Authorization alone cannot encode purpose, temporal validity, or revocation. Consent, if not explicitly evaluated, degrades into an implicit assumption inherited from earlier states. At scale, this creates systems that are technically authorized but substantively unauthorized.</p>
+
+        <p>Separating authorization from consent is therefore not a semantic exercise; it is a structural requirement. Authorization establishes who may act within a system. Consent determines whether a specific action is allowed under current conditions. Treating these as interchangeable obscures responsibility and makes enforcement dependent on interpretation rather than execution. For AI governance to be enforceable, consent must become an explicit input to decision-making, evaluated independently of authorization and bound to execution. Without this separation, organizations cannot reliably demonstrate that AI actions were legitimate at the moment they occurred, only that access existed in general.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div id="s4" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 4</span>
+        <h2><a class="anchor-link" href="#s4">#</a>Requirements for Enforceable AI Consent</h2>
+
+        <p>For consent to be enforceable in AI-driven systems, it must satisfy a set of properties that go beyond policy definition or procedural compliance. These properties are not aspirational; they are technical requirements derived from the realities of distributed systems, autonomous execution, and regulatory accountability. If any of these requirements is missing, consent degrades from an enforceable constraint into an assumption. The following requirements define what enforceable AI consent must look like at the system level.</p>
+      </div>
+
+      <div id="s4-1" class="doc-section">
+        <h3>4.1 Explicitness</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Explicitness</div>
+          <p>Consent must be explicit. All relevant parameters: who is acting, what action is requested, for what purpose, under which constraints, must be declared in a machine-readable form as part of the execution request.</p>
+        </div>
+        <p>Implicit assumptions, inferred intent, or default values undermine enforceability by shifting responsibility from humans to the system. If intent is not explicitly declared, the system cannot reliably determine whether an action is legitimate. In enforceable systems, ambiguity is not resolved heuristically; it results in refusal to execute.</p>
+      </div>
+
+      <div id="s4-2" class="doc-section">
+        <h3>4.2 Contextual Binding</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Contextual Binding</div>
+          <p>Consent must be bound to context. Authorization decisions must account for purpose, data category, jurisdiction, and temporal validity. A consent grant that is valid in one context may be invalid in another, even if the same actor and data are involved. Without contextual binding, consent becomes overly permissive and loses its meaning as a constraint. Enforceable consent is not global; it is conditional.</p>
+        </div>
+      </div>
+
+      <div id="s4-3" class="doc-section">
+        <h3>4.3 Time-Bounded Validity</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Time-Bounded Validity</div>
+          <p>Consent must be time-aware. It must be possible to determine whether consent is valid at the exact moment an AI action occurs. Consent may expire, be revoked, or become invalid due to external changes. Systems that treat consent as perpetual are unable to enforce revocation and cannot demonstrate temporal correctness. Time-bounded validity ensures that execution reflects current authorization, not historical assumptions.</p>
+        </div>
+      </div>
+
+      <div id="s4-4" class="doc-section">
+        <h3>4.4 Deterministic Evaluation</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Deterministic Evaluation</div>
+          <p>Consent evaluation must be deterministic. Given the same declared intent, consent state, and applicable rules, the system must always reach the same decision. Probabilistic or heuristic approaches are incompatible with enforceability, as they prevent independent verification and reproducibility. Determinism is a prerequisite for accountability. If decisions cannot be reproduced, they cannot be defended.</p>
+        </div>
+      </div>
+
+      <div id="s4-5" class="doc-section">
+        <h3>4.5 Separation of Responsibility and Enforcement</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Separation of Responsibility</div>
+          <p>Human responsibility and machine enforcement must be clearly separated. Humans define policies, consent scopes, and rules. Systems enforce them mechanically. When systems are allowed to infer, reinterpret, or optimize consent, responsibility becomes ambiguous and accountability weakens. Enforceable consent requires that systems execute rules exactly as defined, without interpretation.</p>
+        </div>
+      </div>
+
+      <div id="s4-6" class="doc-section">
+        <h3>4.6 Fail-Closed Semantics</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Fail-Closed Semantics</div>
+          <p>Enforceable systems must fail closed. When required inputs are missing, inconsistent, or unavailable, execution must be denied. Silent fallbacks, retries, or best-effort behavior introduce undefined states that undermine trust and control. Refusal to act is safer than acting on incomplete authorization.</p>
+        </div>
+      </div>
+
+      <div id="s4-7" class="doc-section">
+        <h3>4.7 Auditability and Verifiability</h3>
+        <div class="key-prop">
+          <div class="key-prop-title">Requirement: Auditability and Verifiability</div>
+          <p>Consent enforcement must produce verifiable artifacts. It must be possible to demonstrate, after the fact, that a specific decision was made under specific conditions, using specific rules. Logs alone are insufficient if they cannot be tied to a reproducible evaluation context. Auditability is not an afterthought; it is a system property.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <span class="table-caption">Table 1. Properties of Enforceable AI Consent</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Requirement</th>
+                <th>Implicit Consent Systems</th>
+                <th>Enforceable Consent Systems</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Explicit intent</td><td>Assumed or inferred</td><td>Declared per action</td></tr>
+              <tr><td>Context awareness</td><td>Limited or absent</td><td>Purpose- and scope-bound</td></tr>
+              <tr><td>Time-bounded validity</td><td>Rarely enforced</td><td>Enforced at execution time</td></tr>
+              <tr><td>Deterministic evaluation</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Fail-closed behavior</td><td>Inconsistent</td><td>Mandatory</td></tr>
+              <tr><td>Revocability</td><td>Often complex or none</td><td>Granular and immediate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">The requirements listed are cumulative and interdependent. Enforceable consent emerges only when all properties are satisfied at runtime; partial implementation results in implicit or assumption-based authorization.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div id="s5" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 5</span>
+        <h2><a class="anchor-link" href="#s5">#</a>The QODIQA Framework</h2>
+
+        <p>The requirements outlined in the previous section describe what enforceable AI consent must achieve at runtime. Meeting these requirements cannot be accomplished through policy documents, application-level conventions, or post hoc controls. It requires a dedicated system component designed to operate directly in the execution path of AI-driven actions.</p>
+
+        <p>QODIQA is introduced as such a component: a consent and decision enforcement layer that evaluates whether an AI action may proceed before execution occurs. Its role is not to replace governance, compliance, or legal interpretation, but to provide the missing execution-layer mechanism that allows those constructs to be applied deterministically and at scale. At a high level, the framework formalizes a simple but strict contract: no AI action is executed unless it is explicitly authorized under the current consent state and applicable rules. Authorization is not inferred from access, roles, or historical approvals. It is evaluated at runtime, for each action, using explicit inputs and immutable context.</p>
+      </div>
+
+      <div id="s5-1" class="doc-section">
+        <h3>5.1 Architectural Positioning</h3>
+        <p>QODIQA operates as a thin middleware layer positioned between an application and the AI systems it invokes. All AI-bound requests pass through this layer prior to execution. The framework does not observe or analyze AI behavior after the fact; it acts as a gate that determines whether execution is permitted in the first place.</p>
+        <p>This positioning is intentional. By residing on the critical path, the framework ensures that enforcement cannot be bypassed without explicit architectural decisions. At the same time, it remains independent of specific AI models, vendors, or deployment environments. The layer is model-agnostic and does not depend on the internal workings of the AI systems it controls.</p>
+      </div>
+
+      <div id="s5-2" class="doc-section">
+        <h3>5.2 Input Contract</h3>
+        <p>Every evaluation performed by the framework is driven by an explicit, machine-readable request. This request describes intent, not content. It specifies who is acting, what action is requested, for what purpose, under which constraints, and within which jurisdictional context. The contract is deliberately closed. All required fields must be present and valid.</p>
+        <p>Unknown or missing fields result in refusal to evaluate. This design choice eliminates ambiguity and prevents the system from compensating for incomplete or unclear intent through inference or defaults. By enforcing explicitness at the boundary, the framework ensures that responsibility for intent declaration remains human, while execution remains mechanical.</p>
+      </div>
+
+      <div id="s5-3" class="doc-section">
+        <h3>5.3 Consent Resolution</h3>
+        <p>Within the framework, consent is treated as explicit state rather than embedded logic. Consent resolution occurs prior to policy evaluation and determines whether valid consent exists for the declared purpose, scope, and time of execution. This separation is critical. Policies do not reason about consent; they declare what consent conditions they require. Consent resolution answers whether those conditions are currently satisfied.</p>
+        <p>By decoupling these concerns, the framework avoids entangling policy logic with mutable consent state and maintains deterministic behavior. Consent may be revoked, expired, or constrained independently of policy changes. Once resolved, the resulting consent state becomes part of the immutable evaluation context for the decision.</p>
+      </div>
+
+      <div id="s5-4" class="doc-section">
+        <h3>5.4 Policy Evaluation</h3>
+        <p>Policy evaluation is performed against an immutable snapshot of applicable rules. Policies are versioned, deterministic, and free of side effects. Given the same inputs and policy version, evaluation always produces the same outcome.</p>
+        <p>This immutability ensures that decisions remain reproducible even as policies evolve over time. Past decisions cannot be altered retroactively by policy changes, and future decisions are evaluated against explicitly defined rule sets. Policy evaluation does not inspect data content, apply probabilistic reasoning, or attempt to infer intent. Its sole function is to evaluate declared intent against resolved consent and defined constraints.</p>
+      </div>
+
+      <div id="s5-5" class="doc-section">
+        <h3>5.5 Decision Outcomes</h3>
+        <p>Each evaluation produces one of a small, finite set of outcomes: execution allowed, execution denied, or execution allowed with explicit restrictions. Restrictions may include constraints on retention, logging, reuse, or downstream processing, but they are always declared explicitly as part of the decision.</p>
+        <p>Decisions are treated as artifacts. They are stable, identifiable, and traceable to the exact inputs and rules that produced them. This enables independent verification, replay, and audit without reliance on interpretation or narrative reconstruction.</p>
+      </div>
+
+      <div id="s5-6" class="doc-section">
+        <h3>5.6 Failure Semantics</h3>
+        <p>The framework is designed to fail closed. If required inputs are missing, consent state cannot be resolved, or policy context is unavailable, execution is denied. There are no retries, silent fallbacks, or best-effort decisions. This behavior reflects a deliberate prioritization of correctness and predictability over convenience. In systems where AI actions have real-world consequences, refusal to act under uncertainty is safer than proceeding on assumption.</p>
+      </div>
+
+      <div id="s5-7" class="doc-section">
+        <h3>5.7 Scope and Boundaries</h3>
+        <p>The QODIQA framework is intentionally minimal. Its responsibility ends at decision enforcement. It does not provide user interfaces, reporting dashboards, semantic analysis, or risk scoring. Such capabilities may exist downstream, but they are not part of the core framework.</p>
+        <p>By maintaining a narrow scope, the framework remains composable, auditable, and resilient to changes in AI models, vendors, and deployment patterns. It is designed to function as infrastructure: present, reliable, and largely invisible until it is missing.</p>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">All AI-bound actions pass through a single, deterministic execution path. Execution occurs only after explicit consent and policy evaluation.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div id="s6" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 6</span>
+        <h2><a class="anchor-link" href="#s6">#</a>QODIQA System Architecture</h2>
+
+        <p>This section describes the internal architecture of QODIQA as an execution-layer system. The goal is not to present an implementation tied to a specific stack, but to make the design concrete, inspectable, and reproducible. Every component described here exists to satisfy one or more of the enforceability requirements defined in Section 4. At its core, QODIQA is not a service that decides wisely, but a system that decides predictably.</p>
+      </div>
+
+      <div id="s6-1" class="doc-section">
+        <h3>6.1 Architectural Overview</h3>
+        <p>QODIQA is composed of four core components, executed in a strict, linear sequence: Intent Interface, Consent Resolver, Policy Engine, and Decision Artifact Generator. Each component is deliberately simple in isolation. The innovation lies in their composition, ordering, and constraints.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 680 100" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;min-width:400px;">
+            <rect x="20" y="20" width="130" height="60" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="85" y="47" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Intent</text>
+            <text x="85" y="63" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Interface</text>
+            <text x="85" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-style="italic" fill="#7A8090">deterministic</text>
+            <line x1="150" y1="50" x2="178" y2="50" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+            <rect x="178" y="20" width="140" height="60" rx="2" fill="rgba(46,90,172,0.06)" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="248" y="47" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Consent</text>
+            <text x="248" y="63" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Resolver</text>
+            <text x="248" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-style="italic" fill="#7A8090">fail-closed</text>
+            <line x1="318" y1="50" x2="346" y2="50" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+            <rect x="346" y="20" width="130" height="60" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="411" y="47" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Policy</text>
+            <text x="411" y="63" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Engine</text>
+            <text x="411" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-style="italic" fill="#7A8090">inspectable</text>
+            <line x1="476" y1="50" x2="504" y2="50" stroke="#7A6A50" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+            <rect x="504" y="20" width="156" height="60" rx="2" fill="none" stroke="#7A6A50" stroke-width="1.5"/>
+            <text x="582" y="43" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Decision Artifact</text>
+            <text x="582" y="59" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="500" fill="#0B1C2D">Generator</text>
+            <defs>
+              <marker id="arrowMain" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#7A6A50"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="diagram-caption">Figure 2. QODIQA core component pipeline: strict linear execution enforcing determinism at each stage.</div>
+        </div>
+      </div>
+
+      <div id="s6-2" class="doc-section">
+        <h3>6.2 Intent Declaration: Closed by Design</h3>
+        <p>Every interaction with QODIQA begins with an explicit intent declaration. This is not metadata. It is a hard contract.</p>
+
+        <span class="code-label">Example</span>
+        <pre><code>class DecisionRequest:
+    actor_id: str
+    action: str
+    purpose: str
+    data_types: set[str]
+    jurisdiction: str</code></pre>
+
+        <span class="code-label">Validation logic (simplified)</span>
+        <pre><code>REQUIRED_FIELDS = {
+    "actor_id",
+    "action",
+    "purpose",
+    "data_types",
+    "jurisdiction"
+}
+
+def validate_request(req: dict):
+    missing = REQUIRED_FIELDS - req.keys()
+    extra = set(req.keys()) - REQUIRED_FIELDS
+
+    if missing:
+        raise InvalidRequest(f"Missing fields: {missing}")
+    if extra:
+        raise InvalidRequest(f"Unknown fields: {extra}")</code></pre>
+
+        <div class="decision-block">
+          <strong>Design Decision</strong>
+          <ul>
+            <li>No defaults</li>
+            <li>No inferred intent</li>
+            <li>No partial evaluation</li>
+          </ul>
+          <p style="margin-top:10px;">If intent is ambiguous, execution is refused. This single constraint removes an entire class of governance bugs.</p>
+        </div>
+
+        <div class="footnotes">
+          <div class="footnote" data-num="¹">Code snippets are illustrative and represent architectural intent rather than a specific implementation.</div>
+        </div>
+      </div>
+
+      <div id="s6-3" class="doc-section">
+        <h3>6.3 Consent Resolution as Explicit State</h3>
+        <p>Consent in QODIQA is not embedded in policy logic. It is resolved before policy evaluation and treated as state.</p>
+
+        <span class="code-label">Conceptual model</span>
+        <pre><code>class ConsentState:
+    subject_id: str
+    purpose: str
+    valid_from: datetime
+    valid_until: datetime
+    scopes: set[str]
+    revoked: bool</code></pre>
+
+        <span class="code-label">Resolution step</span>
+        <pre><code>def resolve_consent(request: DecisionRequest) -> ConsentState:
+    consent = consent_store.lookup(
+        subject=request.actor_id,
+        purpose=request.purpose
+    )
+    if not consent or consent.revoked:
+        raise ConsentInvalid
+    if not consent.is_valid_now():
+        raise ConsentExpired
+    return consent</code></pre>
+
+        <p><strong>Important:</strong> Once resolved, the consent reference becomes immutable input to the decision. Later changes do not retroactively affect the outcome.</p>
+      </div>
+
+      <div id="s6-4" class="doc-section">
+        <h3>6.4 Policy Evaluation as a Pure Function</h3>
+        <p>Policies in QODIQA are: <strong>versioned | immutable | deterministic | side-effect free</strong></p>
+
+        <span class="code-label">Policy evaluation signature</span>
+        <pre><code>def evaluate_policy(
+    policy_version: str,
+    request: DecisionRequest,
+    consent: ConsentState
+) -> Decision:
+    ...</code></pre>
+
+        <span class="code-label">Example rule (illustrative)</span>
+        <pre><code>if request.purpose == "training" and "personal_data" in request.data_types:
+    return DENY
+
+if request.jurisdiction == "EU" and consent.scopes != {"inference"}:
+    return DENY
+
+return ALLOW_WITH_RESTRICTIONS(
+    store_input=False,
+    store_output=False,
+    retention_seconds=0
+)</code></pre>
+
+        <div class="decision-block">
+          <strong>Constraints</strong>
+          <p>There is no access to: system time (beyond frozen context); external services; mutable configuration.</p>
+          <p style="margin-top:8px;">Same inputs produce the same outputs. Always.</p>
+        </div>
+      </div>
+
+      <div id="s6-5" class="doc-section">
+        <h3>6.5 Frozen Evaluation Context</h3>
+        <p>At evaluation time, QODIQA constructs a frozen context that captures everything required to reproduce the decision.</p>
+
+        <span class="code-label">Context construction</span>
+        <pre><code>EvaluationContext = {
+    "request": canonicalize(request),
+    "consent_ref": consent.id,
+    "policy_version": policy.version,
+    "ruleset_version": RULESET_VERSION
+}
+
+# Once frozen:
+decision = evaluate(EvaluationContext)
+assert decision == replay(EvaluationContext)</code></pre>
+
+        <p>This removes temporal ambiguity, configuration drift, and environment dependence. Decisions become mathematical objects, not events.</p>
+      </div>
+
+      <div id="s6-6" class="doc-section">
+        <h3>6.6 Decision Artifacts and Identity</h3>
+        <p>Every decision produces a stable, <strong>deterministic identifier</strong>.</p>
+
+        <pre><code>def decision_id(context, outcome):
+    payload = {
+        "context": context,
+        "outcome": outcome
+    }
+    raw = json.dumps(
+        payload,
+        sort_keys=True,
+        separators=(",",":")
+    ).encode()
+    return hashlib.sha256(raw).hexdigest()[:24]</code></pre>
+
+        <div class="decision-block">
+          <strong>Properties</strong>
+          <ul>
+            <li>Identical input produces identical ID</li>
+            <li>No raw data stored</li>
+            <li>Independently recomputable</li>
+            <li>Suitable for audits and verification</li>
+          </ul>
+        </div>
+
+        <p>Decisions stop being responses. They become artifacts.</p>
+      </div>
+
+      <div id="s6-7" class="doc-section">
+        <h3>6.7 Failure Semantics</h3>
+        <p>QODIQA fails closed, always.</p>
+
+        <pre><code>try:
+    decision = evaluate(context)
+except (
+    InvalidRequest,
+    ConsentInvalid,
+    PolicyUnavailable
+):
+    decision = DENY</code></pre>
+
+        <div class="decision-block">
+          <strong>Invariants</strong>
+          <ul>
+            <li>No retries</li>
+            <li>No best-effort evaluation</li>
+            <li>No silent degradation</li>
+          </ul>
+          <p style="margin-top:8px;">Predictability is prioritized over availability.</p>
+        </div>
+      </div>
+
+      <div id="s6-8" class="doc-section">
+        <h3>6.8 Why This Architecture Is Novel</h3>
+        <p>Individually, none of these components are revolutionary. The innovation lies in the constraints:</p>
+
+        <div class="decision-block">
+          <ul>
+            <li>Consent as state, not logic</li>
+            <li>Intent as a closed contract</li>
+            <li>Policy as a pure function</li>
+            <li>Decisions as immutable artifacts</li>
+            <li>Execution gated before AI runs</li>
+          </ul>
+        </div>
+
+        <p>Most systems optimize for flexibility. QODIQA optimizes for defensibility.</p>
+
+        <p class="section-note">This section intentionally mixes conceptual architecture, executable logic, and enforceable constraints. This is deliberate. At this layer, the architecture is the product.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div id="s7" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 7</span>
+        <h2><a class="anchor-link" href="#s7">#</a>Determinism, Auditability, and Proof</h2>
+
+        <p>The architectural constraints described in the previous section are not stylistic choices. They exist to guarantee three properties that most AI systems fail to achieve simultaneously: determinism, auditability, and proof. Together, these properties shift AI governance from interpretation to verification, and from policy narratives to enforceable system behavior. This section explains how these properties emerge from the architecture itself and why they are essential for AI systems operating at scale.</p>
+      </div>
+
+      <div id="s7-1" class="doc-section">
+        <h3>7.1 Determinism as a First-Class Property</h3>
+        <p>In many AI-enabled systems, decisions are inherently temporal. They depend on mutable configuration, dynamic policy resolution, external services, or implicit context. As a result, the same logical request may yield different outcomes depending on when, where, or how it is evaluated. This variability makes governance fragile and undermines accountability.</p>
+        <p>QODIQA treats determinism as a first-class system property. Every decision is defined as the output of a pure evaluation over an immutable set of inputs. Once intent, consent state, policy version, and ruleset are resolved, no additional factors may influence the outcome.</p>
+        <p>Determinism is enforced through strict architectural constraints: closed and explicit request contracts, immutable versioned policies, frozen evaluation contexts, absence of side effects, and absence of probabilistic or heuristic logic. Given the same inputs, the system will always produce the same decision. If this guarantee cannot be upheld, the system is considered incorrect.</p>
+      </div>
+
+      <div id="s7-2" class="doc-section">
+        <h3>7.2 Decisions as Stable Artifacts</h3>
+        <p>In conventional systems, decisions are transient responses that are logged and forgotten. In QODIQA, decisions are treated as stable artifacts with well-defined identity. Each decision is derived from a canonical representation of its evaluation context, including: the declared intent (structure, not content), a reference to resolved consent state, the exact policy version, and the evaluation ruleset version.</p>
+        <p>Conceptually, a decision is defined as: <code>Decision = f(context)</code>, where <em>f</em> is a deterministic function and context is immutable.</p>
+        <p>This framing has a critical consequence: two independent systems evaluating the same context will produce the same outcome and the same decision identity, without coordination or shared state. Decisions cease to be events and become reproducible objects.</p>
+      </div>
+
+      <div id="s7-3" class="doc-section">
+        <h3>7.3 Replay as a Correctness Invariant</h3>
+        <p>Replay is the strongest test of determinism. A decision that cannot be replayed cannot be proven. QODIQA is designed so that any past decision can be recomputed by re-evaluating its frozen context. Replay does not require access to production systems, live consent stores, or current policy state. It requires only the immutable inputs captured at evaluation time.</p>
+        <p>The system enforces the following invariant: <code>evaluate(context) == replay(context)</code></p>
+        <p>If this invariant does not hold, the integrity of the system is compromised. Replay enables capabilities that are otherwise difficult or impossible to achieve: independent verification across environments, regression testing against historical decisions, detection of unintended behavioral drift, and audits that do not depend on trust or interpretation.</p>
+      </div>
+
+      <div id="s7-4" class="doc-section">
+        <h3>7.4 Auditability Without Interpretation</h3>
+        <p>Traditional audit mechanisms rely on logs: partial records of execution interpreted after the fact. Logs can describe what happened, but they rarely prove why an action was allowed. They depend on completeness, consistency, and correct interpretation, all of which degrade as systems scale.</p>
+        <p>QODIQA replaces narrative auditability with reproducible verification. Each decision is backed by a frozen evaluation context, an immutable policy snapshot, a deterministic evaluation path, and a stable decision identifier.</p>
+        <p>An audit no longer asks, "What does the log say happened?" It asks, "Does this decision replay to the same result?" If the inputs match and the outcome is reproduced, the decision is valid. If not, the discrepancy is objective and detectable.</p>
+      </div>
+
+      <div id="s7-5" class="doc-section">
+        <h3>7.5 Proof Over Explanation</h3>
+        <p>Many AI governance efforts emphasize explainability: generating human-readable justifications for decisions. While explanations can be useful, they are inherently subjective and difficult to validate independently.</p>
+        <p>QODIQA prioritizes proof over explanation. Proof does not persuade; it verifies. It does not rely on narratives, trust, or interpretation. It relies on reproducibility.</p>
+        <p>By enabling decisions to be replayed and independently verified, the system provides a stronger guarantee than explanation alone. It allows organizations to demonstrate that an AI action was authorized under specific conditions, using specific rules, at a specific point in time. This distinction is critical in regulatory, contractual, and legal contexts, where legitimacy must be demonstrated, not argued.</p>
+      </div>
+
+      <div id="s7-6" class="doc-section">
+        <h3>7.6 Intentional Limits</h3>
+        <p>Determinism, auditability, and proof impose constraints. The system deliberately rejects flexibility that would compromise reproducibility. There is no adaptive behavior, no inference, no learning from past decisions, and no contextual guesswork. These limitations are not temporary trade-offs. They are foundational design choices.</p>
+        <p>Intelligence exists elsewhere in the AI stack. Optimization exists elsewhere. Interpretation exists elsewhere. At this layer, authority matters more than adaptability.</p>
+
+        <p class="section-note">This section does not introduce new components or diagrams by design. Its purpose is to formalize invariants, not flows. The next section addresses how these guarantees survive contact with real systems.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div id="s8" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 8</span>
+        <h2><a class="anchor-link" href="#s8">#</a>Integration, Adoption, and Operational Reality</h2>
+
+        <p>QODIQA is designed to integrate as a thin middleware layer that sits directly on the AI execution path. Integration does not require refactoring models, rewriting business logic, or adopting a specific AI vendor. Instead, it introduces a single, explicit decision point prior to AI invocation.</p>
+
+        <p>In practice, integration follows a consistent pattern: an application constructs an explicit intent declaration; the intent is evaluated by the enforcement layer; AI execution proceeds only if a positive decision is returned.</p>
+
+        <p>This pattern is compatible with centralized AI gateways, service-oriented architectures, event-driven systems, and synchronous and asynchronous execution models. Because the framework does not inspect content or model internals, it remains decoupled from the evolution of AI capabilities. Models can change, vendors can rotate, and deployment environments can shift without altering the enforcement logic.</p>
+      </div>
+
+      <div id="s8-2" class="doc-section">
+        <h3>8.2 Latency and Performance Constraints</h3>
+        <p>Any system placed on the execution path must meet strict latency requirements. If enforcement introduces noticeable delays, teams will be incentivized to bypass it. QODIQA is designed with this reality as a first-order constraint. The evaluation path is single-hop, deterministic, free of synchronous external dependencies, and bounded in complexity.</p>
+        <p>Policy evaluation operates over in-memory, immutable structures. Consent resolution is explicit and resolved prior to evaluation. No network calls, probabilistic computation, or dynamic inference occur during the hot path.</p>
+        <p>As a result, enforcement latency is predictable and bounded. This predictability is more important than raw speed: teams can reason about performance impact and design accordingly.</p>
+      </div>
+
+      <div id="s8-3" class="doc-section">
+        <h3>8.3 Failure Modes and Fail-Closed Behavior</h3>
+        <p>Operational systems fail. Networks degrade, dependencies become unavailable, and configuration errors occur. How a governance layer behaves under failure is as important as how it behaves under normal conditions.</p>
+        <p>QODIQA is designed to fail closed. When required inputs cannot be resolved, policies are unavailable, or evaluation context cannot be constructed, execution is denied. This behavior is intentional. Silent degradation, retries, or partial evaluation introduce undefined states that undermine trust. A denied execution is visible, traceable, and actionable. An unauthorized execution is not.</p>
+        <p>Fail-closed behavior shifts operational incentives. Instead of silently allowing risky behavior, the system forces explicit resolution of failures, making governance gaps visible rather than latent.</p>
+      </div>
+
+      <div id="s8-4" class="doc-section">
+        <h3>8.4 Adoption Across Teams and Organizations</h3>
+        <p>Governance systems often fail not because they are incorrect, but because they are perceived as obstacles. QODIQA is designed to minimize friction while preserving authority.</p>
+        <p>For engineering teams, the framework provides a stable, explicit contract; deterministic behavior; and clear failure semantics. For legal and compliance teams, it provides enforceable constraints rather than guidelines; reproducible decision artifacts; and auditable proof instead of narrative logs. For organizations, this alignment reduces the need for ad hoc governance logic embedded across services. Responsibility remains human; enforcement becomes systemic.</p>
+      </div>
+
+      <div id="s8-5" class="doc-section">
+        <h3>8.5 Resistance to Bypass</h3>
+        <p>Any control mechanism that can be bypassed easily will be bypassed eventually. QODIQA addresses this risk structurally.</p>
+        <p>Because enforcement occurs before AI execution and is positioned on the critical path, bypassing it requires an explicit architectural decision. Such decisions are visible, reviewable, and auditable. There is no implicit bypass through defaults, cached permissions, or inherited roles.</p>
+        <p>In effect, the framework shifts governance from convention to infrastructure. Control is no longer a matter of discipline; it is a property of the system.</p>
+      </div>
+
+      <div id="s8-6" class="doc-section">
+        <h3>8.6 Operational Transparency</h3>
+        <p>QODIQA does not attempt to hide its decisions. Denials, restrictions, and failures are explicit. Each outcome produces a traceable artifact that can be surfaced to operators, developers, or auditors as needed. This transparency reduces operational ambiguity. When execution fails, the reason is deterministic and reproducible. Teams do not need to guess whether a failure is due to policy, consent, or system error.</p>
+
+        <p class="section-note">This section addresses the practical conditions under which execution-layer governance either succeeds or fails. The design choices described here are not optimizations; they are prerequisites for adoption in real systems.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div id="s9" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 9</span>
+        <h2><a class="anchor-link" href="#s9">#</a>Limitations, Trade-offs, and Non-Goals</h2>
+
+        <p>Any system that aims to be enforceable at scale must make explicit trade-offs. QODIQA is no exception. Its design deliberately prioritizes determinism, verifiability, and execution-level control over flexibility, adaptiveness, or convenience. This section outlines the limitations and non-goals of the framework, not as weaknesses, but as intentional boundaries that preserve its core guarantees.</p>
+
+        <h3>9.1 No Probabilistic or Adaptive Decision-Making</h3>
+        <p>QODIQA does not employ probabilistic reasoning, machine learning, or adaptive logic in its decision process. Outcomes are not influenced by confidence scores, historical patterns, or inferred intent. This is a deliberate constraint. Probabilistic systems may optimize outcomes, but they undermine reproducibility. Adaptive behavior introduces statefulness that makes decisions difficult to replay and impossible to prove. At the enforcement layer, predictability outweighs optimization.</p>
+
+        <h3>9.2 No Content Inspection or Semantic Understanding</h3>
+        <p>The framework does not inspect raw data, analyze content semantics, or classify inputs based on meaning. It operates on declared intent, resolved consent state, and policy rules, not on the substance of the data itself. Content inspection and semantic analysis may be valuable in other parts of the AI stack, but embedding them into the consent enforcement layer would blur responsibility and reintroduce inference. QODIQA intentionally separates enforcement from interpretation.</p>
+
+        <h3>9.3 No Legal Interpretation</h3>
+        <p>QODIQA does not interpret laws, regulations, or contracts. Legal reasoning remains a human responsibility. Policies enforced by the system are assumed to be derived from legal, contractual, or organizational sources and translated into machine-readable rules elsewhere. This separation is essential. A system that claims to understand the law would implicitly assume responsibility for interpretation. QODIQA assumes responsibility only for execution.</p>
+
+        <h3>9.4 Reduced Flexibility in Exchange for Authority</h3>
+        <p>The framework rejects several forms of flexibility that are common in application-layer systems: default values for missing inputs, best-effort evaluation, silent fallbacks, and dynamic inference under uncertainty. These omissions may increase friction in the short term, but they are necessary to maintain authority and correctness. When enforcement systems attempt to be helpful, they often become unpredictable. QODIQA chooses refusal over ambiguity.</p>
+
+        <h3>9.5 Not a User-Facing Governance Tool</h3>
+        <p>QODIQA is not designed to be a dashboard, reporting platform, or user interface. While decision artifacts may be surfaced to other systems, visualization and reporting are explicitly out of scope for the core framework. This boundary ensures that the enforcement layer remains lightweight, composable, and resilient to changes in organizational workflows or tooling preferences.</p>
+
+        <h3>9.6 No Retroactive Control</h3>
+        <p>Decisions made by the system are immutable. Changes to policies, consent state, or rulesets do not retroactively alter past outcomes. While this may limit the ability to correct historical behavior, it preserves auditability and proof. Retroactive modification of decisions would compromise determinism and undermine trust in the system's outputs.</p>
+
+        <h3>9.7 Scope as a Feature</h3>
+        <p>The limitations described above are not temporary gaps or future roadmap items. They are structural choices that define what the framework is and is not. By narrowing its scope, QODIQA remains predictable under scale, defensible under scrutiny, and stable as AI systems evolve. Attempts to expand beyond these boundaries would erode the very guarantees the framework is designed to provide.</p>
+
+        <p class="section-note">This section exists to prevent misinterpretation and overextension. Clear non-goals are as important as defined capabilities when building infrastructure intended to outlast specific technologies or regulatory cycles.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div id="s10" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Section 10</span>
+        <h2><a class="anchor-link" href="#s10">#</a>Conclusion and Outlook</h2>
+
+        <p>Artificial intelligence has reached a level of capability where questions of governance can no longer be treated as external concerns. As AI systems increasingly operate inside critical workflows, the legitimacy of their actions depends not on intent or documentation, but on whether authorization can be enforced, verified, and proven at the moment of execution.</p>
+
+        <p>This paper has argued that many of the failures attributed to AI governance are not failures of regulation, ethics, or organizational process, but failures of system design. Consent and authorization are typically defined outside the execution path, expressed in human-readable form, and enforced retrospectively. In environments characterized by autonomy, scale, and speed, these approaches are structurally insufficient.</p>
+
+        <p>QODIQA introduces a different framing. Rather than attempting to make AI systems more cautious, interpretable, or compliant after the fact, it embeds consent enforcement directly into the execution path. By treating intent as an explicit contract, consent as state, policies as immutable logic, and decisions as reproducible artifacts, the framework transforms authorization from an assumption into a verifiable system property.</p>
+
+        <p>The central contribution of this approach is not a new governance model, but a new layer of infrastructure. One that is deliberately narrow in scope, deterministic by design, and resistant to ambiguity. In doing so, it separates responsibility from enforcement: humans remain accountable for defining rules and consent, while systems execute those rules mechanically and without interpretation.</p>
+
+        <p>This shift has broader implications. It allows organizations to scale AI usage without scaling uncertainty. It enables audits that rely on proof rather than narrative. It reduces reliance on trust in systems whose behavior must instead be demonstrable.</p>
+
+        <p>Most importantly, it establishes a foundation on which legal, ethical, and organizational governance can be applied consistently, rather than aspirationally.</p>
+
+        <p>The approach outlined here does not claim to solve all challenges associated with AI governance. It intentionally avoids semantic interpretation, probabilistic reasoning, and adaptive behavior. These constraints are not limitations to be overcome, but boundaries that preserve correctness and defensibility. As AI systems continue to evolve, such boundaries will become increasingly valuable.</p>
+
+        <p>Execution-layer consent enforcement represents a necessary evolution in AI system architecture. As AI moves from experimentation to infrastructure, legitimacy must become a property of execution itself. QODIQA is proposed as a concrete step in that direction.</p>
+      </div>
+
+      <!-- DOCUMENT STATUS -->
+      <div id="s-status" class="doc-section">
+        <div class="section-divider"></div>
+        <span class="section-label">Document Status</span>
+        <h2><a class="anchor-link" href="#s-status">#</a>Document Status and Corpus Alignment</h2>
+
+        <div class="doc-status-block">
+          <p>This document is the foundational whitepaper of the QODIQA specification corpus. It provides the conceptual and technical rationale for QODIQA: a deterministic runtime consent enforcement layer for artificial intelligence systems.</p>
+
+          <p>The whitepaper establishes the structural argument for treating consent as executable infrastructure rather than a policy obligation. It defines the properties that enforceable AI consent must satisfy, introduces the QODIQA enforcement framework, describes its internal architecture, and characterizes the determinism, auditability, and proof guarantees that emerge from this design.</p>
+
+          <p>This document should be read together with the following related specifications:</p>
+
+          <ul class="corpus-list">
+            <li>QODIQA — Core Standard for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — 68-Point Enforcement Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Reference Architecture for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Security and Cryptographic Profile for Runtime Consent Enforcement</li>
+            <li>QODIQA — Terminology and Normative Definitions</li>
+            <li>QODIQA — Threat Model and Abuse Case Specification</li>
+            <li>QODIQA — Certification Framework for Deterministic Runtime Consent Enforcement</li>
+            <li>QODIQA — Governance Charter for the QODIQA Standard Corpus</li>
+          </ul>
+
+          <p>Version 1.0 represents the initial formal release of this document as part of the QODIQA standard corpus.</p>
+
+          <hr style="border:none;border-top:1px solid #C8C4BE;margin:24px 0;">
+
+          <div class="contact-block">
+            <p>For strategic inquiries, architectural discussions, or partnership exploration:</p>
+            <p class="contact-name">Bogdan Duțescu</p>
+            <p class="contact-detail"><a href="mailto:bddutescu@gmail.com">bddutescu@gmail.com</a></p>
+            <p class="contact-detail">0040.724.218.572</p>
+          </div>
+        </div>
+
+        <!-- DOCUMENT IDENTITY BLOCK -->
+        <div class="doc-identity-block">
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Identifier</span>
+            <span class="doc-id-val">QODIQA-WP-2026-001</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Title</span>
+            <span class="doc-id-val">Consent as Infrastructure for Artificial Intelligence: Technical Whitepaper</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Subtitle</span>
+            <span class="doc-id-val">Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Publication Date</span>
+            <span class="doc-id-val">April 2026</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Version</span>
+            <span class="doc-id-val">1.0</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Type</span>
+            <span class="doc-id-val">Technical Whitepaper</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Document Status</span>
+            <span class="doc-id-val">Normative</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Governing Authority</span>
+            <span class="doc-id-val">QODIQA Governance Charter</span>
+          </div>
+          <div class="doc-identity-row">
+            <span class="doc-id-key">Integrity Notice</span>
+            <span class="doc-id-val">Document integrity may be verified using the official SHA-256 checksum distributed with the QODIQA specification corpus.</span>
+          </div>
+        </div>
+
+      </div><!-- /.s-status -->
+
+    </div><!-- /.content-inner -->
+  </main>
+</div><!-- /.layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-block">
+      <span class="f-label">Document</span>
+      <p>QODIQA — Consent as Infrastructure for Artificial Intelligence: Technical Whitepaper</p>
+      <p>Version 1.0 &nbsp;·&nbsp; April 2026</p>
+      <p>Deterministic Runtime Consent Enforcement</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Reference</span>
+      <p>QODIQA-WP-2026-001</p>
+      <p>Technical Whitepaper</p>
+      <p>Status: Normative</p>
+    </div>
+    <div class="footer-block">
+      <span class="f-label">Disclaimer</span>
+      <p>This document presents a conceptual and technical framework and does not constitute legal, regulatory, or operational advice. All architectural principles described herein are intended for implementation guidance only.</p>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 QODIQA</span>
+      <span>QODIQA-WP-2026-001 &nbsp;·&nbsp; Version 1.0 — Normative &nbsp;·&nbsp; All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- IntersectionObserver ScrollSpy (deterministic, observer-only) ---- */
+  const navItems = document.querySelectorAll('.nav-item');
+  const sectionIds = [
+    'cover','s-abstract','s1','s2','s3','s3-1','s3-2','s3-3',
+    's4','s4-1','s4-2','s4-3','s4-4','s4-5','s4-6','s4-7',
+    's5','s5-1','s5-2','s5-3','s5-4','s5-5','s5-6','s5-7',
+    's6','s6-1','s6-2','s6-3','s6-4','s6-5','s6-6','s6-7','s6-8',
+    's7','s7-1','s7-2','s7-3','s7-4','s7-5','s7-6',
+    's8','s8-2','s8-3','s8-4','s8-5','s8-6',
+    's9','s10','s-status'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  function setActive(id) {
+    navItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+    });
+  }
+
+  /* Map each section to its document order index for stable tie-breaking */
+  const sectionIndex = new Map(sections.map((s, i) => [s.id, i]));
+  const visible = new Set();
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visible.add(entry.target.id);
+      } else {
+        visible.delete(entry.target.id);
+      }
+    });
+    /* Activate the topmost (lowest index) currently visible section */
+    if (visible.size > 0) {
+      let topId = null;
+      let topIdx = Infinity;
+      visible.forEach(id => {
+        const idx = sectionIndex.get(id);
+        if (idx < topIdx) { topIdx = idx; topId = id; }
+      });
+      if (topId) setActive(topId);
+    }
+  }, {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* ---- Smooth nav clicks ---- */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = window.innerWidth <= 768 ? 60 : 20;
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+        }
+      }
+    });
+  });
+
+  /* ---- Back to top ---- */
+  const btt = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 600), { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---- Mobile sidebar toggle ---- */
+  const toggle = document.getElementById('navToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+  }
+
+  /* ---- Fallback scroll spy (deterministic, position-based) ---- */
+  function fallbackScrollSpy() {
+    let closest = null;
+    let minDistance = Infinity;
+
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+
+      if (rect.top <= window.innerHeight * 0.4) {
+        const distance = Math.abs(rect.top);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = sec.id;
+        }
+      }
+    });
+
+    if (closest) setActive(closest);
+  }
+
+  /* Use fallback on scroll as a safety net alongside IntersectionObserver */
+  window.addEventListener('scroll', fallbackScrollSpy, { passive: true });
+
+  /* Run once on load to set initial active state */
+  fallbackScrollSpy();
+
+})();
+</script>
+</body>
+</html>
