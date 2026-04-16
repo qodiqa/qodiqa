@@ -27,9 +27,9 @@ It is an execution constraint.
 
 ## Start Here
 
-- [Read Whitepaper](https://qodiqa.github.io/qodiqa/whitepaper.html)
-- [Explore Core Standard](https://qodiqa.github.io/qodiqa/core-standard.html)
-- [Browse Full Corpus](https://qodiqa.github.io/qodiqa/index.html)
+- [Read Whitepaper]([https://qodiqa.github.io/qodiqa/index.html](https://qodiqa.github.io/qodiqa/docs/QODIQA___Consent_as_Infrastructure_for_Artificial_Intelligence_Technical_Whitepaper.html))
+- [Explore Core Standard](https://qodiqa.github.io/qodiqa/docs/QODIQA___Core_Standard_for_Deterministic_Runtime_Consent_Enforcement.html)
+- [Browse Full Corpus]([https://qodiqa.github.io/qodiqa/index.html](https://qodiqa.github.io/qodiqa/index.html#corpus))
 
 ---
 
