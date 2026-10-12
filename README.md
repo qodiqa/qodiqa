@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/og.png" alt="QODIQA: Consent, enforced at execution" width="100%"></p>
+
 # QODIQA
 
 **Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems**
@@ -48,7 +50,7 @@ It enforces it.
 
 AI governance frameworks define consent requirements. They do not enforce them.
 
-Consent exists in policy documents, data agreements, and system specifications. At runtime, these conditions are assumed — not verified. Systems invoke models, process data, and return outputs without mechanically confirming that consent conditions are satisfied.
+Consent exists in policy documents, data agreements, and system specifications. At runtime, these conditions are assumed, not verified. Systems invoke models, process data, and return outputs without mechanically confirming that consent conditions are satisfied.
 
 The gap between policy and execution is structural. It cannot be closed by documentation, audits after the fact, or organizational controls alone.
 
@@ -60,10 +62,10 @@ Not enforcement.
 
 ## Solution
 
-- **Deterministic runtime enforcement** — Consent conditions are evaluated on every inference call. Without exception.
-- **Fail-closed execution** — Unverifiable or absent consent halts execution. There is no permissive fallback.
-- **Cryptographic verification** — Consent signals are cryptographically bound to execution context. Tampering is detectable.
-- **Auditability** — Every enforcement decision produces a signed, structured audit record suitable for regulatory review.
+- **Deterministic runtime enforcement**: Consent conditions are evaluated on every inference call. Without exception.
+- **Fail-closed execution**: Unverifiable or absent consent halts execution. There is no permissive fallback.
+- **Cryptographic verification**: Consent signals are cryptographically bound to execution context. Tampering is detectable.
+- **Auditability**: Every enforcement decision produces a signed, structured audit record suitable for regulatory review.
 
 ---
 
