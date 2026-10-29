@@ -31,6 +31,8 @@ It is an execution constraint.
 - [Read Whitepaper](https://qodiqa.github.io/qodiqa/docs/QODIQA___Consent_as_Infrastructure_for_Artificial_Intelligence_Technical_Whitepaper.html)
 - [Explore Core Standard](https://qodiqa.github.io/qodiqa/docs/QODIQA___Core_Standard_for_Deterministic_Runtime_Consent_Enforcement.html)
 - [Browse Full Corpus](https://qodiqa.github.io/qodiqa/index.html)
+- [Reference implementation: qodiqa-gateway](https://github.com/qodiqa/qodiqa-gateway)
+- [Verify a receipt offline: qodiqa-verify](https://github.com/qodiqa/qodiqa-verify)
 
 ---
 
@@ -68,15 +70,15 @@ Not enforcement.
 
 ---
 
-## Repository Structure
+## Repositories
 
-```
-/index.html
-/docs/
-/assets/
-README.md
-LICENSE
-```
+| Repository | Description |
+|---|---|
+| [qodiqa](https://github.com/qodiqa/qodiqa) | QODIQA-STD-1.0: open technical standard for deterministic runtime consent enforcement in AI systems (32-document corpus) |
+| [qodiqa-gateway](https://github.com/qodiqa/qodiqa-gateway) | Runtime consent enforcement gateway for AI actions: signed consent, execution-bound tokens, hash-chained audit, offline-verifiable receipts. |
+| [qodiqa-verify](https://github.com/qodiqa/qodiqa-verify) | Offline verifier for QODIQA receipts, audit chains and transparency-log proofs (JavaScript and Python). |
+| [qodiqa-anchors](https://github.com/qodiqa/qodiqa-anchors) | Publication of signed audit-chain checkpoints (anchors) for QODIQA gateways. |
+| [website](https://github.com/qodiqa/website) | Website for QODIQA (qodiqa.com) |
 
 ---
 
@@ -133,18 +135,26 @@ The following documents constitute the normative and informative QODIQA corpus. 
 
 ## Status
 
-**Public specification.**
-The QODIQA standard corpus is released for implementation, regulatory reference, and independent review.
+**Specification.** The QODIQA standard corpus (QODIQA-STD-1.0) is released for implementation, regulatory reference, and independent review.
 
-**Reference implementation:** In progress.
-Specification available in corpus document 24.
+**Reference implementation.** Published as open source: `qodiqa-gateway`, `qodiqa-verify` and `qodiqa-anchors`. The reference implementation is specified in corpus document 24.
 
 ---
 
 ## License
 
-The specification text is licensed under CC BY 4.0. See [LICENSE](./LICENSE). Corpus document 22 (Public Specification License) is kept as a historical record and is superseded by CC BY 4.0.
+The specification text is licensed under [CC BY 4.0](./LICENSE). Corpus document 22 (Public Specification License) is kept as a historical record and is superseded by CC BY 4.0.
 
-Code is licensed separately: qodiqa-gateway, qodiqa-verify and qodiqa-anchors are released under the Apache License 2.0.
+Code is licensed separately: `qodiqa-gateway`, `qodiqa-verify` and `qodiqa-anchors` are released under the Apache License 2.0.
 
 No certification body or program exists yet; the corpus is a conformance framework for self-assessment.
+
+---
+
+## Contact
+
+- Website: [www.qodiqa.com](https://www.qodiqa.com)
+- Email: contact@qodiqa.com
+- LinkedIn: [company/qodiqa](https://www.linkedin.com/company/qodiqa)
+
+Feedback and independent review of the specification are welcome.
