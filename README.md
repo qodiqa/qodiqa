@@ -1,4 +1,5 @@
-<p align="center"><img src="assets/og-nvidia.png" alt="QODIQA: Consent, enforced at execution" width="100%"></p>
+<p align="center"><img src="assets/og.png?v=3" alt="QODIQA: Consent, enforced at execution" width="100%"></p>
+
 # QODIQA
 
 **Deterministic Runtime Consent Enforcement for Artificial Intelligence Systems**
