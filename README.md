@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/og.png" alt="QODIQA: Consent, enforced at execution" width="100%"></p>
+<p align="center"><img src="https://github.com/qodiqa/qodiqa/raw/main/assets/og.png?v=2" alt="QODIQA: Consent, enforced at execution" width="100%"></p>
 
 # QODIQA
 
